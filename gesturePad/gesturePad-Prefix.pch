@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'gesturePad' target in the 'gesturePad' project
+//
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+#endif
