@@ -6,130 +6,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0" />
 	<meta charset="utf-8">
 	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-	<!-- Libraries -->
 	<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
 	<script type="text/javascript" src="gestures.js"></script>
-	<link rel="stylesheet" href="jquery.mobile-1.1.0.min.css" />
-	<script type="text/javascript" src="jquery.mobile-1.1.0.min.js"></script>
-	<script type="text/javascript" src="localstoragedb.min.js"></script>
-	
-	<!-- other -->
 	<script type="text/javascript" src="script.js"></script>
+
 	<link rel="stylesheet" href="style.css" />
-	
-    <script type="text/javascript" charset="utf-8" src="cordova-1.5.0.js"></script>
-    <script type="text/javascript" charset="utf-8">
-
-	function onBodyLoad() {		
-	     if (typeof navigator.device == "undefined"){
-	         document.addEventListener("deviceready", PhoneGapReady, false);
-	     } else {
-	     	PhoneGapReady();
-	     }
-	     onDeviceReady();
-	}
-
-    </script>
 
 </head> 
 	
-<body onload="onBodyLoad();">
+<body onload="onBodyLoad()">
 
-<!-- Start of gesuture page -->
-<div data-role="page" id="pgGesture" data-theme="a" class="ui-page-active">
-	
-	<div data-role="header" data-position="inline" id="mainheader" style="height: 42px !important; overflow: hidden;">
-		<div style="float:left; text-align: left; width: 70%">
-			<a data-role="none" data-enhance="false" style="background-image: url('images/rewind.png');" id="btnRewind" class="opaqueicon"></a>
-			<a data-role="none" data-enhance="false" style="background-image: url('images/play.png'); " id="btnPlay" class="opaqueicon"></a>
-			<a data-role="none" data-enhance="false" style="background-image: url('images/pause.png'); " id="btnPause" class="opaqueicon"></a>
-			<a data-role="none" data-enhance="false" style="background-image: url('images/stop.png');" id="btnStop" class="opaqueicon"></a>
-			<a data-role="none" data-enhance="false" style="background-image: url('images/forward.png');" id="btnForward" class="opaqueicon"></a>
+	<div id="top">
+		<div class="left control" id="btnCommands"></div>
+		<div class="head" id="header">
+			<p class="bold" id="txtRoom">&nbsp;</p>
+			<p class="grey" id="txtDevice">&nbsp;</p>
 		</div>
-		<div style="float:right; text-align: right; width: 30%">	
-			<a data-role="none" data-enhance="false" style="background-image: url('images/power.png'); float: right" id="btnPower" class="opaqueicon"></a>
-			<a data-role="none" data-enhance="false" style="background-image: url('images/volume2.png'); float: right" id="btnVolume" class="opaqueicon"></a>
-		</div>
-		<div id="seekbarContainer" style="clear:both; display:none">
-			<div class="timespanleft" id="timespanleft">&nbsp;</div>
-				<div class="slider" id="sliderbar">
-					<div class="sliderh" id="sliderh"></div>        
-					<div id="seekto"></div>
+		<div class="right control" id="btnTitles"></div>
+	</div>
+
+	<div id="container">
+		<div id="card">
+		  <div id="frontFace" class="front face">
+				<div class="toptrans">
+					<div class="seekbarContainer">
+						<p id='NowPlayingTitle'>&nbsp;</p>
+						<div class="timespanleft" id="timespanleft">0:00</div>
+							<div class="slider" style="width: 69%" >
+								<div class="sliderh" id='timebar'></div>        
+								<div class="seekto" id='timeseek'></div>
+							</div>
+						<div class="timespanright" id="timespanright">-1:00</div>
+
+						<div class="left emoji" id="btnNumberPad" style="display:none"  >🔢</div>
+						<div class="right emoji" id="btnConfig" style="display:none" >🔧</div>
+					</div>
 				</div>
-			<div class="timespanright" id="timespanright">&nbsp;</div>
+				<div id="bgPic" class="noart">
+				</div>
+				<div id="gestureCallback">
+
+				</div>
+		  		<canvas id="gestures_canvas"></canvas>
+		  </div>
+		  <div id="backFace" class="back face center">
+
+		  </div>
 		</div>
-		<span class="ui-title" />
 	</div>
 	
-
-
-
 	
-	<p id="txtRoom">Loading settings</p>
-	
-	<div data-role="content" id="gesturecontainer">	
-		<canvas id="gestures_canvas" style="display:none"></canvas>
-	</div><!-- /content -->
-	
-	<div data-role="footer" data-position="inline" style="" id="myfooter">	
-		<div style="height: 37px; margin-top: -37px;">
-			<p id="txtDevice">Please wait</p>
+
+	<div id="bottom">
+		<div class="five control" id="btnPower" ></div>
+		<div class="five control" id="btnRewind" ></div>
+		<div class="five control" id="btnPlay" ></div>
+		<div class="five control" id="btnForward" ></div>
+		<div class="five control" id="btnRoom" ></div>
+		<div style="clear:both">
+
+		<div class="volume control" id="btnMute" ></div>
+		<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
+			
+			<div class="slider" id="VolumeSlider" >
+				<div class="sliderh" id="VolumeSliderh" ></div>        
+				<div class="seekto" id="VolumeSliderSeek" ></div>
+			</div>
+
 		</div>
+		</div>
+	</div>
 
-		<div data-role="navbar" class="nav-glyphish-example">
-			<ul>
-				<li><a href="#pgMode" id="icoMode" data-iconpos="notext" data-icon="custom" data-transition="pop"></a></li>
-				<li><a href="#pgAction" id="icoAction" data-iconpos="notext" data-icon="custom" data-transition="pop"></a></li>
-				<li><a href="#MB|get.Groups" id="icoMovies" data-iconpos="notext" data-icon="custom" data-transition="pop"></a></li>
-			</ul>
-		</div><!-- /navbar -->
-		
-	</div><!-- /footer -->
-	
-</div><!-- /page -->
+	<form style="display:none;" id="frmNumPad" onsubmit="" >
+		<input type="tel" id="NumPad" value="">
+		<input type="submit" value="OK" />  
+	</form>
 
-
-<!-- Start of modes page -->
-<div data-role="page" id="pgMode" data-add-back-btn="true" data-loaded="false">
-	<div data-role="header">
-		<h1>Mode</h1>
-	</div><!-- /header -->
-
-	<div data-role="content" id="ModeList">	
+	<form style="display:none;" id="frmRoom" onsubmit="" >
+		<select id="lstRooms">
 				
-	</div><!-- /content -->
-</div><!-- /page -->
+		</select>
+		<input type="submit" value="OK" />  
+	</form>	
 
-<!-- Start of Action page -->
-<div data-role="page" id="pgAction" data-add-back-btn="true">
-	<div data-role="header" data-add-back-btn="true">
-		<h1>Actions</h1>
-	</div><!-- /header -->
-	
-		<div data-role="content">	
-			<div id="numpadcontainer" style="display:none;" >
-				<button data-role="button" onclick="showNumPad()">Number Pad</button>
-				<form style="display:none;" id="frmNumPad" onsubmit="" >
-					<input type="tel" id="NumPad" value="">
-					<input type="submit" value="OK" />  
-				</form>
-			</div>
+	<div style="display:none" id="tmpSpinner">
+	  <div class="spincontainer">
+	    <div class="spinner">
+	      Loading Data...
+	    </div>
+	  </div>
+	</div>
+	<div style="display:none" id='Filter'>
+		<div class="searchContainer">
+			<form id="searchform" class="searchform">
+				<span class="icon-search"></span>
+				<label>
+					<input type="text" class="searcher" placeholder="Filter Items...">
+				</label>
+			</form>
+
+			<div class="dtv left emoji">⭐</div>
+			<div class="dtv right emoji">📅</div>
+
+			<div class="mce left emoji" id="btnGuidedNavigation">👋</div>
+			<div class="mce right emoji" id="btnSortDate">📅</div>
 		</div>
+	</div>
 
-		<div data-role="content">	
-			<div class="content-primary" id="ActionList">
-	
-			</div>
-		</div><!-- /content -->
-
-</div><!-- /page -->
-
-<!-- Start of playdialog page -->
-<div data-role="page" id="playdialog" data-add-back-btn="true">
-
-</div><!-- /page -->
-
-<input type="hidden" id="lastSeen" value="" />
+  
 </body>
 
 </html>

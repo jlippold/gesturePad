@@ -21,15 +21,15 @@
 //  MainViewController.h
 //  gesturePad
 //
-//  Created by Some Dood on 5/2/12.
-//  Copyright __MyCompanyName__ 2012. All rights reserved.
+//  Created by ___FULLUSERNAME___ on ___DATE___.
+//  Copyright ___ORGANIZATIONNAME___ ___YEAR___. All rights reserved.
 //
 
 #import "MainViewController.h"
 
 @implementation MainViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -38,7 +38,7 @@
     return self;
 }
 
-- (void)didReceiveMemoryWarning
+- (void) didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -48,23 +48,138 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    // Set the main view to utilize the entire application frame space of the device.
+    // Change this to suit your view's UI footprint needs in your application.
+    self.view.frame = [[UIScreen mainScreen] applicationFrame];
+    
+    [super viewWillAppear:animated];
 }
 
-- (void)viewDidUnload
+
+- (void) viewDidLoad
+{
+
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+        
+    
+}
+
+- (void) viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return [super shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+}
+
+/* Comment out the block below to over-ride */
+/*
+- (CDVCordovaView*) newCordovaViewWithFrame:(CGRect)bounds
+{
+    return[super newCordovaViewWithFrame:bounds];
+}
+*/
+
+/* Comment out the block below to over-ride */
+/*
+#pragma CDVCommandDelegate implementation
+
+- (id) getCommandInstance:(NSString*)className
+{
+	return [super getCommandInstance:className];
+}
+
+- (BOOL) execute:(CDVInvokedUrlCommand*)command
+{
+	return [super execute:command];
+}
+
+- (NSString*) pathForResource:(NSString*)resourcepath;
+{
+	return [super pathForResource:resourcepath];
+}
+ 
+- (void) registerPlugin:(CDVPlugin*)plugin withClassName:(NSString*)className
+{
+    return [super registerPlugin:plugin withClassName:className];
+}
+*/
+
+#pragma UIWebDelegate implementation
+
+- (void) webViewDidFinishLoad:(UIWebView*) theWebView 
+{
+     // only valid if ___PROJECTNAME__-Info.plist specifies a protocol to handle
+     if (self.invokeString)
+     {
+        // this is passed before the deviceready event is fired, so you can access it in js when you receive deviceready
+		NSLog(@"DEPRECATED: window.invokeString - use the window.handleOpenURL(url) function instead, which is always called when the app is launched through a custom scheme url.");
+        NSString* jsString = [NSString stringWithFormat:@"var invokeString = \"%@\";", self.invokeString];
+        [theWebView stringByEvaluatingJavaScriptFromString:jsString];
+     }
+     
+     // Black base color for background matches the native apps
+     theWebView.backgroundColor = [UIColor blackColor];
+
+	return [super webViewDidFinishLoad:theWebView];
+}
+
+/* Comment out the block below to over-ride */
+
+
+- (void) webViewDidStartLoad:(UIWebView*)theWebView 
+{
+	return [super webViewDidStartLoad:theWebView];
+}
+
+- (void) webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error 
+{
+	return [super webView:theWebView didFailLoadWithError:error];
+}
+
+- (BOOL) webView:(UIWebView*)theWebView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    NSString *url = [[request URL] absoluteString];
+    
+    static NSString *urlPrefix = @"http://";
+
+    NSLog(@"This is it: %@",url);
+    
+    if ([url hasPrefix:urlPrefix]) {
+        NSString *paramsString = [url substringFromIndex:[urlPrefix length]];
+        NSArray *paramsArray = [paramsString componentsSeparatedByString:@"&"];
+        int paramsAmount = [paramsArray count];
+        
+        for (int i = 0; i < paramsAmount; i++) {
+            NSArray *keyValuePair = [[paramsArray objectAtIndex:i] componentsSeparatedByString:@"="];
+            NSString *key = [keyValuePair objectAtIndex:0];
+            NSString *value = nil;
+            if ([keyValuePair count] > 1) {
+                value = [keyValuePair objectAtIndex:1];
+            }
+            
+            if (key && [key length] > 0) {
+                if (value && [value length] > 0) {
+            
+                }
+            }
+        }
+        
+        return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
+    }
+    else {
+        return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
+    }
+    
+	//return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
 }
 
 @end

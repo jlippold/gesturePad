@@ -16,30 +16,31 @@ jQuery.gestures = {};
   
   
   function exec(chain) {
+  
     if (chain.length && retGesture) {
-    	//console.log(xStart, xEnd,  yStart, yEnd);
-    	var toReturn = chain.join('.')
-    	if (toReturn == "R") {
-    		if ((xEnd - xStart) > LongSwipeThreshold ) {
-    			toReturn = "LS" + toReturn;
-    		}
-    	}
-    	if (toReturn == "L") {
-    		if ((xStart - xEnd) > LongSwipeThreshold ) {
-    			toReturn = "LS" + toReturn;
-    		}
-    	}
-    	if (toReturn == "U") {
-    		if ((yStart - yEnd) > LongSwipeThreshold ) {
-    			toReturn = "LS" + toReturn;
-    		}
-    	}
-    	if (toReturn == "D") {
-    		if ((yEnd-yStart) > LongSwipeThreshold ) {
-    			toReturn = "LS" + toReturn;
-    		}
-    	}
-		retGesture(fingers + "." + toReturn );
+      //console.log(xStart, xEnd,  yStart, yEnd);
+      var toReturn = chain.join('.')
+      if (toReturn == "R") {
+        if ((xEnd - xStart) > LongSwipeThreshold ) {
+          toReturn = "LS" + toReturn;
+        }
+      }
+      if (toReturn == "L") {
+        if ((xStart - xEnd) > LongSwipeThreshold ) {
+          toReturn = "LS" + toReturn;
+        }
+      }
+      if (toReturn == "U") {
+        if ((yStart - yEnd) > LongSwipeThreshold ) {
+          toReturn = "LS" + toReturn;
+        }
+      }
+      if (toReturn == "D") {
+        if ((yEnd-yStart) > LongSwipeThreshold ) {
+          toReturn = "LS" + toReturn;
+        }
+      }
+    retGesture(fingers + "." + toReturn );
     }
   }
 
@@ -57,43 +58,46 @@ jQuery.gestures = {};
   }
 
   function drawline(previous,cur) {
-  	isTap = false;
+    //console.log(previous);
+    isTap = false;
     var context = document.getElementById('gestures_canvas').getContext('2d');
-	context.strokeStyle = "#bae1ff";
-	context.lineCap = "round";
-	context.lineJoin = "round";
-	context.shadowColor = 'rgba(169,236,255,0.1)';
-	context.shadowOffsetX = 0;
-	context.shadowOffsetY = 2;
-	context.shadowBlur = 10; 
-	context.lineWidth = 4;
+    context.strokeStyle = "#bae1ff";
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.shadowColor = 'rgba(169,236,255,0.1)';
+    context.shadowOffsetX = 0;
+    context.shadowOffsetY = 2;
+    context.shadowBlur = 10; 
+    context.lineWidth = 4;
     context.beginPath();
-    context.moveTo(previous.x,previous.y);
-    context.lineTo(cur.x,cur.y);
+    var off = $("#gestures_canvas").offset().top;
+
+    context.moveTo(previous.x,  previous.y - off);
+    context.lineTo(cur.x, cur.y - off);
     context.closePath();
     context.stroke();
     
     if (xStart == 0) {
-    	xStart = previous.x;
+      xStart = previous.x;
     }
-    if (yStart == 0) {
-    	yStart = previous.y;
+    if (yStart- off == 0) {
+      yStart = previous.y- off;
     }
     
-	xEnd = previous.x;
-	yEnd = previous.y;
+    xEnd = previous.x;
+    yEnd = previous.y- off;
   }
 
   function setup() {
     if(active) {
       recording=false;
       chain=[];
-      	//clear canvas
-      	var context = document.getElementById('gestures_canvas').getContext('2d');
-		context.save();
-		context.setTransform(1, 0, 0, 1, 0, 0);
-		context.clearRect(0, 0, canvas.width(), canvas.height());
-		context.restore();
+        //clear canvas
+        var context = document.getElementById('gestures_canvas').getContext('2d');
+        context.save();
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        context.clearRect(0, 0, canvas.width(), canvas.height());
+        context.restore();
     }
   }
 
@@ -105,42 +109,44 @@ jQuery.gestures = {};
     // capturing gestures
     $(canvas).bind("mousedown touchstart", function (e) {
 
-		if (e.currentTarget.id != "gestures_canvas") {
-			return ;	
-		}
-    	chain=[];
-		xStart = 0;
-		xEnd = 0;
-		yStart = 0;
-		yEnd = 0;
+    if (e.currentTarget.id != "gestures_canvas") {
+      return ;  
+    }
+      chain=[];
+    xStart = 0;
+    xEnd = 0;
+    yStart = 0;
+    yEnd = 0;
   
-	    $.gestures.enable();
+      $.gestures.enable();
         if (active) {
           recording=true;
           if (e.type == "mousedown") {
-          	previous={x:e.clientX,y:e.clientY}
-      	  } else {
-      	  	previous={x:e.originalEvent.pageX,y:e.originalEvent.pageY}	
-      	  	fingers = e.originalEvent.touches.length;
-	    	isTap = true;
-      	  }
+            previous={x:e.clientX,y:e.clientY  }
+          } else {
+            previous={x:e.originalEvent.pageX,y:e.originalEvent.pageY}  
+            fingers = e.originalEvent.touches.length;
+        isTap = true;
+          }
+          
         }
       });
      
     $(canvas).bind("mousemove touchmove", function (e) {
 
-		if (e.currentTarget.id != "gestures_canvas") {
-			return;	
-		}
+          if (e.currentTarget.id != "gestures_canvas") {
+            return; 
+          }
+
 
         if(active && recording) {
-        	
+          console.log("Curr" + e.clientY)
           if (e.type == "mousemove") {
-          	var pos = {x:e.clientX,y:e.clientY};
-      	  } else {
-      	  	var pos = {x:e.originalEvent.pageX,y:e.originalEvent.pageY};
-      	  }
-      	  
+            var pos = {x:e.clientX,y:e.clientY};
+          } else {
+            var pos = {x:e.originalEvent.pageX,y:e.originalEvent.pageY};
+          }
+          
           
           drawline(previous, pos);
           var mv = get_last_move(previous, pos);
@@ -151,46 +157,46 @@ jQuery.gestures = {};
           }
           
           if (e.type == "mousemove") {
-          	previous={x:e.clientX,y:e.clientY}
-      	  } else {
-      	  	previous={x:e.originalEvent.pageX,y:e.originalEvent.pageY}
-      	  }
+            previous={x:e.clientX,y:e.clientY}
+          } else {
+            previous={x:e.originalEvent.pageX,y:e.originalEvent.pageY}
+          }
         }
         
-    	e.preventDefault();
-    	return false;
+      e.preventDefault();
+      return false;
       });
       
     $(canvas).bind("mouseup touchend", function (e) {
-		if (e.currentTarget.id != "gestures_canvas") {
-			return ;	
-		}
-    	
-    	if(active && recording) {
-	    	if (isTap) {
-	    		node = $(this);
-		        tapcount++;
-		        if (tapcount == 1) {
-		          setTimeout(function() {
-		            if(tapcount == 1) {
-						var c = [];
-				    	c.push("Tap");
-						exec(c);	
-		            } else {
-						var c = [];
-				    	c.push("DblTap");
-						exec(c);	
-		            }
-		            tapcount = 0;
-		          }, 300);
-		        }   
-	    	} else {
-		          var c = chain;
-		          setup();
-		          exec(c);
-		          return;
-	    	}
-    	}
+    if (e.currentTarget.id != "gestures_canvas") {
+      return ;  
+    }
+      
+      if(active && recording) {
+        if (isTap) {
+          node = $(this);
+            tapcount++;
+            if (tapcount == 1) {
+              setTimeout(function() {
+                if(tapcount == 1) {
+            var c = [];
+              c.push("Tap");
+            exec(c);  
+                } else {
+            var c = [];
+              c.push("DblTap");
+            exec(c);  
+                }
+                tapcount = 0;
+              }, 300);
+            }   
+        } else {
+              var c = chain;
+              setup();
+              exec(c);
+              return;
+        }
+      }
 
       });
 
@@ -204,3 +210,6 @@ jQuery.gestures = {};
   $.gestures.disable = function () { active = false; $(canvas).hide(); }
   $.gestures.active = function () { return active; }
 })(jQuery)
+
+
+

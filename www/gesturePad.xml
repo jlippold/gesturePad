@@ -1,6 +1,4 @@
-<!-- http://192.168.1.120:8080/tv/getTuned -->
-
-
+<!-- gesture Pad config  -->
 
 <gesturePad>
 
@@ -18,35 +16,35 @@
 
 			<name>Living Room</name>
 
-			<device shortname='MetaB' quickswitch='true' timeshift='true'>
+			<device shortname='MCE' quickswitch='true' timeshift='true'>
 
-				<name>Movies</name>
+				<name>Media Center</name>
 
-				<baseurl>http://192.168.1.119:7000/mce/192.168.1.105/</baseurl> 
+				<IPAddress>192.168.1.105</IPAddress> 
+
+				<Port>80</Port> 
+
+				<ServicePort>8092</ServicePort> 
+
 
 			</device>
 			
 			<device shortname='DTV' quickswitch='true' timeshift='false'>
 
-				<name>TV</name>
+				<name>DirecTV</name>
 
-				<baseurl>http://192.168.1.120:8080/</baseurl>
+				<IPAddress>192.168.1.120</IPAddress> 
 
-			</device>
-
-			<device shortname='EVG' quickswitch='false' timeshift='false'>
-
-				<name>EventGhost</name>
-
-				<baseurl>http://192.168.1.105/</baseurl>
+				<Port>8080</Port> 
 
 			</device>
 
-			<roomgestures> <!-- gestures that run independant of current device -->
 
-				<gesture definition='foobar'>	  
+			<roomgestures> <!-- gestures that run globally / independant of current device -->
 
-					<device shortname='EVG'>
+				<gesture definition='nothing'>	  
+
+					<device shortname='MCE'>
 
 						<command>
 
@@ -60,7 +58,7 @@
 				
 				<gesture definition='1.U.R'>	  
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -74,7 +72,7 @@
 
 				<gesture definition='1.U.L'>	  
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -88,7 +86,7 @@
 
 				<gesture definition='2.Tap'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -102,7 +100,7 @@
 				
 				<gesture definition='1.U.R.D.L'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -116,7 +114,7 @@
 				
 				<gesture definition='1.U.R.L'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -127,24 +125,10 @@
 					</device>
 
 				</gesture>	 
-				
-				<gesture definition='3.Tap'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Power</name>
-
-						</command>
-
-					</device>
-
-				</gesture>	   
 
 				<gesture definition='1.U.D.U.D'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE' switchesto='MCE' >
 
 						<command>
 
@@ -158,261 +142,54 @@
 
 				<gesture definition='1.D.L.U.R'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE' switchesto='DTV'>
 
 						<command>
 
-							<name>TV</name>
+							<name>DirecTV</name>
 
 						</command>
 
 					</device>
 
 				</gesture>	    
-								
-				<gesture definition='1.U.R.D.L.R.D'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Restart PC</name>
-
-						</command>
-
-					</device>
-
-				</gesture> 
 
 			</roomgestures>
-
 		</room>
 
 		<room roomshortname='BR'>
-			
+
 			<name>Bedroom</name>
-			
-			<device shortname='MetaB' quickswitch='true' timeshift='true'>
 
-				<name>Movies</name>
+			<device shortname='MCE' quickswitch='true' timeshift='true'>
 
-				<baseurl>http://192.168.1.119:7000/mce/192.168.1.144/</baseurl>
+				<name>Media Center</name>
 
-			</device>
-			
-			
+				<IPAddress>192.168.1.144</IPAddress> 
 
-			<device shortname='DTV' quickswitch='true' timeshift='false'>
+				<Port>80</Port> 
 
-				<name>TV</name>
+				<ServicePort>8092</ServicePort> 
 
-				<baseurl>http://192.168.1.123:8080/</baseurl>
-
-			</device>
-			
-
-			<device shortname='EVG' quickswitch='false' timeshift='false'>
-
-				<name>EventGhost</name>
-
-				<baseurl>http://192.168.1.144/</baseurl>
-
-			</device>
-
-			<roomgestures> <!-- gestures that run independant of current device -->
-
-				<gesture definition='foobar'>	  
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Mute</name>
-
-						</command>
-
-					</device>
-
-				</gesture>
-				
-				<gesture definition='foobar'>	  
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Search</name>
-
-						</command>
-
-					</device>
-
-				</gesture>
-				
-				<gesture definition='1.U.R'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>VolumeUp</name>
-
-						</command>
-
-					</device>
-
-				</gesture>
-				
-				<gesture definition='1.U.R.D.L.R.D'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Restart PC</name>
-
-						</command>
-
-					</device>
-
-				</gesture>
-
-				<gesture definition='1.U.L'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>VolumeDown</name>
-
-						</command>
-
-					</device>
-
-				</gesture>
-
-				<gesture definition='2.Tap'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Power</name>
-
-						</command>
-
-					</device>
-
-				</gesture>	 
-				
-				<gesture definition='1.U.R.D.L'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Power</name>
-
-						</command>
-
-					</device>
-
-				</gesture>	    
-				
-				<gesture definition='1.U.R.L'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Power</name>
-
-						</command>
-
-					</device>
-
-				</gesture>	 
-				
-				<gesture definition='3.Tap'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Power</name>
-
-						</command>
-
-					</device>
-
-				</gesture>     
-
-				<gesture definition='1.U.D.U.D'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Media Center</name>
-
-						</command>
-
-					</device>
-
-				</gesture>	      
-
-				<gesture definition='1.D.L.U.R'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>TV</name>
-
-						</command>
-
-					</device>
-
-				</gesture>	      
-
-			</roomgestures>
-
-		</room>
-
-		<room roomshortname='KT'>
-
-			<name>Kitchen</name>
-			
-			<device shortname='MetaB' quickswitch='true' timeshift='true'>
-
-				<name>Movies</name>
-
-				<baseurl>http://192.168.1.119:7000/mce/192.168.1.134/</baseurl> 
 
 			</device>
 			
 			<device shortname='DTV' quickswitch='true' timeshift='false'>
 
-				<name>TV</name>
+				<name>DirecTV</name>
 
-				<baseurl>http://192.168.1.149:8080/</baseurl>
+				<IPAddress>192.168.1.123</IPAddress> 
 
-			</device>
-			
-
-			<device shortname='EVG' quickswitch='false' timeshift='false'>
-
-				<name>EventGhost</name>
-
-				<baseurl>http://192.168.1.134/</baseurl>
+				<Port>8080</Port> 
 
 			</device>
 
-			<roomgestures> <!-- gestures that run independant of current device -->
 
-				<gesture definition='foobar'>	  
+			<roomgestures> <!-- gestures that run globally / independant of current device -->
 
-					<device shortname='EVG'>
+				<gesture definition='nothing'>	  
+
+					<device shortname='MCE'>
 
 						<command>
 
@@ -426,7 +203,7 @@
 				
 				<gesture definition='1.U.R'>	  
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -440,7 +217,7 @@
 
 				<gesture definition='1.U.L'>	  
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -454,7 +231,7 @@
 
 				<gesture definition='2.Tap'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -464,11 +241,11 @@
 
 					</device>
 
-				</gesture>     
+				</gesture>	     
 				
 				<gesture definition='1.U.R.D.L'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -478,25 +255,11 @@
 
 					</device>
 
-				</gesture>	      
-				
-				<gesture definition='3.Tap'>	
-
-					<device shortname='EVG'>
-
-						<command>
-
-							<name>Power</name>
-
-						</command>
-
-					</device>
-
-				</gesture>     
+				</gesture>	  
 				
 				<gesture definition='1.U.R.L'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE'>
 
 						<command>
 
@@ -510,7 +273,7 @@
 
 				<gesture definition='1.U.D.U.D'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE' switchesto='MCE' >
 
 						<command>
 
@@ -520,15 +283,146 @@
 
 					</device>
 
-				</gesture>		
+				</gesture>	      
 
 				<gesture definition='1.D.L.U.R'>	
 
-					<device shortname='EVG'>
+					<device shortname='MCE' switchesto='DTV'>
 
 						<command>
 
-							<name>TV</name>
+							<name>DirecTV</name>
+
+						</command>
+
+					</device>
+
+				</gesture>	    
+
+			</roomgestures>
+		</room>
+
+		<room roomshortname='KT'>
+
+			<name>Kitchen</name>
+
+			<device shortname='MCE' quickswitch='true' timeshift='true'>
+
+				<name>Media Center</name>
+
+				<IPAddress>192.168.1.134</IPAddress> 
+
+				<Port>80</Port> 
+
+				<ServicePort>8092</ServicePort> 
+
+
+			</device>
+			
+			<device shortname='DTV' quickswitch='true' timeshift='false'>
+
+				<name>DirecTV</name>
+
+				<IPAddress>192.168.1.149</IPAddress> 
+
+				<Port>8080</Port> 
+
+			</device>
+
+
+			<roomgestures> <!-- gestures that run globally / independant of current device -->
+
+				<gesture definition='nothing'>	  
+
+					<device shortname='MCE'>
+
+						<command>
+
+							<name>Mute</name>
+
+						</command>
+
+					</device>
+
+				</gesture>
+				
+				<gesture definition='1.U.R'>	  
+
+					<device shortname='MCE'>
+
+						<command>
+
+							<name>VolumeUp</name>
+
+						</command>
+
+					</device>
+
+				</gesture>
+
+				<gesture definition='1.U.L'>	  
+
+					<device shortname='MCE'>
+
+						<command>
+
+							<name>VolumeDown</name>
+
+						</command>
+
+					</device>
+
+				</gesture>
+
+				<gesture definition='2.Tap'>	
+
+					<device shortname='MCE'>
+
+						<command>
+
+							<name>Power</name>
+
+						</command>
+
+					</device>
+
+				</gesture>	     
+				
+				<gesture definition='1.U.R.D.L'>	
+
+					<device shortname='MCE'>
+
+						<command>
+
+							<name>Power</name>
+
+						</command>
+
+					</device>
+
+				</gesture>	  
+				
+				<gesture definition='1.U.R.L'>	
+
+					<device shortname='MCE'>
+
+						<command>
+
+							<name>Power</name>
+
+						</command>
+
+					</device>
+
+				</gesture>	 
+
+				<gesture definition='1.U.D.U.D'>	
+
+					<device shortname='MCE' switchesto='MCE' >
+
+						<command>
+
+							<name>Media Center</name>
 
 						</command>
 
@@ -536,30 +430,200 @@
 
 				</gesture>	      
 
+				<gesture definition='1.D.L.U.R'>	
+
+					<device shortname='MCE' switchesto='DTV'>
+
+						<command>
+
+							<name>DirecTV</name>
+
+						</command>
+
+					</device>
+
+				</gesture>	    
+
 			</roomgestures>
 		</room>
-
 	</rooms>
-
-
 
 	<devices>
 
-		<device shortname='MetaB' useNumberPad="true">
+		<device shortname='MCE' useNumberPad="true">
 
-			<name>Movies</name>
-
-			<numberpad>
-
-				<method>GET</method>					
-
-				<dataType>xml</dataType>
-
-				<addtobaseurl>num</addtobaseurl>
-
-			</numberpad>
+			<name>Media Center</name>
 
 			<commands>
+
+				<category>
+
+					<name>Inputs</name>
+
+					<command>
+
+						<name>Media Center</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[Switch_MCE]]></data>				
+
+							<dataType>text</dataType>
+
+							<onCompleteSetDevice shortname='MCE'>Movies</onCompleteSetDevice>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>DirecTV</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[Switch_TV]]></data>			      
+
+							<dataType>text</dataType>
+
+							<onCompleteSetDevice shortname='DTV'>Television</onCompleteSetDevice>
+
+						</action>
+
+					</command>
+
+				</category>
+
+				<category>
+
+					<name>Television</name>
+
+					<command>
+
+						<name>Power</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[TV_Power]]></data>				
+
+							<dataType>text</dataType>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>Mute</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[Volume_Mute]]></data>			      
+
+							<dataType>text</dataType>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>VolumeUp</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[Volume_Up]]></data>			      
+
+							<dataType>text</dataType>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>VolumeDown</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[Volume_Down]]></data>			      
+
+							<dataType>text</dataType>
+
+						</action>
+
+					</command>
+
+				</category>
+
+				<category>
+
+					<name>Computer</name>
+
+					<command>
+
+						<name>Restart PC</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[Restart_PC]]></data>				
+
+							<dataType>text</dataType>
+
+						</action>
+						
+						<gesture definition='1.U.R.D.L.R.D' />
+
+					</command>
+
+					<command>
+
+						<name>Restart MCE</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[Restart_MCE]]></data>			      
+
+							<dataType>text</dataType>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>Green Button</name>
+
+						<action>
+
+							<dataType>text</dataType>
+
+							<method>GET</method>
+
+							<data><![CDATA[GreenButton]]></data>	
+
+						</action>
+
+					</command>
+
+				</category>
+
 
 				<category>
 
@@ -571,11 +635,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>up</addtobaseurl>
+							<data><![CDATA[Up]]></data>	
 
 						</action>
 
@@ -589,11 +653,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>down</addtobaseurl>
+							<data><![CDATA[Down]]></data>	
 
 						</action>
 
@@ -607,11 +671,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>left</addtobaseurl>
+							<data><![CDATA[Left]]></data>	
 
 						</action>
 
@@ -625,11 +689,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>right</addtobaseurl>
+							<data><![CDATA[Right]]></data>	
 
 						</action>
 
@@ -643,11 +707,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>ok</addtobaseurl>
+							<data><![CDATA[Ok]]></data>	
 
 						</action>
 
@@ -661,11 +725,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>back</addtobaseurl>
+							<data><![CDATA[Back]]></data>	
 
 						</action>
 
@@ -679,11 +743,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>channeldown</addtobaseurl>
+							<data><![CDATA[ChannelDown]]></data>	
 
 						</action>
 
@@ -699,103 +763,17 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>channelup</addtobaseurl>
+							<data><![CDATA[ChannelUp]]></data>	
 
 						</action>
 
 						<gesture definition='1.LSL' />
 
 						<gesture definition='1.LSD' />
-
-					</command>
-
-				</category>
-
-				<category>
-
-					<name>Entry Points</name>
-
-					<command>
-
-						<name>Home</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>greenbutton</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>My Music</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>music</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>My Pictures</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>pictures</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Live TV</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>tvlive</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Recorded TV</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>tvrecorded</addtobaseurl>
-
-						</action>
 
 					</command>
 
@@ -811,15 +789,15 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>play</addtobaseurl>
+							<data><![CDATA[Play]]></data>	
 
 						</action>
 
-						<gesture definition='1.U.D' />
+
 
 					</command>
 
@@ -829,15 +807,14 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>pause</addtobaseurl>
+							<data><![CDATA[Pause]]></data>	
 
 						</action>
 
-						<gesture definition='1.D.U' />
 
 					</command>
 
@@ -847,11 +824,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>stop</addtobaseurl>
+							<data><![CDATA[Stop]]></data>
 
 						</action>
 						
@@ -865,11 +842,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>skipforward</addtobaseurl>
+							<data><![CDATA[SkipForward]]></data>
 
 						</action>
 
@@ -883,11 +860,11 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>skipback</addtobaseurl>
+							<data><![CDATA[SkipBack]]></data>
 
 						</action>
 
@@ -895,335 +872,9 @@
 
 					</command>
 
-					<command>
-
-						<name>VolumeUp</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>volumeup</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>VolumeDown</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>volumedown</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>FastForward</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>ff</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>FastForward 1X</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>ff1</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>FastForward 2X</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>ff2</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>FastForward 3X</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>ff3</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Rewind</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>rewind</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Rewind 1X</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>rewind1</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Rewind 2X</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>rewind2</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Rewind 3X</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>rewind3</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Slow Motion 1</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>slowmotion1</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Slow Motion 2</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>slowmotion2</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Slow Motion 3</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>slowmotion3</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					
-
-					<command>
-
-						<name>DVD Menu</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>dvdmenu</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>DVD Audio</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>dvdaudio</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>DVD Subtitle</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>dvdsubtitle</addtobaseurl>
-
-						</action>
-
-					</command>
 
 				</category>
 
-				<category>
-
-					<name>LiveTV</name>
-
-					<command>
-
-						<name>Channel Up</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>channelup</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Channel Down</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>channeldown</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Record</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>record</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>CC</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>cc</addtobaseurl>
-
-						</action>
-
-					</command>
-
-				</category>
 
 				<category>
 
@@ -1231,47 +882,15 @@
 
 					<command>
 
-						<name>Full Screen</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>fullscreen</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Green Button</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>greenbutton</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
 						<name>Info</name>
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>info</addtobaseurl>
+							<data><![CDATA[Info]]></data>
 
 						</action>
 
@@ -1283,59 +902,28 @@
 
 						<action>
 
-							<dataType>xml</dataType>
+							<dataType>text</dataType>
 
 							<method>GET</method>
 
-							<addtobaseurl>star</addtobaseurl>
+							<data><![CDATA[Star]]></data>
 
 						</action>
 						
 						<gesture definition='1.L.D.R.D.L' />
 						<gesture definition='1.D.U.D.U' />
-					</command>
-
-					<command>
-
-						<name>Clear</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>clear</addtobaseurl>
-
-						</action>
 
 					</command>
 
-					<command>
-
-						<name>Zoom</name>
-
-						<action>
-
-							<dataType>xml</dataType>
-
-							<method>GET</method>
-
-							<addtobaseurl>zoom</addtobaseurl>
-
-						</action>
-
-					</command>
 
 				</category>
-
 			</commands>
 
-		</device>	
+		</device>
 
 		<device shortname='DTV' useNumberPad="true">
 
-			<name>TV</name>
+			<name>DirecTV</name>
 
 			<numberpad>
 
@@ -1352,6 +940,46 @@
 				<category>
 
 					<name>Navigation</name>
+
+					<command>
+
+						<name>Channel Up</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[key=chanup]]></data> 				      
+
+							<dataType>json</dataType>
+
+							<addtobaseurl>remote/processKey</addtobaseurl>
+
+						</action>
+
+						<gesture definition='1.U.D' />
+
+					</command>
+
+					<command>
+
+						<name>Channel Down</name>
+
+						<action>
+
+							<method>GET</method>
+
+							<data><![CDATA[key=chandown]]></data> 				      
+
+							<dataType>json</dataType>
+
+							<addtobaseurl>remote/processKey</addtobaseurl>
+
+						</action>
+
+						<gesture definition='1.D.U' />
+
+					</command>
 
 					<command>
 
@@ -1892,185 +1520,6 @@
 			</commands>
 
 		</device>
-
-		<device shortname='EVG'  useNumberPad="false">
-
-			<name>EventGhost</name>
-
-			<commands>
-
-				<category>
-
-					<name>Switch Inputs</name>
-
-					<command>
-
-						<name>Media Center</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[Switch_MCE]]></data>				
-
-							<dataType>text</dataType>
-
-							<onCompleteSetDevice shortname='MetaB'>Movies</onCompleteSetDevice>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>TV</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[Switch_TV]]></data>			      
-
-							<dataType>text</dataType>
-
-							<onCompleteSetDevice shortname='DTV'>TV</onCompleteSetDevice>
-
-						</action>
-
-					</command>
-					
-					<command>
-
-						<name>Search</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[MB_Search]]></data>			      
-
-							<dataType>text</dataType>
-
-						</action>
-
-					</command>
-
-				</category>
-
-				<category>
-
-					<name>Television</name>
-
-					<command>
-
-						<name>Power</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[TV_Power]]></data>				
-
-							<dataType>text</dataType>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Mute</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[Volume_Mute]]></data>			      
-
-							<dataType>text</dataType>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>VolumeUp</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[Volume_Up]]></data>			      
-
-							<dataType>text</dataType>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>VolumeDown</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[Volume_Down]]></data>			      
-
-							<dataType>text</dataType>
-
-						</action>
-
-					</command>
-
-				</category>
-
-				<category>
-
-					<name>Computer</name>
-
-					<command>
-
-						<name>Restart PC</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[Restart_PC]]></data>				
-
-							<dataType>text</dataType>
-
-						</action>
-						
-						<gesture definition='1.U.R.D.L.R.D' />
-
-					</command>
-
-					<command>
-
-						<name>Restart MCE</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[Restart_MCE]]></data>			      
-
-							<dataType>text</dataType>
-
-						</action>
-
-					</command>
-
-				</category>
-
-			</commands>
-
-		</device>
-
 		
 	</devices>
 

@@ -1,233 +1,497 @@
-var xml;
+var xml, channellist;
 var LongSwipeThreshold = 100;
 var playSounds = "true";
 var appendOncetoQueryString = "";
-
-
-function showNumPad() {
-	$("#frmNumPad").show();
-	$("#NumPad").focus();
-	$("#frmNumPad").hide();
-}
-
-function executeGestureByCommandName(command) {
-	//check if there's a global gesture for it
-	var globals = $(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > roomgestures > gesture > device > command > name:contains('" + command + "'):first")
-
-	if ( $(globals).size() == 1 ) {
-		var globalDevicetoTrigger = $(globals).parent().parent().attr("shortname");
-		$(xml).find("gesturePad > devices > device[shortname='" + globalDevicetoTrigger + "'] > commands > category > command > name:contains('" + command + "'):first").each( function(){
-				actionNodes = $(this).parent().find("action");	
-				doEvent("manual", actionNodes) 
-		});
-	} else {
-		var device = $(xml).find("gesturePad > devices > device[shortname='" + localStorage.getItem("shortname") + "'] > commands > category > command > name:contains('" + command + "'):first")
-		if ( $(device).size() == 1 ) {
-			actionNodes = $(device).next();	
-			doEvent("manual", actionNodes) 
-		}
-	}
-}
-
+var navigator;
+var npTimer;
+var inputTimer;
+var clickEventType;
 var slideTimer;
+var guide =  new Object();
+var workerTimer = null;
+var scrollstop = null;
 
-function doSlideEvent() {
-	appendOncetoQueryString = "&" + $("#seekbarContainer").attr("data-sendval");
-	executeGestureByCommandName($("#seekbarContainer").attr("data-command"));
-	$("#mainheader").trigger("click");
+function setupWorker() {
+
+	if  ( $(xml).find('gesturePad > rooms > room:first > device[shortname="DTV"]').size() == 0 ) {
+		return;
+	}
+
+	guide.channels = new Array();
+
+	//setup base structures
+	$(channellist).find('channels > channel').each(function() {
+	  	var channel = new Object();
+	  	channel.number = $(this).find("number").text() ;
+	  	channel.logo = $(this).find("logo").text();
+	  	channel.callsign = $(this).find("callsign").text();
+	  	channel.nowplaying = "";
+	  	channel.ending = 0;
+	  	channel.timeleft = "";
+		guide.channels.push( channel );
+	});
+
+	startWorker();
+}
+
+function startWorker() {
+
+	//save all dtv servers to an array
+	var dtvServers = new Array();
+	var currentServer = 0;
+
+	$(xml).find('gesturePad > rooms > room > device[shortname="DTV"]').each(function(){
+		var DTVurl = ""
+		$(this).find("IPAddress:first").each(function(){
+			DTVurl = "http://" + $(this).text()
+		});				
+		$(this).find("Port:first").each(function(){
+			DTVurl += ":" + $(this).text() + "/"
+		});		
+		dtvServers[currentServer] = DTVurl;
+		currentServer += 1;
+	});
+
+	currentServer = 0;
+ 	$.each(guide.channels, function(channelKey) { 
+ 		var c = guide.channels[channelKey];
+
+ 		//first determine if the channel needs a refresh
+ 		if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) {
+ 			c.nowplaying = "";
+ 			//pick a server
+	 		if ( currentServer > dtvServers.length-1 ) {
+	 			currentServer = 0
+	 		}
+	 
+ 			//queue the refesh on that server
+ 			refreshChannel(dtvServers[currentServer], "DTVWorker"+currentServer, channelKey);
+ 			currentServer += 1;
+ 		}
+
+
+	});
+ 	clearTimeout(workerTimer)
+	workerTimer = setTimeout( "startWorker()", 60000 );
+}
+
+function refreshChannel(server, queueName, channelKey) {
+	var c = guide.channels[channelKey];
+	$.ajaxq(queueName, {
+		url: server + 'tv/getProgInfo',
+		dataType: "json",
+		type: "GET",
+		data: 'major=' + c.number,
+		success: function(response) {
+			c.nowplaying = response.title;
+			c.timeleft = hms2( (response.startTime+response.duration) - Math.floor(new Date().getTime() / 1000)  );
+			c.ending = (response.startTime+response.duration);
+
+			if ( $("#tr"+channelKey).size() > 0 ) {
+				var row = $("#tr"+channelKey);
+				//update on screen info
+				$(row).find("td:eq(1) div").text( c.nowplaying )
+            	$(row).find("td:eq(2)").text( c.timeleft ) 
+            	$(row).attr("data-loaded", "true")
+
+			}
+
+		}
+	});
 }
 
 function onDeviceReady() {
-	
-	$.mobile.activePage = $("#pgGesture");
-	$.mobile.allowCrossDomainPages = true;
-	//$.mobile.pushStateEnabled = true;
-	$.support.cors = true;
-	
-	$("#gesturecontainer").height( $(window).height() - (51+44) );
-
-    $("#gestures_canvas").css({ position:'fixed', top:44, left:0, })
-        .attr({ height: $(window).height() - (51+44) , width: $(window).width() })
-        .show();
+    
 	$.gestures.init();
 	$.gestures.retGesture(function(gesture) {
 		doEvent(gesture);
 	});
 	
-	
-	$("#mainheader").bind("click", function() {
-		if ( $("#seekbarContainer:visible").size() > 0 ) {
-			$("#mainheader").attr("style", "height: 42px !important; overflow: hidden;");			
-			$("#seekbarContainer").hide();	
-			$("#gestures_canvas").show();
+	doResize();
+
+	clickEventType = ((document.ontouchstart!==null)?'click':'click'); //never inplemented custom tap
+
+	//event when scrolling ends to refresh dtv channels
+	$("#backFace").bind("scroll", function() {
+		if (localStorage.getItem("shortname") != "DTV") {
+			return;
 		}
+		clearTimeout(scrollstop);
+
+		var dtvServers = new Array();
+		var currentServer = 0;
+
+		$(xml).find('gesturePad > rooms > room > device[shortname="DTV"]').each(function(){
+			var DTVurl = ""
+			$(this).find("IPAddress:first").each(function(){
+				DTVurl = "http://" + $(this).text()
+			});				
+			$(this).find("Port:first").each(function(){
+				DTVurl += ":" + $(this).text() + "/"
+			});		
+			dtvServers[currentServer] = DTVurl;
+			currentServer += 1;
+		});
+
+		currentServer = 0;
+
+		if (dtvServers.length == 0 ) {
+			return;
+		}
+
+	    scrollstop = setTimeout(function() {
+
+			var threadcounter = 0;
+		    $("#backFace tr").each(function () {
+		    	var row = $(this);
+		    	if ($(row).attr("data-loaded") == "true") {
+		    		return;
+		    	}
+
+		        if ( $(row).position().top + $(row).height() > 0 && $(row).position().top < $("#backFace").height()+180 ) {  //is the row scrolled into view   
+		        	$(row).find("td:eq(1) div").text( "Loading..." )
+	            	if (threadcounter > dtvServers.length-1) {
+	            		threadcounter = 0
+	            	}
+	            	refreshChannel(dtvServers[threadcounter], "DTVImmediate" + threadcounter, $(row).attr("data-key"));
+		            threadcounter += 1;					            
+		        }
+		    });
+	    }, 100);
 	});
-	
-	$("#btnVolume").bind("click", function(event) {
-		if ( $("#seekbarContainer:visible").size() > 0 ) {
-			$("#mainheader").attr("style", "height: 42px !important; overflow: hidden;");			
-			$("#seekbarContainer").hide();	
+
+
+	/* UI buttons */
+	$("#btnTitles").bind(clickEventType, function() {
+
+		/* generic flip shit */
+		if ( localStorage.getItem("roomname") == "" || localStorage.getItem("devicename") == "" ) { //No room selected
+		    try {		        
+		        navigator.notification.alert("Please Select a Room First", null, "gesturePad");
+		    } catch (e) { }
+		    $("#btnRoom").trigger(clickEventType);
+		    return;
+		}
+
+		if ( $("#card").attr("class") == "doFlip" ) {
+			$("#card").toggleClass("doFlip");
 			$("#gestures_canvas").show();
-		} else {
-			$("#mainheader").attr("style", "height: 82px !important; overflow: hidden;");
-			$("#seekbarContainer").show();	
-			$("#gestures_canvas").hide();	
+			setTimeout(function() {
+				$("#backFace").html( "" );	
+				hideFilter()
+			}, 200)
+			return;
+		} 
+		$("#gestures_canvas").hide();
+		$("#backFace").html( $("#tmpSpinner").html() );
+		$("#card").toggleClass("doFlip");		
+		var curChannel = $("#NowPlayingTitle").attr("data-item");
+
+		if (localStorage.getItem("shortname") == "DTV") {
+			
+			//build table for channel list 
+			var tb =  "<table class='listing' style='width: " + $("#card").width() + "px !important'>"
+		 	$.each(guide.channels, function(channelKey) { 
+		 		var c = guide.channels[channelKey];
+				if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) { //needs refresh
+					tb += '<tr id="tr' + channelKey + '" data-loaded="false" data-major="' + c.number + '" data-key="' + channelKey + '"><td width="50px" ' 
+					if ( c.logo != "" ) {
+						tb += "style = 'background: url(" + c.logo + ") center no-repeat' > "  
+					} else {
+						tb += 'style="text-align: center" >' + c.number
+					}
+					tb += '</td>' +
+					'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
+					'</div></td>'+
+					'<td width="30px" style="text-align: right">0:00</td></tr>';
+
+				} else { //pull cached
+
+					tb += '<tr id="tr' + channelKey + '" data-loaded="true" data-major="' + c.number + '"><td width="50px" ' 
+					if ( c.logo != "" ) {
+						tb += "style = 'background: url(" + c.logo + ") center no-repeat' > " 
+					} else {
+						tb += 'style="text-align: center" >' + c.number
+					}
+					tb += '</td>' +
+					'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
+					c.nowplaying +
+					'</div></td>'+
+					'<td width="30px" style="text-align: right">' + c.timeleft +'</td></tr>';
+				}
+			});
+			tb += "</table>"
+
+		    $("#backFace").html( tb );
+		     
+		    checkScrollOverflow()
+		    showFilter("DTV") 
+			
+			//scroll to current channel
+			var scrollToDiv = 0
+			if ( $("#ScrollToMe").size() > 0 ) {
+				scrollToDiv = $("#ScrollToMe").position().top - ($("#card").height()/2) + 50 ;
+			}
+			$("#backFace").scrollTop( scrollToDiv );
+			//start scraping data
+			$("#backFace").trigger("scroll");
+			// trigger channel change on click
+			$("#backFace table tr").bind(clickEventType, function () {
+		        var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
+		        if ($(configNode).size() > 0) {
+		   			$("#btnTitles").trigger(clickEventType);
+		            $.getJSON("http://" + $(configNode).find("IPAddress").text() + ":" + $(configNode).find("Port").text() + '/tv/tune?major=' + $(this).attr("data-major"), function() {
+						setTimeout(function() {
+							nowPlaying();
+						}, 1500)
+		            })
+			     }
+			});
+
+		}
+
+		if (localStorage.getItem("shortname") == "MCE") {
+			/* populate it */
+
+			var MBUrl = "";
+			
+			$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname")  + '"]:first').each(function(){
+				$(this).find("IPAddress:first").each(function(){
+					MBUrl = "http://" + $(this).text()
+				});				
+				$(this).find("ServicePort:first").each(function(){
+					MBUrl += ":" + $(this).text() + "/mbwebapi/service/library"
+				});		
+			});
+			
+			if (MBUrl == "" ) {
+				MBUrl;
+			}
+
+			$.getJSON(MBUrl, function(d) {
+				var tb =  "<table class='listing' style='width: " + $("#card").width() + "px !important'>"
+				$.each(d.Data.Children, function(key, val) { 
+					tb += '<tr data-guid="' + d.Data.Children[key].Id + '" data-type="'+ d.Data.Children[key].Type +'" >'
+						+ '<td><div>' + d.Data.Children[key].Name  + '</div></td>'
+					tb += '<td width="30px" style="text-align: right">' + d.Data.Children[key].ChildCount  + '</td></tr>';	
+				});
+				  tb += "</table>"
+			     $("#backFace").html( tb );
+			     checkScrollOverflow();
+			     showFilter("MCE")
+				
+				$("#backFace table tr").bind(clickEventType, function () {
+						ShowItems( $(this) );
+				});
+
+			});	
 		}
 		
 
-		//set props
-		$("#seekbarContainer").attr("data-type", "volume");
-		$("#timespanleft").html("&nbsp;").css({"width": "4%"});
-		$("#sliderbar").css({"width": "79%"});
-		$("#timespanright").html("+/- 0"); 
-		
-		//set slider at center
-	    var max = $("#sliderbar").width();
-	    var x = max*0.5;
-	    $("#seekto").attr("style", "left: " + (x-10) + "px");
-	    $("#sliderh").attr("style", "width: " + ((x/max)*100) + "%");
 
-		event.stopPropagation()
-		//executeGestureByCommandName("Mute");
+
 	});
-						
-		
-	$("#seekbarContainer").bind("touchmove", function(event) {  
+
+	$("#btnCommands").bind(clickEventType, function() {
+		/* generic flip shit */
+		if ( localStorage.getItem("roomname") == "" || localStorage.getItem("devicename") == "" ) { //No room selected
+		    try {		        
+		        navigator.notification.alert("Please Select a Room First", null, "gesturePad");
+		    } catch (e) { }
+		    $("#btnRoom").trigger(clickEventType);
+		    return;
+		}
+
+		if ( $("#card").attr("class") == "doFlip" ) {
+			$("#card").toggleClass("doFlip");
+			$("#gestures_canvas").show();
+			setTimeout(function() {
+				$("#backFace").html( "" );	
+				hideFilter()
+			}, 200)
+			return;
+		} 
+		$("#gestures_canvas").hide();
+		$("#backFace").html( $("#tmpSpinner").html() );
+
+		$("#card").toggleClass("doFlip");		
+
+		/* populate it */
+		var category = "";
+		var tb = "<table class='listing'>"
+
+		$(xml).find('gesturePad > devices > device[shortname="' + localStorage.getItem("shortname") + '"]').each( function() {
+
+			var devicenode = $(this);
+			var devicename = $(this).children("name:first").text();
+			var roomname = localStorage.getItem("roomname");
+			
+			$(devicenode).find("command").each(function(index){
+				var actions = $(this).find("action");
+				var gestureDefinition = "";
+				var commandname = $(this).children("name:first").text();
+			
+				$(this).find("gesture").each(function(i){ 
+					if (i==0) {
+						gestureDefinition = ""
+						gestureDefinition = $(this).attr("definition");
+					} 
+				});
+				
+			 	if (category != ( $(this).parent().children("name:first").text() ) ) {
+			 		category = $(this).parent().children("name:first").text();
+			 		tb += "<tr class='head'><td colspan='2'>" + category + '</td></tr>' ;
+			 	}
+			 	
+				tb += '<tr data-idx="' + index + '"> '
+							+ '<td>' + ((gestureDefinition == "")?"":"👆 ") + commandname 
+							+ '</td><td style="width:20%">' + gestureDefinition + '</td></tr>';
+			});
+		});
+		tb += "</table>"
+	
+		$("#backFace").html( tb );
+		checkScrollOverflow()
+		showFilter("gesturelist");
+
+		$("#backFace table tr").bind(clickEventType, function () {
+
+
+			var i = $(this).attr("data-idx") ;
+			var actions = $(xml).find('gesturePad > devices > device[shortname="' + localStorage.getItem("shortname") + '"] command:eq(' + i + ') action');
+			doEvent("manual", actions);
+		})
+
+	});
+
+	$("#VolumeContainer").bind("touchmove", function(event) {  
 			clearTimeout(slideTimer);
 			
 			//event.preventDefault();
 			var e = event.originalEvent;
 		    var touch = e.touches[0]; 
 
-		    var max = $("#sliderbar").width();
+		    var max = $("#VolumeSlider").width();
 		    var x = touch.pageX;
 		    if (x > max) {
 		    	x = max;
 		    }
 		    
 		    var percentageDragged =  x/max ;
-		    $("#seekto").attr("style", "left: " + (x-10) + "px");
-		    $("#sliderh").attr("style", "width: " + Math.floor(percentageDragged*100) + "%");
+		    $("#VolumeSliderSeek").attr("style", "left: " + (x-10) + "px");
+		    $("#VolumeSliderh").attr("style", "width: " + Math.floor(percentageDragged*100) + "%");
 			
-			if ( $(this).attr("data-type") == "volume" ) {
-				$("#timespanright").html( percentageDragged  );
-			    var MaxVolumeJump = 30;
-		    	var seekTo = Math.round( MaxVolumeJump - (MaxVolumeJump * percentageDragged) );
-			    var sendval = 0;
-			    if ( seekTo >= (MaxVolumeJump/2) ) {
-			    	sendval = (seekTo-(MaxVolumeJump/2));
-			    	$("#timespanright").html( "- " + sendval  );
-			    	if (sendval > 0 ) {
-					    $(this).attr("data-command", "VolumeDown");
-					    $(this).attr("data-sendval", sendval);
-					    slideTimer = setTimeout(doSlideEvent, 500);
-					}
-				} else {
-					// Up	
-					sendval = ((MaxVolumeJump/2)-seekTo );
-					$("#timespanright").html( "+ " + sendval  );
-					if (sendval > 0 ) {
-					    $(this).attr("data-command", "VolumeUp");
-					    $(this).attr("data-sendval", sendval);
-					    slideTimer = setTimeout(doSlideEvent, 500);
-					}
+		
+		    var MaxVolumeJump = 30;
+	    	var seekTo = Math.round( MaxVolumeJump - (MaxVolumeJump * percentageDragged) );
+		    var sendval = 0;
+		    if ( seekTo >= (MaxVolumeJump/2) ) {
+		    	//down
+		    	sendval = (seekTo-(MaxVolumeJump/2));
+		    	if (sendval > 0 ) {
+				    $(this).attr("data-command", "VolumeDown");
+				    $(this).attr("data-sendval", sendval);
+				    
+				    slideTimer = setTimeout(doSlideEvent, 500);
+				}
+			} else {
+				// Up	
+				sendval = ((MaxVolumeJump/2)-seekTo );
+				if (sendval > 0 ) {
+				    $(this).attr("data-command", "VolumeUp");
+				    $(this).attr("data-sendval", sendval);
+				    slideTimer = setTimeout(doSlideEvent, 500);
 				}
 			}
+			
 	});
-	
-	$("#btnPower").bind("click", function() {
+
+	$("#btnRoom").bind(clickEventType, function() {
+		$("#frmRoom").show();
+		$("#lstRooms").val("")
+		$("#lstRooms").focus();
+		$("#frmRoom").hide();
+	});
+
+	$("#btnPower").bind(clickEventType, function() {
 		executeGestureByCommandName("Power");
 	});
-	$("#btnPlay").bind("click", function() {
+	$("#btnPlay").bind(clickEventType, function() {
 		executeGestureByCommandName("Play");
 	});
-	$("#btnPause").bind("click", function() {
-		executeGestureByCommandName("Pause");
+	$("#btnMute").bind(clickEventType, function() {
+		executeGestureByCommandName("Mute");
 	});
-	$("#btnStop").bind("click", function() {
-		executeGestureByCommandName("Stop");
-	});
-	$("#btnSearch").bind("click", function() {
-		executeGestureByCommandName("Search");
-	});
-	
-	$("#btnRewind, #btnForward").bind("click", function() {
-		var direction = "Forward"
-		if ( $(this).attr("id") == "btnRewind" ) {
-			direction = "Back"
-		}
-		
-		if ( $(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='" + localStorage.getItem("shortname") + "']").attr("timeshift") == "false"  ) {
-			if ( direction = "Back" ) {
-				executeGestureByCommandName("Forward");
-				executeGestureByCommandName("Forward");
-				executeGestureByCommandName("Forward");	
-			} else {
-				executeGestureByCommandName("Rewind");
-				executeGestureByCommandName("Rewind");
-				executeGestureByCommandName("Rewind");
-			}
+	$("#btnGuidedNavigation").bind(clickEventType, function () {
+		if ( $(this).hasClass("opaqueEmoji") ) {
+			localStorage.setItem("GuidedNavigation", true)
 		} else {
-			$("#skip").parent().remove();
-			var str = "<div style='display:none'><select id='skip'><option value=''>No Skip</option><option value='1'>1 Minute " + direction + "</option>"
-			for (i=5;i<=60;i+=5) {
-				str += "<option value='" + i + "'>" + i + " Minutes " + direction + "</option>"
-			}
-			str += "</select><div>"
-			
-			$(this).parent().append(str)
-			
-			$("#skip").bind("change", function() {
-				
-				var command = "Skip " + direction
-				var multiplier = $(this).val();			
-	
-				if ( multiplier.length == 1 ) {
-				 	multiplier = "0" + multiplier
-				}
-			   	$(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='" + localStorage.getItem("shortname") + "'] > baseurl:first").each(function() {
-					var burl = $(this).text();
-					console.log(multiplier)
-			   		for (var i=0;i<multiplier.length;i++) {
-						$.ajax({
-						    type: "GET",
-							url: burl + "num" + multiplier.charAt(i),
-							dataType: "xml",
-							success: function(resp) {
-								//alert("good");
-							}
-						});
-					}
-					setTimeout( function () {
-						executeGestureByCommandName(command);
-					}, 1000);
-	
-			   	});
-	
-				$("#btnVolume").focus();
-				$("#skip").parent().remove();
-			});
-			
-			$("#skip").parent().show();
-			$("#skip").focus();
-			$("#skip").parent().hide();
+			localStorage.setItem("GuidedNavigation", false)
 		}
-
+		$(this).toggleClass("opaqueEmoji")
 	});
-	
-	$("#myfooter, #pgMode, #mainheader").bind("touchmove", function (e) {
-		e.preventDefault()
+	$("#btnSortDate").bind(clickEventType, function () {
+		if ( $(this).hasClass("opaqueEmoji") ) {
+			localStorage.setItem("SortDate", true)
+		} else {
+			localStorage.setItem("SortDate", false)
+		}
+		$(this).toggleClass("opaqueEmoji")
+	});
+
+
+	$("#header").bind(clickEventType, function() {
+		//scrolltop
+		if ( $("#backFace table").size() > 0 ) {
+			$("#backFace").scrollTop(0);
+		}
 	})
 
+	//list filering
+	$("#Filter").bind("keyup", function(event) {
+	    if (inputTimer) {
+	        clearTimeout(inputTimer);
+	    }
+	     inputTimer = setTimeout(function () {
+	    	var s = $("#Filter input.searcher").val().toLowerCase();
+	    	$("#backFace tr").each(function() {
+	    		var t = $(this).text().toLowerCase();
+	    		if ( t.indexOf(s) == -1 ) {
+	    			$(this).hide()
+	    		} else {
+	    			$(this).show()
+	    		}
+	    	})
+	    }, 500);
+	});
+
+	$("#searchform").bind("submit", function(event) {
+		event.preventDefault();
+	})
+
+	$("#top, #bottom").bind("touchmove", function(event) {
+		event.preventDefault();
+	})
 
 	//generic keybind for number pad
+
+	$("#btnNumberPad").bind(clickEventType, function() {
+		$("#frmNumPad").show();
+		$("#NumPad").focus();
+		$("#frmNumPad").hide();
+	});
+
 	$("#frmNumPad").keyup(function(event) {
-	   if (event.keyCode > 47 && event.keyCode < 58 && $("#ActionList form div.uifocus").size() == 0 ) {
-	   	var shortname = $("#numpadcontainer").attr("data-shortname");
+	   if (event.keyCode > 47 && event.keyCode < 58  ) {
+	   		var shortname = localStorage.getItem("shortname") ;
+
 		   	$(xml).find("gesturePad > devices > device[shortname='" + shortname + "'] > numberpad:first").each(function() {
+		   		var main  = $(xml).find("gesturePad > rooms > room > name:contains('" + localStorage.getItem("roomname") + "') ~ device[shortname='" + shortname + "']")
 				$.ajax({
 				    type: $(this).find("method").text(),
-					url: $(xml).find("gesturePad > rooms > room > name:contains('" + localStorage.getItem("roomname") + "') ~ device[shortname='" + shortname + "'] > baseurl:first").text() + $(this).find("addtobaseurl").text() + String.fromCharCode(event.keyCode),
+					url: "http://" + $(main).find("IPAddress").text() + 
+						":" +  $(main).find("Port").text() + 
+						"/" + $(this).find("addtobaseurl").text() + String.fromCharCode(event.keyCode),
 					dataType: $(this).find("dataType").text(),
 					success: function(resp) {
 						//alert("good");
@@ -239,126 +503,202 @@ function onDeviceReady() {
 	});
 	
 	
-
-
-	
-	$(document).bind("pagehide", function( e, data ) {
-		if ( $.mobile.activePage.attr("id") == "pgGesture" || $.mobile.activePage.attr("id") == "pgAction" || $.mobile.activePage.attr("id") == "pgMode" ) {
-			//setTimeout( function () {
-				$("body > div[data-origq]").remove();	
-			//}, 10)
-		}
-	});
-	
-	$(document).bind("pagebeforechange", function( e, data ) {
-        urlObj = $.mobile.path.parseUrl(data.toPage);
-        if (typeof data.toPage === "string")
-        {
-                page_name = urlObj.hash;
-                clearCallers(true);
-                if (page_name == "#pgMode" || page_name == "#pgAction" ) {
-                	$("#gestures_canvas").hide();
-                	createLists(page_name);
-                	 setTimeout(function() {
-                	 	if (page_name == "#pgMode") {
-                	 		//$("#ModeList ul").listview();
-       
-                	 	} else {
-                	 		$("#ActionList ul").listview();
-                	 	}
-                	 }, 1);
-                	 
-               	} else if (page_name == "#MB|Play") {
-               		//e.preventDefault();
-               		getMetaData($('#playdialog').attr('data-guid'), data.options)
-					//return;
-                } else {
-                	$("#gestures_canvas").hide();
-                	if ( $("body > div[data-origq='" + page_name.substring(4, 9999) + "']:first").size() == 1 ) {
-                		$.mobile.changePage( $("body > div[data-origq='" + page_name.substring(4, 9999) + "']:first"), data.options )
-                		
-                		return;
-                	}
-
-                	if (page_name.substring(1, 3) == "MB" ) {
-                		queryServer(page_name.substring(4, 9999), urlObj, data.options);
-						e.preventDefault();
-                	} else { 
-						$("#ActionList").html("");
-						$.mobile.activePage = $("#pgGesture");
-						$("#gestures_canvas").show();
-                	}
-
-                }
-        }
-	});
-	
-	
 	$.ajax({
 	    type: "GET",
-		url: "gesturePad.xml",
+		url: "gesturePad.xml?r=3",
 		dataType: "xml",
 		success: function(resp) {
-			xml = resp;
+          	xml = resp;
 			loadSettings();
 		},
 		error: function() {
 			navigator.notification.alert("Error loading settings", null, "gesturePad");
 		}		
 	});
-	
-	
-	
 
 	
+ 	npTimer = setInterval(function() {
+      nowPlaying()
+	}, 30000);
 
+}
+
+function ShowItems(tr) {
+
+	var MBUrl = "";
+	
+	$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname")  + '"]:first').each(function(){
+		$(this).find("IPAddress:first").each(function(){
+			MBUrl = "http://" + $(this).text()
+		});				
+		$(this).find("ServicePort:first").each(function(){
+			MBUrl += ":" + $(this).text() + "/mbwebapi/service/"
+		});		
+	});
+	
+	if (MBUrl == "" ) {
+		MBUrl;
+	}
+
+	if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode" || localStorage.getItem("GuidedNavigation") == false  ) {
+		//play title
+		MBUrl += "ui?command=play&id=" + $(tr).attr("data-guid")
+		$.getJSON(MBUrl, function(x) {
+			$("#btnTitles").trigger(clickEventType);
+			setTimeout(function() {
+				nowPlaying();
+			}, 1500)
+
+         })
+		return;
+	}
+
+	$.getJSON(MBUrl + "library?lightData=1&Id=" + $(tr).attr("data-guid"), function(x) {
+		$("#backFace table").html( "" );
+		tb = "";
+
+		if ( x.Data.Name != "StartupFolder" ) {
+			tb += '<tr data-guid="' + x.Data.parentId + '" data-type="Folder">'
+				+ '<td colspan="2"><div>.. </div></td>';
+		}
+
+		if (localStorage.getItem("SortDate") == true && x.Data.Name != "StartupFolder" ) {
+			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
+		}
+		
+		if (localStorage.getItem("GuidedNavigation") == true ) {
+			MBUrl += "ui?command=navigatetoitem&id=" + $(tr).attr("data-guid")
+			$.getJSON(MBUrl)
+		}
+
+		$.each(x.Data.Children, function(key, val) { 
+			tb += '<tr data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type +'">'
+				+ '<td><div>' + ( (x.Data.Children[key].WatchedPercentage < 5) ? "⭐ " : ""  ) 
+				+ x.Data.Children[key].Name 
+				+ ( (x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""  ) 
+				+ '</div></td>';
+
+			if ( x.Data.Children[key].Type == "Folder") {
+				tb += '<td width="30px" style="text-align: right">' + x.Data.Children[key].ChildCount  + '</td></tr>';
+			} else {
+				tb += '<td width="30px" style="text-align: right">'
+				if ( x.Data.Children[key].ImdbRating  ) {
+					tb += x.Data.Children[key].ImdbRating 
+				}	
+				tb += '&nbsp;</td></tr>'
+			}
+
+		});
+		$("#backFace table").html( tb );
+		checkScrollOverflow();
+		$("#backFace table tr").bind(clickEventType, function () {
+			ShowItems( $(this) )
+		})
+	})
+}
+
+function doSlideEvent() {
+	appendOncetoQueryString = "&" + $("#VolumeContainer").attr("data-sendval");
+	executeGestureByCommandName($("#VolumeContainer").attr("data-command"));
+	resetVolumeSlider();
 }
 
 function PhoneGapReady() {
     document.addEventListener("resume", onResume, false);
     document.addEventListener("pause", onBackground, false);
+	window.onorientationchange = detectOrientation;
+    window.onresize = detectOrientation;
+    onDeviceReady();
+
 }
 
-function netState() {
-    var networkState = navigator.network.connection.type;
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI]     = 'WiFi connection';
-    states[Connection.CELL_2G]  = 'Cell 2G connection';
-    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    states[Connection.CELL_4G]  = 'Cell 4G connection';
-    states[Connection.NONE]     = 'No network connection';
-    return states[networkState];
+
+function checkScrollOverflow() {
+	if ( $("#backFace table").height() > $("#backFace").height() ) {
+		$("#backFace").attr("style", "-webkit-overflow-scrolling : touch");
+		$("#backFace").unbind("touchmove");
+	} else {
+		$("#backFace").bind("touchmove", function(event) {
+			event.preventDefault();
+		})
+	}
+}
+
+
+function showFilter(to) {
+	//setTimeout(function () {
+		$("#Filter div.emoji").hide()
+		if (to == "DTV") {
+			 $("#Filter div.dtv").show()
+		}
+		if (to == "MCE") {
+			 $("#Filter div.mce").show()
+		}
+
+		$("#Filter input").val("");
+		$("#Filter").fadeIn();
+	//}, 500)
+}
+
+function hideFilter() {
+	//setTimeout(function () {
+		$("#Filter").fadeOut();
+	//}, 1000)
+}
+
+
+function onResume() {
+	setTimeout(function () {
+    	nowPlaying()
+	}, 10)
+
+ 	npTimer = setInterval(function() {
+      nowPlaying()
+	}, 30000);
 }
 
 function onBackground() {
-	var myDate = new Date();
-	var EpochDate = myDate.getTime()/1000.0;
-	$("#lastSeen").val( EpochDate ) 
+	clearInterval(npTimer);
 }
 
-function reloadPage() {
-		var url = window.location.href;
-		if (url.indexOf("?") > 0) {
-			url = url.substring(0, url.indexOf("?"));
-		}
-		if (url.indexOf("#") > 0) {
-			url = url.substring(0, url.indexOf("#"));
-		}
-		window.location.href = url;
+function detectOrientation(){
+    if(typeof window.onorientationchange != 'undefined'){
+        doResize();
+    }
 }
 
-function onResume() {
-	var myDate = new Date();
-	var EpochDate = myDate.getTime()/1000.0;
-	var lastEpochDate = parseFloat( $("#lastSeen").val() );
-	
-	if ( (EpochDate -lastEpochDate) > 600 ) { //backgrounded for more than 10 minutes
-		//reload the page to clear the DOM
-		reloadPage();
-	}
+function doResize() {
+ 	$("#card").height( $("body").height() - ($("#top").outerHeight() + ( $("#bottom").outerHeight() / 2) ) )
+	var h = $("#container").height() - ($("#top").outerHeight() + $("#bottom").outerHeight() + $("div.toptrans").outerHeight() -1) ;
+	var w = $("body").width();
+	$("#gestures_canvas").attr("height", h)
+	$("#gestures_canvas").attr("width", w)
+	$("#gestures_canvas").height(h)
+	$("#gestures_canvas").width(w)
+
+
+	resetVolumeSlider();
 }
+
+function resetVolumeSlider() {
+	//set volume slider at center
+    var max = $("#VolumeSlider").width();
+    var x = max*0.5;
+    $("#VolumeSliderSeek").attr("style", "left: " + (x-10) + "px");
+    $("#VolumeSliderh").attr("style", "width: " + ((x/max)*100) + "%");
+}
+
+function onBodyLoad() {
+    setTimeout( function () {
+       if (typeof navigator.device === undefined){
+            document.addEventListener("deviceready", PhoneGapReady, false);
+       } else {
+            PhoneGapReady();
+       }
+    }, 10)
+
+}
+
 
 function loadSettings() {
 	
@@ -378,7 +718,13 @@ function loadSettings() {
 	} catch (e) {
 		
 	}
-	
+	if (localStorage.getItem("SortDate") == null) {
+		localStorage.setItem("SortDate", false)
+	}
+	if (localStorage.getItem("GuidedNavigation") == null) {
+		localStorage.setItem("GuidedNavigation", false)
+	}
+
 	if (roomshortname != "") {
 		if ( $(xml).find('gesturePad > rooms > room[roomshortname="' + roomshortname + '"]').size() == 0 ) {
 			roomname = "";
@@ -408,8 +754,101 @@ function loadSettings() {
 		} catch (e) { }
 	});
 
+	//set buttons
+	if ( localStorage.getItem("GuidedNavigation")  ==  true ) {
+
+	} else {
+		$("#btnGuidedNavigation").addClass("opaqueEmoji")
+	}
+
+	if ( localStorage.getItem("SortDate")  ==  true ) {
+
+	} else {
+		$("#btnSortDate").addClass("opaqueEmoji")
+	}
+
+
+
+	//Populate room picker
+	var toAppend = ""
+	var toAppendNoSwitch = ""
+	$(xml).find('gesturePad > rooms > room').each(function(){	
+	 	var roomname = $(this).children("name:first").text();
+	 	var roomshortname = $(this).attr("roomshortname");
+	 	
+	 	$(this).children("device[quickswitch='true']").each(function(){
+		 	var devicename = $(this).children("name:first").text();
+		 	var shortname = $(this).attr("shortname");
+		 	toAppend += '<option data-switch="1" value="' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
+		 	toAppendNoSwitch += '<option data-switch="0"  value="0' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
+	 	});
+	 
+	});
+	$("#lstRooms").html( "<option value=''>Switch Inputs</option>" + toAppend + "<optgroup label='Dont Switch Inputs'>"  + toAppendNoSwitch + "</optgroup>" )
+	$("#lstRooms").val("");
+
+	//bind room swtich events
+	$("#lstRooms").bind("change", function () {
+		$(this).parent().submit();
+ 		localStorage.setItem("roomname", $(this).find("option:selected").attr("data-roomname") );
+ 		localStorage.setItem("devicename", $(this).find("option:selected").attr("data-devicename") );
+ 		localStorage.setItem("roomshortname", $(this).find("option:selected").attr("data-roomshortname") );
+ 		localStorage.setItem("shortname", $(this).find("option:selected").attr("data-shortname") );
+
+ 		if ( $(this).find("option:selected").attr("data-switch") == "1" ) {
+	 		var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
+	 		doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
+ 		}
+ 		updateStatus();
+	})
+
+
+	$.ajax({
+	    type: "GET",
+		url: "channellist.xml?r=1",
+		dataType: "xml",
+		success: function(resp) {
+          	channellist = resp;
+          	setupWorker()
+		},
+		error: function() {
+			navigator.notification.alert("Error loading channel list", null, "gesturePad");
+		}		
+	});
+
 	updateStatus();
+
+	
+
 }
+
+/*    function downloadFile() {
+        var remoteFile = "http://i3.kym-cdn.com/entries/icons/original/000/000/080/doubt.jpg";
+        var localFileName = remoteFile.substring(remoteFile.lastIndexOf('/')+1);
+        
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+            fileSystem.root.getFile(localFileName, {create: true, exclusive: false}, function(fileEntry) {
+                var localPath = fileEntry.fullPath;
+                if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
+                    localPath = localPath.substring(7);
+                }
+                var ft = new FileTransfer();
+                ft.download(remoteFile,
+                    localPath, function(entry) {
+                    	alert("foo")
+                        var dwnldImg = document.getElementById("dwnldImg");
+                        dwnldImg.src = entry.fullPath;
+                        dwnldImg.style.visibility = "visible";
+                        dwnldImg.style.display = "block";
+                    }, fail);
+            }, fail);
+        }, fail);
+    }
+    
+    function fail(error) {
+        console.log(error.code);
+    }*/
+
 
 function updateStatus() { 
 	try {
@@ -422,186 +861,187 @@ function updateStatus() {
 	} catch (e) {
 		
 	}
+	setTimeout(function () {
+    	nowPlaying()
+	}, 500)
 
 }
 
-
-function createLists(pagename) {
-
-	if (pagename == "#pgMode") {
-		if ( $(pagename).attr("data-loaded") == "false" ) {
-			$(pagename).attr("data-loaded", "true");
-			//Load Rooms & Modes
-			
-			$(xml).find('gesturePad > rooms > room').each(function(){
-			 	var roomname = $(this).children("name:first").text();
-			 	var roomshortname = $(this).attr("roomshortname");
-			 	//$("#ModeList").append(  );
-				var ul = $('<div data-role="collapsible" data-iconpos="right" data-theme="b" data-content-theme="d" data-collapsed="false"><h3>' + roomname + '</h3><fieldset class="ui-grid-b"><div class="ui-block-a"><button data-theme="f" data-roomname="' + roomname + '" data-roomshortname="' + roomshortname + '">Power</button></div></fieldset></div>');
-				var s = "a";
-			 	$(this).children("device[quickswitch='true']").each(function(){
-				 	var devicename = $(this).children("name:first").text();
-				 	var shortname = $(this).attr("shortname");
-				 	if (s == "a") {
-				 		s = "b"
-				 	} else if (s == "b") {
-				 		s = "c"
-				 	} else {
-				 		s = "a"
-				 	}
-				 	if (localStorage.getItem("roomname") == roomname && localStorage.getItem("devicename") == devicename ) {
-				 		var mli = $('<div class="ui-block-' + s + '"><button data-theme="g" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '" >' + devicename + '</button></div>');
-				 	} else {
-				 		var mli = $('<div class="ui-block-' + s + '"><button data-theme="c" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '" >' + devicename + '</button></div>');	
-				 	}
-				 	
-				 	$(ul).find("fieldset").append( $(mli) );
-
-			 	});
-			 	$("#ModeList").append( $(ul) );
-			});	
-				
-		 	$("#ModeList").find("button").bind("vclick", function() {
-		 		if ( $(this).text() == "Power" ) {
-			 		localStorage.setItem("roomname", $(this).attr("data-roomname") );
-			 		localStorage.setItem("roomshortname", $(this).attr("data-roomshortname") );
-			 		localStorage.setItem("devicename", $(xml).find('gesturePad > rooms > room[roomshortname="' +  $(this).attr("data-roomshortname") + '"] > device:first > name').text() );
-			 		localStorage.setItem("shortname", $(xml).find('gesturePad > rooms > room[roomshortname="' +  $(this).attr("data-roomshortname") + '"] > device:first').attr("shortname") );
-			 		updateStatus();
-		 			var a = $(this);
-		 			var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' +  $(this).attr("data-roomshortname") + '"] > device[quickswitch="false"]').attr("shortname");
-		 			doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > name:contains("Power")').next() );
-					setTimeout(function() {
-						$(a).removeClass("ui-btn-active").removeClass("ui-btn-hover-c");
-					}, 500);
-		 		} else {
-			 		localStorage.setItem("roomname", $(this).attr("data-roomname") );
-			 		localStorage.setItem("devicename", $(this).attr("data-devicename") );
-			 		localStorage.setItem("roomshortname", $(this).attr("data-roomshortname") );
-			 		localStorage.setItem("shortname", $(this).attr("data-shortname") );
-			 		updateStatus();
-			 		if ( $("#flip-b").val() == "Yes" ) {
-				 		var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' +  $(this).attr("data-roomshortname") + '"] > device[quickswitch="false"]:first').attr("shortname")
-				 		doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + $(this).attr("data-shortname") + '"]:first').parent() );			 			
-			 		}
-			 		history.back();
-		 		}
-		 	});
-		 	
-		 	$("#ModeList").append( '<select name="slider" id="flip-b" data-role="slider" data-inline="true"><option value="No">Dont Switch</option><option value="Yes" selected="selected">Switch Inputs</option></select>');
-		 	
-		} else {
-			$("#ModeList button").each(function() {
-				if ( $(this).text() != "Power") {
-					$(this).attr("data-theme", "c");
-					$(this).parent().attr('class', 'ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c');					
-				}
-
-			});
-			$("#ModeList button[data-roomshortname='" + localStorage.getItem("roomshortname") + "'][data-devicename='" + localStorage.getItem("devicename") + "']").parent().attr('class', 'ui-btn ui-btn-corner-all ui-shadow ui-btn-up-g').find("button").attr("data-theme", "c");
-		}
+function hms2(totalSec) {
+	if (totalSec < 0 ) {
+		return "0:00"
 	}
-	
+    hours = parseInt( totalSec / 3600 ) % 24;
+    minutes = parseInt( totalSec / 60 ) % 60;
+    seconds = totalSec % 60;
+    return (hours < 10 ? "0" + hours : hours)  + ":" + (minutes < 10 ? "0" + minutes : minutes) ;
+}
 
-	if (pagename == "#pgAction") {
-		//Load all actions for the room
-		if ( localStorage.getItem("roomname") == "" || localStorage.getItem("devicename") == "" ) { //No room selected
-			$("#ActionList").append('<p>&nbsp;</p><h2>Please select a room first.</h2><p>&nbsp;</p>');
-			return;
-		}
 
-		//$("#ActionList").append('<h2>' + localStorage.getItem("roomname") + ' ' + localStorage.getItem("devicename") + '</h2>');
-		
-		var category = "";
-		var ul = $('<ul data-role="listview" data-filter="true"  data-theme="d"></ul>');
-		var toFind = "";
-		
-			
-		$(xml).find('gesturePad > devices > device[shortname="' + localStorage.getItem("shortname") + '"]').each(function(){
-			
-			if ($(this).attr("useNumberPad") == "true") {
-				$("#numpadcontainer").show().attr("data-shortname", $(this).attr("shortname"));
-			} else {
-				$("#numpadcontainer").hide();
-			}
-			var devicenode = $(this);
-			var devicename = $(this).children("name:first").text();
-			var roomname = localStorage.getItem("roomname");
-			
-			$(devicenode).find("command").each(function(){
-				var actions = $(this).find("action");
-				var gestureDefinition = "";
-				var commandname = $(this).children("name:first").text();
-			
-				$(this).find("gesture").each(function(i){ 
-					if (i==0) {
-						gestureDefinition = ""
-						gestureDefinition = gestureDefinition + " <span class='ui-li-count'>" + $(this).attr("definition") + "</span>";
-					} else {
-						//gestureDefinition = gestureDefinition + " / " + $(this).attr("definition") ;
-					}
-				});
-				
-			 	if (category != ( $(this).parent().children("name:first").text() ) ) {
-			 		category = $(this).parent().children("name:first").text();
-			 		$(ul).append( $('<li data-role="list-divider" >'+ category + '</li>') );
-			 	}
-			 	
-				var mli = $('<li><a href="#" data-roomname="' 
-							+ roomname 
-							+ '" data-devicename="' 
-							+ devicename 
-							+ '" >' + commandname + ' ' + gestureDefinition
-							+'</a></li>');
-							
-				 	$(mli).find("a").bind("vclick", function() {
-				 		//history.back();
-						//var t = setTimeout(function() {
-							doEvent("manual", actions);
-						//}, 1000);
-				 	});
-				 	
-				 $(ul).append( $(mli) );
-				 
-			});
-	
-		});
-		
-		$("#ActionList").append( $(ul) );
-		
-	}
+function nowPlaying() {
 
+    if (localStorage.getItem("shortname") == "MCE") {
+   
+        var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
+        if ($(configNode).size() > 0) {
+
+           var base = "http://" + $(configNode).find("IPAddress").text();
+           base += ":" + $(configNode).find("ServicePort").text() + "/mbwebapi/service/"
+          
+            $.ajax({
+                   url: base + "ui",
+                   dataType: "json",
+                   success: function(j) {
+	                   	var output = j.Data.PlayingControllers[0].NowPlayingTitle;
+	                   	$("#NowPlayingTitle").text( output );
+							var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
+							var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
+	                   		var perc = offset / duration;
+
+		    				$("#timebar").attr("style", "width: " + Math.floor(perc*100) + "%");
+		    				$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
+		    				$("#timespanleft").text( hms2(offset) )
+		    				$("#timespanright").text( "- " + hms2(duration - offset) );
+	  
+		 					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[0];
+							$("#bgPic").attr("style", "background-image: url('" + base + "image/?Id=" + guid + "');")
+							$("#bgPic").attr("class", "");
+		         }
+	             
+            });
+        
+        }
+    }	
+
+    if (localStorage.getItem("shortname") == "DTV") {
+   
+        var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
+        if ($(configNode).size() > 0) {
+           
+          var canvas = document.getElementById("gestures_canvas");
+          var ctx  = canvas.getContext('2d');
+
+            $.ajax({
+                   type: "GET",
+                   url: "http://" + $(configNode).find("IPAddress").text() + ":" + $(configNode).find("Port").text() + "/tv/getTuned",
+                   dataType: "json",
+
+                   success: function(json) {
+  					
+	                   if (json.startTime) {
+							if (json.startTime == "0" ) { return; }
+
+	                   		var perc = json.offset/json.duration;
+
+		    				$("#timebar").attr("style", "width: " + Math.floor(perc*100) + "%");
+		    				$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
+		    				$("#timespanleft").text( hms2(json.offset) )
+		    				$("#timespanright").text( "- " + hms2(json.duration - json.offset) )
+	  
+	                   }
+	                   var output = json.major + " " + json.callsign + " " + json.title;
+	                   $("#NowPlayingTitle").text( output );
+  					   $("#NowPlayingTitle").attr("data-item", json.callsign + json.major);
+  					   $("#NowPlayingTitle").attr("class", "");
+
+  	
+
+
+	                    $.ajax({
+		                   type: "GET",
+		                   url: "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + json.title,
+		                   dataType: "xml",
+		                   error: function (x,y,z) {
+		                   		$("#bgPic").attr("class", "noart");
+		                   		$("#bgPic").attr("style", "");
+		                   },
+		                   success: function(tvxml) {
+		                   		var url = "";
+		                   		$(tvxml).find("Data > Series > SeriesName").each(function () {
+		                   			if ( $(this).text().toLowerCase().replace(/\W/g, '').replace('the', '') == json.title.toLowerCase().replace(/\W/g, '').replace('the', '') ) {
+		                   				url = "http://thetvdb.com/banners/_cache/posters/" + $(this).parent().find("seriesid").text() + "-1.jpg";
+		                   				return false;	
+		                   			}
+		                   		});
+		                   		if (url == "" ) {
+		                   			$("#bgPic").attr("class", "noart");
+		                   			$("#bgPic").attr("style", "");
+		                   		} else {
+
+									$("#bgPic").attr("style", "background-image: url('" + url + "');")
+									$("#bgPic").attr("class", "");
+
+		                   		}
+
+
+		                   	}
+		                });
+						
+						if ( parseInt($('#NowPlayingTitle')[0].scrollWidth) > parseInt($('#NowPlayingTitle').width())) {
+						    $("#NowPlayingTitle").attr("class", "doMarquee")
+						}
+	                   
+	                }
+            });
+        
+        }
+    }
 }
 
 function clearCallers(force) {
 	if (force == false) {
-		var endedDivs = $("#gesturecontainer div.dofadeout-final");
-		//var visibleDivs = $("#gesturecontainer div:not(.dofadeout-final)");
-		//if ( $(endedDivs).size() > 0 || ($(endedDivs).size() > 2) ) {
-			$(endedDivs).remove();
-		//}
+		var endedDivs = $("#gestureCallback div.dofadeout-final");
+		$(endedDivs).remove();
 	} else {
-		$("#gesturecontainer div").remove();
+		$("#gestureCallback div").remove();
+	}
+}
+
+function executeGestureByCommandName(command) {
+	//check if there's a global gesture for it
+	var globals = $(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > roomgestures > gesture > device > command > name:contains('" + command + "'):first")
+
+	if ( $(globals).size() == 1 ) {
+		var globalDevicetoTrigger = $(globals).parent().parent().attr("shortname");
+		$(xml).find("gesturePad > devices > device[shortname='" + globalDevicetoTrigger + "'] > commands > category > command > name:contains('" + command + "'):first").each( function(){
+				actionNodes = $(this).parent().find("action");	
+				doEvent("manual", actionNodes) 
+		});
+	} else {
+		var device = $(xml).find("gesturePad > devices > device[shortname='" + localStorage.getItem("shortname") + "'] > commands > category > command > name:contains('" + command + "'):first")
+		if ( $(device).size() == 1 ) {
+			actionNodes = $(device).next();	
+			doEvent("manual", actionNodes) 
+		}
 	}
 }
 
 function doEvent(gesture, actions)  {
 	
-    if (gesture != 'manual') {
-		if ( $.mobile.activePage.attr("id") != "pgGesture") {
-			return;	
-		}
+    
+    try {
+        if ( netState() != 'WiFi connection' ) {
+            navigator.notification.alert("You do are not on Wifi. Connect to Wifi and try again", null, "gesturePad");
+            return;
+        }
+    }
+    catch (e) {
+        
     }
 
-	if ( netState() != 'WiFi connection' ) {
-		navigator.notification.alert("You do are not on Wifi. Connect to Wifi and try again", null, "gesturePad");	
-		return;
-	}
 	
 	clearCallers(false);
 
-	var message = $("<div class='message' style='display:none'><h3>&nbsp;</h3><p>" + gesture + "</p></div>");
-	$(message).insertBefore( $("#gestures_canvas") );
+	var showCallback = true;
+	if ($("#gestures_canvas:visible").size() == 0 ) {
+		showCallback = false;
+	}
+
+	var message = $("<div class='message' style='display:none' data-gest='" + gesture + "'><span class='i'></span> <span class='t'>" + gesture + "</span></div>");
+	//$(message).insertBefore( $("#gestures_canvas") );
+	if (showCallback) {
+		$("#gestureCallback").prepend( message ); 
+	}
 	var blnGoodGesture = true;
 	var blnisGlobalGesture = false;
 	
@@ -659,12 +1099,15 @@ function doEvent(gesture, actions)  {
 	if (blnGoodGesture) {
 		playBeep();
 		
+
 		//Run commands for gesture
 		if (gesture != 'manual') {
-			$(message).css('background', 'url("images/wifi.png") no-repeat 20px center #222222').find("h3").text( $(actionNodes).parent().find("name:first").text() );
+			$(message).find("span.t").text( $(actionNodes).parent().find("name:first").text() + ' - ' + $(message).attr("data-gest")  );
+			$(message).find("span.i").text('🔄');
 			$(message).show().addClass("dofadein");
 		} else {
-			$(message).css('background', 'url("images/wifi.png") no-repeat 20px center #222222').find("h3").text( $(actionNodes).parent().find("name:first").text() );
+			$(message).find("span.t").text( $(actionNodes).parent().find("name:first").text() + ' - ' + $(message).attr("data-gest") );
+			$(message).find("span.i").text('🔄');
 			$(message).show().addClass("dofadein");
 		}
 
@@ -681,11 +1124,14 @@ function doEvent(gesture, actions)  {
 			var thisnode = $(actionNodes);
 
 			//Look up url overrides
-			var server = "";
+			var server = "http://";
 
-			$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + shortname + '"]:first').each(function(){
-				$(this).find("baseurl:first").each(function(){
-					server = $(this).text();
+			$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + shortname  + '"]:first').each(function(){
+				$(this).find("IPAddress:first").each(function(){
+					server += $(this).text();
+				});				
+				$(this).find("Port:first").each(function(){
+					server += ":" + $(this).text() + "/";
 				});				
 			});
 			
@@ -693,7 +1139,6 @@ function doEvent(gesture, actions)  {
 				server = server + $(this).text();
 			});
 			
-			 
 			$.ajax({
 			    type: $(this).find("method:first").text(),
 				url: server,
@@ -703,7 +1148,7 @@ function doEvent(gesture, actions)  {
 				success: function(resp) {
 					appendOncetoQueryString = "";
 					if (i == totalActions) { //only run animation callback on final ajax call
-						$(message).css('background', 'url("images/checkmark.png") no-repeat 20px center #222222');
+						$(message).find("span.i").text('✅');
 						$(message).unbind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend");
 						$(message).bind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend", function() {
 							if ( $(thisnode).find("onCompleteSetDevice").size() > 0) {
@@ -720,12 +1165,15 @@ function doEvent(gesture, actions)  {
 							$(message).addClass('dofadeout');
 						}, 200);
 					}
+
+					setTimeout(function() {
+						nowPlaying();	
+					}, 1500)
 				},
 				error: function() {
 					appendOncetoQueryString = "";
 					if (i == totalActions) { //only run animation callback on final ajax call
-						$(message).css('background', 'url("images/stop.png") no-repeat 20px center #222222');
-						
+						$(message).find("span.i").text('❌');
 						$(message).unbind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend");
 						$(message).bind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend", function() {
 							if ($(this).hasClass('dofadeout') ) {
@@ -751,7 +1199,9 @@ function doEvent(gesture, actions)  {
 	} else {
 		
 		//Unassigned gesture, just show and hide it
-		$(message).css('background', 'url("images/warning1.png") no-repeat 20px center #222222').find("h3").text("Unassigned");
+		$(message).find("span.i").text('❌');
+		$(message).find("span.t").text( "Unassigned" + ' - ' + $(message).attr("data-gest")  );
+		
 		$(message).show().addClass("dofadein");
 		$(message).bind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend", function() {
 	
@@ -766,13 +1216,10 @@ function doEvent(gesture, actions)  {
 				$this.addClass('dofadeout');
 			}, 500);
 			
-			//navigator.notification=new Notification();
-			//navigator.notification.vibrate();
 
 		});
 	}
 	
-
 }
 
 function playBeep() {
@@ -785,335 +1232,68 @@ function playBeep() {
 
 
 
+/*
+ * jQuery AjaxQ - AJAX request queueing for jQuery
+ *
+ * Version: 0.0.1
+ * Date: July 22, 2008
+ *
+ * Copyright (c) 2008 Oleg Podolsky (oleg.podolsky@gmail.com)
+ * Licensed under the MIT (MIT-LICENSE.txt) license.
+ *
+ * http://plugins.jquery.com/project/ajaxq
+ * http://code.google.com/p/jquery-ajaxq/
+ */
 
+jQuery.ajaxq = function (queue, options)
+{
+	// Initialize storage for request queues if it's not initialized yet
+	if (typeof document.ajaxq == "undefined") document.ajaxq = {q:{}, r:null};
 
-/* mediabrowser stuff */
-
-var baseURL = "http://192.168.1.119:7000/"
-var dbRev = "db101";
-
-function custom_sort(a, b) {
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-}
-
-function pad(num, size) {
-    var s = num+"";
-    while (s.length < size) s = "0" + s;
-    return s;
-}
+	// Initialize current queue if it's not initialized yet
+	if (typeof document.ajaxq.q[queue] == "undefined") document.ajaxq.q[queue] = [];
 	
-function checkCache(lib, query) {
-	query = query.split("&Search=")[0];
-	var titles = lib.query("titles", {source: query} );
-	return titles.length;
-}
+	if (typeof options != "undefined") // Request settings are given, enqueue the new request
+	{
+		// Copy the original options, because options.complete is going to be overridden
 
-function queryServer(query, urlObj, options) {
-
-	$.mobile.showPageLoadingMsg();
-	
-	query = query.replace(/\|/gi, "/")
-
-	var lib = new localStorageDB(dbRev);
-	
-	if( lib.isNew() || lib.tableExists("titles") == false ) {
-		lib.createTable("titles", ["itemid", "itemtype", "itemname", "source", "date", "year", "rating", "path"]);
-		lib.commit();
-	}
-	
-
-	
-	if ( checkCache(lib, query) == 0 ) {
-
-		$.ajax({
-			url: baseURL + query,
-			dataType: "xml",
-			async: false,
-			success:function(xml){
-				
-				$(xml).find("group").each(function(){
-					var itemid = $(this).text();
-					var itemtype = 'home';
-					var itemname = $(this).text();
-					var path = 'home';
-					var source = 'home';
-					var date = '';
-					var year = '';
-					var rating = '';
-					lib.insert("titles", {itemid: itemid, itemtype: itemtype, itemname: itemname, source: query, date: date, year: year, rating: rating, path: path});
-				});
-				
-				$(xml).find("media").each(function(){
-					var itemid = $(this).find("id").text();
-					var itemtype = $(this).attr("type");
-					var itemname = $(this).find("name").text();
-					if (itemtype == "season") {
-						itemname = itemname + " " + $(this).find("seasonnumber").text();
-					}
-					if (itemtype == "episode") {
-						itemname = pad( $(this).find("episodenumber").text() , 2) + " " +  itemname;
-					}
-					var path = $(this).find("path").text();
-					var source = query; //$(this).find("sortname").text();
-					var date = $(this).find("dateadded").text();
-					var year = $(this).find("productionyear").text();
-					var rating = $(this).find("rating").text();
-					lib.insert("titles", {itemid: itemid, itemtype: itemtype, itemname: itemname, source: source, date: date, year: year, rating: rating, path: path});
-				});
-				
-				lib.commit();	
-				doOutput(query, urlObj, options)	
-			},
-			error: function (request, status, error) {
-				$.mobile.hidePageLoadingMsg();
-				navigator.notification.alert(error, null, "gesturePad");
-			}
-		});
-	} else {
-		doOutput(query, urlObj, options)	
-	}
-
-}
-function clearDB() {
-	var lib = new localStorageDB(dbRev);
-	
-	if (lib.tableExists("titles")) {
-		lib.dropTable("titles");lib.commit();
-	}
-	
-	if( lib.isNew() || lib.tableExists("titles") == false ) {
-		lib.createTable("titles", ["itemid", "itemtype", "itemname", "source", "date", "year", "rating", "path"]);
-		lib.commit();
-	} 
-	navigator.notification.alert("Database is now cleared", null, "gesturePad");
-}
-
-function doOutput(query, urlObj, options) {
-	
-	var lib = new localStorageDB(dbRev);
-	
-	if( lib.isNew() || lib.tableExists("titles") == false ) {
-		lib.createTable("titles", ["itemid", "itemtype", "itemname", "source", "date", "year", "rating", "path"]);
-		lib.commit();
-	}
-	
-	var toSearch = query.split("&Search=")[1]
-	if (toSearch==undefined) {
-		var toSearch = "";
-	}
-	toSearch = toSearch.toLowerCase();
-	query = query.split("&Search=")[0];
-	
-	var searchbox = '<div class="sform" style="display:none"><input type="search" value="" onkeyup="var a = $(this).parent().next(); $(a).attr(\'href\', $(a).attr(\'dsearch\') + $(this).val() ); " /> <a href="#" data-theme="g" dsearch="#MB|' + query + '&Search=" data-role="button">Search</a><p>&nbsp;</p></div>'
-	var btn =  '<a data-role="none" data-enhance="false" style="background-image: url(\'images/search.png\');" onclick="$(this).parent().next().find(\'div.sform\').toggle();"  class="opaqueicon"></a>'
-	if (query == "get.Groups") {
-		btn =  '<a data-role="none" data-enhance="false" style="background-image: url(\'images/refresh.png\');" onclick="clearDB()" class="opaqueicon"></a>'
-		searchbox = '';
-	}
-
-	var pagecontainer = $('<div data-role="page" data-origQ="' + query + '" > <div data-role="header"> <a class="customclose" onclick="history.back(-1)">Back</a> <h1>&nbsp;</h1> ' + btn + ' </div> <div data-role="content"> ' + searchbox + ' <ul data-role="listview" ></ul></div></div>');
-	var toAppend = $(pagecontainer).find("ul:first");
-	
-	var titles = lib.query("titles", null, 9999);
-
-	titles.sort(custom_sort);
-	var counter = 0;
-	var output = "";
-	$.each(titles, function(i, row) {
-		if(row.source == query || toSearch != "") {
-			var thisitem = row.itemname.toString().toLowerCase();
-			if ( thisitem.indexOf(toSearch) > -1 ) {
-			  	if (counter <= 100) {
-			  		subcaption = '';
-			  		if ( row.year != null ) {
-			  			subcaption = '<p>' + row.year + ' Rated: '  + row.rating + '</p>';
-			  		}
-
-					if ( row.itemtype == "series" || row.itemtype == "season"  ) {
-						output += ('<li><a href="#MB|get.Children|' + escape(row.itemid) + '"><img onerror="this.setAttribute(\'src\', \'images/default.png\')" src="' + baseURL + '/get.Image?path=' + row.path + 'folder.jpg&height=80' + '" /><h3>' + row.itemname + '</h3>' + subcaption + '</a></li>');	
-					} else if ( row.itemtype == "movie" || row.itemtype == "episode"  ) { 
-						output += ('<li><a href="#MB|Play" data-transition="flip" onclick="$(\'#playdialog\').attr(\'data-guid\', \'' + row.itemid + '\')"><img onerror="this.setAttribute(\'src\', \'images/default.png\')" src="' + baseURL + '/get.Image?path=' + row.path + 'folder.jpg&height=80' + '" /><h3>' + row.itemname + '</h3>' + subcaption + '</a></li>');	
-					} else {
-						output += ('<li><a href="#MB|get.Group?group=' + escape(row.itemid) + '"><img onerror="this.setAttribute(\'src\', \'images/default.png\')" src="' + baseURL + '/get.Image?path=' + row.path + 'folder.jpg&height=80' + '" /><h3>' + row.itemname + '</h3>' + subcaption + '</a></li>');
-					}
-			   }
-			   counter += 1;
-			}
-
-		}
+		var optionsCopy = {};
+		for (var o in options) optionsCopy[o] = options[o];
+		options = optionsCopy;
 		
-	});
-	
-	$(toAppend).html(output);
-	$(pagecontainer).appendTo( $("body") );
-	$(pagecontainer).page();
-	options.dataUrl = urlObj.href;
-	options.transition = "slide"	
+		// Override the original callback
 
-	if (query == "get.Groups" && options.fromHashChange == false ) {
-		options.transition = "slideup"
-	}
-	
-	$.mobile.changePage( $(pagecontainer), options )
-}
+		var originalCompleteCallback = options.complete;
 
-
-
-
-function getMetaData(itemid, options) {
-
-	var itemtitle = '';
-	var itemyear = '';
-	var itemruntime = '';
-	var itemrating = '';
-	var itemimdb = '';
-	var itemdescription = '';
-	var itemposter = '';
-	var itemtagline = '';
-	var mediadetails = '';
-	var actors = '';
-	var moviedetails = '';
-	var itemgenres = '';
-
-	var pagecontainer = $('<div data-role="page" > <div data-role="header"> <a class="customclose" onclick="history.back(-1)">Back</a> <h1>Details</h1></div> <div data-role="content" style="padding: 0px"></div></div>');
-	var toAppend = $(pagecontainer).find("div[data-role='content']");
-
-	var imgwidth = Math.floor(($(window).width()*0.34));
-
-		$.ajax({
-			url: baseURL + "/get.MetaData/" + itemid,
-			dataType: "xml",
-			async: false,
-			success:function(resp){
-				
-				itemtitle = $(resp).find("localtitle:first").text();
-				itemyear = $(resp).find("productionyear:first").text();
-				itemruntime = $(resp).find("runtime:first").text();
-				itemrating = $(resp).find("rating:first").text();
-				itemimdb = $(resp).find("imdbid:first").text();
-				itemdescription = $(resp).find("description:first").text();
-				itemtitle = $(resp).find("localtitle:first").text();
-				
-				$(resp).find("genre").each( function() {
-					itemgenres = itemgenres + $(this).text() + "  "
-				});
-				itemposter = baseURL + "/get.Image?path=" + $(resp).find("posters > poster:first").text() + "&width=" + imgwidth;
-				
-				if ( $(resp).find("mediainfo > video, mediainfo > audio").size() > 0 ) {
-					mediadetails = mediadetails + "<h3>Media Information</h3>";
-					$(resp).find("mediainfo > video, mediainfo > audio").children().each(function() {
-						if ($(this).text().toString() != "") {
-							mediadetails = mediadetails + "<p>" + $(this)[0].nodeName.toString().toUpperCase() + "</p>"
-							mediadetails = mediadetails + "<p style='padding-left: 5px;'>" + $(this).text().toString() + "</p>"
-						}
-					});
-				}
-				
-				details = $(resp).find("path:first, filename:first, groupvalue:first, dateadded:first, runtime:first, mpaarating:first, mpaadescription:first, aspectratio:first, studio, country");
-				if ( $(details).size() > 0 ) {
-					moviedetails = moviedetails + "<h3>Movie Information</h3>";
-					$(details).each(function() {
-						if ($(this).text().toString() != "") {
-							moviedetails = moviedetails + "<p>" + $(this)[0].nodeName.toString().toUpperCase() + "</p>"
-							moviedetails = moviedetails + "<p style='padding-left: 5px;'>" + $(this).text().toString() + "</p>"
-						}
-					});
-				}
-				
-				if ( $(resp).find("person").size() > 0 ) {
-					actors = actors + "<h3>Cast and Crew</h3><ul data-role='listview' data-inset='true' data-theme='c'>";
-					$(resp).find("person").each(function(i) {
-						var CastName = $(this).find("name").text();
-						var CastRole = $(this).find("role").text();
-						var CastType = $(this).find("type").text();
-						var CastThumb = $(this).find("thumb").text();
-						if ( i < 4 ) {
-							actors = actors + "<li>"
-							actors = actors + "<img src='" + baseURL + "/get.Image?path=" + CastThumb + "&width=50' />"
-							actors = actors + "<h3>" + CastName + "</h3>"
-							actors = actors + "<p>" + CastRole + " - " + CastType + "</p>"
-							actors = actors + "</li>"
-						}
-					});
-					actors = actors + "</ul>";
-				}
-				
-				
-				newHTML = ('<div class="ui-body ui-body-a">' + 
-					   			'<h1>' +itemtitle + ' (' + itemyear + ')</h1>' + 
-									'<div><img src="' + itemposter + '" class="boxcover" />'+
-									'<p>' +itemdescription+ '</p>'+
-									itemtagline + '<p>' + itemgenres + '</p>'+ 
-									'</div><div style="clear:both"></div>');
-				
-				newHTML = newHTML + '<div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed="false"><h3>Play</h3> <div class="pbuttons"></div> </div>'
-								
-				if (moviedetails != "") {
-					newHTML = newHTML + '<div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed="false">' +
-							moviedetails +
-						'</div>'
-				}	
-				
-				if (mediadetails != "") {
-					newHTML = newHTML + '<div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed="false">' +
-							mediadetails +
-						'</div>'
-				}
+		options.complete = function (request, status)
+		{
+			// Dequeue the current request
+			document.ajaxq.q[queue].shift ();
+			document.ajaxq.r = null;
 			
-				
-				if (actors != "") {
-					newHTML = newHTML + '<div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed="false">' +
-							actors +
-						'</div>'
-				}		
-				
-				
-				
-				newHTML = newHTML +  '<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>'
-				
-				$(toAppend).html(newHTML);
-				
-				$(xml).find("gesturePad > rooms > room").each(function() {
-	
-					var btn = $("<a data-role='button' data-theme='b' data-mce='" + $(this).find("device[shortname='MetaB'] > baseurl").text() + "'>" + $(this).find("name:first").text() + "</a>")
-					$(btn).bind("vclick", function() {
-						 $("#playdialog").attr("data-guid")
-						 var u = $(this).attr("data-mce") + "playitem?value=" + $("#playdialog").attr("data-guid")
-						$.ajax({
-						    type: "GET",
-							url: u, 
-							dataType: "xml",
-							success: function(resp) {
-								var url = window.location.href;
-								if (url.indexOf("?") > 0) {
-									url = url.substring(0, url.indexOf("?"));
-								}
-								if (url.indexOf("#") > 0) {
-									url = url.substring(0, url.indexOf("#"));
-								}
-								window.location.href = url;
-							},
-							error: function() {
-								navigator.notification.alert("Error playing", null, "gesturePad");
-							}		
-						});
-					});
-					$(toAppend).find("div.pbuttons:first").append( btn );
-				});
-				
-				$(pagecontainer).appendTo( $("body") );
-				$(pagecontainer).page();
-				options.dataUrl = urlObj.href;
-				options.transition = "slide"	
-				
-				$.mobile.changePage( $(pagecontainer), options )
+			// Run the original callback
+			if (originalCompleteCallback) originalCompleteCallback (request, status);
 
-			}
-			,
-			error: function (request, status, error) {
-				$.mobile.hidePageLoadingMsg();
-				alert(error);
-			}	
-		})	
+			// Run the next request from the queue
+			if (document.ajaxq.q[queue].length > 0) document.ajaxq.r = jQuery.ajax (document.ajaxq.q[queue][0]);
+		};
 
+		// Enqueue the request
+		document.ajaxq.q[queue].push (options);
+
+		// Also, if no request is currently running, start it
+		if (document.ajaxq.q[queue].length == 1) document.ajaxq.r = jQuery.ajax (options);
+	}
+	else // No request settings are given, stop current request and clear the queue
+	{
+		if (document.ajaxq.r)
+		{
+			document.ajaxq.r.abort ();
+			document.ajaxq.r = null;
+		}
+
+		document.ajaxq.q[queue] = [];
+	}
 }
+
+
