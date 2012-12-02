@@ -38,6 +38,8 @@
     return self;
 }
 
+
+
 - (void) didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -145,37 +147,35 @@
 	return [super webView:theWebView didFailLoadWithError:error];
 }
 
+
+
+
 - (BOOL) webView:(UIWebView*)theWebView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSString *url = [[request URL] absoluteString];
-    
-    static NSString *urlPrefix = @"http://";
 
-    NSLog(@"This is it: %@",url);
+    self.view.backgroundColor = [UIColor blackColor];
     
-    if ([url hasPrefix:urlPrefix]) {
-        NSString *paramsString = [url substringFromIndex:[urlPrefix length]];
-        NSArray *paramsArray = [paramsString componentsSeparatedByString:@"&"];
-        int paramsAmount = [paramsArray count];
+    if ([url hasPrefix:@"http://gesturepad/sleep"]) {
+                
+        [[UIScreen mainScreen] setWantsSoftwareDimming:YES];
+        [[UIScreen mainScreen] setBrightness:0.0];
+        self.webView.opaque = YES;
+        self.webView.alpha = 0.05f;
+        [[UIApplication sharedApplication] setStatusBarHidden:YES animated:NO];
+        return NO;
+    }
+    else if ([url hasPrefix:@"http://gesturepad/wake"]) {
         
-        for (int i = 0; i < paramsAmount; i++) {
-            NSArray *keyValuePair = [[paramsArray objectAtIndex:i] componentsSeparatedByString:@"="];
-            NSString *key = [keyValuePair objectAtIndex:0];
-            NSString *value = nil;
-            if ([keyValuePair count] > 1) {
-                value = [keyValuePair objectAtIndex:1];
-            }
-            
-            if (key && [key length] > 0) {
-                if (value && [value length] > 0) {
-            
-                }
-            }
-        }
-        
-        return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
+        [[UIScreen mainScreen] setWantsSoftwareDimming:YES];
+        [[UIScreen mainScreen] setBrightness:1.0];
+        self.webView.opaque = YES;
+        self.webView.alpha = 1.0f;
+        [[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO];
+        return NO;
     }
     else {
+        [[UIScreen mainScreen] setBrightness:1.0];
         return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
     }
     

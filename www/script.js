@@ -1,15 +1,15 @@
 var xml, channellist;
 var LongSwipeThreshold = 100;
+var SleepThreshold = 15000;
 var playSounds = "true";
 var appendOncetoQueryString = "";
-var navigator;
-var npTimer;
-var inputTimer;
-var clickEventType;
-var slideTimer;
+var navigator, npTimer, inputTimer, clickEventType, slideTimer;
 var guide =  new Object();
 var workerTimer = null;
+var sleepTimer = null;
 var scrollstop = null;
+var recentChannels = new Array();
+
 
 function setupWorker() {
 
@@ -36,43 +36,48 @@ function setupWorker() {
 
 function startWorker() {
 
-	//save all dtv servers to an array
-	var dtvServers = new Array();
-	var currentServer = 0;
+	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
+		 
+		//save all dtv servers to an array
+			var dtvServers = new Array();
+			var currentServer = 0;
 
-	$(xml).find('gesturePad > rooms > room > device[shortname="DTV"]').each(function(){
-		var DTVurl = ""
-		$(this).find("IPAddress:first").each(function(){
-			DTVurl = "http://" + $(this).text()
-		});				
-		$(this).find("Port:first").each(function(){
-			DTVurl += ":" + $(this).text() + "/"
-		});		
-		dtvServers[currentServer] = DTVurl;
-		currentServer += 1;
-	});
+			$(xml).find('gesturePad > rooms > room > device[shortname="DTV"]').each(function(){
+				var DTVurl = ""
+				$(this).find("IPAddress:first").each(function(){
+					DTVurl = "http://" + $(this).text()
+				});				
+				$(this).find("Port:first").each(function(){
+					DTVurl += ":" + $(this).text() + "/"
+				});		
+				dtvServers[currentServer] = DTVurl;
+				currentServer += 1;
+			});
 
-	currentServer = 0;
- 	$.each(guide.channels, function(channelKey) { 
- 		var c = guide.channels[channelKey];
+			currentServer = 0;
+		 	$.each(guide.channels, function(channelKey) { 
+		 		var c = guide.channels[channelKey];
 
- 		//first determine if the channel needs a refresh
- 		if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) {
- 			c.nowplaying = "";
- 			//pick a server
-	 		if ( currentServer > dtvServers.length-1 ) {
-	 			currentServer = 0
-	 		}
-	 
- 			//queue the refesh on that server
- 			refreshChannel(dtvServers[currentServer], "DTVWorker"+currentServer, channelKey);
- 			currentServer += 1;
- 		}
+		 		//first determine if the channel needs a refresh
+		 		if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) {
+		 			c.nowplaying = "";
+		 			//pick a server
+			 		if ( currentServer > dtvServers.length-1 ) {
+			 			currentServer = 0
+			 		}
+			 
+		 			//queue the refesh on that server
+		 			refreshChannel(dtvServers[currentServer], "DTVWorker"+currentServer, channelKey);
+		 			currentServer += 1;
+		 		}
 
 
-	});
- 	clearTimeout(workerTimer)
-	workerTimer = setTimeout( "startWorker()", 60000 );
+			});
+		 	clearTimeout(workerTimer)
+			workerTimer = setTimeout( "startWorker()", 60000 );
+
+	}
+	
 }
 
 function refreshChannel(server, queueName, channelKey) {
@@ -100,17 +105,40 @@ function refreshChannel(server, queueName, channelKey) {
 	});
 }
 
+function SleepDevice(sleep) {
+	if (sleep) {
+		executeObjC("http://gesturepad/sleep/?do=true")
+	} else {
+		executeObjC("http://gesturepad/wake/?do=true")
+	}
+}
+
+function executeObjC(url) {
+  var iframe = document.createElement("IFRAME");
+  iframe.setAttribute("src", url);
+  document.documentElement.appendChild(iframe);
+  iframe.parentNode.removeChild(iframe);
+  iframe = null;
+}
+
 function onDeviceReady() {
+	//window.localStorage.clear();
     
 	$.gestures.init();
 	$.gestures.retGesture(function(gesture) {
 		doEvent(gesture);
+
 	});
 	
 	doResize();
 
 	clickEventType = ((document.ontouchstart!==null)?'click':'click'); //never inplemented custom tap
 
+	$("body").bind("touchend", function() {
+		SleepDevice(false);
+	 	clearTimeout(sleepTimer)
+		sleepTimer = setTimeout( "SleepDevice(true)", SleepThreshold );
+	})
 	//event when scrolling ends to refresh dtv channels
 	$("#backFace").bind("scroll", function() {
 		if (localStorage.getItem("shortname") != "DTV") {
@@ -144,7 +172,7 @@ function onDeviceReady() {
 			var threadcounter = 0;
 		    $("#backFace tr").each(function () {
 		    	var row = $(this);
-		    	if ($(row).attr("data-loaded") == "true") {
+		    	if ($(row).attr("data-loaded") != "false") {
 		    		return;
 		    	}
 
@@ -162,6 +190,13 @@ function onDeviceReady() {
 
 
 	/* UI buttons */
+
+	$('div.control').bind('touchstart', function(){
+	    $(this).addClass('active');
+	}).bind('touchend', function(){
+	    $(this).removeClass('active');
+	});
+
 	$("#btnTitles").bind(clickEventType, function() {
 
 		/* generic flip shit */
@@ -191,36 +226,33 @@ function onDeviceReady() {
 			
 			//build table for channel list 
 			var tb =  "<table class='listing' style='width: " + $("#card").width() + "px !important'>"
-		 	$.each(guide.channels, function(channelKey) { 
-		 		var c = guide.channels[channelKey];
-				if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) { //needs refresh
-					tb += '<tr id="tr' + channelKey + '" data-loaded="false" data-major="' + c.number + '" data-key="' + channelKey + '"><td width="50px" ' 
-					if ( c.logo != "" ) {
-						tb += "style = 'background: url(" + c.logo + ") center no-repeat' > "  
-					} else {
-						tb += 'style="text-align: center" >' + c.number
+			
+			//loop recents first 
+			if (recentChannels.length > 0) {
+				tb += "<tr class='head'><td colspan='3'>Recent Channels</td></tr>";
+				$.each(recentChannels, function(idx, channelKey) { 
+					if ( guide.channels[channelKey] ) {
+						var c = guide.channels[channelKey];
+						tb += getTableRowHTML(c, channelKey, curChannel);
 					}
-					tb += '</td>' +
-					'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
-					'</div></td>'+
-					'<td width="30px" style="text-align: right">0:00</td></tr>';
+				});
+			}
+	
+			if (recentChannels.length > 0) {
+				tb += "<tr class='head'><td colspan='3'>Other Channels</td></tr>";
+			}
 
-				} else { //pull cached
-
-					tb += '<tr id="tr' + channelKey + '" data-loaded="true" data-major="' + c.number + '"><td width="50px" ' 
-					if ( c.logo != "" ) {
-						tb += "style = 'background: url(" + c.logo + ") center no-repeat' > " 
-					} else {
-						tb += 'style="text-align: center" >' + c.number
-					}
-					tb += '</td>' +
-					'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
-					c.nowplaying +
-					'</div></td>'+
-					'<td width="30px" style="text-align: right">' + c.timeleft +'</td></tr>';
-				}
+		 	$.each(guide.channels, function(channelKey, c) { 
+		 		if ( recentChannels[ parseInt(channelKey)-1 ] ) {
+		 			//console.log("skipping" + (channelKey-1) )
+		 		} else {
+		 			//var c = guide.channels[channelKey];
+					tb += getTableRowHTML(c, channelKey, curChannel);
+		 		}
 			});
+
 			tb += "</table>"
+
 
 		    $("#backFace").html( tb );
 		     
@@ -237,13 +269,39 @@ function onDeviceReady() {
 			$("#backFace").trigger("scroll");
 			// trigger channel change on click
 			$("#backFace table tr").bind(clickEventType, function () {
+		    	if ($(this).is("[data-loaded]")) {
+		    	} else {
+		    		return;
+		    	}
 		        var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
 		        if ($(configNode).size() > 0) {
+
+					// save recent channel
+					var channelKey = $(this).attr("data-key");
+					if (isNumeric(channelKey) == false) {
+						return;
+					}
+					var isRecent = recentChannels.indexOf(channelKey);
+					if (isRecent > -1 ) {
+						recentChannels.splice(isRecent, 1); //remove it
+					}
+					recentChannels.unshift(channelKey) //add it to the top
+					if ( recentChannels.length > 10  ) { //remove > 10
+						recentChannels.splice(11, recentChannels.length-10)
+					}
+
+					//save recents
+					localStorage.setItem('recentChannels', JSON.stringify(recentChannels) );
+					
+					//flip screen
 		   			$("#btnTitles").trigger(clickEventType);
+
+					// change channel
 		            $.getJSON("http://" + $(configNode).find("IPAddress").text() + ":" + $(configNode).find("Port").text() + '/tv/tune?major=' + $(this).attr("data-major"), function() {
+						// update whats on
 						setTimeout(function() {
 							nowPlaying();
-						}, 1500)
+						}, 1500);
 		            })
 			     }
 			});
@@ -417,19 +475,18 @@ function onDeviceReady() {
 		executeGestureByCommandName("Power");
 	});
 	$("#btnPlay").bind(clickEventType, function() {
-		executeGestureByCommandName("Play");
+		if ( $(this).hasClass("playing") ) {
+			executeGestureByCommandName("Pause");
+			$(this).removeClass("playing");
+		} else {
+			executeGestureByCommandName("Play");
+		}
+		
 	});
 	$("#btnMute").bind(clickEventType, function() {
 		executeGestureByCommandName("Mute");
 	});
-	$("#btnGuidedNavigation").bind(clickEventType, function () {
-		if ( $(this).hasClass("opaqueEmoji") ) {
-			localStorage.setItem("GuidedNavigation", true)
-		} else {
-			localStorage.setItem("GuidedNavigation", false)
-		}
-		$(this).toggleClass("opaqueEmoji")
-	});
+	
 	$("#btnSortDate").bind(clickEventType, function () {
 		if ( $(this).hasClass("opaqueEmoji") ) {
 			localStorage.setItem("SortDate", true)
@@ -540,7 +597,7 @@ function ShowItems(tr) {
 		MBUrl;
 	}
 
-	if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode" || localStorage.getItem("GuidedNavigation") == false  ) {
+	if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
 		//play title
 		MBUrl += "ui?command=play&id=" + $(tr).attr("data-guid")
 		$.getJSON(MBUrl, function(x) {
@@ -566,10 +623,6 @@ function ShowItems(tr) {
 			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
 		}
 		
-		if (localStorage.getItem("GuidedNavigation") == true ) {
-			MBUrl += "ui?command=navigatetoitem&id=" + $(tr).attr("data-guid")
-			$.getJSON(MBUrl)
-		}
 
 		$.each(x.Data.Children, function(key, val) { 
 			tb += '<tr data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type +'">'
@@ -603,6 +656,37 @@ function doSlideEvent() {
 	resetVolumeSlider();
 }
 
+function getTableRowHTML(c, channelKey, curChannel) {
+	var row = ""
+	if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) { //needs refresh
+		row += '<tr id="tr' + channelKey + '" data-loaded="false" data-major="' + c.number + '" data-key="' + channelKey + '"><td width="50px" ' 
+		if ( c.logo != "" ) {
+			row += "style = 'background: url(" + c.logo + ") center no-repeat' > "  
+		} else {
+			row += 'style="text-align: center" >' + c.number
+		}
+		row += '</td>' +
+		'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
+		'</div></td>'+
+		'<td width="30px" style="text-align: right">0:00</td></tr>';
+
+	} else { //pull cached
+
+		row += '<tr id="tr' + channelKey + '" data-loaded="true" data-major="' + c.number + '" data-key="' + channelKey + '"><td width="50px" ' 
+		if ( c.logo != "" ) {
+			row += "style = 'background: url(" + c.logo + ") center no-repeat' > " 
+		} else {
+			row += 'style="text-align: center" >' + c.number
+		}
+		row += '</td>' +
+		'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
+		c.nowplaying +
+		'</div></td>'+
+		'<td width="30px" style="text-align: right">' + c.timeleft +'</td></tr>';
+	}
+	return row;
+}
+
 function PhoneGapReady() {
     document.addEventListener("resume", onResume, false);
     document.addEventListener("pause", onBackground, false);
@@ -624,6 +708,9 @@ function checkScrollOverflow() {
 	}
 }
 
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 function showFilter(to) {
 	//setTimeout(function () {
@@ -648,6 +735,7 @@ function hideFilter() {
 
 
 function onResume() {
+	SleepDevice(false);
 	setTimeout(function () {
     	nowPlaying()
 	}, 10)
@@ -721,9 +809,6 @@ function loadSettings() {
 	if (localStorage.getItem("SortDate") == null) {
 		localStorage.setItem("SortDate", false)
 	}
-	if (localStorage.getItem("GuidedNavigation") == null) {
-		localStorage.setItem("GuidedNavigation", false)
-	}
 
 	if (roomshortname != "") {
 		if ( $(xml).find('gesturePad > rooms > room[roomshortname="' + roomshortname + '"]').size() == 0 ) {
@@ -744,6 +829,10 @@ function loadSettings() {
 	localStorage.setItem("devicename", devicename);
 	localStorage.setItem("shortname", shortname);
 	
+	if (localStorage.getItem("recentChannels") != null) {
+	 recentChannels=JSON.parse(localStorage['recentChannels']);
+	}
+
 	$(xml).find('gesturePad > settings > sounds:first').each(function() {
 		playSounds = $(this).text();
 	});
@@ -754,19 +843,19 @@ function loadSettings() {
 		} catch (e) { }
 	});
 
-	//set buttons
-	if ( localStorage.getItem("GuidedNavigation")  ==  true ) {
+	$(xml).find('gesturePad > settings > SleepThreshold').each(function() {
+		try {
+			SleepThreshold = parseInt($(this).text());
+		} catch (e) { }
+	});
 
-	} else {
-		$("#btnGuidedNavigation").addClass("opaqueEmoji")
-	}
+	//set buttons
 
 	if ( localStorage.getItem("SortDate")  ==  true ) {
 
 	} else {
 		$("#btnSortDate").addClass("opaqueEmoji")
 	}
-
 
 
 	//Populate room picker
@@ -877,6 +966,14 @@ function hms2(totalSec) {
     return (hours < 10 ? "0" + hours : hours)  + ":" + (minutes < 10 ? "0" + minutes : minutes) ;
 }
 
+function clearNowPlaying() {
+	$("#bgPic").attr("class", "noart");
+	$("#bgPic").attr("style", "");
+	$("#btnPlay").removeClass("playing");
+	$("#timespanleft").text( "0:00" )
+	$("#timespanright").text( "- 0:00" );
+	$("#NowPlayingTitle").text("");
+}
 
 function nowPlaying() {
 
@@ -891,9 +988,11 @@ function nowPlaying() {
             $.ajax({
                    url: base + "ui",
                    dataType: "json",
+                   timeout:10000,
                    success: function(j) {
-	                   	var output = j.Data.PlayingControllers[0].NowPlayingTitle;
-	                   	$("#NowPlayingTitle").text( output );
+                   		clearNowPlaying();
+
+	                   		
 							var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
 							var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
 	                   		var perc = offset / duration;
@@ -902,10 +1001,22 @@ function nowPlaying() {
 		    				$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
 		    				$("#timespanleft").text( hms2(offset) )
 		    				$("#timespanright").text( "- " + hms2(duration - offset) );
-	  
+	  						$("#NowPlayingTitle").text( j.Data.PlayingControllers[0].PlayableItems[0].DisplayName );
+
 		 					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[0];
 							$("#bgPic").attr("style", "background-image: url('" + base + "image/?Id=" + guid + "');")
 							$("#bgPic").attr("class", "");
+
+							if (j.Data.PlayingControllers[0].IsPaused == true ) {
+								$("#btnPlay").removeClass("playing");
+							} else {
+								$("#btnPlay").addClass("playing");
+							}
+
+							
+		         }, 
+		         error: function() {
+		         	clearNowPlaying();
 		         }
 	             
             });
@@ -917,15 +1028,12 @@ function nowPlaying() {
    
         var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
         if ($(configNode).size() > 0) {
-           
-          var canvas = document.getElementById("gestures_canvas");
-          var ctx  = canvas.getContext('2d');
-
+ 			$("#btnPlay").removeClass("playing");
             $.ajax({
                    type: "GET",
                    url: "http://" + $(configNode).find("IPAddress").text() + ":" + $(configNode).find("Port").text() + "/tv/getTuned",
                    dataType: "json",
-
+                   timeout: 10000,
                    success: function(json) {
   					
 	                   if (json.startTime) {
@@ -943,9 +1051,6 @@ function nowPlaying() {
 	                   $("#NowPlayingTitle").text( output );
   					   $("#NowPlayingTitle").attr("data-item", json.callsign + json.major);
   					   $("#NowPlayingTitle").attr("class", "");
-
-  	
-
 
 	                    $.ajax({
 		                   type: "GET",
@@ -965,15 +1070,11 @@ function nowPlaying() {
 		                   		});
 		                   		if (url == "" ) {
 		                   			$("#bgPic").attr("class", "noart");
-		                   			$("#bgPic").attr("style", "");
+									$("#bgPic").attr("style", "");
 		                   		} else {
-
 									$("#bgPic").attr("style", "background-image: url('" + url + "');")
 									$("#bgPic").attr("class", "");
-
 		                   		}
-
-
 		                   	}
 		                });
 						

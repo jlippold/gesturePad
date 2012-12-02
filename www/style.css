@@ -10,6 +10,10 @@ body {
 	overflow: hidden;
 }
 
+* {
+	-webkit-tap-highlight-color: rgba(0,0,0,1); 
+}
+
 #top {
 	z-index: 1;
 	height: 40px;
@@ -75,6 +79,11 @@ div.five {
 #btnPlay {
 	background: url("img/play.png");
 }
+
+#btnPlay.playing {
+	background: url("img/pause.png");
+}
+
 #btnForward {
 	background: url("img/next.png");
 }
@@ -98,7 +107,8 @@ div.five {
 	width: 8%;
 	margin-left: 3%;
 	margin-right: 1%;
-	height: 100%;
+	margin-top: 5px;
+	height: 70%;
 	float:left;
 }
 #top div.head {
@@ -111,8 +121,9 @@ div.five {
 	width: 8%;
 	margin-left: 1%;
 	margin-right: 3%;
-	height: 100%;
 	float:left;
+	margin-top: 5px;
+	height: 70%;
 }
 
 #btnCommands {
@@ -234,13 +245,9 @@ p.bold {
 	text-align: center;
 }
 
-div.control {
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-
-div.control:active {
-	background-image: none !important, -moz-radial-gradient(center center , circle closest-corner, #FFFFFF 1%, rgba(255, 255, 255, 0) 40%) !important;
-	background-image: none !important, -webkit-radial-gradient(center center , circle closest-corner, #FFFFFF 1%, rgba(255, 255, 255, 0) 40%) !important;
+div.active {
+	background-image: -moz-radial-gradient(center center , circle closest-corner, #FFFFFF 1%, rgba(255, 255, 255, 0) 40%) !important;
+	background-image: -webkit-radial-gradient(center center , circle closest-corner, #FFFFFF 1%, rgba(255, 255, 255, 0) 40%) !important;
 }
 
 div.searchContainer div.left {

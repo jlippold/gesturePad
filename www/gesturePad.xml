@@ -8,6 +8,8 @@
 
 		<LongSwipeThreshold>200</LongSwipeThreshold>
 
+		<SleepThreshold>15000</SleepThreshold>
+
 	</settings>
 
 	<rooms>
@@ -797,7 +799,7 @@
 
 						</action>
 
-
+						<gesture definition='1.U.D' />
 
 					</command>
 
@@ -815,6 +817,7 @@
 
 						</action>
 
+						<gesture definition='1.D.U' />
 
 					</command>
 
@@ -1163,8 +1166,6 @@
 
 						</action>
 
-						<gesture definition='1.U.D' />
-
 					</command>
 
 					<command>
@@ -1182,8 +1183,6 @@
 							<addtobaseurl>remote/processKey</addtobaseurl>
 
 						</action>
-
-						<gesture definition='1.D.U' />
 
 					</command>
 
