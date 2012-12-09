@@ -1,4 +1,4 @@
-var xml, channellist;
+var xml;
 var LongSwipeThreshold = 100;
 var SleepThreshold = 15000;
 var playSounds = "true";
@@ -11,7 +11,7 @@ var scrollstop = null;
 var recentChannels = new Array();
 
 
-function setupWorker() {
+function setupWorker(channellist) {
 
 	if  ( $(xml).find('gesturePad > rooms > room:first > device[shortname="DTV"]').size() == 0 ) {
 		return;
@@ -35,8 +35,9 @@ function setupWorker() {
 }
 
 function startWorker() {
-
-	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
+	if (typeof navigator.device === "undefined") {
+		return;
+	} else {
 		 
 		//save all dtv servers to an array
 			var dtvServers = new Array();
@@ -105,11 +106,25 @@ function refreshChannel(server, queueName, channelKey) {
 	});
 }
 
+function clearSleepTimer() {
+	SleepDevice(false);
+ 	clearTimeout(sleepTimer)
+ 	if (SleepThreshold > 0) {
+		sleepTimer = setTimeout( "SleepDevice(true)", SleepThreshold );
+ 	}
+}
+
 function SleepDevice(sleep) {
-	if (sleep) {
-		executeObjC("http://gesturepad/sleep/?do=true")
-	} else {
-		executeObjC("http://gesturepad/wake/?do=true")
+
+	if (SleepThreshold > 0) {
+		if (sleep) {
+			if ( $("#gestures_canvas:visible").size() == 0  ) {
+				return;
+			} 
+			executeObjC("http://gesturepad/sleep/?do=true")
+		} else {
+			executeObjC("http://gesturepad/wake/?do=true")
+		}
 	}
 }
 
@@ -121,26 +136,23 @@ function executeObjC(url) {
   iframe = null;
 }
 
+
 function onDeviceReady() {
-	//window.localStorage.clear();
-    
+
+
 	$.gestures.init();
 	$.gestures.retGesture(function(gesture) {
 		doEvent(gesture);
-
+		clearSleepTimer();
 	});
 	
 	doResize();
 
 	clickEventType = ((document.ontouchstart!==null)?'click':'click'); //never inplemented custom tap
 
-	$("body").bind("touchend", function() {
-		SleepDevice(false);
-	 	clearTimeout(sleepTimer)
-		sleepTimer = setTimeout( "SleepDevice(true)", SleepThreshold );
-	})
 	//event when scrolling ends to refresh dtv channels
 	$("#backFace").bind("scroll", function() {
+
 		if (localStorage.getItem("shortname") != "DTV") {
 			return;
 		}
@@ -185,6 +197,7 @@ function onDeviceReady() {
 		            threadcounter += 1;					            
 		        }
 		    });
+		    clearSleepTimer()
 	    }, 100);
 	});
 
@@ -195,8 +208,29 @@ function onDeviceReady() {
 	    $(this).addClass('active');
 	}).bind('touchend', function(){
 	    $(this).removeClass('active');
+	    clearSleepTimer()
 	});
 
+	$("#saveSettings").bind(clickEventType, function() {
+		var gestureXML = $("#gestureXML").val();
+		var channelXML = $("#channelXML").val();
+		if (channelXML == "" ) {
+			channelXML = null;
+		}
+		if (gestureXML == "" ) {
+			gestureXML = null;
+		}
+		localStorage.setItem("gestureXML",  gestureXML );
+		localStorage.setItem("channelXML",  channelXML );
+			try {
+				navigator.notification.alert("Settings Saved.", null, "gesturePad");
+			} catch(e) {} 
+		
+		loadXML(); 
+		$("#btnConfig").trigger(clickEventType);
+		
+	});
+	
 	$("#btnTitles").bind(clickEventType, function() {
 
 		/* generic flip shit */
@@ -225,8 +259,9 @@ function onDeviceReady() {
 		if (localStorage.getItem("shortname") == "DTV") {
 			
 			//build table for channel list 
-			var tb =  "<table class='listing' style='width: " + $("#card").width() + "px !important'>"
 			
+
+			var tb = "<table class='listing'>"
 			//loop recents first 
 			if (recentChannels.length > 0) {
 				tb += "<tr class='head'><td colspan='3'>Recent Channels</td></tr>";
@@ -253,8 +288,9 @@ function onDeviceReady() {
 
 			tb += "</table>"
 
-
-		    $("#backFace").html( tb );
+			
+				   
+			$("#backFace").html( tb );
 		     
 		    checkScrollOverflow()
 		    showFilter("DTV") 
@@ -350,6 +386,21 @@ function onDeviceReady() {
 
 	});
 
+	
+	$("#btnConfig").bind(clickEventType, function() {
+		if ( $("#gestures_canvas").is(":visible") ) {
+			$("#gestures_canvas").hide();
+			$("#bgPic").attr("class", "noartnologo");
+			$("#bgPic").attr("style", "");
+			$("#frmSettings").show();
+		} else {
+			$("#gestures_canvas").show();
+			$("#bgPic").attr("class", "noart");
+			$("#frmSettings").hide();
+			nowPlaying();
+		}
+	})
+
 	$("#btnCommands").bind(clickEventType, function() {
 		/* generic flip shit */
 		if ( localStorage.getItem("roomname") == "" || localStorage.getItem("devicename") == "" ) { //No room selected
@@ -424,13 +475,13 @@ function onDeviceReady() {
 
 	$("#VolumeContainer").bind("touchmove", function(event) {  
 			clearTimeout(slideTimer);
-			
+			clearSleepTimer()
 			//event.preventDefault();
 			var e = event.originalEvent;
 		    var touch = e.touches[0]; 
 
 		    var max = $("#VolumeSlider").width();
-		    var x = touch.pageX;
+		    var x = touch.pageX - 50;
 		    if (x > max) {
 		    	x = max;
 		    }
@@ -464,6 +515,40 @@ function onDeviceReady() {
 			
 	});
 
+	$("#seekbarContainer").bind("touchmove", function(event) {  
+			clearSleepTimer()
+			clearTimeout(slideTimer);
+			if (localStorage.getItem("shortname") == "MCE") {
+				event.preventDefault();
+				var e = event.originalEvent;
+			    var touch = e.touches[0]; 
+
+			    var max = $("#slider").width();
+			    var x = touch.pageX - 50;
+			    if (x > max) {
+			    	x = max;
+			    }
+
+			    var duration = $("#timespanright").attr("data-duration");
+
+			    if (isNumeric(duration)) {
+
+				    var percentageDragged =  x/max ;
+				    $("#timeseek").attr("style", "left: " + (x-10) + "px");
+				    $("#timebar").attr("style", "width: " + Math.floor(percentageDragged*100) + "%");
+					
+			    	var seekTo = Math.floor(  duration * percentageDragged );
+
+				    $(this).attr("data-sendval", seekTo);
+				     
+				    slideTimer = setTimeout(doSeekEvent, 500);
+			    }
+			    
+
+			}
+	
+	});
+
 	$("#btnRoom").bind(clickEventType, function() {
 		$("#frmRoom").show();
 		$("#lstRooms").val("")
@@ -489,9 +574,9 @@ function onDeviceReady() {
 	
 	$("#btnSortDate").bind(clickEventType, function () {
 		if ( $(this).hasClass("opaqueEmoji") ) {
-			localStorage.setItem("SortDate", true)
+			localStorage.setItem("SortDate", 1)
 		} else {
-			localStorage.setItem("SortDate", false)
+			localStorage.setItem("SortDate", 0)
 		}
 		$(this).toggleClass("opaqueEmoji")
 	});
@@ -526,7 +611,7 @@ function onDeviceReady() {
 		event.preventDefault();
 	})
 
-	$("#top, #bottom").bind("touchmove", function(event) {
+	$("#top, #bottom, #toptrans").bind("touchmove", function(event) {
 		event.preventDefault();
 	})
 
@@ -558,29 +643,41 @@ function onDeviceReady() {
 		event.preventDefault();	
 	   }
 	});
-	
-	
+
+	loadXML(); 
+
+ 	npTimer = setInterval(function() {
+      nowPlaying()
+	}, 30000);
+
+	clearSleepTimer();
+
+}
+
+function loadXML() {
+	var xmlLoc = "gesturePad.xml?r=" + Math.random()
+	if ( localStorage.getItem("gestureXML").toString() != 'null'  ) {
+		xmlLoc = localStorage.getItem("gestureXML")
+	}
 	$.ajax({
 	    type: "GET",
-		url: "gesturePad.xml?r=3",
+		url: xmlLoc,
 		dataType: "xml",
 		success: function(resp) {
           	xml = resp;
 			loadSettings();
 		},
 		error: function() {
-			navigator.notification.alert("Error loading settings", null, "gesturePad");
+
+			try {
+			navigator.notification.alert("Error loading settings: " + xmlLoc , null, "gesturePad");
+			} catch(e) {} 
 		}		
 	});
-
-	
- 	npTimer = setInterval(function() {
-      nowPlaying()
-	}, 30000);
-
 }
 
 function ShowItems(tr) {
+	clearSleepTimer()
 
 	var MBUrl = "";
 	
@@ -610,6 +707,18 @@ function ShowItems(tr) {
 		return;
 	}
 
+	if ( $(tr).attr("data-type") == "Shuffle" ) {
+		//play title
+		MBUrl += "ui?command=shuffle&id=" + $(tr).attr("data-guid")
+		$.getJSON(MBUrl, function(x) {
+			$("#btnTitles").trigger(clickEventType);
+			setTimeout(function() {
+				nowPlaying();
+			}, 1500)
+         })
+		return;
+	}
+
 	$.getJSON(MBUrl + "library?lightData=1&Id=" + $(tr).attr("data-guid"), function(x) {
 		$("#backFace table").html( "" );
 		tb = "";
@@ -617,16 +726,18 @@ function ShowItems(tr) {
 		if ( x.Data.Name != "StartupFolder" ) {
 			tb += '<tr data-guid="' + x.Data.parentId + '" data-type="Folder">'
 				+ '<td colspan="2"><div>.. </div></td>';
+
+			tb += '<tr data-guid="' + x.Data.Id + '" data-type="Shuffle">'
+				+ '<td colspan="2" class="shuffle"><div> Shuffle </div></td>';
 		}
 
-		if (localStorage.getItem("SortDate") == true && x.Data.Name != "StartupFolder" ) {
+		if (localStorage.getItem("SortDate") == 1 && x.Data.Name != "StartupFolder" ) {
 			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
 		}
 		
-
 		$.each(x.Data.Children, function(key, val) { 
 			tb += '<tr data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type +'">'
-				+ '<td><div>' + ( (x.Data.Children[key].WatchedPercentage < 5) ? "⭐ " : ""  ) 
+				+ '<td><div>' + ( (x.Data.Children[key].WatchedPercentage < 5) ? "&#10022; " : ""  ) 
 				+ x.Data.Children[key].Name 
 				+ ( (x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""  ) 
 				+ '</div></td>';
@@ -648,6 +759,23 @@ function ShowItems(tr) {
 			ShowItems( $(this) )
 		})
 	})
+}
+
+function doSeekEvent() {
+	var seek = $("#seekbarContainer").attr("data-sendval");
+    if (localStorage.getItem("shortname") == "MCE") {
+        var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
+        if ($(configNode).size() > 0) {
+			var base = "http://" + $(configNode).find("IPAddress").text();
+			base += ":" + $(configNode).find("ServicePort").text() + "/mbwebapi/service/"
+			base += "ui?command=seek&value=" + seek + "&controllerName=" + $("#timespanright").attr("data-controller") ;
+			$.getJSON(base, function() {
+				setTimeout(function() {
+					nowPlaying();
+				}, 1500)
+			 })
+        }
+    }
 }
 
 function doSlideEvent() {
@@ -746,6 +874,7 @@ function onResume() {
 }
 
 function onBackground() {
+	SleepDevice(false);
 	clearInterval(npTimer);
 }
 
@@ -778,7 +907,7 @@ function resetVolumeSlider() {
 
 function onBodyLoad() {
     setTimeout( function () {
-       if (typeof navigator.device === undefined){
+       if (typeof navigator.device !== "undefined"){
             document.addEventListener("deviceready", PhoneGapReady, false);
        } else {
             PhoneGapReady();
@@ -806,8 +935,8 @@ function loadSettings() {
 	} catch (e) {
 		
 	}
-	if (localStorage.getItem("SortDate") == null) {
-		localStorage.setItem("SortDate", false)
+	if (localStorage.getItem("SortDate") == 'null') {
+		localStorage.setItem("SortDate", 0)
 	}
 
 	if (roomshortname != "") {
@@ -828,9 +957,19 @@ function loadSettings() {
 	localStorage.setItem("roomshortname", roomshortname);
 	localStorage.setItem("devicename", devicename);
 	localStorage.setItem("shortname", shortname);
+
+
 	
-	if (localStorage.getItem("recentChannels") != null) {
-	 recentChannels=JSON.parse(localStorage['recentChannels']);
+	if (localStorage.getItem("recentChannels").toString() != 'null') {
+	  recentChannels=JSON.parse(localStorage['recentChannels']);
+	}
+
+	if ( localStorage.getItem("gestureXML").toString() != 'null' ) {
+		$("#gestureXML").val(  localStorage.getItem("gestureXML") )
+	}
+
+	if ( localStorage.getItem("channelXML").toString() != 'null' ) {
+		$("#channelXML").val(  localStorage.getItem("channelXML") )
 	}
 
 	$(xml).find('gesturePad > settings > sounds:first').each(function() {
@@ -851,7 +990,7 @@ function loadSettings() {
 
 	//set buttons
 
-	if ( localStorage.getItem("SortDate")  ==  true ) {
+	if ( localStorage.getItem("SortDate")  ==  1 ) {
 
 	} else {
 		$("#btnSortDate").addClass("opaqueEmoji")
@@ -871,13 +1010,15 @@ function loadSettings() {
 		 	toAppend += '<option data-switch="1" value="' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
 		 	toAppendNoSwitch += '<option data-switch="0"  value="0' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
 	 	});
-	 
+
 	});
+
 	$("#lstRooms").html( "<option value=''>Switch Inputs</option>" + toAppend + "<optgroup label='Dont Switch Inputs'>"  + toAppendNoSwitch + "</optgroup>" )
 	$("#lstRooms").val("");
 
 	//bind room swtich events
 	$("#lstRooms").bind("change", function () {
+		$("#btnPlay").addClass("playing");
 		$(this).parent().submit();
  		localStorage.setItem("roomname", $(this).find("option:selected").attr("data-roomname") );
  		localStorage.setItem("devicename", $(this).find("option:selected").attr("data-devicename") );
@@ -888,20 +1029,25 @@ function loadSettings() {
 	 		var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
 	 		doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
  		}
+
  		updateStatus();
 	})
 
 
+	var xmlLoc = "channellist.xml?r=" + Math.random();
+	if ( localStorage.getItem("channelXML") != 'null' ) {
+		xmlLoc = localStorage.getItem("channelXML")
+	}
+
 	$.ajax({
 	    type: "GET",
-		url: "channellist.xml?r=1",
+		url: xmlLoc,
 		dataType: "xml",
 		success: function(resp) {
-          	channellist = resp;
-          	setupWorker()
+          	setupWorker(resp)
 		},
 		error: function() {
-			navigator.notification.alert("Error loading channel list", null, "gesturePad");
+			navigator.notification.alert("Error loading channel list: "  + xmlLoc, null, "gesturePad");
 		}		
 	});
 
@@ -911,32 +1057,7 @@ function loadSettings() {
 
 }
 
-/*    function downloadFile() {
-        var remoteFile = "http://i3.kym-cdn.com/entries/icons/original/000/000/080/doubt.jpg";
-        var localFileName = remoteFile.substring(remoteFile.lastIndexOf('/')+1);
-        
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-            fileSystem.root.getFile(localFileName, {create: true, exclusive: false}, function(fileEntry) {
-                var localPath = fileEntry.fullPath;
-                if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
-                    localPath = localPath.substring(7);
-                }
-                var ft = new FileTransfer();
-                ft.download(remoteFile,
-                    localPath, function(entry) {
-                    	alert("foo")
-                        var dwnldImg = document.getElementById("dwnldImg");
-                        dwnldImg.src = entry.fullPath;
-                        dwnldImg.style.visibility = "visible";
-                        dwnldImg.style.display = "block";
-                    }, fail);
-            }, fail);
-        }, fail);
-    }
-    
-    function fail(error) {
-        console.log(error.code);
-    }*/
+
 
 
 function updateStatus() { 
@@ -969,13 +1090,23 @@ function hms2(totalSec) {
 function clearNowPlaying() {
 	$("#bgPic").attr("class", "noart");
 	$("#bgPic").attr("style", "");
-	$("#btnPlay").removeClass("playing");
 	$("#timespanleft").text( "0:00" )
 	$("#timespanright").text( "- 0:00" );
 	$("#NowPlayingTitle").text("");
 }
 
 function nowPlaying() {
+
+	//generic repaint for disappearing ui elements
+	$("#top, #bottom, #seekbarContainer, #toptrans").each(function() {
+		$(this)[0].style.display='none';
+		$(this)[0].offsetHeight; // no need to store this anywhere, the reference is enough
+		$(this)[0].style.display='block';
+	});
+
+	if ( $("#frmSettings").is(":visible") ) {
+		return;
+	}
 
     if (localStorage.getItem("shortname") == "MCE") {
    
@@ -1001,12 +1132,19 @@ function nowPlaying() {
 		    				$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
 		    				$("#timespanleft").text( hms2(offset) )
 		    				$("#timespanright").text( "- " + hms2(duration - offset) );
+		    				$("#timespanright").attr("data-duration", j.Data.PlayingControllers[0].CurrentFileDuration.Ticks );
+		    				$("#timespanright").attr("data-controller", j.Data.PlayingControllers[0].ControllerName );
 	  						$("#NowPlayingTitle").text( j.Data.PlayingControllers[0].PlayableItems[0].DisplayName );
 
-		 					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[0];
-							$("#bgPic").attr("style", "background-image: url('" + base + "image/?Id=" + guid + "');")
-							$("#bgPic").attr("class", "");
+		 					var currentID = j.Data.PlayingControllers[0].PlayableItems[0].CurrentMediaIndex;
+		 					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[currentID];
 
+		 					if ( $("#bgPic").attr("data-id") != guid ) {
+								$("#bgPic").attr("style", "background-image: url('" + base + "image/?Id=" + guid + "');")
+								$("#bgPic").attr("class", "");
+								$("#bgPic").attr("data-id", guid);
+		 					}
+						
 							if (j.Data.PlayingControllers[0].IsPaused == true ) {
 								$("#btnPlay").removeClass("playing");
 							} else {
@@ -1028,7 +1166,7 @@ function nowPlaying() {
    
         var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
         if ($(configNode).size() > 0) {
- 			$("#btnPlay").removeClass("playing");
+ 			
             $.ajax({
                    type: "GET",
                    url: "http://" + $(configNode).find("IPAddress").text() + ":" + $(configNode).find("Port").text() + "/tv/getTuned",
@@ -1062,18 +1200,37 @@ function nowPlaying() {
 		                   },
 		                   success: function(tvxml) {
 		                   		var url = "";
+		                   		var guid = ""
 		                   		$(tvxml).find("Data > Series > SeriesName").each(function () {
 		                   			if ( $(this).text().toLowerCase().replace(/\W/g, '').replace('the', '') == json.title.toLowerCase().replace(/\W/g, '').replace('the', '') ) {
-		                   				url = "http://thetvdb.com/banners/_cache/posters/" + $(this).parent().find("seriesid").text() + "-1.jpg";
+		                   				guid = $(this).parent().find("seriesid").text();
 		                   				return false;	
 		                   			}
 		                   		});
-		                   		if (url == "" ) {
+
+		                   		if (guid == "" ) {
 		                   			$("#bgPic").attr("class", "noart");
 									$("#bgPic").attr("style", "");
 		                   		} else {
-									$("#bgPic").attr("style", "background-image: url('" + url + "');")
-									$("#bgPic").attr("class", "");
+				                    $.ajax({
+					                   type: "GET",
+					                   url: "http://thetvdb.com/api/77658293DB487350/series/" + guid + "/",
+					                   dataType: "xml",
+					                   error: function (x,y,z) {
+					                   		$("#bgPic").attr("class", "noart");
+					                   		$("#bgPic").attr("style", "");
+					                   },
+					                   success: function(seriesxml) {
+					                   		$(seriesxml).find("poster:first").each(function () {
+												if ( $("#bgPic").attr("data-id") != guid ) {
+													$("#bgPic").attr("style", "background-image: url('http://thetvdb.com/banners/_cache/" + $(this).text() + "');")
+													$("#bgPic").attr("class", "");
+													$("#bgPic").attr("data-id", guid);
+							 					}
+					                   		});
+							 		
+					                   }
+					                 })
 		                   		}
 		                   	}
 		                });

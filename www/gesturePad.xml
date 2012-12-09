@@ -8,7 +8,7 @@
 
 		<LongSwipeThreshold>200</LongSwipeThreshold>
 
-		<SleepThreshold>15000</SleepThreshold>
+		<SleepThreshold>120000</SleepThreshold>
 
 	</settings>
 
@@ -35,7 +35,7 @@
 
 				<name>DirecTV</name>
 
-				<IPAddress>192.168.1.120</IPAddress> 
+				<IPAddress>192.168.1.149</IPAddress> 
 
 				<Port>8080</Port> 
 
@@ -325,7 +325,7 @@
 
 				<name>DirecTV</name>
 
-				<IPAddress>192.168.1.149</IPAddress> 
+				<IPAddress>192.168.1.120</IPAddress> 
 
 				<Port>8080</Port> 
 

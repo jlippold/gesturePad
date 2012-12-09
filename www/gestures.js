@@ -140,7 +140,7 @@ jQuery.gestures = {};
 
 
         if(active && recording) {
-          console.log("Curr" + e.clientY)
+          
           if (e.type == "mousemove") {
             var pos = {x:e.clientX,y:e.clientY};
           } else {

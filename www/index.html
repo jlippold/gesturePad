@@ -29,21 +29,27 @@
 	<div id="container">
 		<div id="card">
 		  <div id="frontFace" class="front face">
-				<div class="toptrans">
-					<div class="seekbarContainer">
+				<div class="toptrans" id="toptrans">
+					<div class="seekbarContainer" id="seekbarContainer">
 						<p id='NowPlayingTitle'>&nbsp;</p>
 						<div class="timespanleft" id="timespanleft">0:00</div>
-							<div class="slider" style="width: 69%" >
+							<div class="slider" id="slider" style="width: 69%" >
 								<div class="sliderh" id='timebar'></div>        
 								<div class="seekto" id='timeseek'></div>
 							</div>
 						<div class="timespanright" id="timespanright">-1:00</div>
 
-						<div class="left emoji" id="btnNumberPad" style="display:none"  >🔢</div>
-						<div class="right emoji" id="btnConfig" style="display:none" >🔧</div>
+						<div class="left" id="btnConfig" ></div>
+						<div class="right" id="btnTransfer"></div>
+
 					</div>
 				</div>
 				<div id="bgPic" class="noart">
+					<form style="" id="frmSettings" class="frmSettings">
+						<input type="text" id="gestureXML" value="" placeholder="gesturePad.xml Web Location" /> <br />
+						<input type="text" id="channelXML" value="" placeholder="channelList.xml Web Location" />
+						<a href="#" class="redButton" id="saveSettings">Save Changes</a>
+					</form>
 				</div>
 				<div id="gestureCallback">
 

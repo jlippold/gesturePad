@@ -161,21 +161,21 @@
         [[UIScreen mainScreen] setWantsSoftwareDimming:YES];
         [[UIScreen mainScreen] setBrightness:0.0];
         self.webView.opaque = YES;
-        self.webView.alpha = 0.05f;
+        self.webView.alpha = 0.1f;
         [[UIApplication sharedApplication] setStatusBarHidden:YES animated:NO];
         return NO;
     }
     else if ([url hasPrefix:@"http://gesturepad/wake"]) {
         
         [[UIScreen mainScreen] setWantsSoftwareDimming:YES];
-        [[UIScreen mainScreen] setBrightness:1.0];
+        [[UIScreen mainScreen] setBrightness:0.8];
         self.webView.opaque = YES;
         self.webView.alpha = 1.0f;
         [[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO];
         return NO;
     }
     else {
-        [[UIScreen mainScreen] setBrightness:1.0];
+        [[UIScreen mainScreen] setBrightness:0.8];
         return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
     }
     

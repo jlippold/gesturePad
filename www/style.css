@@ -11,13 +11,18 @@ body {
 }
 
 * {
-	-webkit-tap-highlight-color: rgba(0,0,0,1); 
+	-webkit-tap-highlight-color: rgba(0,0,0,0.75); 
+}
+
+*:not(input) {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none; /* Disable selection/Copy of UIWebView */
 }
 
 #top {
 	z-index: 1;
 	height: 40px;
-	position: absolute;
+	position: fixed;
 	top:0;
 	width: 100%;
 	border-bottom: 1px solid #1E1E1E;
@@ -55,7 +60,7 @@ div.toptrans {
 	width: 100%;
 	background: rgba(0,0,0,0.5);
 	border-bottom: 1px solid #000;
-	height: 70px;
+	height: 80px;
 	-webkit-backface-visibility: hidden;
 }
 
@@ -126,6 +131,7 @@ div.five {
 	height: 70%;
 }
 
+
 #btnCommands {
 	background-image: url("img/commands.png");
 	background-size: contain;
@@ -138,6 +144,28 @@ div.five {
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center center; 
+}
+
+#btnConfig {
+	background-image: url("img/gear.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center; 
+	width: 18px;
+	height: 18px;
+	margin-left: 5%;
+	margin-top: 10px;
+}
+
+#btnTransfer {
+	background-image: url("img/transfer.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center; 
+	width: 18px;
+	height: 18px;
+	margin-right: 5%;
+	margin-top: 10px;
 }
 
 .slider {
@@ -278,13 +306,24 @@ div.searchContainer div.right {
 
 #bgPic.noart {
 	min-height: 100%;
-	background: url("img/logo.png") center no-repeat, -moz-radial-gradient(circle , #FCFCFD, #D8E0E8);
-	background: url("img/logo.png") center no-repeat, -webkit-radial-gradient(50% 0%, circle, #FCFCFD, #D8E0E8);
+	background: url("img/logo.png") center no-repeat, radial-gradient(center -65%, circle farthest-corner, rgba(171, 171, 171, 0.6), #000000 76%);
+	background: url("img/logo.png") center no-repeat, -webkit-radial-gradient(center -65%, circle farthest-corner, rgba(171, 171, 171, 0.6), #000000 76%);
 	background-size: auto;
     margin-bottom: auto;
     margin-top: 0px !important;
     min-height: 100%;
 }
+
+#bgPic.noartnologo {
+	min-height: 100%;
+	background: radial-gradient(center -65%, circle farthest-corner, rgba(171, 171, 171, 0.6), #000000 76%);
+	background: -webkit-radial-gradient(center -65%, circle farthest-corner, rgba(171, 171, 171, 0.6), #000000 76%);
+	background-size: auto;
+    margin-bottom: auto;
+    margin-top: 0px !important;
+    min-height: 100%;
+}
+
 
 #container {
   position: absolute;
@@ -339,6 +378,7 @@ div.searchContainer div.right {
 	background: -moz-radial-gradient(circle , #767777, #394147);
 	background:  -webkit-radial-gradient(50% 0%, circle , #767777, #282828);
 		overflow: auto;
+		overflow-x: hidden;
 	
 	border-collapse: collapse;
 }
@@ -371,6 +411,7 @@ form.searchform {
 
 }
 
+
 form.searchform .icon-search:before {
     content: "🔎";
     display: inline-block;
@@ -385,6 +426,8 @@ form.searchform input  {
     color: #555555;
     padding: 0;
     width: 100%;
+    -webkit-appearance: textarea;
+
 }
 
 table.listing {
@@ -403,6 +446,22 @@ table.listing tr td {
 	line-height: 26px;
 }
 
+td.shuffle {
+	background-attachment: scroll;
+	background-clip: border-box;
+	background-color: transparent;
+	background-image: url("img/shuffle.png");
+	background-origin: padding-box;
+	background-position: 10px center;
+	background-repeat: no-repeat;
+	background-size: 20px auto;
+}
+
+td.shuffle div {
+	margin-left: 26px;
+	width: 70%;
+}
+
 table.listing tr td div {
 	width: 100%;
 	height: 30px;
@@ -415,7 +474,8 @@ table.listing tr td div {
 
 
 table.listing tr.head td {
-	height: 15px;
+	height: 14px;
+	line-height: 14px;
 	font-size: 12px;
 	text-align: center;
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(
@@ -475,7 +535,7 @@ table.listing tr > td:last-child {
 #gestures_canvas {
 	z-index: 2;
 	position: absolute;
-	top: 71px;
+	top: 81px;
 }
 
 #gestureCallback {
@@ -614,3 +674,68 @@ div.spincontainer {
 div.spincontainer div.spinner div {background: #fff;}
 
 /* spinner */
+
+
+form.frmSettings {
+	top: 100px; 
+	position: absolute; 
+	z-index: 20;
+	width: 100%;
+	display: none;
+}
+
+form.frmSettings input {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    color: #555555;
+   	background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 2em 2em 2em 2em;
+    line-height: 1em;
+    padding: 4px 31px 4px 15px;
+    position: relative;
+    width: 80%;
+    margin-left: 5%;
+    -webkit-appearance: textarea;
+    margin-top: 20px;
+}
+
+form.frmSettings a {
+    width: 80%;
+    margin-left: 5%;
+    margin-top: 40px;
+}
+
+
+.whiteButton, .grayButton, .redButton, .blueButton{
+    display: block;
+    border-width: 0 12px;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: inherit;
+    color: inherit;
+}
+
+.whiteButton {
+    -webkit-border-image: url(img/whiteButton.png) 0 12 0 12;
+    text-shadow: rgba(255, 255, 255, 0.7) 0 1px 0;
+    color: #000;
+}
+.grayButton {
+    -webkit-border-image: url(img/grayButton.png) 0 12 0 12;
+    color: #FFFFFF;
+}
+
+.redButton {
+    -webkit-border-image: url(img/redButton.png) 0 12 0 12;
+    text-shadow: #7a0001 0 -1px 0;
+}
+.blueButton {
+    -webkit-border-image: url(img/blueButton.png) 0 12 0 12;
+    color: #FFFFFF;
+}
+
+
+
+
