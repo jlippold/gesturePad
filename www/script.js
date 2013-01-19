@@ -1,6 +1,6 @@
 var xml;
 var LongSwipeThreshold = 100;
-var SleepThreshold = 15000;
+var SleepThreshold = 60000;
 var playSounds = "true";
 var appendOncetoQueryString = "";
 var navigator, npTimer, inputTimer, clickEventType, slideTimer;
@@ -8,8 +8,6 @@ var guide =  new Object();
 var workerTimer = null;
 var sleepTimer = null;
 var scrollstop = null;
-var recentChannels = new Array();
-
 
 function setupWorker(channellist) {
 
@@ -20,18 +18,45 @@ function setupWorker(channellist) {
 	guide.channels = new Array();
 
 	//setup base structures
+	var dedupe = ""
 	$(channellist).find('channels > channel').each(function() {
-	  	var channel = new Object();
-	  	channel.number = $(this).find("number").text() ;
-	  	channel.logo = $(this).find("logo").text();
-	  	channel.callsign = $(this).find("callsign").text();
-	  	channel.nowplaying = "";
-	  	channel.ending = 0;
-	  	channel.timeleft = "";
-		guide.channels.push( channel );
+		if (dedupe != $(this).find("number").text() ) {
+	  		var channel = new Object();
+		  	channel.number = $(this).find("number").text() ;
+		  	channel.logo = $(this).find("logo").text();
+		  	channel.callsign = $(this).find("callsign").text();
+		  	channel.nowplaying = "";
+		  	channel.ending = 0;
+		  	channel.timeleft = "";
+		  	channel.fullname = $(this).find("fullname").text();
+		  	var fav = $(channellist).find('channels > favorites > category > number').filter(function() { return $(this).text() == channel.number  });;
+
+		  	if ( $(fav).size() > 0 ) {
+		  		channel.category = $(fav).parent().attr("name");
+		  		channel.catIndex = parseInt($(fav).parent().attr("idx"));
+		  	}  else {
+		  		channel.category = "Unsorted";
+		  		channel.catIndex = 999;
+		  	}
+
+			guide.channels.push( channel );
+			dedupe = channel.number;
+		}
 	});
 
+	guide.channels.sort(compare);
+
 	startWorker();
+}
+
+
+//sort em
+function compare(a,b) {
+  if (a.catIndex < b.catIndex)
+     return -1;
+  if (a.catIndex > b.catIndex)
+    return 1;
+  return 0;
 }
 
 function startWorker() {
@@ -51,7 +76,11 @@ function startWorker() {
 				$(this).find("Port:first").each(function(){
 					DTVurl += ":" + $(this).text() + "/"
 				});		
-				dtvServers[currentServer] = DTVurl;
+				var Dtv = new Object();
+				Dtv.url = DTVurl;
+				Dtv.room = $(this).parent().attr("roomshortname");
+				dtvServers[currentServer] = Dtv;
+
 				currentServer += 1;
 			});
 
@@ -62,26 +91,36 @@ function startWorker() {
 		 		//first determine if the channel needs a refresh
 		 		if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) {
 		 			c.nowplaying = "";
-		 			//pick a server
-			 		if ( currentServer > dtvServers.length-1 ) {
-			 			currentServer = 0
-			 		}
-			 
-		 			//queue the refesh on that server
-		 			refreshChannel(dtvServers[currentServer], "DTVWorker"+currentServer, channelKey);
-		 			currentServer += 1;
+
+		 			var blnFoundServer = false;
+		 			while(blnFoundServer == false) {
+		 				//pick a server
+				 		if ( currentServer > dtvServers.length-1 ) {
+				 			currentServer = 0
+				 		}
+				 		//alert(dtvServers[currentServer].room);
+			 			//queue the refesh on that server
+			 			if ( dtvServers[currentServer].room != localStorage.getItem("roomshortname") ) { //dont overload the current room
+			 				refreshChannel(dtvServers[currentServer].url, "DTVWorker"+currentServer, channelKey);
+			 				blnFoundServer = true;
+			 			}
+
+			 			currentServer += 1;
+		 			}
+	
 		 		}
 
 
 			});
 		 	clearTimeout(workerTimer)
-			workerTimer = setTimeout( "startWorker()", 60000 );
+			workerTimer = setTimeout( "startWorker()", 30000 );
 
 	}
 	
 }
 
 function refreshChannel(server, queueName, channelKey) {
+	
 	var c = guide.channels[channelKey];
 	$.ajaxq(queueName, {
 		url: server + 'tv/getProgInfo',
@@ -115,7 +154,7 @@ function clearSleepTimer() {
 }
 
 function SleepDevice(sleep) {
-
+	return;
 	if (SleepThreshold > 0) {
 		if (sleep) {
 			if ( $("#gestures_canvas:visible").size() == 0  ) {
@@ -129,6 +168,7 @@ function SleepDevice(sleep) {
 }
 
 function executeObjC(url) {
+  return;
   var iframe = document.createElement("IFRAME");
   iframe.setAttribute("src", url);
   document.documentElement.appendChild(iframe);
@@ -136,9 +176,53 @@ function executeObjC(url) {
   iframe = null;
 }
 
+function htmlEscape(str) {
+    return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
 
 function onDeviceReady() {
 
+navigator.splashscreen.show();
+
+/*
+	//get xml from json
+    $.getJSON('guideChannelList.json', function(data) {
+    	var out = "<channels>"
+        $.each(data.channels, function(i) {
+        	out += "<channel>"
+        	out += "<number>" + data.channels[i].chNum + "</number>"
+        	out += "<callsign><![CDATA[" + data.channels[i].chCall + "]]></callsign>"
+        	if (data.channels[i].chLogoUrl == null) {
+        		out += "<logo></logo>"
+        	} else {
+        		out += "<logo><![CDATA[img/channels" + data.channels[i].chLogoUrl.substring( data.channels[i].chLogoUrl.lastIndexOf("/") ) + "]]></logo>"
+        	}
+        	out += "<fullname><![CDATA[" + data.channels[i].chName + "]]></fullname>"
+            out += "</channel>"
+        });
+        out += "</channels>"
+        document.write(htmlEscape(out))
+    });
+    return;
+
+    //get list of images
+      $.getJSON('guideChannelList.json', function(data) {
+    	var out = ""
+        $.each(data.channels, function(i) {
+        	if (data.channels[i].chLogoUrl == null) {
+        	} else {
+        		out += "<a href='http://directv.images.cust.footprint.net/" + data.channels[i].chLogoUrl + "'>" + data.channels[i].chLogoUrl.substring( data.channels[i].chLogoUrl.lastIndexOf("/") ) + "</a>"
+        	}
+        });
+        $("body").html(out)
+    });
+    return;
+*/
 
 	$.gestures.init();
 	$.gestures.retGesture(function(gesture) {
@@ -152,7 +236,7 @@ function onDeviceReady() {
 
 	//event when scrolling ends to refresh dtv channels
 	$("#backFace").bind("scroll", function() {
-
+		window.scrollTo(0,0);
 		if (localStorage.getItem("shortname") != "DTV") {
 			return;
 		}
@@ -212,19 +296,27 @@ function onDeviceReady() {
 	});
 
 	$("#saveSettings").bind(clickEventType, function() {
+		localStorage.clear();
+
 		var gestureXML = $("#gestureXML").val();
 		var channelXML = $("#channelXML").val();
-		if (channelXML == "" ) {
-			channelXML = null;
+		if (channelXML != "" ) {
+			localStorage.setItem("channelXML",  channelXML );
+		} else {
+			localStorage.setItem("channelXML",  "channellist.xml" );
 		}
-		if (gestureXML == "" ) {
-			gestureXML = null;
+		if (gestureXML != "" ) {
+			localStorage.setItem("gestureXML",  gestureXML );
+		} else {
+			localStorage.setItem("gestureXML",  "gesturePad.xml" );
 		}
-		localStorage.setItem("gestureXML",  gestureXML );
-		localStorage.setItem("channelXML",  channelXML );
-			try {
-				navigator.notification.alert("Settings Saved.", null, "gesturePad");
-			} catch(e) {} 
+
+		
+		
+		try {
+			navigator.notification.alert("Settings Saved.", null, "gesturePad");
+		} catch(e) {} 
+
 		
 		loadXML(); 
 		$("#btnConfig").trigger(clickEventType);
@@ -232,7 +324,7 @@ function onDeviceReady() {
 	});
 	
 	$("#btnTitles").bind(clickEventType, function() {
-
+		window.scrollTo(0,0);
 		/* generic flip shit */
 		if ( localStorage.getItem("roomname") == "" || localStorage.getItem("devicename") == "" ) { //No room selected
 		    try {		        
@@ -259,31 +351,15 @@ function onDeviceReady() {
 		if (localStorage.getItem("shortname") == "DTV") {
 			
 			//build table for channel list 
-			
-
 			var tb = "<table class='listing'>"
-			//loop recents first 
-			if (recentChannels.length > 0) {
-				tb += "<tr class='head'><td colspan='3'>Recent Channels</td></tr>";
-				$.each(recentChannels, function(idx, channelKey) { 
-					if ( guide.channels[channelKey] ) {
-						var c = guide.channels[channelKey];
-						tb += getTableRowHTML(c, channelKey, curChannel);
-					}
-				});
-			}
-	
-			if (recentChannels.length > 0) {
-				tb += "<tr class='head'><td colspan='3'>Other Channels</td></tr>";
-			}
-
+			
+			var cat = ""
 		 	$.each(guide.channels, function(channelKey, c) { 
-		 		if ( recentChannels[ parseInt(channelKey)-1 ] ) {
-		 			//console.log("skipping" + (channelKey-1) )
-		 		} else {
-		 			//var c = guide.channels[channelKey];
-					tb += getTableRowHTML(c, channelKey, curChannel);
+		 		if ( cat != c.category ) {
+		 			cat = c.category;
+		 			tb += "<tr class='head'><td colspan='3'>" + cat + "</td></tr>";
 		 		}
+				tb += getTableRowHTML(c, channelKey, curChannel);
 			});
 
 			tb += "</table>"
@@ -312,22 +388,7 @@ function onDeviceReady() {
 		        var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
 		        if ($(configNode).size() > 0) {
 
-					// save recent channel
-					var channelKey = $(this).attr("data-key");
-					if (isNumeric(channelKey) == false) {
-						return;
-					}
-					var isRecent = recentChannels.indexOf(channelKey);
-					if (isRecent > -1 ) {
-						recentChannels.splice(isRecent, 1); //remove it
-					}
-					recentChannels.unshift(channelKey) //add it to the top
-					if ( recentChannels.length > 10  ) { //remove > 10
-						recentChannels.splice(11, recentChannels.length-10)
-					}
-
-					//save recents
-					localStorage.setItem('recentChannels', JSON.stringify(recentChannels) );
+				
 					
 					//flip screen
 		   			$("#btnTitles").trigger(clickEventType);
@@ -454,7 +515,7 @@ function onDeviceReady() {
 			 	
 				tb += '<tr data-idx="' + index + '"> '
 							+ '<td>' + ((gestureDefinition == "")?"":"👆 ") + commandname 
-							+ '</td><td style="width:20%">' + gestureDefinition + '</td></tr>';
+							+ '</td><td style="width: 50px !important"><div style="width: 50px !important; overflow:hidden">' + gestureDefinition + '</div></td></tr>';
 			});
 		});
 		tb += "</table>"
@@ -550,11 +611,45 @@ function onDeviceReady() {
 	});
 
 	$("#btnRoom").bind(clickEventType, function() {
+		$("#lstRooms").val( localStorage.getItem("roomname") );
 		$("#frmRoom").show();
-		$("#lstRooms").val("")
+		
 		$("#lstRooms").focus();
 		$("#frmRoom").hide();
 	});
+
+	$("#btnTransfer").bind(clickEventType, function() {
+
+		//Populate device picker
+		var toAppend = ""
+		$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device').each(function(){	
+		 	toAppend += '<option ' + ((localStorage.getItem("shortname") != $(this).attr("shortname")) ? '' : ' selected="selected" ') + ' value="' + $(this).attr("shortname") + '" data-shortname="' + $(this).attr("shortname") + '" data-devicename="' + $(this).find("name:first").text() + '">' + $(this).find("name:first").text() + '</option>';
+		});
+		
+		$("#lstDevice").html(toAppend);
+		$("#frmDevice").show();
+		$("#lstDevice").focus();
+		$("#frmDevice").hide();
+	})
+
+	//bind device swtich events
+	$("#lstDevice").bind("change", function () {
+		if ( $(this).val() == "" ) {
+			return false;
+		}
+		$("#btnPlay").addClass("playing");
+		$(this).parent().submit();
+	    document.activeElement.blur();
+	    $("#lstDevice").blur();
+
+ 		localStorage.setItem("shortname", $(this).find("option:selected").attr("data-shortname") );
+		localStorage.setItem("devicename", $(this).find("option:selected").attr("data-devicename") );
+
+	 	var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
+	 	doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
+ 		
+	})
+
 
 	$("#btnPower").bind(clickEventType, function() {
 		executeGestureByCommandName("Power");
@@ -589,26 +684,30 @@ function onDeviceReady() {
 		}
 	})
 
-	//list filering
-	$("#Filter").bind("keyup", function(event) {
-	    if (inputTimer) {
-	        clearTimeout(inputTimer);
-	    }
-	     inputTimer = setTimeout(function () {
-	    	var s = $("#Filter input.searcher").val().toLowerCase();
-	    	$("#backFace tr").each(function() {
-	    		var t = $(this).text().toLowerCase();
-	    		if ( t.indexOf(s) == -1 ) {
-	    			$(this).hide()
-	    		} else {
-	    			$(this).show()
-	    		}
-	    	})
-	    }, 500);
-	});
+	// //list filering
+	// $("#Filter").bind("keyup", function(event) {
+	//     if (inputTimer) {
+	//         clearTimeout(inputTimer);
+	//     }
+	//      inputTimer = setTimeout(function () {
+
+	//     }, 500);
+	// });
 
 	$("#searchform").bind("submit", function(event) {
 		event.preventDefault();
+    	var s = $("#Filter input.searcher").val().toLowerCase();
+    	$("#backFace tr").each(function() {
+    		var t = $(this).text().toLowerCase() + " " + $(this).attr("data-fullname").toLowerCase();
+    		if ( t.indexOf(s) == -1 ) {
+    			$(this).hide()
+    		} else {
+    			$(this).show()
+    		}
+    	})
+		$("#backFace").trigger("scroll");
+		checkScrollOverflow();
+		return true;
 	})
 
 	$("#top, #bottom, #toptrans").bind("touchmove", function(event) {
@@ -648,15 +747,20 @@ function onDeviceReady() {
 
  	npTimer = setInterval(function() {
       nowPlaying()
+      getRoomStatus()
 	}, 30000);
 
 	clearSleepTimer();
+
+	window.scrollTo(0,0);
+
 
 }
 
 function loadXML() {
 	var xmlLoc = "gesturePad.xml?r=" + Math.random()
-	if ( localStorage.getItem("gestureXML").toString() != 'null'  ) {
+	
+	if ( localStorage.getItem("gestureXML")  !== null ) {
 		xmlLoc = localStorage.getItem("gestureXML")
 	}
 	$.ajax({
@@ -668,7 +772,7 @@ function loadXML() {
 			loadSettings();
 		},
 		error: function() {
-
+			navigator.splashscreen.hide();
 			try {
 			navigator.notification.alert("Error loading settings: " + xmlLoc , null, "gesturePad");
 			} catch(e) {} 
@@ -786,8 +890,9 @@ function doSlideEvent() {
 
 function getTableRowHTML(c, channelKey, curChannel) {
 	var row = ""
+	//alert(c.logo)
 	if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) { //needs refresh
-		row += '<tr id="tr' + channelKey + '" data-loaded="false" data-major="' + c.number + '" data-key="' + channelKey + '"><td width="50px" ' 
+		row += '<tr id="tr' + channelKey + '" data-loaded="false" data-major="' + c.number + '" data-key="' + channelKey + '" data-fullname="' + escape(c.fullname) + '"><td width="50px" ' 
 		if ( c.logo != "" ) {
 			row += "style = 'background: url(" + c.logo + ") center no-repeat' > "  
 		} else {
@@ -796,11 +901,11 @@ function getTableRowHTML(c, channelKey, curChannel) {
 		row += '</td>' +
 		'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
 		'</div></td>'+
-		'<td width="30px" style="text-align: right">0:00</td></tr>';
+		'<td width="30px" style="text-align: right">0:00';
 
 	} else { //pull cached
 
-		row += '<tr id="tr' + channelKey + '" data-loaded="true" data-major="' + c.number + '" data-key="' + channelKey + '"><td width="50px" ' 
+		row += '<tr id="tr' + channelKey + '" data-loaded="true" data-major="' + c.number + '" data-key="' + channelKey + '" data-fullname="' + escape(c.fullname) + '"><td width="50px" ' 
 		if ( c.logo != "" ) {
 			row += "style = 'background: url(" + c.logo + ") center no-repeat' > " 
 		} else {
@@ -810,8 +915,9 @@ function getTableRowHTML(c, channelKey, curChannel) {
 		'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
 		c.nowplaying +
 		'</div></td>'+
-		'<td width="30px" style="text-align: right">' + c.timeleft +'</td></tr>';
+		'<td width="30px" style="text-align: right">' + c.timeleft +'';
 	}
+	row += "</td></tr>";
 	return row;
 }
 
@@ -827,7 +933,7 @@ function PhoneGapReady() {
 
 function checkScrollOverflow() {
 	if ( $("#backFace table").height() > $("#backFace").height() ) {
-		$("#backFace").attr("style", "-webkit-overflow-scrolling : touch");
+		$("#backFace").attr("style", "overflow-x: hidden; -webkit-overflow-scrolling : touch");
 		$("#backFace").unbind("touchmove");
 	} else {
 		$("#backFace").bind("touchmove", function(event) {
@@ -863,10 +969,9 @@ function hideFilter() {
 
 
 function onResume() {
+	clearNowPlaying()
+	getRoomStatus()
 	SleepDevice(false);
-	setTimeout(function () {
-    	nowPlaying()
-	}, 10)
 
  	npTimer = setInterval(function() {
       nowPlaying()
@@ -957,18 +1062,14 @@ function loadSettings() {
 	localStorage.setItem("roomshortname", roomshortname);
 	localStorage.setItem("devicename", devicename);
 	localStorage.setItem("shortname", shortname);
-
-
 	
-	if (localStorage.getItem("recentChannels").toString() != 'null') {
-	  recentChannels=JSON.parse(localStorage['recentChannels']);
-	}
 
-	if ( localStorage.getItem("gestureXML").toString() != 'null' ) {
+
+	if ( localStorage.getItem("gestureXML") != 'null' ) {
 		$("#gestureXML").val(  localStorage.getItem("gestureXML") )
 	}
 
-	if ( localStorage.getItem("channelXML").toString() != 'null' ) {
+	if ( localStorage.getItem("channelXML") != 'null' ) {
 		$("#channelXML").val(  localStorage.getItem("channelXML") )
 	}
 
@@ -998,39 +1099,68 @@ function loadSettings() {
 
 
 	//Populate room picker
-	var toAppend = ""
+	var toAppend = "<option value=''></option>"
 	var toAppendNoSwitch = ""
 	$(xml).find('gesturePad > rooms > room').each(function(){	
 	 	var roomname = $(this).children("name:first").text();
+	 	var IP = "http://" + $(this).find("IPAddress:first").text() + "/index.html";
 	 	var roomshortname = $(this).attr("roomshortname");
-	 	
-	 	$(this).children("device[quickswitch='true']").each(function(){
-		 	var devicename = $(this).children("name:first").text();
-		 	var shortname = $(this).attr("shortname");
-		 	toAppend += '<option data-switch="1" value="' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
-		 	toAppendNoSwitch += '<option data-switch="0"  value="0' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
-	 	});
+	 	toAppend += '<option data-switch="1" value="' + roomname + '" data-ip="' + IP + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '">' + roomname + '</option>';
+
+	 	// $(this).children("device[quickswitch='true']").each(function(){
+		 // 	var devicename = $(this).children("name:first").text();
+		 // 	var shortname = $(this).attr("shortname");
+		 // 	toAppend += '<option data-switch="1" value="' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
+		 // 	toAppendNoSwitch += '<option data-switch="0"  value="0' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
+	 	// });
 
 	});
-
-	$("#lstRooms").html( "<option value=''>Switch Inputs</option>" + toAppend + "<optgroup label='Dont Switch Inputs'>"  + toAppendNoSwitch + "</optgroup>" )
+	
+	$("#lstRooms").html(  toAppend )
+	//$("#lstRooms").html( "<option value=''>Switch Inputs</option>" + toAppend + "<optgroup label='Dont Switch Inputs'>"  + toAppendNoSwitch + "</optgroup>" )
 	$("#lstRooms").val("");
 
 	//bind room swtich events
 	$("#lstRooms").bind("change", function () {
+		if ( $(this).val() == "" ) {
+			return false;
+		}
 		$("#btnPlay").addClass("playing");
 		$(this).parent().submit();
+	    document.activeElement.blur();
+	    $("#lstRooms").blur();
+
  		localStorage.setItem("roomname", $(this).find("option:selected").attr("data-roomname") );
- 		localStorage.setItem("devicename", $(this).find("option:selected").attr("data-devicename") );
  		localStorage.setItem("roomshortname", $(this).find("option:selected").attr("data-roomshortname") );
- 		localStorage.setItem("shortname", $(this).find("option:selected").attr("data-shortname") );
+ 		//localStorage.setItem("shortname", $(this).find("option:selected").attr("data-shortname") );
+		//localStorage.setItem("devicename", $(this).find("option:selected").attr("data-devicename") );
 
- 		if ( $(this).find("option:selected").attr("data-switch") == "1" ) {
-	 		var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
-	 		doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
- 		}
+ 		//if ( $(this).find("option:selected").attr("data-switch") == "1" ) {
+	 	//	var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
+	 	//	doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
+ 		//}
+ 		
+ 		$.ajax({
+		    type: "GET",
+			dataType: "text",
+			url: $("#lstRooms option:selected").attr("data-ip"),
+			success: function(resp) {
+				var obj = jQuery.parseJSON(resp);
+				if ( obj.device != "" ) {
+					localStorage.setItem("shortname", obj.device );
+					localStorage.setItem("devicename", $(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='" + localStorage.getItem("shortname") + "'] > name:first" ).text() );
+					updateStatus();
+				}
+			},
+			error: function(x,y,z) {
+				localStorage.setItem("shortname", "MCE" )
+				localStorage.setItem("shortname", "Media Center" )
+				updateStatus();
+				//navigator.notification.alert("Error loading channel list: "  + xmlLoc, null, "gesturePad");
+			}	
+		});
 
- 		updateStatus();
+ 		
 	})
 
 
@@ -1051,14 +1181,34 @@ function loadSettings() {
 		}		
 	});
 
-	updateStatus();
-
+	getRoomStatus()
+	setTimeout( function () {
+		navigator.splashscreen.hide();
+	}, 500)
+	
 	
 
 }
 
 
 
+function getRoomStatus() {
+	//alert("http://" + "xml > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='MCE'] > IPAddress" + "/")
+	$.ajax({
+	    type: "GET",
+		dataType: "text",
+		url: "http://" + $(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='MCE'] > IPAddress").text() + "/",
+		success: function(resp) {
+			var obj = jQuery.parseJSON(resp);
+			if ( obj.device != "" ) {
+				localStorage.setItem("shortname", obj.device );
+				localStorage.setItem("devicename", $(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='" + localStorage.getItem("shortname") + "'] > name:first" ).text() );
+			}
+			updateStatus()
+	
+		}
+	});
+}
 
 function updateStatus() { 
 	try {
@@ -1097,14 +1247,16 @@ function clearNowPlaying() {
 
 function nowPlaying() {
 
-	//generic repaint for disappearing ui elements
-	$("#top, #bottom, #seekbarContainer, #toptrans").each(function() {
-		$(this)[0].style.display='none';
-		$(this)[0].offsetHeight; // no need to store this anywhere, the reference is enough
-		$(this)[0].style.display='block';
-	});
+	
 
-	if ( $("#frmSettings").is(":visible") ) {
+	//generic repaint for disappearing ui elements
+	// $("#top, #bottom, #seekbarContainer, #toptrans").each(function() {
+	// 	$(this)[0].style.display='none';
+	// 	$(this)[0].offsetHeight; // no need to store this anywhere, the reference is enough
+	// 	$(this)[0].style.display='block';
+	// });
+
+	if ( $("#gestures_canvas:visible").size() == 0 ) {
 		return;
 	}
 
@@ -1121,9 +1273,8 @@ function nowPlaying() {
                    dataType: "json",
                    timeout:10000,
                    success: function(j) {
-                   		clearNowPlaying();
+						if ( j.Data.PlayingControllers.length >= 1 ) {
 
-	                   		
 							var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
 							var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
 	                   		var perc = offset / duration;
@@ -1139,10 +1290,20 @@ function nowPlaying() {
 		 					var currentID = j.Data.PlayingControllers[0].PlayableItems[0].CurrentMediaIndex;
 		 					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[currentID];
 
+
 		 					if ( $("#bgPic").attr("data-id") != guid ) {
-								$("#bgPic").attr("style", "background-image: url('" + base + "image/?Id=" + guid + "');")
-								$("#bgPic").attr("class", "");
-								$("#bgPic").attr("data-id", guid);
+								img = new Image();
+								img.onload = function() {
+									$("#bgPic").attr("style", "background-image: url('" + base + "image/?Id=" + guid + "');")
+									$("#bgPic").attr("class", "");
+									$("#bgPic").attr("data-id", guid);
+								};
+								img.onerror = function() {
+									$("#bgPic").attr("class", "noart");
+									$("#bgPic").attr("style", "");
+									$("#bgPic").attr("data-id", guid);
+								};
+								img.src = base + "image/?Id=" + guid;
 		 					}
 						
 							if (j.Data.PlayingControllers[0].IsPaused == true ) {
@@ -1151,10 +1312,13 @@ function nowPlaying() {
 								$("#btnPlay").addClass("playing");
 							}
 
+						} else {
+							clearNowPlaying();
+						}	                   		
 							
 		         }, 
 		         error: function() {
-		         	clearNowPlaying();
+		         	
 		         }
 	             
             });
@@ -1208,6 +1372,7 @@ function nowPlaying() {
 		                   			}
 		                   		});
 
+
 		                   		if (guid == "" ) {
 		                   			$("#bgPic").attr("class", "noart");
 									$("#bgPic").attr("style", "");
@@ -1221,13 +1386,19 @@ function nowPlaying() {
 					                   		$("#bgPic").attr("style", "");
 					                   },
 					                   success: function(seriesxml) {
-					                   		$(seriesxml).find("poster:first").each(function () {
-												if ( $("#bgPic").attr("data-id") != guid ) {
-													$("#bgPic").attr("style", "background-image: url('http://thetvdb.com/banners/_cache/" + $(this).text() + "');")
+					                   		var poster = $(seriesxml).find("poster:first")
+
+					                   		if ( $(poster).size() > 0) {
+
+												if ( $("#bgPic").attr("data-id") != guid  && $(poster).text() != "" ) {
+													$("#bgPic").attr("style", "background-image: url('http://thetvdb.com/banners/_cache/" + $(poster).text() + "');")
 													$("#bgPic").attr("class", "");
 													$("#bgPic").attr("data-id", guid);
 							 					}
-					                   		});
+					                   		} else {
+						                   		$("#bgPic").attr("class", "noart");
+						                   		$("#bgPic").attr("style", "");
+					                   		}
 							 		
 					                   }
 					                 })
@@ -1274,12 +1445,29 @@ function executeGestureByCommandName(command) {
 	}
 }
 
+function netState() {
+
+    var networkState = navigator.connection.type;
+
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'No network connection';
+    return( states[networkState] );
+
+}
+
 function doEvent(gesture, actions)  {
-	
+	window.scrollTo(0,0);
     
     try {
         if ( netState() != 'WiFi connection' ) {
-            navigator.notification.alert("You do are not on Wifi. Connect to Wifi and try again", null, "gesturePad");
+            navigator.notification.alert("You are not on Wifi. Connect to Wifi and try again", null, "gesturePad");
             return;
         }
     }
@@ -1362,96 +1550,92 @@ function doEvent(gesture, actions)  {
 		if (gesture != 'manual') {
 			$(message).find("span.t").text( $(actionNodes).parent().find("name:first").text() + ' - ' + $(message).attr("data-gest")  );
 			$(message).find("span.i").text('🔄');
-			$(message).show().addClass("dofadein");
 		} else {
 			$(message).find("span.t").text( $(actionNodes).parent().find("name:first").text() + ' - ' + $(message).attr("data-gest") );
 			$(message).find("span.i").text('🔄');
-			$(message).show().addClass("dofadein");
 		}
 
-		$(message).bind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend", function() {
-			if ($(this).hasClass('dofadein') ) {
-				$(this).addClass('dofadein-final');
-			}
-		});
-		
-		var totalActions = ($(actionNodes).size()-1)
+		$(message).show()
+		$(message).animate({
+			opacity: 1,
+			width: '100%',
+		}, 250, function() {
+			var totalActions = ($(actionNodes).size()-1)
+					
+			//Trigger ajax events
+			$(actionNodes).each(function(i) {
+				var thisnode = $(actionNodes);
+
+				//Look up url overrides
+				var server = "http://";
+
+				$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + shortname  + '"]:first').each(function(){
+					$(this).find("IPAddress:first").each(function(){
+						server += $(this).text();
+					});				
+					$(this).find("Port:first").each(function(){
+						server += ":" + $(this).text() + "/";
+					});				
+				});
 				
-		//Trigger ajax events
-		$(actionNodes).each(function(i) {
-			var thisnode = $(actionNodes);
+				$(this).find("addtobaseurl:first").each(function(){
+					server = server + $(this).text();
+				});
 
-			//Look up url overrides
-			var server = "http://";
-
-			$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + shortname  + '"]:first').each(function(){
-				$(this).find("IPAddress:first").each(function(){
-					server += $(this).text();
-				});				
-				$(this).find("Port:first").each(function(){
-					server += ":" + $(this).text() + "/";
-				});				
-			});
-			
-			$(this).find("addtobaseurl:first").each(function(){
-				server = server + $(this).text();
-			});
-			
-			$.ajax({
-			    type: $(this).find("method:first").text(),
-				url: server,
-				data: $(this).find("data:first").text() + appendOncetoQueryString,
-				timeout: 60000,
-				dataType: $(this).find("dataType:first").text(),
-				success: function(resp) {
-					appendOncetoQueryString = "";
-					if (i == totalActions) { //only run animation callback on final ajax call
-						$(message).find("span.i").text('✅');
-						$(message).unbind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend");
-						$(message).bind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend", function() {
-							if ( $(thisnode).find("onCompleteSetDevice").size() > 0) {
-								localStorage.setItem("devicename", $(thisnode).find("onCompleteSetDevice").text() );
-								localStorage.setItem("shortname", $(thisnode).find("onCompleteSetDevice").attr("shortname"));
-			 		
-								updateStatus();
-							}
-							if ($(this).hasClass('dofadeout') ) {
-								$(this).addClass('dofadeout-final');
-							}
-						});
-						var t = setTimeout(function() {
-							$(message).addClass('dofadeout');
-						}, 200);
-					}
-
-					setTimeout(function() {
-						nowPlaying();	
-					}, 1500)
-				},
-				error: function() {
-					appendOncetoQueryString = "";
-					if (i == totalActions) { //only run animation callback on final ajax call
-						$(message).find("span.i").text('❌');
-						$(message).unbind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend");
-						$(message).bind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend", function() {
-							if ($(this).hasClass('dofadeout') ) {
-								$(this).addClass('dofadeout-final');
-							}
-						});
-
-						if ( $(thisnode).find("onCompleteSetDevice").size() > 0) {
-							localStorage.setItem("devicename", $(thisnode).find("onCompleteSetDevice").text() );
-							localStorage.setItem("shortname", $(thisnode).find("onCompleteSetDevice").attr("shortname"));
-							updateStatus();
+				$(this).find("replacebaseurl:first").each(function(){
+					server = $(this).text();
+				});
+				
+				$.ajax({
+				    type: $(this).find("method:first").text(),
+					url: server,
+					data: $(this).find("data:first").text() + appendOncetoQueryString,
+					timeout: 60000,
+					dataType: $(this).find("dataType:first").text(),
+					success: function(resp) {
+						appendOncetoQueryString = "";
+						if (i == totalActions) { //only run animation callback on final ajax call
+							$(message).find("span.i").text('✅');
+							$(message).animate({
+								opacity: 0,
+								width: '0%'
+							}, 250, function() {
+								if ( $(thisnode).find("onCompleteSetDevice").size() > 0) {
+									localStorage.setItem("devicename", $(thisnode).find("onCompleteSetDevice").text() );
+									localStorage.setItem("shortname", $(thisnode).find("onCompleteSetDevice").attr("shortname"));
+									updateStatus();
+								}
+								$(message).hide().remove();
+							})
 						}
-							
-						var t = setTimeout(function() {
-							$(message).addClass('dofadeout');
-						}, 200);
+						setTimeout(function() {
+							nowPlaying();	
+						}, 1500)
+					},
+					error: function() {
+						appendOncetoQueryString = "";
+						if (i == totalActions) { //only run animation callback on final ajax call
+							$(message).find("span.i").text('❌');
+							$(message).animate({
+								opacity: 0,
+								width: '0%'
+							}, 250, function() {
+								if ( $(thisnode).find("onCompleteSetDevice").size() > 0) {
+									localStorage.setItem("devicename", $(thisnode).find("onCompleteSetDevice").text() );
+									localStorage.setItem("shortname", $(thisnode).find("onCompleteSetDevice").attr("shortname"));
+									updateStatus();
+								}
+								$(message).hide().remove();
+
+							})
+
+						}
 					}
-				}
+				});
 			});
-		});
+
+		});		
+
 
 			
 	} else {
@@ -1459,23 +1643,19 @@ function doEvent(gesture, actions)  {
 		//Unassigned gesture, just show and hide it
 		$(message).find("span.i").text('❌');
 		$(message).find("span.t").text( "Unassigned" + ' - ' + $(message).attr("data-gest")  );
-		
-		$(message).show().addClass("dofadein");
-		$(message).bind("webkitAnimationEnd oAnimationEnd msAnimationEnd animationend", function() {
-	
-			if ($(this).hasClass('dofadein') ) {
-				$(this).addClass('dofadein-final');
-			}
-			if ($(this).hasClass('dofadeout') ) {
-				$(this).addClass('dofadeout-final');
-			}
-			var $this = $(this);
-			var t = setTimeout(function() {
-				$this.addClass('dofadeout');
-			}, 500);
-			
+		$(message).show();
+		$(message).animate({
+			opacity: 1,
+			width: '100%'
+		}, 250, function() {
+			$(message).delay(500).animate({
+				opacity: 0,
+				width: '0%'
+			}, 500, function() {
+				$(message).remove();
+			})
 
-		});
+		})
 	}
 	
 }

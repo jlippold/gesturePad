@@ -24,6 +24,8 @@ body {
 	height: 40px;
 	position: fixed;
 	top:0;
+	left: 0px;
+	-webkit-transform: translate3d(0, 0, 0);
 	width: 100%;
 	border-bottom: 1px solid #1E1E1E;
 	background-color: rgba(0, 0, 0, 0);
@@ -41,7 +43,9 @@ body {
 	z-index: 5;
 	height: 100px;
 	position: absolute;
-	bottom: 0;
+	bottom: 0px;
+	left: 0px;
+	-webkit-transform: translate3d(0, 0, 0);
 	width: 100%;
 	border-top: 1px solid black;
 	background-color: rgba(0, 0, 0, 0);
@@ -61,6 +65,9 @@ div.toptrans {
 	background: rgba(0,0,0,0.5);
 	border-bottom: 1px solid #000;
 	height: 80px;
+	top: 0px;
+	left: 0px;
+	-webkit-transform: translate3d(0, 0, 0);
 	-webkit-backface-visibility: hidden;
 }
 
@@ -175,6 +182,7 @@ div.five {
 	width: 100%;
 	margin: auto;
 	float: left;
+	position: relative;
 }
 
 .sliderh {
@@ -183,6 +191,7 @@ div.five {
 	height: 9px;
 	width: 0%;
 	margin: -3px 0px 0px -4px;
+	position: relative;
 }
 
 
@@ -306,9 +315,8 @@ div.searchContainer div.right {
 
 #bgPic.noart {
 	min-height: 100%;
-	background: url("img/logo.png") center no-repeat, radial-gradient(center -65%, circle farthest-corner, rgba(171, 171, 171, 0.6), #000000 76%);
-	background: url("img/logo.png") center no-repeat, -webkit-radial-gradient(center -65%, circle farthest-corner, rgba(171, 171, 171, 0.6), #000000 76%);
-	background-size: auto;
+	background: url("img/logo3.png") center no-repeat, -webkit-radial-gradient(center -65%, circle farthest-corner, rgba(171, 171, 171, 0.6), #000000 76%);
+	background-size: 40%, auto;
     margin-bottom: auto;
     margin-top: 0px !important;
     min-height: 100%;
@@ -374,7 +382,7 @@ div.searchContainer div.right {
 	transform: rotateY(180deg);
 	box-sizing: border-box;
 	width: 100%;
-	padding: 70px 0px;
+	padding: 72px 0px;
 	background: -moz-radial-gradient(circle , #767777, #394147);
 	background:  -webkit-radial-gradient(50% 0%, circle , #767777, #282828);
 		overflow: auto;
@@ -444,6 +452,10 @@ table.listing tr td {
 	font-size: 13px;
 	text-overflow: ellipsis;
 	line-height: 26px;
+}
+
+table.listing tr td span {
+	display: none;
 }
 
 td.shuffle {
@@ -539,7 +551,7 @@ table.listing tr > td:last-child {
 }
 
 #gestureCallback {
-	top: 71px;
+	top: 81px;
 	position: absolute;
 	z-index: 1;
 	width: 100%;
@@ -560,17 +572,12 @@ div.message {
 	font-weight: bold;
 	text-shadow: 0 3px 8px #2A2A2A;
 
-    -webkit-animation-duration: 0.4s;
-    -webkit-animation-timing-function: ease-in-out;
-    -webkit-animation-iteration-count: 1;
-    
-    -moz-animation-duration: 1s;
-    -moz-animation-timing-function: ease-in-out;
-    -moz-animation-iteration-count: 1;
-     padding-left: 16px;
+    padding-left: 16px;
     
     height: 24px;
-    width: 100%;
+    width: 0%;
+    margin: auto;
+    opacity: 0;
 	overflow:hidden;
 
 }

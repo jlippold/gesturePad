@@ -1,429 +1,1492 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <channels>
-<channel><number>1</number><callsign><![CDATA[INFO]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>16</number><callsign><![CDATA[WNEP]]></callsign><logo><![CDATA[img/channel/WNEP.png]]></logo></channel>
-<channel><number>22</number><callsign><![CDATA[WYOU]]></callsign><logo><![CDATA[img/channel/WYOU.png]]></logo></channel>
-<channel><number>28</number><callsign><![CDATA[WBRE]]></callsign><logo><![CDATA[img/channel/WBRE.png]]></logo></channel>
-<channel><number>38</number><callsign><![CDATA[WSWB]]></callsign><logo><![CDATA[img/channel/WSWB.png]]></logo></channel>
-<channel><number>44</number><callsign><![CDATA[WVIA]]></callsign><logo><![CDATA[img/channel/WVIA.png]]></logo></channel>
-<channel><number>53</number><callsign><![CDATA[WQMY]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>56</number><callsign><![CDATA[WOLF]]></callsign><logo><![CDATA[img/channel/WOLF.png]]></logo></channel>
-<channel><number>70</number><callsign><![CDATA[JTV]]></callsign><logo><![CDATA[img/channel/JTV.png]]></logo></channel>
-<channel><number>74</number><callsign><![CDATA[SHOP]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>77</number><callsign><![CDATA[SALE]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>78</number><callsign><![CDATA[LOOK]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>81</number><callsign><![CDATA[BUY]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>82</number><callsign><![CDATA[HOME]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>83</number><callsign><![CDATA[WOW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>84</number><callsign><![CDATA[IDEA]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>85</number><callsign><![CDATA[SAVE]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>86</number><callsign><![CDATA[MALL]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>87</number><callsign><![CDATA[VALU]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>88</number><callsign><![CDATA[BEST]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>95</number><callsign><![CDATA[CSHP]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>200</number><callsign><![CDATA[CINE]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>201</number><callsign><![CDATA[CINE]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>202</number><callsign><![CDATA[CNNHD]]></callsign><logo><![CDATA[img/channel/CNNHD.png]]></logo></channel>
-<channel><number>203</number><callsign><![CDATA[LOOK]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>204</number><callsign><![CDATA[HLN]]></callsign><logo><![CDATA[img/channel/HLN.png]]></logo></channel>
-<channel><number>205</number><callsign><![CDATA[SMX]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>206</number><callsign><![CDATA[ESPNHD]]></callsign><logo><![CDATA[img/channel/ESPNHD.png]]></logo></channel>
-<channel><number>207</number><callsign><![CDATA[ESNHD]]></callsign><logo><![CDATA[img/channel/ESNHD.png]]></logo></channel>
-<channel><number>208</number><callsign><![CDATA[ESPNUHD]]></callsign><logo><![CDATA[img/channel/ESPNUHD.png]]></logo></channel>
-<channel><number>209</number><callsign><![CDATA[ESPN2HD]]></callsign><logo><![CDATA[img/channel/ESPN2HD.png]]></logo></channel>
-<channel><number>210</number><callsign><![CDATA[ESNaHD]]></callsign><logo><![CDATA[img/channel/ESNaHD.png]]></logo></channel>
-<channel><number>211</number><callsign><![CDATA[ESNa]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>212</number><callsign><![CDATA[NFLHD]]></callsign><logo><![CDATA[img/channel/NFLHD.png]]></logo></channel>
-<channel><number>213</number><callsign><![CDATA[MLBNHD]]></callsign><logo><![CDATA[img/channel/MLBNHD.png]]></logo></channel>
-<channel><number>214</number><callsign><![CDATA[MLBaHD]]></callsign><logo><![CDATA[img/channel/MLBaHD.png]]></logo></channel>
-<channel><number>215</number><callsign><![CDATA[NHLHD]]></callsign><logo><![CDATA[img/channel/NHLHD.png]]></logo></channel>
-<channel><number>216</number><callsign><![CDATA[NBAHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>217</number><callsign><![CDATA[TNNSHD]]></callsign><logo><![CDATA[img/channel/TNNSHD.png]]></logo></channel>
-<channel><number>218</number><callsign><![CDATA[GolfHD]]></callsign><logo><![CDATA[img/channel/GolfHD.png]]></logo></channel>
-<channel><number>219</number><callsign><![CDATA[NOW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>220</number><callsign><![CDATA[NBCSHD]]></callsign><logo><![CDATA[img/channel/NBCSHD.png]]></logo></channel>
-<channel><number>222</number><callsign><![CDATA[SAVE]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>223</number><callsign><![CDATA[CSHP]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>224</number><callsign><![CDATA[AVC]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>225</number><callsign><![CDATA[HOME]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>226</number><callsign><![CDATA[LC]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>227</number><callsign><![CDATA[PAID]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>228</number><callsign><![CDATA[GEM]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>229</number><callsign><![CDATA[HGTVHD]]></callsign><logo><![CDATA[img/channel/HGTVHD.png]]></logo></channel>
-<channel><number>230</number><callsign><![CDATA[DIYHD]]></callsign><logo><![CDATA[img/channel/DIYHD.png]]></logo></channel>
-<channel><number>231</number><callsign><![CDATA[foodHD]]></callsign><logo><![CDATA[img/channel/foodHD.png]]></logo></channel>
-<channel><number>232</number><callsign><![CDATA[COOK]]></callsign><logo><![CDATA[img/channel/COOK.png]]></logo></channel>
-<channel><number>233</number><callsign><![CDATA[GSN]]></callsign><logo><![CDATA[img/channel/GSN.png]]></logo></channel>
-<channel><number>234</number><callsign><![CDATA[WOW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>235</number><callsign><![CDATA[STYLE]]></callsign><logo><![CDATA[img/channel/STYLE.png]]></logo></channel>
-<channel><number>236</number><callsign><![CDATA[E!HD]]></callsign><logo><![CDATA[img/channel/E!HD.png]]></logo></channel>
-<channel><number>237</number><callsign><![CDATA[BRVOHD]]></callsign><logo><![CDATA[img/channel/BRVOHD.png]]></logo></channel>
-<channel><number>238</number><callsign><![CDATA[REELZ]]></callsign><logo><![CDATA[img/channel/REELZ.png]]></logo></channel>
-<channel><number>239</number><callsign><![CDATA[AUDHD]]></callsign><logo><![CDATA[img/channel/AUDHD.png]]></logo></channel>
-<channel><number>240</number><callsign><![CDATA[HSN]]></callsign><logo><![CDATA[img/channel/HSN.png]]></logo></channel>
-<channel><number>241</number><callsign><![CDATA[SpikeHD]]></callsign><logo><![CDATA[img/channel/SpikeHD.png]]></logo></channel>
-<channel><number>242</number><callsign><![CDATA[USAHD]]></callsign><logo><![CDATA[img/channel/USAHD.png]]></logo></channel>
-<channel><number>243</number><callsign><![CDATA[BUZZ]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>244</number><callsign><![CDATA[SyfyHD]]></callsign><logo><![CDATA[img/channel/SyfyHD.png]]></logo></channel>
-<channel><number>245</number><callsign><![CDATA[TNTHD]]></callsign><logo><![CDATA[img/channel/TNTHD.png]]></logo></channel>
-<channel><number>246</number><callsign><![CDATA[truTVHD]]></callsign><logo><![CDATA[img/channel/truTVHD.png]]></logo></channel>
-<channel><number>247</number><callsign><![CDATA[TBSHD]]></callsign><logo><![CDATA[img/channel/TBSHD.png]]></logo></channel>
-<channel><number>248</number><callsign><![CDATA[FXHD]]></callsign><logo><![CDATA[img/channel/FXHD.png]]></logo></channel>
-<channel><number>249</number><callsign><![CDATA[COMHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>250</number><callsign><![CDATA[MALL]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>251</number><callsign><![CDATA[OXGN]]></callsign><logo><![CDATA[img/channel/OXGN.png]]></logo></channel>
-<channel><number>252</number><callsign><![CDATA[LIFEHD]]></callsign><logo><![CDATA[img/channel/LIFEHD.png]]></logo></channel>
-<channel><number>253</number><callsign><![CDATA[LMN]]></callsign><logo><![CDATA[img/channel/LMN.png]]></logo></channel>
-<channel><number>254</number><callsign><![CDATA[AMCHD]]></callsign><logo><![CDATA[img/channel/AMCHD.png]]></logo></channel>
-<channel><number>255</number><callsign><![CDATA[XTRA]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>256</number><callsign><![CDATA[TCMHD]]></callsign><logo><![CDATA[img/channel/TCMHD.png]]></logo></channel>
-<channel><number>257</number><callsign><![CDATA[CHLL]]></callsign><logo><![CDATA[img/channel/CHLL.png]]></logo></channel>
-<channel><number>258</number><callsign><![CDATA[FMC]]></callsign><logo><![CDATA[img/channel/FMC.png]]></logo></channel>
-<channel><number>259</number><callsign><![CDATA[CINEMOI]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>260</number><callsign><![CDATA[We]]></callsign><logo><![CDATA[img/channel/We.png]]></logo></channel>
-<channel><number>261</number><callsign><![CDATA[DFH]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>262</number><callsign><![CDATA[SOAP]]></callsign><logo><![CDATA[img/channel/SOAP.png]]></logo></channel>
-<channel><number>263</number><callsign><![CDATA[RTV]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>264</number><callsign><![CDATA[BBCAHD]]></callsign><logo><![CDATA[img/channel/BBCAHD.png]]></logo></channel>
-<channel><number>265</number><callsign><![CDATA[A&EHD]]></callsign><logo><![CDATA[img/channel/A&EHD.png]]></logo></channel>
-<channel><number>266</number><callsign><![CDATA[bioHD]]></callsign><logo><![CDATA[img/channel/bioHD.png]]></logo></channel>
-<channel><number>267</number><callsign><![CDATA[DOC]]></callsign><logo><![CDATA[img/channel/DOC.png]]></logo></channel>
-<channel><number>268</number><callsign><![CDATA[BEST]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>269</number><callsign><![CDATA[HISTHD]]></callsign><logo><![CDATA[img/channel/HISTHD.png]]></logo></channel>
-<channel><number>270</number><callsign><![CDATA[IDEA]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>271</number><callsign><![CDATA[H2]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>272</number><callsign><![CDATA[LOGO]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>273</number><callsign><![CDATA[TVGN]]></callsign><logo><![CDATA[img/channel/TVGN.png]]></logo></channel>
-<channel><number>274</number><callsign><![CDATA[OVTV]]></callsign><logo><![CDATA[img/channel/OVTV.png]]></logo></channel>
-<channel><number>275</number><callsign><![CDATA[QVC]]></callsign><logo><![CDATA[img/channel/QVC.png]]></logo></channel>
-<channel><number>276</number><callsign><![CDATA[NGCHD]]></callsign><logo><![CDATA[img/channel/NGCHD.png]]></logo></channel>
-<channel><number>277</number><callsign><![CDATA[TRAVHD]]></callsign><logo><![CDATA[img/channel/TRAVHD.png]]></logo></channel>
-<channel><number>278</number><callsign><![CDATA[DSCHD]]></callsign><logo><![CDATA[img/channel/DSCHD.png]]></logo></channel>
-<channel><number>279</number><callsign><![CDATA[OWN]]></callsign><logo><![CDATA[img/channel/OWN.png]]></logo></channel>
-<channel><number>280</number><callsign><![CDATA[TLCHD]]></callsign><logo><![CDATA[img/channel/TLCHD.png]]></logo></channel>
-<channel><number>281</number><callsign><![CDATA[VEL]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>282</number><callsign><![CDATA[APLHD]]></callsign><logo><![CDATA[img/channel/APLHD.png]]></logo></channel>
-<channel><number>283</number><callsign><![CDATA[NGWHD]]></callsign><logo><![CDATA[img/channel/NGWHD.png]]></logo></channel>
-<channel><number>284</number><callsign><![CDATA[SCIHD]]></callsign><logo><![CDATA[img/channel/SCIHD.png]]></logo></channel>
-<channel><number>285</number><callsign><![CDATA[ID]]></callsign><logo><![CDATA[img/channel/ID.png]]></logo></channel>
-<channel><number>286</number><callsign><![CDATA[DESTHD]]></callsign><logo><![CDATA[img/channel/DESTHD.png]]></logo></channel>
-<channel><number>287</number><callsign><![CDATA[MILT]]></callsign><logo><![CDATA[img/channel/MILT.png]]></logo></channel>
-<channel><number>288</number><callsign><![CDATA[GAME]]></callsign><logo><![CDATA[img/channel/GAME.png]]></logo></channel>
-<channel><number>289</number><callsign><![CDATA[DSJRHD]]></callsign><logo><![CDATA[img/channel/DSJRHD.png]]></logo></channel>
-<channel><number>290</number><callsign><![CDATA[DISeHD]]></callsign><logo><![CDATA[img/channel/DISeHD.png]]></logo></channel>
-<channel><number>291</number><callsign><![CDATA[DISw]]></callsign><logo><![CDATA[img/channel/DISw.png]]></logo></channel>
-<channel><number>292</number><callsign><![CDATA[DXDHD]]></callsign><logo><![CDATA[img/channel/DXDHD.png]]></logo></channel>
-<channel><number>293</number><callsign><![CDATA[BABY]]></callsign><logo><![CDATA[img/channel/BABY.png]]></logo></channel>
-<channel><number>294</number><callsign><![CDATA[HUB]]></callsign><logo><![CDATA[img/channel/HUB.png]]></logo></channel>
-<channel><number>295</number><callsign><![CDATA[SPRT]]></callsign><logo><![CDATA[img/channel/SPRT.png]]></logo></channel>
-<channel><number>296</number><callsign><![CDATA[CNeHD]]></callsign><logo><![CDATA[img/channel/CNeHD.png]]></logo></channel>
-<channel><number>297</number><callsign><![CDATA[CNw]]></callsign><logo><![CDATA[img/channel/CNw.png]]></logo></channel>
-<channel><number>298</number><callsign><![CDATA[Boom]]></callsign><logo><![CDATA[img/channel/Boom.png]]></logo></channel>
-<channel><number>299</number><callsign><![CDATA[NIKeHD]]></callsign><logo><![CDATA[img/channel/NIKeHD.png]]></logo></channel>
-<channel><number>300</number><callsign><![CDATA[NIKw]]></callsign><logo><![CDATA[img/channel/NIKw.png]]></logo></channel>
-<channel><number>301</number><callsign><![CDATA[NKJR]]></callsign><logo><![CDATA[img/channel/NKJR.png]]></logo></channel>
-<channel><number>302</number><callsign><![CDATA[NKTN]]></callsign><logo><![CDATA[img/channel/NKTN.png]]></logo></channel>
-<channel><number>303</number><callsign><![CDATA[TNCK]]></callsign><logo><![CDATA[img/channel/TNCK.png]]></logo></channel>
-<channel><number>304</number><callsign><![CDATA[TVLD]]></callsign><logo><![CDATA[img/channel/TVLD.png]]></logo></channel>
-<channel><number>305</number><callsign><![CDATA[IONEHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>306</number><callsign><![CDATA[ION W]]></callsign><logo><![CDATA[img/channel/ION W.png]]></logo></channel>
-<channel><number>307</number><callsign><![CDATA[WGNHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>308</number><callsign><![CDATA[cloo]]></callsign><logo><![CDATA[img/channel/cloo.png]]></logo></channel>
-<channel><number>309</number><callsign><![CDATA[SHOP]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>310</number><callsign><![CDATA[GAME]]></callsign><logo><![CDATA[img/channel/GAME.png]]></logo></channel>
-<channel><number>311</number><callsign><![CDATA[ABCFHD]]></callsign><logo><![CDATA[img/channel/ABCFHD.png]]></logo></channel>
-<channel><number>312</number><callsign><![CDATA[HALLHD]]></callsign><logo><![CDATA[img/channel/HALLHD.png]]></logo></channel>
-<channel><number>313</number><callsign><![CDATA[JTV]]></callsign><logo><![CDATA[img/channel/JTV.png]]></logo></channel>
-<channel><number>314</number><callsign><![CDATA[VALU]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>315</number><callsign><![CDATA[NOVA]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>316</number><callsign><![CDATA[SNBC]]></callsign><logo><![CDATA[img/channel/SNBC.png]]></logo></channel>
-<channel><number>317</number><callsign><![CDATA[QVC]]></callsign><logo><![CDATA[img/channel/QVC.png]]></logo></channel>
-<channel><number>318</number><callsign><![CDATA[BUY]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>319</number><callsign><![CDATA[SALE]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>322</number><callsign><![CDATA[NUTV]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>324</number><callsign><![CDATA[AAN]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>326</number><callsign><![CDATA[GAC]]></callsign><logo><![CDATA[img/channel/GAC.png]]></logo></channel>
-<channel><number>327</number><callsign><![CDATA[CMTHD]]></callsign><logo><![CDATA[img/channel/CMTHD.png]]></logo></channel>
-<channel><number>328</number><callsign><![CDATA[TV1]]></callsign><logo><![CDATA[img/channel/TV1.png]]></logo></channel>
-<channel><number>329</number><callsign><![CDATA[BETHD]]></callsign><logo><![CDATA[img/channel/BETHD.png]]></logo></channel>
-<channel><number>330</number><callsign><![CDATA[CTRC]]></callsign><logo><![CDATA[img/channel/CTRC.png]]></logo></channel>
-<channel><number>331</number><callsign><![CDATA[MTVHD]]></callsign><logo><![CDATA[img/channel/MTVHD.png]]></logo></channel>
-<channel><number>333</number><callsign><![CDATA[MTV2]]></callsign><logo><![CDATA[img/channel/MTV2.png]]></logo></channel>
-<channel><number>334</number><callsign><![CDATA[AUDHD]]></callsign><logo><![CDATA[img/channel/AUDHD.png]]></logo></channel>
-<channel><number>335</number><callsign><![CDATA[VH1HD]]></callsign><logo><![CDATA[img/channel/VH1HD.png]]></logo></channel>
-<channel><number>337</number><callsign><![CDATA[VH1C]]></callsign><logo><![CDATA[img/channel/VH1C.png]]></logo></channel>
-<channel><number>338</number><callsign><![CDATA[GMC]]></callsign><logo><![CDATA[img/channel/GMC.png]]></logo></channel>
-<channel><number>339</number><callsign><![CDATA[fuse]]></callsign><logo><![CDATA[img/channel/fuse.png]]></logo></channel>
-<channel><number>340</number><callsign><![CDATA[AXSTVHD]]></callsign><logo><![CDATA[img/channel/AXSTVHD.png]]></logo></channel>
-<channel><number>344</number><callsign><![CDATA[SBN]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>345</number><callsign><![CDATA[RFDTV]]></callsign><logo><![CDATA[img/channel/RFDTV.png]]></logo></channel>
-<channel><number>346</number><callsign><![CDATA[NASA]]></callsign><logo><![CDATA[img/channel/NASA.png]]></logo></channel>
-<channel><number>348</number><callsign><![CDATA[FSTV]]></callsign><logo><![CDATA[img/channel/FSTV.png]]></logo></channel>
-<channel><number>350</number><callsign><![CDATA[CSP1]]></callsign><logo><![CDATA[img/channel/CSP1.png]]></logo></channel>
-<channel><number>351</number><callsign><![CDATA[CSP2]]></callsign><logo><![CDATA[img/channel/CSP2.png]]></logo></channel>
-<channel><number>352</number><callsign><![CDATA[NMX]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>353</number><callsign><![CDATA[BTV]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>355</number><callsign><![CDATA[CNBCHD]]></callsign><logo><![CDATA[img/channel/CNBCHD.png]]></logo></channel>
-<channel><number>356</number><callsign><![CDATA[mnbcHD]]></callsign><logo><![CDATA[img/channel/mnbcHD.png]]></logo></channel>
-<channel><number>357</number><callsign><![CDATA[CNBW]]></callsign><logo><![CDATA[img/channel/CNBW.png]]></logo></channel>
-<channel><number>358</number><callsign><![CDATA[CRNT]]></callsign><logo><![CDATA[img/channel/CRNT.png]]></logo></channel>
-<channel><number>359</number><callsign><![CDATA[FBNHD]]></callsign><logo><![CDATA[img/channel/FBNHD.png]]></logo></channel>
-<channel><number>360</number><callsign><![CDATA[FNCHD]]></callsign><logo><![CDATA[img/channel/FNCHD.png]]></logo></channel>
-<channel><number>361</number><callsign><![CDATA[NUTV]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>362</number><callsign><![CDATA[TWCHD]]></callsign><logo><![CDATA[img/channel/TWCHD.png]]></logo></channel>
-<channel><number>363</number><callsign><![CDATA[GEB]]></callsign><logo><![CDATA[img/channel/GEB.png]]></logo></channel>
-<channel><number>364</number><callsign><![CDATA[INSP]]></callsign><logo><![CDATA[img/channel/INSP.png]]></logo></channel>
-<channel><number>365</number><callsign><![CDATA[GTV]]></callsign><logo><![CDATA[img/channel/GTV.png]]></logo></channel>
-<channel><number>366</number><callsign><![CDATA[JLTV]]></callsign><logo><![CDATA[img/channel/JLTV.png]]></logo></channel>
-<channel><number>367</number><callsign><![CDATA[WHT]]></callsign><logo><![CDATA[img/channel/WHT.png]]></logo></channel>
-<channel><number>368</number><callsign><![CDATA[HOPE]]></callsign><logo><![CDATA[img/channel/HOPE.png]]></logo></channel>
-<channel><number>369</number><callsign><![CDATA[DSTR]]></callsign><logo><![CDATA[img/channel/DSTR.png]]></logo></channel>
-<channel><number>370</number><callsign><![CDATA[EWTN]]></callsign><logo><![CDATA[img/channel/EWTN.png]]></logo></channel>
-<channel><number>371</number><callsign><![CDATA[TCC]]></callsign><logo><![CDATA[img/channel/TCC.png]]></logo></channel>
-<channel><number>372</number><callsign><![CDATA[TBN]]></callsign><logo><![CDATA[img/channel/TBN.png]]></logo></channel>
-<channel><number>373</number><callsign><![CDATA[WORD]]></callsign><logo><![CDATA[img/channel/WORD.png]]></logo></channel>
-<channel><number>374</number><callsign><![CDATA[BYU]]></callsign><logo><![CDATA[img/channel/BYU.png]]></logo></channel>
-<channel><number>375</number><callsign><![CDATA[LINK]]></callsign><logo><![CDATA[img/channel/LINK.png]]></logo></channel>
-<channel><number>376</number><callsign><![CDATA[CTN]]></callsign><logo><![CDATA[img/channel/CTN.png]]></logo></channel>
-<channel><number>377</number><callsign><![CDATA[TCT]]></callsign><logo><![CDATA[img/channel/TCT.png]]></logo></channel>
-<channel><number>378</number><callsign><![CDATA[NRB]]></callsign><logo><![CDATA[img/channel/NRB.png]]></logo></channel>
-<channel><number>389</number><callsign><![CDATA[PBS]]></callsign><logo><![CDATA[img/channel/PBS.png]]></logo></channel>
-<channel><number>390</number><callsign><![CDATA[CBSeHD]]></callsign><logo><![CDATA[img/channel/CBSeHD.png]]></logo></channel>
-<channel><number>391</number><callsign><![CDATA[CBSwHD]]></callsign><logo><![CDATA[img/channel/CBSwHD.png]]></logo></channel>
-<channel><number>392</number><callsign><![CDATA[NBCeHD]]></callsign><logo><![CDATA[img/channel/NBCeHD.png]]></logo></channel>
-<channel><number>393</number><callsign><![CDATA[NBCwHD]]></callsign><logo><![CDATA[img/channel/NBCwHD.png]]></logo></channel>
-<channel><number>394</number><callsign><![CDATA[CWe]]></callsign><logo><![CDATA[img/channel/CWe.png]]></logo></channel>
-<channel><number>395</number><callsign><![CDATA[CWw]]></callsign><logo><![CDATA[img/channel/CWw.png]]></logo></channel>
-<channel><number>396</number><callsign><![CDATA[ABCeHD]]></callsign><logo><![CDATA[img/channel/ABCeHD.png]]></logo></channel>
-<channel><number>397</number><callsign><![CDATA[ABCwHD]]></callsign><logo><![CDATA[img/channel/ABCwHD.png]]></logo></channel>
-<channel><number>398</number><callsign><![CDATA[FOXeHD]]></callsign><logo><![CDATA[img/channel/FOXeHD.png]]></logo></channel>
-<channel><number>399</number><callsign><![CDATA[FOXwHD]]></callsign><logo><![CDATA[img/channel/FOXwHD.png]]></logo></channel>
-<channel><number>400</number><callsign><![CDATA[PPV]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>401</number><callsign><![CDATA[Aqui]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>402</number><callsign><![CDATA[UNIeHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>403</number><callsign><![CDATA[UNIw]]></callsign><logo><![CDATA[img/channel/UNIw.png]]></logo></channel>
-<channel><number>404</number><callsign><![CDATA[GALA]]></callsign><logo><![CDATA[img/channel/GALA.png]]></logo></channel>
-<channel><number>405</number><callsign><![CDATA[MEGAHD]]></callsign><logo><![CDATA[img/channel/MEGAHD.png]]></logo></channel>
-<channel><number>406</number><callsign><![CDATA[TELe]]></callsign><logo><![CDATA[img/channel/TELe.png]]></logo></channel>
-<channel><number>407</number><callsign><![CDATA[TELw]]></callsign><logo><![CDATA[img/channel/TELw.png]]></logo></channel>
-<channel><number>408</number><callsign><![CDATA[TFTwHD]]></callsign><logo><![CDATA[img/channel/TFTwHD.png]]></logo></channel>
-<channel><number>409</number><callsign><![CDATA[TVZL]]></callsign><logo><![CDATA[img/channel/TVZL.png]]></logo></channel>
-<channel><number>410</number><callsign><![CDATA[mun2]]></callsign><logo><![CDATA[img/channel/mun2.png]]></logo></channel>
-<channel><number>411</number><callsign><![CDATA[TLFI]]></callsign><logo><![CDATA[img/channel/TLFI.png]]></logo></channel>
-<channel><number>412</number><callsign><![CDATA[MEXI]]></callsign><logo><![CDATA[img/channel/MEXI.png]]></logo></channel>
-<channel><number>413</number><callsign><![CDATA[DSCE]]></callsign><logo><![CDATA[img/channel/DSCE.png]]></logo></channel>
-<channel><number>414</number><callsign><![CDATA[WAPA]]></callsign><logo><![CDATA[img/channel/WAPA.png]]></logo></channel>
-<channel><number>415</number><callsign><![CDATA[RMTV]]></callsign><logo><![CDATA[img/channel/RMTV.png]]></logo></channel>
-<channel><number>416</number><callsign><![CDATA[TVCO]]></callsign><logo><![CDATA[img/channel/TVCO.png]]></logo></channel>
-<channel><number>417</number><callsign><![CDATA[CARA]]></callsign><logo><![CDATA[img/channel/CARA.png]]></logo></channel>
-<channel><number>418</number><callsign><![CDATA[NTN]]></callsign><logo><![CDATA[img/channel/NTN.png]]></logo></channel>
-<channel><number>419</number><callsign><![CDATA[CNNE]]></callsign><logo><![CDATA[img/channel/CNNE.png]]></logo></channel>
-<channel><number>420</number><callsign><![CDATA[MXTV]]></callsign><logo><![CDATA[img/channel/MXTV.png]]></logo></channel>
-<channel><number>421</number><callsign><![CDATA[UTIL]]></callsign><logo><![CDATA[img/channel/UTIL.png]]></logo></channel>
-<channel><number>422</number><callsign><![CDATA[CIES]]></callsign><logo><![CDATA[img/channel/CIES.png]]></logo></channel>
-<channel><number>423</number><callsign><![CDATA[CILA]]></callsign><logo><![CDATA[img/channel/CILA.png]]></logo></channel>
-<channel><number>424</number><callsign><![CDATA[CINO]]></callsign><logo><![CDATA[img/channel/CINO.png]]></logo></channel>
-<channel><number>425</number><callsign><![CDATA[FOXD]]></callsign><logo><![CDATA[img/channel/FOXD.png]]></logo></channel>
-<channel><number>426</number><callsign><![CDATA[beIN]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>427</number><callsign><![CDATA[TYC]]></callsign><logo><![CDATA[img/channel/TYC.png]]></logo></channel>
-<channel><number>428</number><callsign><![CDATA[CATV]]></callsign><logo><![CDATA[img/channel/CATV.png]]></logo></channel>
-<channel><number>429</number><callsign><![CDATA[TLCN]]></callsign><logo><![CDATA[img/channel/TLCN.png]]></logo></channel>
-<channel><number>430</number><callsign><![CDATA[LTV]]></callsign><logo><![CDATA[img/channel/LTV.png]]></logo></channel>
-<channel><number>431</number><callsign><![CDATA[PMTV]]></callsign><logo><![CDATA[img/channel/PMTV.png]]></logo></channel>
-<channel><number>432</number><callsign><![CDATA[ESPD]]></callsign><logo><![CDATA[img/channel/ESPD.png]]></logo></channel>
-<channel><number>433</number><callsign><![CDATA[VXTV]]></callsign><logo><![CDATA[img/channel/VXTV.png]]></logo></channel>
-<channel><number>434</number><callsign><![CDATA[DOMN]]></callsign><logo><![CDATA[img/channel/DOMN.png]]></logo></channel>
-<channel><number>435</number><callsign><![CDATA[NGMUN]]></callsign><logo><![CDATA[img/channel/NGMUN.png]]></logo></channel>
-<channel><number>436</number><callsign><![CDATA[DFAM]]></callsign><logo><![CDATA[img/channel/DFAM.png]]></logo></channel>
-<channel><number>437</number><callsign><![CDATA[TVCH]]></callsign><logo><![CDATA[img/channel/TVCH.png]]></logo></channel>
-<channel><number>438</number><callsign><![CDATA[ECUA]]></callsign><logo><![CDATA[img/channel/ECUA.png]]></logo></channel>
-<channel><number>439</number><callsign><![CDATA[PERU]]></callsign><logo><![CDATA[img/channel/PERU.png]]></logo></channel>
-<channel><number>440</number><callsign><![CDATA[V-Me]]></callsign><logo><![CDATA[img/channel/V-Me.png]]></logo></channel>
-<channel><number>441</number><callsign><![CDATA[AZA]]></callsign><logo><![CDATA[img/channel/AZA.png]]></logo></channel>
-<channel><number>442</number><callsign><![CDATA[AZM]]></callsign><logo><![CDATA[img/channel/AZM.png]]></logo></channel>
-<channel><number>443</number><callsign><![CDATA[HISE]]></callsign><logo><![CDATA[img/channel/HISE.png]]></logo></channel>
-<channel><number>444</number><callsign><![CDATA[PASN]]></callsign><logo><![CDATA[img/channel/PASN.png]]></logo></channel>
-<channel><number>445</number><callsign><![CDATA[MTV3]]></callsign><logo><![CDATA[img/channel/MTV3.png]]></logo></channel>
-<channel><number>446</number><callsign><![CDATA[MEX]]></callsign><logo><![CDATA[img/channel/MEX.png]]></logo></channel>
-<channel><number>447</number><callsign><![CDATA[ONCE]]></callsign><logo><![CDATA[img/channel/ONCE.png]]></logo></channel>
-<channel><number>448</number><callsign><![CDATA[ENLC]]></callsign><logo><![CDATA[img/channel/ENLC.png]]></logo></channel>
-<channel><number>449</number><callsign><![CDATA[HITN]]></callsign><logo><![CDATA[img/channel/HITN.png]]></logo></channel>
-<channel><number>456</number><callsign><![CDATA[GOL]]></callsign><logo><![CDATA[img/channel/GOL.png]]></logo></channel>
-<channel><number>457</number><callsign><![CDATA[ECTV]]></callsign><logo><![CDATA[img/channel/ECTV.png]]></logo></channel>
-<channel><number>458</number><callsign><![CDATA[TWCDHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>500</number><callsign><![CDATA[AUDHD]]></callsign><logo><![CDATA[img/channel/AUDHD.png]]></logo></channel>
-<channel><number>501</number><callsign><![CDATA[HBOeHD]]></callsign><logo><![CDATA[img/channel/HBOeHD.png]]></logo></channel>
-<channel><number>502</number><callsign><![CDATA[HB2eHD]]></callsign><logo><![CDATA[img/channel/HB2eHD.png]]></logo></channel>
-<channel><number>503</number><callsign><![CDATA[HBSeHD]]></callsign><logo><![CDATA[img/channel/HBSeHD.png]]></logo></channel>
-<channel><number>504</number><callsign><![CDATA[HBOwHD]]></callsign><logo><![CDATA[img/channel/HBOwHD.png]]></logo></channel>
-<channel><number>505</number><callsign><![CDATA[HB2wHD]]></callsign><logo><![CDATA[img/channel/HB2wHD.png]]></logo></channel>
-<channel><number>506</number><callsign><![CDATA[HBOCHD]]></callsign><logo><![CDATA[img/channel/HBOCHD.png]]></logo></channel>
-<channel><number>507</number><callsign><![CDATA[HBOFeHD]]></callsign><logo><![CDATA[img/channel/HBOFeHD.png]]></logo></channel>
-<channel><number>508</number><callsign><![CDATA[HBFw]]></callsign><logo><![CDATA[img/channel/HBFw.png]]></logo></channel>
-<channel><number>509</number><callsign><![CDATA[HBOZHD]]></callsign><logo><![CDATA[img/channel/HBOZHD.png]]></logo></channel>
-<channel><number>511</number><callsign><![CDATA[HBOLHD]]></callsign><logo><![CDATA[img/channel/HBOLHD.png]]></logo></channel>
-<channel><number>515</number><callsign><![CDATA[MAXeHD]]></callsign><logo><![CDATA[img/channel/MAXeHD.png]]></logo></channel>
-<channel><number>516</number><callsign><![CDATA[MAXwHD]]></callsign><logo><![CDATA[img/channel/MAXwHD.png]]></logo></channel>
-<channel><number>517</number><callsign><![CDATA[MMAXHD]]></callsign><logo><![CDATA[img/channel/MMAXHD.png]]></logo></channel>
-<channel><number>519</number><callsign><![CDATA[AMAXHD]]></callsign><logo><![CDATA[img/channel/AMAXHD.png]]></logo></channel>
-<channel><number>520</number><callsign><![CDATA[5MAXHD]]></callsign><logo><![CDATA[img/channel/5MAXHD.png]]></logo></channel>
-<channel><number>521</number><callsign><![CDATA[WMAXHD]]></callsign><logo><![CDATA[img/channel/WMAXHD.png]]></logo></channel>
-<channel><number>522</number><callsign><![CDATA[TMAXHD]]></callsign><logo><![CDATA[img/channel/TMAXHD.png]]></logo></channel>
-<channel><number>523</number><callsign><![CDATA[@MAXHD]]></callsign><logo><![CDATA[img/channel/@MAXHD.png]]></logo></channel>
-<channel><number>525</number><callsign><![CDATA[STZKHD]]></callsign><logo><![CDATA[img/channel/STZKHD.png]]></logo></channel>
-<channel><number>526</number><callsign><![CDATA[STZCHD]]></callsign><logo><![CDATA[img/channel/STZCHD.png]]></logo></channel>
-<channel><number>527</number><callsign><![CDATA[STZeHD]]></callsign><logo><![CDATA[img/channel/STZeHD.png]]></logo></channel>
-<channel><number>528</number><callsign><![CDATA[STZwHD]]></callsign><logo><![CDATA[img/channel/STZwHD.png]]></logo></channel>
-<channel><number>529</number><callsign><![CDATA[SEDGHD]]></callsign><logo><![CDATA[img/channel/SEDGHD.png]]></logo></channel>
-<channel><number>530</number><callsign><![CDATA[SBLKHD]]></callsign><logo><![CDATA[img/channel/SBLKHD.png]]></logo></channel>
-<channel><number>531</number><callsign><![CDATA[SCINHD]]></callsign><logo><![CDATA[img/channel/SCINHD.png]]></logo></channel>
-<channel><number>535</number><callsign><![CDATA[ENCeHD]]></callsign><logo><![CDATA[img/channel/ENCeHD.png]]></logo></channel>
-<channel><number>536</number><callsign><![CDATA[ENCw]]></callsign><logo><![CDATA[img/channel/ENCw.png]]></logo></channel>
-<channel><number>537</number><callsign><![CDATA[ELOV]]></callsign><logo><![CDATA[img/channel/ELOV.png]]></logo></channel>
-<channel><number>538</number><callsign><![CDATA[EWST]]></callsign><logo><![CDATA[img/channel/EWST.png]]></logo></channel>
-<channel><number>539</number><callsign><![CDATA[ENCSUS]]></callsign><logo><![CDATA[img/channel/ENCSUS.png]]></logo></channel>
-<channel><number>540</number><callsign><![CDATA[EDRA]]></callsign><logo><![CDATA[img/channel/EDRA.png]]></logo></channel>
-<channel><number>541</number><callsign><![CDATA[EACT]]></callsign><logo><![CDATA[img/channel/EACT.png]]></logo></channel>
-<channel><number>542</number><callsign><![CDATA[ENCFAM]]></callsign><logo><![CDATA[img/channel/ENCFAM.png]]></logo></channel>
-<channel><number>545</number><callsign><![CDATA[SHOeHD]]></callsign><logo><![CDATA[img/channel/SHOeHD.png]]></logo></channel>
-<channel><number>546</number><callsign><![CDATA[SHOwHD]]></callsign><logo><![CDATA[img/channel/SHOwHD.png]]></logo></channel>
-<channel><number>547</number><callsign><![CDATA[SHO2HD]]></callsign><logo><![CDATA[img/channel/SHO2HD.png]]></logo></channel>
-<channel><number>548</number><callsign><![CDATA[SHO3HD]]></callsign><logo><![CDATA[img/channel/SHO3HD.png]]></logo></channel>
-<channel><number>549</number><callsign><![CDATA[EXTRHD]]></callsign><logo><![CDATA[img/channel/EXTRHD.png]]></logo></channel>
-<channel><number>550</number><callsign><![CDATA[SHBYHD]]></callsign><logo><![CDATA[img/channel/SHBYHD.png]]></logo></channel>
-<channel><number>551</number><callsign><![CDATA[SHNXHD]]></callsign><logo><![CDATA[img/channel/SHNXHD.png]]></logo></channel>
-<channel><number>552</number><callsign><![CDATA[ShWmHD]]></callsign><logo><![CDATA[img/channel/ShWmHD.png]]></logo></channel>
-<channel><number>554</number><callsign><![CDATA[TMCeHD]]></callsign><logo><![CDATA[img/channel/TMCeHD.png]]></logo></channel>
-<channel><number>555</number><callsign><![CDATA[TMCw]]></callsign><logo><![CDATA[img/channel/TMCw.png]]></logo></channel>
-<channel><number>556</number><callsign><![CDATA[TMCXHD]]></callsign><logo><![CDATA[img/channel/TMCXHD.png]]></logo></channel>
-<channel><number>557</number><callsign><![CDATA[FLIX]]></callsign><logo><![CDATA[img/channel/FLIX.png]]></logo></channel>
-<channel><number>558</number><callsign><![CDATA[SUND]]></callsign><logo><![CDATA[img/channel/SUND.png]]></logo></channel>
-<channel><number>559</number><callsign><![CDATA[IFC]]></callsign><logo><![CDATA[img/channel/IFC.png]]></logo></channel>
-<channel><number>560</number><callsign><![CDATA[HLMKHD]]></callsign><logo><![CDATA[img/channel/HLMKHD.png]]></logo></channel>
-<channel><number>561</number><callsign><![CDATA[HDNM]]></callsign><logo><![CDATA[img/channel/HDNM.png]]></logo></channel>
-<channel><number>562</number><callsign><![CDATA[MGMHD]]></callsign><logo><![CDATA[img/channel/MGMHD.png]]></logo></channel>
-<channel><number>563</number><callsign><![CDATA[SONYHD]]></callsign><logo><![CDATA[img/channel/SONYHD.png]]></logo></channel>
-<channel><number>564</number><callsign><![CDATA[UHD]]></callsign><logo><![CDATA[img/channel/UHD.png]]></logo></channel>
-<channel><number>565</number><callsign><![CDATA[SMTHHD]]></callsign><logo><![CDATA[img/channel/SMTHHD.png]]></logo></channel>
-<channel><number>566</number><callsign><![CDATA[CIHD]]></callsign><logo><![CDATA[img/channel/CIHD.png]]></logo></channel>
-<channel><number>567</number><callsign><![CDATA[PLDAHD]]></callsign><logo><![CDATA[img/channel/PLDAHD.png]]></logo></channel>
-<channel><number>568</number><callsign><![CDATA[SHRTHD]]></callsign><logo><![CDATA[img/channel/SHRTHD.png]]></logo></channel>
-<channel><number>570</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>571</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>572</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>573</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>574</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>575</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>576</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>577</number><callsign><![CDATA[BSN]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>578</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>579</number><callsign><![CDATA[PTNW]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>580</number><callsign><![CDATA[PPV]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>582</number><callsign><![CDATA[DTV]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>584</number><callsign><![CDATA[ADLT]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>585</number><callsign><![CDATA[PTVE]]></callsign><logo><![CDATA[img/channel/PTVE.png]]></logo></channel>
-<channel><number>586</number><callsign><![CDATA[PTVE]]></callsign><logo><![CDATA[img/channel/PTVE.png]]></logo></channel>
-<channel><number>587</number><callsign><![CDATA[PENT]]></callsign><logo><![CDATA[img/channel/PENT.png]]></logo></channel>
-<channel><number>588</number><callsign><![CDATA[HUST]]></callsign><logo><![CDATA[img/channel/HUST.png]]></logo></channel>
-<channel><number>589</number><callsign><![CDATA[PBTV]]></callsign><logo><![CDATA[img/channel/PBTV.png]]></logo></channel>
-<channel><number>590</number><callsign><![CDATA[PBTV]]></callsign><logo><![CDATA[img/channel/PBTV.png]]></logo></channel>
-<channel><number>591</number><callsign><![CDATA[BUY6]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>592</number><callsign><![CDATA[BUY6]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>593</number><callsign><![CDATA[ADLT]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>594</number><callsign><![CDATA[RKTV]]></callsign><logo><![CDATA[img/channel/RKTV.png]]></logo></channel>
-<channel><number>595</number><callsign><![CDATA[PENT]]></callsign><logo><![CDATA[img/channel/PENT.png]]></logo></channel>
-<channel><number>596</number><callsign><![CDATA[XTSY]]></callsign><logo><![CDATA[img/channel/XTSY.png]]></logo></channel>
-<channel><number>597</number><callsign><![CDATA[BRAZ]]></callsign><logo><![CDATA[img/channel/BRAZ.png]]></logo></channel>
-<channel><number>598</number><callsign><![CDATA[MFOS]]></callsign><logo><![CDATA[img/channel/MFOS.png]]></logo></channel>
-<channel><number>599</number><callsign><![CDATA[HUST]]></callsign><logo><![CDATA[img/channel/HUST.png]]></logo></channel>
-<channel><number>600</number><callsign><![CDATA[SMX]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>602</number><callsign><![CDATA[TVG]]></callsign><logo><![CDATA[img/channel/TVG.png]]></logo></channel>
-<channel><number>604</number><callsign><![CDATA[PRST]]></callsign><logo><![CDATA[img/channel/PRST.png]]></logo></channel>
-<channel><number>605</number><callsign><![CDATA[SPMN]]></callsign><logo><![CDATA[img/channel/SPMN.png]]></logo></channel>
-<channel><number>606</number><callsign><![CDATA[OUT]]></callsign><logo><![CDATA[img/channel/OUT.png]]></logo></channel>
-<channel><number>607</number><callsign><![CDATA[SPEEDHD]]></callsign><logo><![CDATA[img/channel/SPEEDHD.png]]></logo></channel>
-<channel><number>608</number><callsign><![CDATA[FCSHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>609</number><callsign><![CDATA[BTNaHD]]></callsign><logo><![CDATA[img/channel/BTNaHD.png]]></logo></channel>
-<channel><number>610</number><callsign><![CDATA[BTNHD]]></callsign><logo><![CDATA[img/channel/BTNHD.png]]></logo></channel>
-<channel><number>611</number><callsign><![CDATA[BTNaHD]]></callsign><logo><![CDATA[img/channel/BTNaHD.png]]></logo></channel>
-<channel><number>612</number><callsign><![CDATA[BTNaHD]]></callsign><logo><![CDATA[img/channel/BTNaHD.png]]></logo></channel>
-<channel><number>613</number><callsign><![CDATA[CBSSNHD]]></callsign><logo><![CDATA[img/channel/CBSSNHD.png]]></logo></channel>
-<channel><number>614</number><callsign><![CDATA[ECL]]></callsign><logo><![CDATA[img/channel/ECL.png]]></logo></channel>
-<channel><number>615</number><callsign><![CDATA[BTNaHD]]></callsign><logo><![CDATA[img/channel/BTNaHD.png]]></logo></channel>
-<channel><number>618</number><callsign><![CDATA[FuelHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>619</number><callsign><![CDATA[FSCHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>620</number><callsign><![CDATA[beINHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>621</number><callsign><![CDATA[FSPHD]]></callsign><logo><![CDATA[img/channel/FSPHD.png]]></logo></channel>
-<channel><number>622</number><callsign><![CDATA[FSPa]]></callsign><logo><![CDATA[img/channel/FSPa.png]]></logo></channel>
-<channel><number>623</number><callsign><![CDATA[FCSHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>624</number><callsign><![CDATA[FOXD]]></callsign><logo><![CDATA[img/channel/FOXD.png]]></logo></channel>
-<channel><number>625</number><callsign><![CDATA[USN]]></callsign><logo><![CDATA[img/channel/USN.png]]></logo></channel>
-<channel><number>626</number><callsign><![CDATA[FCS]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>628</number><callsign><![CDATA[NESNHD]]></callsign><logo><![CDATA[img/channel/NESNHD.png]]></logo></channel>
-<channel><number>629</number><callsign><![CDATA[NSN+HD]]></callsign><logo><![CDATA[img/channel/NSN+HD.png]]></logo></channel>
-<channel><number>630</number><callsign><![CDATA[CSNEHD]]></callsign><logo><![CDATA[img/channel/CSNEHD.png]]></logo></channel>
-<channel><number>631</number><callsign><![CDATA[YESHD]]></callsign><logo><![CDATA[img/channel/YESHD.png]]></logo></channel>
-<channel><number>633</number><callsign><![CDATA[YESaHD]]></callsign><logo><![CDATA[img/channel/YESaHD.png]]></logo></channel>
-<channel><number>634</number><callsign><![CDATA[MSGHD]]></callsign><logo><![CDATA[img/channel/MSGHD.png]]></logo></channel>
-<channel><number>635</number><callsign><![CDATA[MSG+HD]]></callsign><logo><![CDATA[img/channel/MSG+HD.png]]></logo></channel>
-<channel><number>636</number><callsign><![CDATA[NYa1HD]]></callsign><logo><![CDATA[img/channel/NYa1HD.png]]></logo></channel>
-<channel><number>637</number><callsign><![CDATA[NYa2HD]]></callsign><logo><![CDATA[img/channel/NYa2HD.png]]></logo></channel>
-<channel><number>638</number><callsign><![CDATA[NYa3HD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>639</number><callsign><![CDATA[SNYHD]]></callsign><logo><![CDATA[img/channel/SNYHD.png]]></logo></channel>
-<channel><number>640</number><callsign><![CDATA[MASNHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>641</number><callsign><![CDATA[MASN2HD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>642</number><callsign><![CDATA[CSNHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>643</number><callsign><![CDATA[CSNaHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>644</number><callsign><![CDATA[FSTNHD]]></callsign><logo><![CDATA[img/channel/FSTNHD.png]]></logo></channel>
-<channel><number>645</number><callsign><![CDATA[FSCRHD]]></callsign><logo><![CDATA[img/channel/FSCRHD.png]]></logo></channel>
-<channel><number>646</number><callsign><![CDATA[FSSOHD]]></callsign><logo><![CDATA[img/channel/FSSOHD.png]]></logo></channel>
-<channel><number>647</number><callsign><![CDATA[FSSO+HD]]></callsign><logo><![CDATA[img/channel/FSSO+HD.png]]></logo></channel>
-<channel><number>648</number><callsign><![CDATA[FSSO2HD]]></callsign><logo><![CDATA[img/channel/FSSO2HD.png]]></logo></channel>
-<channel><number>649</number><callsign><![CDATA[SPSOHD]]></callsign><logo><![CDATA[img/channel/SPSOHD.png]]></logo></channel>
-<channel><number>650</number><callsign><![CDATA[SPSO+HD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>651</number><callsign><![CDATA[DTV]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>652</number><callsign><![CDATA[RSNaHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>653</number><callsign><![CDATA[SUNHD]]></callsign><logo><![CDATA[img/channel/SUNHD.png]]></logo></channel>
-<channel><number>654</number><callsign><![CDATA[FSFLHD]]></callsign><logo><![CDATA[img/channel/FSFLHD.png]]></logo></channel>
-<channel><number>655</number><callsign><![CDATA[FSFL+HD]]></callsign><logo><![CDATA[img/channel/FSFL+HD.png]]></logo></channel>
-<channel><number>656</number><callsign><![CDATA[SUN+HD]]></callsign><logo><![CDATA[img/channel/SUN+HD.png]]></logo></channel>
-<channel><number>657</number><callsign><![CDATA[RSNaHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>658</number><callsign><![CDATA[RSNaHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>659</number><callsign><![CDATA[RTPTHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>660</number><callsign><![CDATA[FSOHHD]]></callsign><logo><![CDATA[img/channel/FSOHHD.png]]></logo></channel>
-<channel><number>661</number><callsign><![CDATA[FSCINHD]]></callsign><logo><![CDATA[img/channel/FSCINHD.png]]></logo></channel>
-<channel><number>662</number><callsign><![CDATA[STOHD]]></callsign><logo><![CDATA[img/channel/STOHD.png]]></logo></channel>
-<channel><number>663</number><callsign><![CDATA[FSDETHD]]></callsign><logo><![CDATA[img/channel/FSDETHD.png]]></logo></channel>
-<channel><number>664</number><callsign><![CDATA[FSDT+HD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>665</number><callsign><![CDATA[CSNCHD]]></callsign><logo><![CDATA[img/channel/CSNCHD.png]]></logo></channel>
-<channel><number>666</number><callsign><![CDATA[CSNCaHD]]></callsign><logo><![CDATA[img/channel/CSNCaHD.png]]></logo></channel>
-<channel><number>667</number><callsign><![CDATA[CSNa]]></callsign><logo><![CDATA[img/channel/CSNa.png]]></logo></channel>
-<channel><number>668</number><callsign><![CDATA[FSNORHD]]></callsign><logo><![CDATA[img/channel/FSNORHD.png]]></logo></channel>
-<channel><number>669</number><callsign><![CDATA[FSWISHD]]></callsign><logo><![CDATA[img/channel/FSWISHD.png]]></logo></channel>
-<channel><number>671</number><callsign><![CDATA[FSMWHD]]></callsign><logo><![CDATA[img/channel/FSMWHD.png]]></logo></channel>
-<channel><number>672</number><callsign><![CDATA[FSKCHD]]></callsign><logo><![CDATA[img/channel/FSKCHD.png]]></logo></channel>
-<channel><number>673</number><callsign><![CDATA[FSINDHD]]></callsign><logo><![CDATA[img/channel/FSINDHD.png]]></logo></channel>
-<channel><number>675</number><callsign><![CDATA[RSNaHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>676</number><callsign><![CDATA[FSSWHD]]></callsign><logo><![CDATA[img/channel/FSSWHD.png]]></logo></channel>
-<channel><number>677</number><callsign><![CDATA[FSSW+HD]]></callsign><logo><![CDATA[img/channel/FSSW+HD.png]]></logo></channel>
-<channel><number>678</number><callsign><![CDATA[FSNOHD]]></callsign><logo><![CDATA[img/channel/FSNOHD.png]]></logo></channel>
-<channel><number>679</number><callsign><![CDATA[FSOKHD]]></callsign><logo><![CDATA[img/channel/FSOKHD.png]]></logo></channel>
-<channel><number>680</number><callsign><![CDATA[RSNa]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>681</number><callsign><![CDATA[ALTHD]]></callsign><logo><![CDATA[img/channel/ALTHD.png]]></logo></channel>
-<channel><number>682</number><callsign><![CDATA[ALTaHD]]></callsign><logo><![CDATA[img/channel/ALTaHD.png]]></logo></channel>
-<channel><number>683</number><callsign><![CDATA[RTRMHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>684</number><callsign><![CDATA[RTRM+HD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>685</number><callsign><![CDATA[RSNa]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>686</number><callsign><![CDATA[FSAZHD]]></callsign><logo><![CDATA[img/channel/FSAZHD.png]]></logo></channel>
-<channel><number>687</number><callsign><![CDATA[RTNWHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>688</number><callsign><![CDATA[RTNW+]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>691</number><callsign><![CDATA[TWCSNHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>692</number><callsign><![CDATA[FSWHD]]></callsign><logo><![CDATA[img/channel/FSWHD.png]]></logo></channel>
-<channel><number>693</number><callsign><![CDATA[PTHD]]></callsign><logo><![CDATA[img/channel/PTHD.png]]></logo></channel>
-<channel><number>694</number><callsign><![CDATA[FSSDHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>695</number><callsign><![CDATA[RSNa]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>696</number><callsign><![CDATA[CSNBAHD]]></callsign><logo><![CDATA[img/channel/CSNBAHD.png]]></logo></channel>
-<channel><number>697</number><callsign><![CDATA[CSBAaHD]]></callsign><logo><![CDATA[img/channel/CSBAaHD.png]]></logo></channel>
-<channel><number>698</number><callsign><![CDATA[CSNCAHD]]></callsign><logo><![CDATA[]]></logo></channel>
-<channel><number>699</number><callsign><![CDATA[CSNCAHD]]></callsign><logo><![CDATA[img/channel/CSNCAHD.png]]></logo></channel>
-
+	<favorites>
+		<category name="Kids" idx="0">
+			<number>289</number>
+			<number>290</number>
+			<number>291</number>
+			<number>292</number>
+			<number>293</number>
+			<number>294</number>
+			<number>295</number>
+			<number>296</number>
+			<number>297</number>
+			<number>298</number>
+			<number>299</number>
+			<number>300</number>
+			<number>301</number>
+			<number>302</number>
+			<number>303</number>
+		</category>
+		<category name="Educational" idx="1">
+			<number>276</number>
+			<number>278</number>
+			<number>280</number>
+			<number>282</number>
+			<number>283</number>
+			<number>284</number>
+			<number>285</number>
+			<number>269</number>
+			<number>266</number>
+		</category>
+		<category name="DIY" idx="2">
+			<number>231</number>
+			<number>230</number>
+			<number>229</number>
+			<number>232</number>
+		</category>
+		<category name="Music" idx="3">
+			<number>329</number>
+			<number>331</number>
+			<number>333</number>
+			<number>335</number>
+			<number>337</number>
+			<number>339</number>
+		</category>
+		<category name="Other" idx="4">
+			<number>249</number>
+			<number>251</number>
+			<number>235</number>
+			<number>236</number>
+			<number>237</number>
+			<number>246</number>
+			<number>241</number>
+			<number></number>
+		</category>
+		<category name="Networks" idx="5">
+			<number>16</number>
+			<number>22</number>
+			<number>28</number>
+			<number>38</number>
+			<number>56</number>
+			<number>242</number>
+			<number>245</number>
+			<number>247</number>
+			<number>248</number>
+			<number>254</number>
+			<number>285</number>
+		</category>
+		<category name="News" idx="6">
+			<number>355</number>
+			<number>356</number>
+			<number>360</number>
+			<number>362</number>
+		</category>
+	</favorites>
+	<channel>
+		<number>1</number>
+		<callsign><![CDATA[INFO]]></callsign>
+		<logo />
+		<fullname><![CDATA[Customer Information Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>16</number>
+		<callsign><![CDATA[WNEP]]></callsign>
+		<logo><![CDATA[img/channels/872_Dark__ABCHD.png]]></logo>
+		<fullname><![CDATA[A3 Wilkes Barre 16 WNEP ABC]]></fullname>
+	</channel>
+	<channel>
+		<number>22</number>
+		<callsign><![CDATA[WYOU]]></callsign>
+		<logo><![CDATA[img/channels/873_Dark_CBS_HD.png]]></logo>
+		<fullname><![CDATA[A3 Wilkes Barre 22 WYOU CBS]]></fullname>
+	</channel>
+	<channel>
+		<number>28</number>
+		<callsign><![CDATA[WBRE]]></callsign>
+		<logo><![CDATA[img/channels/875_Dark__NBCHD.png]]></logo>
+		<fullname><![CDATA[A3 Wilkes Barre 28 WBRE NBC]]></fullname>
+	</channel>
+	<channel>
+		<number>38</number>
+		<callsign><![CDATA[WSWB]]></callsign>
+		<logo><![CDATA[img/channels/677_Dark_CWHD.png]]></logo>
+		<fullname><![CDATA[A3 Wilkes Barre 38 WSWB CW]]></fullname>
+	</channel>
+	<channel>
+		<number>44</number>
+		<callsign><![CDATA[WVIA]]></callsign>
+		<logo><![CDATA[img/channels/022_Dark_PBS.png]]></logo>
+		<fullname><![CDATA[A3 Wilkes Barre 44 WVIA PBS]]></fullname>
+	</channel>
+	<channel>
+		<number>53</number>
+		<callsign><![CDATA[WQMY]]></callsign>
+		<logo />
+		<fullname><![CDATA[A3 Wilkes Barre 53 WQMY MNT]]></fullname>
+	</channel>
+	<channel>
+		<number>56</number>
+		<callsign><![CDATA[WOLF]]></callsign>
+		<logo><![CDATA[img/channels/874_Dark_FOXHD.png]]></logo>
+		<fullname><![CDATA[A3 Wilkes Barre 56 WOLF FOX]]></fullname>
+	</channel>
+	<channel>
+		<number>70</number>
+		<callsign><![CDATA[JTV]]></callsign>
+		<logo><![CDATA[img/channels/709_Dark_JTV.png]]></logo>
+		<fullname><![CDATA[Jewelry TV Infomercial]]></fullname>
+	</channel>
+	<channel>
+		<number>73</number>
+		<callsign><![CDATA[SNBC]]></callsign>
+		<logo><![CDATA[img/channels/243_Dark_SNBC.png]]></logo>
+		<fullname><![CDATA[ShopNBC (73)]]></fullname>
+	</channel>
+	<channel>
+		<number>74</number>
+		<callsign><![CDATA[SHOP]]></callsign>
+		<logo />
+		<fullname><![CDATA[SHOP Network 74]]></fullname>
+	</channel>
+	<channel>
+		<number>77</number>
+		<callsign><![CDATA[SALE]]></callsign>
+		<logo />
+		<fullname><![CDATA[SALE Network 77]]></fullname>
+	</channel>
+	<channel>
+		<number>78</number>
+		<callsign><![CDATA[LOOK]]></callsign>
+		<logo />
+		<fullname><![CDATA[LOOK Network 78]]></fullname>
+	</channel>
+	<channel>
+		<number>81</number>
+		<callsign><![CDATA[BUY]]></callsign>
+		<logo />
+		<fullname><![CDATA[BUY (81)]]></fullname>
+	</channel>
+	<channel>
+		<number>82</number>
+		<callsign><![CDATA[HOME]]></callsign>
+		<logo />
+		<fullname><![CDATA[Infomercial Programming Ch. 82]]></fullname>
+	</channel>
+	<channel>
+		<number>83</number>
+		<callsign><![CDATA[WOW]]></callsign>
+		<logo />
+		<fullname><![CDATA[WOW TV 83]]></fullname>
+	</channel>
+	<channel>
+		<number>84</number>
+		<callsign><![CDATA[IDEA]]></callsign>
+		<logo />
+		<fullname><![CDATA[IDEA Channel 84]]></fullname>
+	</channel>
+	<channel>
+		<number>85</number>
+		<callsign><![CDATA[SAVE]]></callsign>
+		<logo />
+		<fullname><![CDATA[Mercury Media Channel 85]]></fullname>
+	</channel>
+	<channel>
+		<number>86</number>
+		<callsign><![CDATA[VALU]]></callsign>
+		<logo />
+		<fullname><![CDATA[VALU]]></fullname>
+	</channel>
+	<channel>
+		<number>88</number>
+		<callsign><![CDATA[BEST]]></callsign>
+		<logo />
+		<fullname><![CDATA[BEST Channel 88]]></fullname>
+	</channel>
+	<channel>
+		<number>89</number>
+		<callsign><![CDATA[NEW]]></callsign>
+		<logo />
+		<fullname><![CDATA[Infomercial Channel (89)]]></fullname>
+	</channel>
+	<channel>
+		<number>95</number>
+		<callsign><![CDATA[CSHP]]></callsign>
+		<logo />
+		<fullname><![CDATA[Celebrity Shopping TV 95]]></fullname>
+	</channel>
+	<channel>
+		<number>200</number>
+		<callsign><![CDATA[CINE]]></callsign>
+		<logo />
+		<fullname><![CDATA[Cinema Barker Channel (200)]]></fullname>
+	</channel>
+	<channel>
+		<number>201</number>
+		<callsign><![CDATA[INFO]]></callsign>
+		<logo />
+		<fullname><![CDATA[Customer Information Ch. 201]]></fullname>
+	</channel>
+	<channel>
+		<number>202</number>
+		<callsign><![CDATA[CNNHD]]></callsign>
+		<logo><![CDATA[img/channels/727_Dark_CNNHD.png]]></logo>
+		<fullname><![CDATA[CNN HD]]></fullname>
+	</channel>
+	<channel>
+		<number>203</number>
+		<callsign><![CDATA[LOOK]]></callsign>
+		<logo />
+		<fullname><![CDATA[LOOK Network 203]]></fullname>
+	</channel>
+	<channel>
+		<number>204</number>
+		<callsign><![CDATA[HLN]]></callsign>
+		<logo><![CDATA[img/channels/860_Dark_HLN.png]]></logo>
+		<fullname><![CDATA[HLN]]></fullname>
+	</channel>
+	<channel>
+		<number>205</number>
+		<callsign><![CDATA[SMX]]></callsign>
+		<logo />
+		<fullname><![CDATA[Sports Mix (205)]]></fullname>
+	</channel>
+	<channel>
+		<number>206</number>
+		<callsign><![CDATA[ESPNHD]]></callsign>
+		<logo><![CDATA[img/channels/544_Dark_ESPNHD.png]]></logo>
+		<fullname><![CDATA[ESPN HD]]></fullname>
+	</channel>
+	<channel>
+		<number>207</number>
+		<callsign><![CDATA[ESNHD]]></callsign>
+		<logo><![CDATA[img/channels/769_Dark_ESNHD.png]]></logo>
+		<fullname><![CDATA[ESPNews HD]]></fullname>
+	</channel>
+	<channel>
+		<number>208</number>
+		<callsign><![CDATA[ESPNUHD]]></callsign>
+		<logo><![CDATA[img/channels/938_Dark_EPSNUHD.png]]></logo>
+		<fullname><![CDATA[ESPNU HD]]></fullname>
+	</channel>
+	<channel>
+		<number>209</number>
+		<callsign><![CDATA[ESPN2HD]]></callsign>
+		<logo><![CDATA[img/channels/616_Dark_ESN2HD.png]]></logo>
+		<fullname><![CDATA[ESPN2 HD]]></fullname>
+	</channel>
+	<channel>
+		<number>210</number>
+		<callsign><![CDATA[ESNaHD]]></callsign>
+		<logo><![CDATA[img/channels/544_Dark_ESPNHD.png]]></logo>
+		<fullname><![CDATA[ESPN Alt HD Ch. 210]]></fullname>
+	</channel>
+	<channel>
+		<number>211</number>
+		<callsign><![CDATA[ESNa]]></callsign>
+		<logo />
+		<fullname><![CDATA[ESPN2 (Alt)]]></fullname>
+	</channel>
+	<channel>
+		<number>211</number>
+		<callsign><![CDATA[ESNaHD]]></callsign>
+		<logo><![CDATA[img/channels/544_Dark_ESPNHD.png]]></logo>
+		<fullname><![CDATA[ESPN 2 Alt. HD Ch. 211]]></fullname>
+	</channel>
+	<channel>
+		<number>212</number>
+		<callsign><![CDATA[NFLHD]]></callsign>
+		<logo><![CDATA[img/channels/342_Dark_NFL.png]]></logo>
+		<fullname><![CDATA[NFL Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>213</number>
+		<callsign><![CDATA[MLBNHD]]></callsign>
+		<logo><![CDATA[img/channels/863_Dark_MLB_HD.png]]></logo>
+		<fullname><![CDATA[MLB Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>214</number>
+		<callsign><![CDATA[MLBaHD]]></callsign>
+		<logo><![CDATA[img/channels/863_Dark_MLB_HD.png]]></logo>
+		<fullname><![CDATA[MLB Network Alternate 214 HD]]></fullname>
+	</channel>
+	<channel>
+		<number>215</number>
+		<callsign><![CDATA[NHLHD]]></callsign>
+		<logo><![CDATA[img/channels/739_Dark_NHLHD.png]]></logo>
+		<fullname><![CDATA[NHL Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>216</number>
+		<callsign><![CDATA[NBAHD]]></callsign>
+		<logo />
+		<fullname><![CDATA[NBA TV HD]]></fullname>
+	</channel>
+	<channel>
+		<number>217</number>
+		<callsign><![CDATA[TNNSHD]]></callsign>
+		<logo><![CDATA[img/channels/772_Dark_TNNSHD.png]]></logo>
+		<fullname><![CDATA[Tennis Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>218</number>
+		<callsign><![CDATA[GolfHD]]></callsign>
+		<logo><![CDATA[img/channels/852_Dark_GOLFHD.png]]></logo>
+		<fullname><![CDATA[The Golf Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>219</number>
+		<callsign><![CDATA[NOW]]></callsign>
+		<logo />
+		<fullname><![CDATA[NOW Network]]></fullname>
+	</channel>
+	<channel>
+		<number>220</number>
+		<callsign><![CDATA[NBCSHD]]></callsign>
+		<logo><![CDATA[img/channels/321_Dark_NBCS.png]]></logo>
+		<fullname><![CDATA[NBC Sports Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>222</number>
+		<callsign><![CDATA[SAVE]]></callsign>
+		<logo />
+		<fullname><![CDATA[Mercury Media (Infomercial)]]></fullname>
+	</channel>
+	<channel>
+		<number>223</number>
+		<callsign><![CDATA[CSHP]]></callsign>
+		<logo />
+		<fullname><![CDATA[Celebrity Shopping TV]]></fullname>
+	</channel>
+	<channel>
+		<number>224</number>
+		<callsign><![CDATA[AVC]]></callsign>
+		<logo />
+		<fullname><![CDATA[Direct Shop Network]]></fullname>
+	</channel>
+	<channel>
+		<number>225</number>
+		<callsign><![CDATA[HOME]]></callsign>
+		<logo />
+		<fullname><![CDATA[Infomercial Channel (225)]]></fullname>
+	</channel>
+	<channel>
+		<number>226</number>
+		<callsign><![CDATA[LC]]></callsign>
+		<logo />
+		<fullname><![CDATA[The Liquidation Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>227</number>
+		<callsign><![CDATA[PAID]]></callsign>
+		<logo />
+		<fullname><![CDATA[Paid Programming 227]]></fullname>
+	</channel>
+	<channel>
+		<number>228</number>
+		<callsign><![CDATA[GEM]]></callsign>
+		<logo />
+		<fullname><![CDATA[GEM Shopping Network]]></fullname>
+	</channel>
+	<channel>
+		<number>229</number>
+		<callsign><![CDATA[HGTVHD]]></callsign>
+		<logo><![CDATA[img/channels/271_Dark_HGTVHD.png]]></logo>
+		<fullname><![CDATA[HGTV HD]]></fullname>
+	</channel>
+	<channel>
+		<number>230</number>
+		<callsign><![CDATA[DIYHD]]></callsign>
+		<logo><![CDATA[img/channels/355_Dark_DIYHD.png]]></logo>
+		<fullname><![CDATA[DIY Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>231</number>
+		<callsign><![CDATA[foodHD]]></callsign>
+		<logo><![CDATA[img/channels/729_Dark_FOODHD.png]]></logo>
+		<fullname><![CDATA[Food Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>232</number>
+		<callsign><![CDATA[COOK]]></callsign>
+		<logo><![CDATA[img/channels/933_Dark_COOK.png]]></logo>
+		<fullname><![CDATA[Cooking Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>233</number>
+		<callsign><![CDATA[GSN]]></callsign>
+		<logo><![CDATA[img/channels/563_Dark_GSN.png]]></logo>
+		<fullname><![CDATA[GSN]]></fullname>
+	</channel>
+	<channel>
+		<number>234</number>
+		<callsign><![CDATA[WOW]]></callsign>
+		<logo />
+		<fullname><![CDATA[WOW TV 234]]></fullname>
+	</channel>
+	<channel>
+		<number>235</number>
+		<callsign><![CDATA[STYLE]]></callsign>
+		<logo><![CDATA[img/channels/697_Dark_Style.png]]></logo>
+		<fullname><![CDATA[Style]]></fullname>
+	</channel>
+	<channel>
+		<number>236</number>
+		<callsign><![CDATA[E!HD]]></callsign>
+		<logo><![CDATA[img/channels/332_Dark_E!HD.png]]></logo>
+		<fullname><![CDATA[E! HD]]></fullname>
+	</channel>
+	<channel>
+		<number>237</number>
+		<callsign><![CDATA[BRVOHD]]></callsign>
+		<logo><![CDATA[img/channels/579_Dark_BRVOHD.png]]></logo>
+		<fullname><![CDATA[Bravo HD]]></fullname>
+	</channel>
+	<channel>
+		<number>238</number>
+		<callsign><![CDATA[REELZ]]></callsign>
+		<logo><![CDATA[img/channels/708_Dark_REEL.png]]></logo>
+		<fullname><![CDATA[ReelzChannel]]></fullname>
+	</channel>
+	<channel>
+		<number>239</number>
+		<callsign><![CDATA[AUDHD]]></callsign>
+		<logo><![CDATA[img/channels/287_Dark_Audience.png]]></logo>
+		<fullname><![CDATA[AUDIENCE Network (239) (HD)]]></fullname>
+	</channel>
+	<channel>
+		<number>240</number>
+		<callsign><![CDATA[HSN]]></callsign>
+		<logo><![CDATA[img/channels/551_Dark_HSN.png]]></logo>
+		<fullname><![CDATA[Home Shopping Network]]></fullname>
+	</channel>
+	<channel>
+		<number>241</number>
+		<callsign><![CDATA[SpikeHD]]></callsign>
+		<logo><![CDATA[img/channels/760_Dark_SPKEHD.png]]></logo>
+		<fullname><![CDATA[Spike HD]]></fullname>
+	</channel>
+	<channel>
+		<number>242</number>
+		<callsign><![CDATA[USAHD]]></callsign>
+		<logo><![CDATA[img/channels/753_Dark_USAHD.png]]></logo>
+		<fullname><![CDATA[USA Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>243</number>
+		<callsign><![CDATA[BUZZ]]></callsign>
+		<logo />
+		<fullname><![CDATA[BUZZ TV]]></fullname>
+	</channel>
+	<channel>
+		<number>244</number>
+		<callsign><![CDATA[SyfyHD]]></callsign>
+		<logo><![CDATA[img/channels/905_Dark_SYFYHD.png]]></logo>
+		<fullname><![CDATA[Syfy Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>245</number>
+		<callsign><![CDATA[TNTHD]]></callsign>
+		<logo><![CDATA[img/channels/656_Dark_TNTHD.png]]></logo>
+		<fullname><![CDATA[TNT HD]]></fullname>
+	</channel>
+	<channel>
+		<number>246</number>
+		<callsign><![CDATA[truTVHD]]></callsign>
+		<logo><![CDATA[img/channels/331_Dark_TRUTVHD.png]]></logo>
+		<fullname><![CDATA[truTV HD]]></fullname>
+	</channel>
+	<channel>
+		<number>247</number>
+		<callsign><![CDATA[TBSHD]]></callsign>
+		<logo><![CDATA[img/channels/750_Dark_TBSHD.png]]></logo>
+		<fullname><![CDATA[TBS HD]]></fullname>
+	</channel>
+	<channel>
+		<number>248</number>
+		<callsign><![CDATA[FXHD]]></callsign>
+		<logo><![CDATA[img/channels/871_Dark_FX.png]]></logo>
+		<fullname><![CDATA[FX HD]]></fullname>
+	</channel>
+	<channel>
+		<number>249</number>
+		<callsign><![CDATA[COMHD]]></callsign>
+		<logo />
+		<fullname><![CDATA[Comedy Central HD]]></fullname>
+	</channel>
+	<channel>
+		<number>250</number>
+		<callsign><![CDATA[MALL]]></callsign>
+		<logo />
+		<fullname><![CDATA[Infomercial Channel (250)]]></fullname>
+	</channel>
+	<channel>
+		<number>251</number>
+		<callsign><![CDATA[OXGN]]></callsign>
+		<logo><![CDATA[img/channels/823_Dark_OXGN.png]]></logo>
+		<fullname><![CDATA[Oxygen]]></fullname>
+	</channel>
+	<channel>
+		<number>252</number>
+		<callsign><![CDATA[LIFEHD]]></callsign>
+		<logo><![CDATA[img/channels/335_Dark_LIFEHD.png]]></logo>
+		<fullname><![CDATA[Lifetime HD]]></fullname>
+	</channel>
+	<channel>
+		<number>253</number>
+		<callsign><![CDATA[LMN]]></callsign>
+		<logo><![CDATA[img/channels/320_Dark_LMN.png]]></logo>
+		<fullname><![CDATA[Lifetime Movie Network]]></fullname>
+	</channel>
+	<channel>
+		<number>254</number>
+		<callsign><![CDATA[AMCHD]]></callsign>
+		<logo><![CDATA[img/channels/313_Dark_AMCHD.png]]></logo>
+		<fullname><![CDATA[AMC HD]]></fullname>
+	</channel>
+	<channel>
+		<number>255</number>
+		<callsign><![CDATA[XTRA]]></callsign>
+		<logo />
+		<fullname><![CDATA[XTRA Network]]></fullname>
+	</channel>
+	<channel>
+		<number>256</number>
+		<callsign><![CDATA[TCMHD]]></callsign>
+		<logo><![CDATA[img/channels/340_Dark_TCMHD.png]]></logo>
+		<fullname><![CDATA[Turner Classic Movies HD]]></fullname>
+	</channel>
+	<channel>
+		<number>257</number>
+		<callsign><![CDATA[CHLL]]></callsign>
+		<logo><![CDATA[img/channels/699_Dark_CHLL.png]]></logo>
+		<fullname><![CDATA[Chiller]]></fullname>
+	</channel>
+	<channel>
+		<number>258</number>
+		<callsign><![CDATA[FMC]]></callsign>
+		<logo><![CDATA[img/channels/248_Dark_FMC.png]]></logo>
+		<fullname><![CDATA[FOX Movie Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>259</number>
+		<callsign><![CDATA[CINEMOI]]></callsign>
+		<logo />
+		<fullname><![CDATA[Cinemoi 259]]></fullname>
+	</channel>
+	<channel>
+		<number>260</number>
+		<callsign><![CDATA[We]]></callsign>
+		<logo><![CDATA[img/channels/330_Dark_WE.png]]></logo>
+		<fullname><![CDATA[Women's Entertainment]]></fullname>
+	</channel>
+	<channel>
+		<number>261</number>
+		<callsign><![CDATA[DFH]]></callsign>
+		<logo />
+		<fullname><![CDATA[Discovery Fit and Health]]></fullname>
+	</channel>
+	<channel>
+		<number>262</number>
+		<callsign><![CDATA[SOAP]]></callsign>
+		<logo><![CDATA[img/channels/215_Dark_SOAP.png]]></logo>
+		<fullname><![CDATA[Soapnet]]></fullname>
+	</channel>
+	<channel>
+		<number>263</number>
+		<callsign><![CDATA[RTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[Rocks TV]]></fullname>
+	</channel>
+	<channel>
+		<number>264</number>
+		<callsign><![CDATA[BBCAHD]]></callsign>
+		<logo><![CDATA[img/channels/344_Dark_BBCAHD.png]]></logo>
+		<fullname><![CDATA[BBC America HD]]></fullname>
+	</channel>
+	<channel>
+		<number>265</number>
+		<callsign><![CDATA[A&EHD]]></callsign>
+		<logo><![CDATA[img/channels/825_Dark_A&EHD.png]]></logo>
+		<fullname><![CDATA[A & E HD]]></fullname>
+	</channel>
+	<channel>
+		<number>266</number>
+		<callsign><![CDATA[bioHD]]></callsign>
+		<logo><![CDATA[img/channels/723_Dark_BIOHD.png]]></logo>
+		<fullname><![CDATA[Biography Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>267</number>
+		<callsign><![CDATA[DOC]]></callsign>
+		<logo><![CDATA[img/channels/925_Dark_DOC.png]]></logo>
+		<fullname><![CDATA[Documentary Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>268</number>
+		<callsign><![CDATA[BEST]]></callsign>
+		<logo />
+		<fullname><![CDATA[BEST Channel 268]]></fullname>
+	</channel>
+	<channel>
+		<number>269</number>
+		<callsign><![CDATA[HISTHD]]></callsign>
+		<logo><![CDATA[img/channels/734_Dark_HISTHD.png]]></logo>
+		<fullname><![CDATA[History Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>270</number>
+		<callsign><![CDATA[IDEA]]></callsign>
+		<logo />
+		<fullname><![CDATA[IDEA Channel 270]]></fullname>
+	</channel>
+	<channel>
+		<number>271</number>
+		<callsign><![CDATA[H2]]></callsign>
+		<logo />
+		<fullname><![CDATA[H2]]></fullname>
+	</channel>
+	<channel>
+		<number>272</number>
+		<callsign><![CDATA[LOGO]]></callsign>
+		<logo />
+		<fullname><![CDATA[Logo]]></fullname>
+	</channel>
+	<channel>
+		<number>273</number>
+		<callsign><![CDATA[TVGN]]></callsign>
+		<logo><![CDATA[img/channels/556_Dark_TVGN.png]]></logo>
+		<fullname><![CDATA[TV Guide]]></fullname>
+	</channel>
+	<channel>
+		<number>274</number>
+		<callsign><![CDATA[OVTV]]></callsign>
+		<logo><![CDATA[img/channels/711_Dark_OVTN.png]]></logo>
+		<fullname><![CDATA[Ovation]]></fullname>
+	</channel>
+	<channel>
+		<number>275</number>
+		<callsign><![CDATA[QVC]]></callsign>
+		<logo><![CDATA[img/channels/127_Dark_QVC.png]]></logo>
+		<fullname><![CDATA[QVC]]></fullname>
+	</channel>
+	<channel>
+		<number>276</number>
+		<callsign><![CDATA[NGCHD]]></callsign>
+		<logo><![CDATA[img/channels/738_Dark_NGCHD.png]]></logo>
+		<fullname><![CDATA[National Geographic Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>277</number>
+		<callsign><![CDATA[TRAVHD]]></callsign>
+		<logo><![CDATA[img/channels/939_Dark_TRAVHD.png]]></logo>
+		<fullname><![CDATA[Travel Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>278</number>
+		<callsign><![CDATA[DSCHD]]></callsign>
+		<logo><![CDATA[img/channels/728_Dark_DSCHD.png]]></logo>
+		<fullname><![CDATA[Discovery Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>279</number>
+		<callsign><![CDATA[OWN]]></callsign>
+		<logo><![CDATA[img/channels/273_Dark_OWN.png]]></logo>
+		<fullname><![CDATA[OWN]]></fullname>
+	</channel>
+	<channel>
+		<number>280</number>
+		<callsign><![CDATA[TLCHD]]></callsign>
+		<logo><![CDATA[img/channels/840_Dark_TLCHD.png]]></logo>
+		<fullname><![CDATA[The Learning Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>281</number>
+		<callsign><![CDATA[VEL]]></callsign>
+		<logo />
+		<fullname><![CDATA[Velocity]]></fullname>
+	</channel>
+	<channel>
+		<number>282</number>
+		<callsign><![CDATA[APLHD]]></callsign>
+		<logo><![CDATA[img/channels/808_Dark_APLHD.png]]></logo>
+		<fullname><![CDATA[Animal Planet HD]]></fullname>
+	</channel>
+	<channel>
+		<number>283</number>
+		<callsign><![CDATA[NGWHD]]></callsign>
+		<logo><![CDATA[img/channels/343_Dark_NGWHD.png]]></logo>
+		<fullname><![CDATA[Nat Geo Wild HD]]></fullname>
+	</channel>
+	<channel>
+		<number>284</number>
+		<callsign><![CDATA[SCIHD]]></callsign>
+		<logo><![CDATA[img/channels/800_Dark_SCIHD.png]]></logo>
+		<fullname><![CDATA[Science Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>285</number>
+		<callsign><![CDATA[ID]]></callsign>
+		<logo><![CDATA[img/channels/802_Dark_ID.png]]></logo>
+		<fullname><![CDATA[Investigation Discovery]]></fullname>
+	</channel>
+	<channel>
+		<number>286</number>
+		<callsign><![CDATA[DESTHD]]></callsign>
+		<logo><![CDATA[img/channels/333_Dark_DESTHD.png]]></logo>
+		<fullname><![CDATA[Destination America HD]]></fullname>
+	</channel>
+	<channel>
+		<number>287</number>
+		<callsign><![CDATA[MILT]]></callsign>
+		<logo><![CDATA[img/channels/599_Dark_MILT.png]]></logo>
+		<fullname><![CDATA[Military Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>288</number>
+		<callsign><![CDATA[GAME]]></callsign>
+		<logo><![CDATA[img/channels/682_Dark_GAME.png]]></logo>
+		<fullname><![CDATA[GSN Game Lounge Play NOW (288)]]></fullname>
+	</channel>
+	<channel>
+		<number>289</number>
+		<callsign><![CDATA[DSJRHD]]></callsign>
+		<logo><![CDATA[img/channels/345_Dark_DSJRHD.png]]></logo>
+		<fullname><![CDATA[Disney Junior HD]]></fullname>
+	</channel>
+	<channel>
+		<number>290</number>
+		<callsign><![CDATA[DISeHD]]></callsign>
+		<logo><![CDATA[img/channels/764_Dark_DISeHD.png]]></logo>
+		<fullname><![CDATA[Disney Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>291</number>
+		<callsign><![CDATA[DISw]]></callsign>
+		<logo><![CDATA[img/channels/001_Dark_DISe.png]]></logo>
+		<fullname><![CDATA[Disney Channel (West)]]></fullname>
+	</channel>
+	<channel>
+		<number>292</number>
+		<callsign><![CDATA[DXDHD]]></callsign>
+		<logo><![CDATA[img/channels/862_Dark_DXD.png]]></logo>
+		<fullname><![CDATA[Disney XD HD]]></fullname>
+	</channel>
+	<channel>
+		<number>293</number>
+		<callsign><![CDATA[BABY]]></callsign>
+		<logo><![CDATA[img/channels/673_Dark_BABY.png]]></logo>
+		<fullname><![CDATA[Baby First]]></fullname>
+	</channel>
+	<channel>
+		<number>294</number>
+		<callsign><![CDATA[HUB]]></callsign>
+		<logo><![CDATA[img/channels/254_Dark_HUB.png]]></logo>
+		<fullname><![CDATA[HUB]]></fullname>
+	</channel>
+	<channel>
+		<number>295</number>
+		<callsign><![CDATA[SPRT]]></callsign>
+		<logo><![CDATA[img/channels/637_Dark_SPRT.png]]></logo>
+		<fullname><![CDATA[PBS Kids Sprout]]></fullname>
+	</channel>
+	<channel>
+		<number>296</number>
+		<callsign><![CDATA[CNeHD]]></callsign>
+		<logo><![CDATA[img/channels/724_Dark_CNeHD_Dark.png]]></logo>
+		<fullname><![CDATA[Cartoon Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>297</number>
+		<callsign><![CDATA[CNw]]></callsign>
+		<logo><![CDATA[img/channels/015_Dark_CNe.png]]></logo>
+		<fullname><![CDATA[Cartoon Network West]]></fullname>
+	</channel>
+	<channel>
+		<number>298</number>
+		<callsign><![CDATA[Boom]]></callsign>
+		<logo><![CDATA[img/channels/217_Dark_BOOM.png]]></logo>
+		<fullname><![CDATA[Boomerang]]></fullname>
+	</channel>
+	<channel>
+		<number>299</number>
+		<callsign><![CDATA[NIKeHD]]></callsign>
+		<logo><![CDATA[img/channels/759_Dark_NIKeHD.png]]></logo>
+		<fullname><![CDATA[Nickelodeon East HD]]></fullname>
+	</channel>
+	<channel>
+		<number>300</number>
+		<callsign><![CDATA[NIKw]]></callsign>
+		<logo><![CDATA[img/channels/030_Dark_NIKe.png]]></logo>
+		<fullname><![CDATA[Nickelodeon West]]></fullname>
+	</channel>
+	<channel>
+		<number>301</number>
+		<callsign><![CDATA[NKJR]]></callsign>
+		<logo><![CDATA[img/channels/911_Dark_NKJR.png]]></logo>
+		<fullname><![CDATA[Nick Jr.]]></fullname>
+	</channel>
+	<channel>
+		<number>302</number>
+		<callsign><![CDATA[NKTN]]></callsign>
+		<logo><![CDATA[img/channels/557_Dark_NKTN.png]]></logo>
+		<fullname><![CDATA[Nicktoons]]></fullname>
+	</channel>
+	<channel>
+		<number>303</number>
+		<callsign><![CDATA[TNCK]]></callsign>
+		<logo><![CDATA[img/channels/912_Dark_TNCK.png]]></logo>
+		<fullname><![CDATA[Teen Nick]]></fullname>
+	</channel>
+	<channel>
+		<number>304</number>
+		<callsign><![CDATA[TVLD]]></callsign>
+		<logo><![CDATA[img/channels/351_Dark_TVLD.png]]></logo>
+		<fullname><![CDATA[TV Land]]></fullname>
+	</channel>
+	<channel>
+		<number>305</number>
+		<callsign><![CDATA[IONEHD]]></callsign>
+		<logo />
+		<fullname><![CDATA[ION East HD]]></fullname>
+	</channel>
+	<channel>
+		<number>306</number>
+		<callsign><![CDATA[ION W]]></callsign>
+		<logo><![CDATA[img/channels/268_Dark_ION.png]]></logo>
+		<fullname><![CDATA[ION Television West]]></fullname>
+	</channel>
+	<channel>
+		<number>307</number>
+		<callsign><![CDATA[WGNHD]]></callsign>
+		<logo />
+		<fullname><![CDATA[WGN America HD]]></fullname>
+	</channel>
+	<channel>
+		<number>308</number>
+		<callsign><![CDATA[cloo]]></callsign>
+		<logo><![CDATA[img/channels/306_Dark_Cloo.png]]></logo>
+		<fullname><![CDATA[cloo]]></fullname>
+	</channel>
+	<channel>
+		<number>309</number>
+		<callsign><![CDATA[SHOP]]></callsign>
+		<logo />
+		<fullname><![CDATA[SHOP Network]]></fullname>
+	</channel>
+	<channel>
+		<number>310</number>
+		<callsign><![CDATA[GAME]]></callsign>
+		<logo><![CDATA[img/channels/682_Dark_GAME.png]]></logo>
+		<fullname><![CDATA[GSN Game Lounge Play NOW (310)]]></fullname>
+	</channel>
+	<channel>
+		<number>311</number>
+		<callsign><![CDATA[ABCFHD]]></callsign>
+		<logo><![CDATA[img/channels/766_Dark_ABCFHD.png]]></logo>
+		<fullname><![CDATA[ABC Family HD]]></fullname>
+	</channel>
+	<channel>
+		<number>312</number>
+		<callsign><![CDATA[HALLHD]]></callsign>
+		<logo><![CDATA[img/channels/927_Dark_HALLHD.png]]></logo>
+		<fullname><![CDATA[Hallmark Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>313</number>
+		<callsign><![CDATA[JTV]]></callsign>
+		<logo><![CDATA[img/channels/709_Dark_JTV.png]]></logo>
+		<fullname><![CDATA[Jewelry Television]]></fullname>
+	</channel>
+	<channel>
+		<number>314</number>
+		<callsign><![CDATA[VALU]]></callsign>
+		<logo />
+		<fullname><![CDATA[VALU Ch. 314]]></fullname>
+	</channel>
+	<channel>
+		<number>315</number>
+		<callsign><![CDATA[NOVA]]></callsign>
+		<logo />
+		<fullname><![CDATA[Infomercial Channel (315)]]></fullname>
+	</channel>
+	<channel>
+		<number>316</number>
+		<callsign><![CDATA[SNBC]]></callsign>
+		<logo><![CDATA[img/channels/243_Dark_SNBC.png]]></logo>
+		<fullname><![CDATA[ShopNBC]]></fullname>
+	</channel>
+	<channel>
+		<number>317</number>
+		<callsign><![CDATA[QVC]]></callsign>
+		<logo><![CDATA[img/channels/127_Dark_QVC.png]]></logo>
+		<fullname><![CDATA[QVC Channel 317]]></fullname>
+	</channel>
+	<channel>
+		<number>318</number>
+		<callsign><![CDATA[BUY]]></callsign>
+		<logo />
+		<fullname><![CDATA[BUY (318)]]></fullname>
+	</channel>
+	<channel>
+		<number>319</number>
+		<callsign><![CDATA[SALE]]></callsign>
+		<logo />
+		<fullname><![CDATA[SALE Network 319]]></fullname>
+	</channel>
+	<channel>
+		<number>321</number>
+		<callsign><![CDATA[DEAL]]></callsign>
+		<logo />
+		<fullname><![CDATA[Infomercial Channel (321)]]></fullname>
+	</channel>
+	<channel>
+		<number>322</number>
+		<callsign><![CDATA[NUTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[Paid Programming (322)]]></fullname>
+	</channel>
+	<channel>
+		<number>324</number>
+		<callsign><![CDATA[AAN]]></callsign>
+		<logo />
+		<fullname><![CDATA[America's Auction]]></fullname>
+	</channel>
+	<channel>
+		<number>325</number>
+		<callsign><![CDATA[NEW]]></callsign>
+		<logo />
+		<fullname><![CDATA[Infomercial Channel (325)]]></fullname>
+	</channel>
+	<channel>
+		<number>326</number>
+		<callsign><![CDATA[GAC]]></callsign>
+		<logo><![CDATA[img/channels/580_Dark_GAC.png]]></logo>
+		<fullname><![CDATA[Great American Country]]></fullname>
+	</channel>
+	<channel>
+		<number>327</number>
+		<callsign><![CDATA[CMTHD]]></callsign>
+		<logo><![CDATA[img/channels/756_Dark_CMTHD.png]]></logo>
+		<fullname><![CDATA[CMT HD]]></fullname>
+	</channel>
+	<channel>
+		<number>328</number>
+		<callsign><![CDATA[TV1]]></callsign>
+		<logo><![CDATA[img/channels/601_Dark_TV1.png]]></logo>
+		<fullname><![CDATA[TV One]]></fullname>
+	</channel>
+	<channel>
+		<number>329</number>
+		<callsign><![CDATA[BETHD]]></callsign>
+		<logo><![CDATA[img/channels/101_Dark_BET.png]]></logo>
+		<fullname><![CDATA[BET HD]]></fullname>
+	</channel>
+	<channel>
+		<number>330</number>
+		<callsign><![CDATA[CTRC]]></callsign>
+		<logo><![CDATA[img/channels/908_Dark_CTRC.png]]></logo>
+		<fullname><![CDATA[Centric]]></fullname>
+	</channel>
+	<channel>
+		<number>331</number>
+		<callsign><![CDATA[MTVHD]]></callsign>
+		<logo><![CDATA[img/channels/758_Dark_MTVHD.png]]></logo>
+		<fullname><![CDATA[MTV HD]]></fullname>
+	</channel>
+	<channel>
+		<number>333</number>
+		<callsign><![CDATA[MTV2]]></callsign>
+		<logo><![CDATA[img/channels/625_Dark_MTV2.png]]></logo>
+		<fullname><![CDATA[MTV2]]></fullname>
+	</channel>
+	<channel>
+		<number>334</number>
+		<callsign><![CDATA[AUDHD]]></callsign>
+		<logo><![CDATA[img/channels/287_Dark_Audience.png]]></logo>
+		<fullname><![CDATA[AUDIENCE Network (334) (HD)]]></fullname>
+	</channel>
+	<channel>
+		<number>335</number>
+		<callsign><![CDATA[VH1HD]]></callsign>
+		<logo><![CDATA[img/channels/762_Dark_VH1HD.png]]></logo>
+		<fullname><![CDATA[VH1 HD]]></fullname>
+	</channel>
+	<channel>
+		<number>337</number>
+		<callsign><![CDATA[VH1C]]></callsign>
+		<logo><![CDATA[img/channels/240_Dark_VH1C.png]]></logo>
+		<fullname><![CDATA[VH1 Classic]]></fullname>
+	</channel>
+	<channel>
+		<number>338</number>
+		<callsign><![CDATA[GMC]]></callsign>
+		<logo><![CDATA[img/channels/810_Dark_GMC.png]]></logo>
+		<fullname><![CDATA[Gospel Music Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>339</number>
+		<callsign><![CDATA[fuse]]></callsign>
+		<logo><![CDATA[img/channels/824_Dark_FUSE.png]]></logo>
+		<fullname><![CDATA[Fuse]]></fullname>
+	</channel>
+	<channel>
+		<number>340</number>
+		<callsign><![CDATA[AXSTV]]></callsign>
+		<logo><![CDATA[img/channels/339_Dark_AXSTVHD.jpg]]></logo>
+		<fullname><![CDATA[AXS TV]]></fullname>
+	</channel>
+	<channel>
+		<number>344</number>
+		<callsign><![CDATA[SBN]]></callsign>
+		<logo />
+		<fullname><![CDATA[SonLife 344]]></fullname>
+	</channel>
+	<channel>
+		<number>345</number>
+		<callsign><![CDATA[RFDTV]]></callsign>
+		<logo><![CDATA[img/channels/570_Dark_RFD.png]]></logo>
+		<fullname><![CDATA[RFD-TV]]></fullname>
+	</channel>
+	<channel>
+		<number>346</number>
+		<callsign><![CDATA[NASA]]></callsign>
+		<logo><![CDATA[img/channels/571_Dark_NASA.png]]></logo>
+		<fullname><![CDATA[NASA TV]]></fullname>
+	</channel>
+	<channel>
+		<number>348</number>
+		<callsign><![CDATA[FSTV]]></callsign>
+		<logo><![CDATA[img/channels/945_Dark_FSTV.png]]></logo>
+		<fullname><![CDATA[Free Speech TV]]></fullname>
+	</channel>
+	<channel>
+		<number>350</number>
+		<callsign><![CDATA[CSP1]]></callsign>
+		<logo><![CDATA[img/channels/056_Dark_CSP1.png]]></logo>
+		<fullname><![CDATA[C-Span 1]]></fullname>
+	</channel>
+	<channel>
+		<number>351</number>
+		<callsign><![CDATA[CSP2]]></callsign>
+		<logo><![CDATA[img/channels/057_Dark_CSP2.png]]></logo>
+		<fullname><![CDATA[C-Span 2]]></fullname>
+	</channel>
+	<channel>
+		<number>353</number>
+		<callsign><![CDATA[BTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[Bloomberg Television]]></fullname>
+	</channel>
+	<channel>
+		<number>355</number>
+		<callsign><![CDATA[CNBCHD]]></callsign>
+		<logo><![CDATA[img/channels/768_Dark_CNBCHD.png]]></logo>
+		<fullname><![CDATA[CNBC HD]]></fullname>
+	</channel>
+	<channel>
+		<number>356</number>
+		<callsign><![CDATA[mnbcHD]]></callsign>
+		<logo><![CDATA[img/channels/940_Dark_MSNBCHD.png]]></logo>
+		<fullname><![CDATA[MSNBC HD]]></fullname>
+	</channel>
+	<channel>
+		<number>357</number>
+		<callsign><![CDATA[CNBW]]></callsign>
+		<logo><![CDATA[img/channels/528_Dark_CNBW.png]]></logo>
+		<fullname><![CDATA[CNBC World]]></fullname>
+	</channel>
+	<channel>
+		<number>358</number>
+		<callsign><![CDATA[CRNT]]></callsign>
+		<logo><![CDATA[img/channels/624_Dark__current.png]]></logo>
+		<fullname><![CDATA[Current]]></fullname>
+	</channel>
+	<channel>
+		<number>359</number>
+		<callsign><![CDATA[FBNHD]]></callsign>
+		<logo><![CDATA[img/channels/757_Dark_FBN.png]]></logo>
+		<fullname><![CDATA[Fox Business Network HD]]></fullname>
+	</channel>
+	<channel>
+		<number>360</number>
+		<callsign><![CDATA[FNCHD]]></callsign>
+		<logo><![CDATA[img/channels/848_Dark__FOXHD.png]]></logo>
+		<fullname><![CDATA[FOX News HD]]></fullname>
+	</channel>
+	<channel>
+		<number>361</number>
+		<callsign><![CDATA[NUTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[Paid Programming (361)]]></fullname>
+	</channel>
+	<channel>
+		<number>362</number>
+		<callsign><![CDATA[TWCHD]]></callsign>
+		<logo><![CDATA[img/channels/755_Dark_TWCHD.png]]></logo>
+		<fullname><![CDATA[Weather Channel HD]]></fullname>
+	</channel>
+	<channel>
+		<number>363</number>
+		<callsign><![CDATA[GEB]]></callsign>
+		<logo><![CDATA[img/channels/946_Dark_GEB.png]]></logo>
+		<fullname><![CDATA[Golden Eagle]]></fullname>
+	</channel>
+	<channel>
+		<number>364</number>
+		<callsign><![CDATA[INSP]]></callsign>
+		<logo><![CDATA[img/channels/838_Dark_INSP.png]]></logo>
+		<fullname><![CDATA[Inspiration Channel 364]]></fullname>
+	</channel>
+	<channel>
+		<number>365</number>
+		<callsign><![CDATA[GTV]]></callsign>
+		<logo><![CDATA[img/channels/681_Dark_GTV.png]]></logo>
+		<fullname><![CDATA[God TV]]></fullname>
+	</channel>
+	<channel>
+		<number>366</number>
+		<callsign><![CDATA[JLTV]]></callsign>
+		<logo><![CDATA[img/channels/892_Dark_JLTV.png]]></logo>
+		<fullname><![CDATA[Jewish Life TV]]></fullname>
+	</channel>
+	<channel>
+		<number>367</number>
+		<callsign><![CDATA[WHT]]></callsign>
+		<logo><![CDATA[img/channels/869_Dark_WHT.png]]></logo>
+		<fullname><![CDATA[World Harvest Television]]></fullname>
+	</channel>
+	<channel>
+		<number>368</number>
+		<callsign><![CDATA[HOPE]]></callsign>
+		<logo><![CDATA[img/channels/894_Dark_HOPE.png]]></logo>
+		<fullname><![CDATA[Hope Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>369</number>
+		<callsign><![CDATA[DSTR]]></callsign>
+		<logo><![CDATA[img/channels/582_Dark_DSTR.png]]></logo>
+		<fullname><![CDATA[Daystar]]></fullname>
+	</channel>
+	<channel>
+		<number>370</number>
+		<callsign><![CDATA[EWTN]]></callsign>
+		<logo><![CDATA[img/channels/552_Dark_EWTN.png]]></logo>
+		<fullname><![CDATA[EWTN]]></fullname>
+	</channel>
+	<channel>
+		<number>371</number>
+		<callsign><![CDATA[TCC]]></callsign>
+		<logo><![CDATA[img/channels/517_Dark_TCC.png]]></logo>
+		<fullname><![CDATA[The Church Channel]]></fullname>
+	</channel>
+	<channel>
+		<number>372</number>
+		<callsign><![CDATA[TBN]]></callsign>
+		<logo><![CDATA[img/channels/129_Dark_TBN.png]]></logo>
+		<fullname><![CDATA[Trinity Broadcast Network]]></fullname>
+	</channel>
+	<channel>
+		<number>373</number>
+		<callsign><![CDATA[WORD]]></callsign>
+		<logo><![CDATA[img/channels/575_Dark_WORD.png]]></logo>
+		<fullname><![CDATA[The WORD Network]]></fullname>
+	</channel>
+	<channel>
+		<number>374</number>
+		<callsign><![CDATA[BYU]]></callsign>
+		<logo><![CDATA[img/channels/924_Dark_BYU.png]]></logo>
+		<fullname><![CDATA[BYU TV]]></fullname>
+	</channel>
+	<channel>
+		<number>375</number>
+		<callsign><![CDATA[LINK]]></callsign>
+		<logo><![CDATA[img/channels/573_Dark_LINK.png]]></logo>
+		<fullname><![CDATA[LinkTV]]></fullname>
+	</channel>
+	<channel>
+		<number>376</number>
+		<callsign><![CDATA[CTN]]></callsign>
+		<logo><![CDATA[img/channels/650_Dark_CTN.png]]></logo>
+		<fullname><![CDATA[Christian Television Net]]></fullname>
+	</channel>
+	<channel>
+		<number>377</number>
+		<callsign><![CDATA[TCT]]></callsign>
+		<logo><![CDATA[img/channels/818_Dark_TCT.png]]></logo>
+		<fullname><![CDATA[TCT]]></fullname>
+	</channel>
+	<channel>
+		<number>378</number>
+		<callsign><![CDATA[NRB]]></callsign>
+		<logo><![CDATA[img/channels/652_Dark_NRB.png]]></logo>
+		<fullname><![CDATA[NRB]]></fullname>
+	</channel>
+	<channel>
+		<number>389</number>
+		<callsign><![CDATA[PBS]]></callsign>
+		<logo><![CDATA[img/channels/022_Dark_PBS.png]]></logo>
+		<fullname><![CDATA[PBSNET]]></fullname>
+	</channel>
+	<channel>
+		<number>390</number>
+		<callsign><![CDATA[CBSeHD]]></callsign>
+		<logo><![CDATA[img/channels/873_Dark_CBS_HD.png]]></logo>
+		<fullname><![CDATA[DNS CBSE HD (D11)]]></fullname>
+	</channel>
+	<channel>
+		<number>391</number>
+		<callsign><![CDATA[CBSwHD]]></callsign>
+		<logo><![CDATA[img/channels/873_Dark_CBS_HD.png]]></logo>
+		<fullname><![CDATA[KCBS (Los Angeles) CBS West HD]]></fullname>
+	</channel>
+	<channel>
+		<number>392</number>
+		<callsign><![CDATA[NBCeHD]]></callsign>
+		<logo><![CDATA[img/channels/875_Dark__NBCHD.png]]></logo>
+		<fullname><![CDATA[DNS NBCE HD (D11)]]></fullname>
+	</channel>
+	<channel>
+		<number>393</number>
+		<callsign><![CDATA[NBCwHD]]></callsign>
+		<logo><![CDATA[img/channels/875_Dark__NBCHD.png]]></logo>
+		<fullname><![CDATA[KNBC (Los Angeles) NBC West HD]]></fullname>
+	</channel>
+	<channel>
+		<number>394</number>
+		<callsign><![CDATA[CWe]]></callsign>
+		<logo><![CDATA[img/channels/677_Dark_CWHD.png]]></logo>
+		<fullname><![CDATA[WDCW (Washington D.C.) CW]]></fullname>
+	</channel>
+	<channel>
+		<number>395</number>
+		<callsign><![CDATA[CWw]]></callsign>
+		<logo><![CDATA[img/channels/677_Dark_CWHD.png]]></logo>
+		<fullname><![CDATA[XETV (San Diego) CW West]]></fullname>
+	</channel>
+	<channel>
+		<number>396</number>
+		<callsign><![CDATA[ABCeHD]]></callsign>
+		<logo><![CDATA[img/channels/872_Dark__ABCHD.png]]></logo>
+		<fullname><![CDATA[DNS ABCE HD (D11)]]></fullname>
+	</channel>
+	<channel>
+		<number>397</number>
+		<callsign><![CDATA[ABCwHD]]></callsign>
+		<logo><![CDATA[img/channels/872_Dark__ABCHD.png]]></logo>
+		<fullname><![CDATA[KABC (Los Angeles) ABC West HD]]></fullname>
+	</channel>
+	<channel>
+		<number>398</number>
+		<callsign><![CDATA[FOXeHD]]></callsign>
+		<logo><![CDATA[img/channels/874_Dark_FOXHD.png]]></logo>
+		<fullname><![CDATA[DNS FOXE HD (D11)]]></fullname>
+	</channel>
+	<channel>
+		<number>399</number>
+		<callsign><![CDATA[FOXwHD]]></callsign>
+		<logo><![CDATA[img/channels/874_Dark_FOXHD.png]]></logo>
+		<fullname><![CDATA[KTTV (Los Angeles) FOX West HD]]></fullname>
+	</channel>
+	<channel>
+		<number>400</number>
+		<callsign><![CDATA[PPV]]></callsign>
+		<logo />
+		<fullname><![CDATA[DTV Cinema 400]]></fullname>
+	</channel>
+	<channel>
+		<number>401</number>
+		<callsign><![CDATA[Aqui]]></callsign>
+		<logo />
+		<fullname><![CDATA[AQUI Network]]></fullname>
+	</channel>
+	<channel>
+		<number>402</number>
+		<callsign><![CDATA[UNIeHD]]></callsign>
+		<logo />
+		<fullname><![CDATA[Univision HD]]></fullname>
+	</channel>
+	<channel>
+		<number>404</number>
+		<callsign><![CDATA[GALA]]></callsign>
+		<logo><![CDATA[img/channels/955_Dark_GALA.png]]></logo>
+		<fullname><![CDATA[Galavision]]></fullname>
+	</channel>
+	<channel>
+		<number>408</number>
+		<callsign><![CDATA[TFTwHD]]></callsign>
+		<logo><![CDATA[img/channels/937_Dark_TFTwHD_Dark.png]]></logo>
+		<fullname><![CDATA[Telefutura West HD]]></fullname>
+	</channel>
+	<channel>
+		<number>410</number>
+		<callsign><![CDATA[mun2]]></callsign>
+		<logo><![CDATA[img/channels/245_Dark_MUN2.png]]></logo>
+		<fullname><![CDATA[MUN2]]></fullname>
+	</channel>
+	<channel>
+		<number>440</number>
+		<callsign><![CDATA[V-Me]]></callsign>
+		<logo><![CDATA[img/channels/795_Dark_VME.png]]></logo>
+		<fullname><![CDATA[V-Me]]></fullname>
+	</channel>
+	<channel>
+		<number>441</number>
+		<callsign><![CDATA[AZA]]></callsign>
+		<logo><![CDATA[img/channels/348_Dark_AZA.png]]></logo>
+		<fullname><![CDATA[Azteca America DNS]]></fullname>
+	</channel>
+	<channel>
+		<number>447</number>
+		<callsign><![CDATA[ONCE]]></callsign>
+		<logo><![CDATA[img/channels/567_Dark_ONCE.png]]></logo>
+		<fullname><![CDATA[ONCE-TV]]></fullname>
+	</channel>
+	<channel>
+		<number>448</number>
+		<callsign><![CDATA[ENLC]]></callsign>
+		<logo><![CDATA[img/channels/918_Dark_ENLC.png]]></logo>
+		<fullname><![CDATA[Enlace]]></fullname>
+	</channel>
+	<channel>
+		<number>449</number>
+		<callsign><![CDATA[HITN]]></callsign>
+		<logo><![CDATA[img/channels/532_Dark_HITN.png]]></logo>
+		<fullname><![CDATA[HITN]]></fullname>
+	</channel>
+	<channel>
+		<number>459</number>
+		<callsign><![CDATA[PPV]]></callsign>
+		<logo />
+		<fullname><![CDATA[DTV Cinema 459]]></fullname>
+	</channel>
+	<channel>
+		<number>471</number>
+		<callsign><![CDATA[MLS]]></callsign>
+		<logo><![CDATA[img/channels/633_Dark_MLS.png]]></logo>
+		<fullname><![CDATA[MLS Direct Kick 471-1]]></fullname>
+	</channel>
+	<channel>
+		<number>472</number>
+		<callsign><![CDATA[MLS]]></callsign>
+		<logo><![CDATA[img/channels/633_Dark_MLS.png]]></logo>
+		<fullname><![CDATA[MLS Direct Kick 472-1]]></fullname>
+	</channel>
+	<channel>
+		<number>473</number>
+		<callsign><![CDATA[MLS]]></callsign>
+		<logo><![CDATA[img/channels/633_Dark_MLS.png]]></logo>
+		<fullname><![CDATA[MLS Direct Kick 473-1]]></fullname>
+	</channel>
+	<channel>
+		<number>474</number>
+		<callsign><![CDATA[MLS]]></callsign>
+		<logo><![CDATA[img/channels/633_Dark_MLS.png]]></logo>
+		<fullname><![CDATA[MLS Direct Kick 474-1]]></fullname>
+	</channel>
+	<channel>
+		<number>475</number>
+		<callsign><![CDATA[MLS]]></callsign>
+		<logo><![CDATA[img/channels/633_Dark_MLS.png]]></logo>
+		<fullname><![CDATA[MLS Direct Kick 475-1]]></fullname>
+	</channel>
+	<channel>
+		<number>476</number>
+		<callsign><![CDATA[MLS]]></callsign>
+		<logo><![CDATA[img/channels/633_Dark_MLS.png]]></logo>
+		<fullname><![CDATA[MLS Direct Kick 476-1]]></fullname>
+	</channel>
+	<channel>
+		<number>477</number>
+		<callsign><![CDATA[DTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[SAWCQ/La Liga Ch. 477]]></fullname>
+	</channel>
+	<channel>
+		<number>478</number>
+		<callsign><![CDATA[DTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[Cricket Ticket HD 478-1]]></fullname>
+	</channel>
+	<channel>
+		<number>479</number>
+		<callsign><![CDATA[DTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[SAWCQ/La Liga Ch. 479]]></fullname>
+	</channel>
+	<channel>
+		<number>480</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Mix Channel 480]]></fullname>
+	</channel>
+	<channel>
+		<number>481</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Channel 481]]></fullname>
+	</channel>
+	<channel>
+		<number>482</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Channel 482]]></fullname>
+	</channel>
+	<channel>
+		<number>483</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Channel 483]]></fullname>
+	</channel>
+	<channel>
+		<number>484</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Channel 484]]></fullname>
+	</channel>
+	<channel>
+		<number>485</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Channel 485]]></fullname>
+	</channel>
+	<channel>
+		<number>486</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Channel 486]]></fullname>
+	</channel>
+	<channel>
+		<number>487</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Channel 487]]></fullname>
+	</channel>
+	<channel>
+		<number>488</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Channel 488]]></fullname>
+	</channel>
+	<channel>
+		<number>489</number>
+		<callsign><![CDATA[UEFA]]></callsign>
+		<logo />
+		<fullname><![CDATA[UEFA Soccer Ch. 489-1]]></fullname>
+	</channel>
+	<channel>
+		<number>490</number>
+		<callsign><![CDATA[RGBY]]></callsign>
+		<logo />
+		<fullname><![CDATA[Rugby Ch. 490]]></fullname>
+	</channel>
+	<channel>
+		<number>490</number>
+		<callsign><![CDATA[RGBY]]></callsign>
+		<logo />
+		<fullname><![CDATA[Rugby HD 490-1]]></fullname>
+	</channel>
+	<channel>
+		<number>491</number>
+		<callsign><![CDATA[DTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[Rugby Ch. 491]]></fullname>
+	</channel>
+	<channel>
+		<number>491</number>
+		<callsign><![CDATA[DTV]]></callsign>
+		<logo />
+		<fullname><![CDATA[Rugby HD 491-1]]></fullname>
+	</channel>
 </channels>

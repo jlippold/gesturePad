@@ -20,7 +20,7 @@
 
 			<device shortname='MCE' quickswitch='true' timeshift='true'>
 
-				<name>Media Center</name>
+				<name>Movies</name>
 
 				<IPAddress>192.168.1.105</IPAddress> 
 
@@ -33,7 +33,7 @@
 			
 			<device shortname='DTV' quickswitch='true' timeshift='false'>
 
-				<name>DirecTV</name>
+				<name>Television</name>
 
 				<IPAddress>192.168.1.149</IPAddress> 
 
@@ -165,7 +165,7 @@
 
 			<device shortname='MCE' quickswitch='true' timeshift='true'>
 
-				<name>Media Center</name>
+				<name>Movies</name>
 
 				<IPAddress>192.168.1.144</IPAddress> 
 
@@ -178,7 +178,7 @@
 			
 			<device shortname='DTV' quickswitch='true' timeshift='false'>
 
-				<name>DirecTV</name>
+				<name>Television</name>
 
 				<IPAddress>192.168.1.123</IPAddress> 
 
@@ -310,9 +310,9 @@
 
 			<device shortname='MCE' quickswitch='true' timeshift='true'>
 
-				<name>Media Center</name>
+				<name>Movies</name>
 
-				<IPAddress>192.168.1.134</IPAddress> 
+				<IPAddress>192.168.1.129</IPAddress> 
 
 				<Port>80</Port> 
 
@@ -323,9 +323,9 @@
 			
 			<device shortname='DTV' quickswitch='true' timeshift='false'>
 
-				<name>DirecTV</name>
+				<name>Television</name>
 
-				<IPAddress>192.168.1.120</IPAddress> 
+				<IPAddress>192.168.1.107</IPAddress> 
 
 				<Port>8080</Port> 
 
@@ -457,6 +457,84 @@
 			<name>Media Center</name>
 
 			<commands>
+
+				<category>
+
+					<name>Home Automation</name>
+					<!--
+					<command>
+
+						<name>Lamp On</name>
+
+						<action>
+
+							<method>POST</method>
+
+							<data><![CDATA[]]></data>				
+
+							<dataType>text</dataType>
+
+							<replacebaseurl>http://192.168.1.108/0?131=I=0</replacebaseurl>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>Lamp Off</name>
+
+						<action>
+
+							<method>POST</method>
+
+							<data><![CDATA[]]></data>				
+
+							<dataType>text</dataType>
+
+							<replacebaseurl>http://192.168.1.108/0?131=I=0</replacebaseurl>
+
+						</action>
+
+					</command>
+					-->
+					<command>
+
+						<name>Fireplace On</name>
+
+						<action>
+
+							<method>POST</method>
+
+							<data><![CDATA[]]></data>				
+
+							<dataType>text</dataType>
+
+							<replacebaseurl>http://192.168.1.109/0?111=I=0</replacebaseurl>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>Fireplace Off</name>
+
+						<action>
+
+							<method>POST</method>
+
+							<data><![CDATA[]]></data>				
+
+							<dataType>text</dataType>
+
+							<replacebaseurl>http://192.168.1.109/0?131=I=0</replacebaseurl>
+
+						</action>
+
+					</command>
+					
+				</category>
 
 				<category>
 
@@ -841,6 +919,54 @@
 
 					<command>
 
+						<name>Change Language</name>
+
+						<action>
+
+							<dataType>text</dataType>
+
+							<method>GET</method>
+
+							<data><![CDATA[Lang]]></data>	
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>Subtitles</name>
+
+						<action>
+
+							<dataType>text</dataType>
+
+							<method>GET</method>
+
+							<data><![CDATA[Sub]]></data>	
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>Subtitles Off</name>
+
+						<action>
+
+							<dataType>text</dataType>
+
+							<method>GET</method>
+
+							<data><![CDATA[SubOff]]></data>	
+
+						</action>
+
+					</command>
+
+					<command>
+
 						<name>Skip Forward</name>
 
 						<action>
@@ -939,6 +1065,84 @@
 			</numberpad>
 
 			<commands>
+
+				<category>
+
+					<name>Home Automation</name>
+					<!-- 
+					<command>
+
+						<name>Lamp On</name>
+
+						<action>
+
+							<method>POST</method>
+
+							<data><![CDATA[]]></data>				
+
+							<dataType>text</dataType>
+
+							<replacebaseurl>http://192.168.1.108/0?111=I=0</replacebaseurl>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>Lamp Off</name>
+
+						<action>
+
+							<method>POST</method>
+
+							<data><![CDATA[]]></data>				
+
+							<dataType>text</dataType>
+
+							<replacebaseurl>http://192.168.1.108/0?131=I=0</replacebaseurl>
+
+						</action>
+
+					</command>
+					-->
+					<command>
+
+						<name>Fireplace On</name>
+
+						<action>
+
+							<method>POST</method>
+
+							<data><![CDATA[]]></data>				
+
+							<dataType>text</dataType>
+
+							<replacebaseurl>http://192.168.1.109/0?111=I=0</replacebaseurl>
+
+						</action>
+
+					</command>
+
+					<command>
+
+						<name>Fireplace Off</name>
+
+						<action>
+
+							<method>POST</method>
+
+							<data><![CDATA[]]></data>				
+
+							<dataType>text</dataType>
+
+							<replacebaseurl>http://192.168.1.109/0?131=I=0</replacebaseurl>
+
+						</action>
+
+					</command>
+					
+				</category>
 
 				<category>
 
