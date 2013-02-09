@@ -18,25 +18,25 @@ jQuery.gestures = {};
   function exec(chain) {
   
     if (chain.length && retGesture) {
-      //console.log(xStart, xEnd,  yStart, yEnd);
+      
       var toReturn = chain.join('.')
       if (toReturn == "R") {
-        if ((xEnd - xStart) > LongSwipeThreshold ) {
+        if ((xEnd - xStart) > HorzLongSwipeThreshold ) {
           toReturn = "LS" + toReturn;
         }
       }
       if (toReturn == "L") {
-        if ((xStart - xEnd) > LongSwipeThreshold ) {
+        if ((xStart - xEnd) > HorzLongSwipeThreshold ) {
           toReturn = "LS" + toReturn;
         }
       }
       if (toReturn == "U") {
-        if ((yStart - yEnd) > LongSwipeThreshold ) {
+        if ((yStart - yEnd) > VertLongSwipeThreshold ) {
           toReturn = "LS" + toReturn;
         }
       }
       if (toReturn == "D") {
-        if ((yEnd-yStart) > LongSwipeThreshold ) {
+        if ((yEnd - yStart) > VertLongSwipeThreshold ) {
           toReturn = "LS" + toReturn;
         }
       }
@@ -80,12 +80,13 @@ jQuery.gestures = {};
     if (xStart == 0) {
       xStart = previous.x;
     }
-    if (yStart- off == 0) {
+    
+    if (yStart == 0) {
       yStart = previous.y- off;
     }
     
     xEnd = previous.x;
-    yEnd = previous.y- off;
+    yEnd = previous.y - off;
   }
 
   function setup() {

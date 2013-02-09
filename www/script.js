@@ -1,5 +1,4 @@
 var xml;
-var LongSwipeThreshold = 100;
 var SleepThreshold = 60000;
 var playSounds = "true";
 var appendOncetoQueryString = "";
@@ -29,6 +28,9 @@ function setupWorker(channellist) {
 		  	channel.ending = 0;
 		  	channel.timeleft = "";
 		  	channel.fullname = $(this).find("fullname").text();
+		  	channel.startTime = 0;
+		  	channel.duration = 0;
+
 		  	var fav = $(channellist).find('channels > favorites > category > number').filter(function() { return $(this).text() == channel.number  });;
 
 		  	if ( $(fav).size() > 0 ) {
@@ -60,6 +62,10 @@ function compare(a,b) {
 }
 
 function startWorker() {
+	try {
+		clearTimeout(workerTimer)
+	} catch (e) {}
+
 	if (typeof navigator.device === "undefined") {
 		return;
 	} else {
@@ -112,23 +118,27 @@ function startWorker() {
 
 
 			});
-		 	clearTimeout(workerTimer)
-			workerTimer = setTimeout( "startWorker()", 30000 );
+
+		 	workerTimer = setTimeout( "startWorker()", 300000 );
+			
 
 	}
 	
 }
 
 function refreshChannel(server, queueName, channelKey) {
-	
+	//$("#txtRoom").text(channelKey);
 	var c = guide.channels[channelKey];
 	$.ajaxq(queueName, {
 		url: server + 'tv/getProgInfo',
 		dataType: "json",
 		type: "GET",
+		timeout: 10000,
 		data: 'major=' + c.number,
 		success: function(response) {
 			c.nowplaying = response.title;
+			c.startTime = response.startTime;
+			c.duration = response.duration;
 			c.timeleft = hms2( (response.startTime+response.duration) - Math.floor(new Date().getTime() / 1000)  );
 			c.ending = (response.startTime+response.duration);
 
@@ -140,8 +150,13 @@ function refreshChannel(server, queueName, channelKey) {
             	$(row).attr("data-loaded", "true")
 
 			}
-
+		},
+		error: function(x,y,z) {
+			console.log(x+y+z);
 		}
+
+			
+
 	});
 }
 
@@ -185,9 +200,19 @@ function htmlEscape(str) {
             .replace(/>/g, '&gt;');
 }
 
+function splash(t) {
+	try {
+		if ( t == "hide" ) {
+			navigator.splashscreen.hide();
+		} else {
+			navigator.splashscreen.show();
+		}
+	} catch (e) {}
+}
+
 function onDeviceReady() {
 
-navigator.splashscreen.show();
+	splash("show");
 
 /*
 	//get xml from json
@@ -387,9 +412,6 @@ navigator.splashscreen.show();
 		    	}
 		        var configNode = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname") +'"]');
 		        if ($(configNode).size() > 0) {
-
-				
-					
 					//flip screen
 		   			$("#btnTitles").trigger(clickEventType);
 
@@ -398,7 +420,7 @@ navigator.splashscreen.show();
 						// update whats on
 						setTimeout(function() {
 							nowPlaying();
-						}, 1500);
+						}, 3000);
 		            })
 			     }
 			});
@@ -612,10 +634,9 @@ navigator.splashscreen.show();
 
 	$("#btnRoom").bind(clickEventType, function() {
 		$("#lstRooms").val( localStorage.getItem("roomname") );
-		$("#frmRoom").show();
-		
+		$("#frmRoom").css({"visibility": "visible"});
 		$("#lstRooms").focus();
-		$("#frmRoom").hide();
+		$("#frmRoom").css({"visibility": "hidden"});
 	});
 
 	$("#btnTransfer").bind(clickEventType, function() {
@@ -627,9 +648,9 @@ navigator.splashscreen.show();
 		});
 		
 		$("#lstDevice").html(toAppend);
-		$("#frmDevice").show();
+		$("#frmDevice").css({"visibility": "visible"});
 		$("#lstDevice").focus();
-		$("#frmDevice").hide();
+		$("#frmDevice").css({"visibility": "hidden"});
 	})
 
 	//bind device swtich events
@@ -696,9 +717,13 @@ navigator.splashscreen.show();
 
 	$("#searchform").bind("submit", function(event) {
 		event.preventDefault();
+
     	var s = $("#Filter input.searcher").val().toLowerCase();
     	$("#backFace tr").each(function() {
-    		var t = $(this).text().toLowerCase() + " " + $(this).attr("data-fullname").toLowerCase();
+    		var t = $(this).text().toLowerCase();
+    		if ( $(this).hasAttr("data-fullname") ) {
+    			t += " " + $(this).attr("data-fullname").toLowerCase();
+    		} 
     		if ( t.indexOf(s) == -1 ) {
     			$(this).hide()
     		} else {
@@ -889,9 +914,11 @@ function doSlideEvent() {
 }
 
 function getTableRowHTML(c, channelKey, curChannel) {
-	var row = ""
+	var row = "";
+	var timeleft = hms2( (c.startTime+c.duration) - Math.floor(new Date().getTime() / 1000)  );
+	
 	//alert(c.logo)
-	if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) { //needs refresh
+	if (c.nowplaying == "" || timeleft == "0:00" || timeleft == "00:00" ) { //needs refresh
 		row += '<tr id="tr' + channelKey + '" data-loaded="false" data-major="' + c.number + '" data-key="' + channelKey + '" data-fullname="' + escape(c.fullname) + '"><td width="50px" ' 
 		if ( c.logo != "" ) {
 			row += "style = 'background: url(" + c.logo + ") center no-repeat' > "  
@@ -904,6 +931,7 @@ function getTableRowHTML(c, channelKey, curChannel) {
 		'<td width="30px" style="text-align: right">0:00';
 
 	} else { //pull cached
+		//$("#txtRoom").text(c.number + " " + c.startTime+ " " + c.duration + " " + Math.floor(new Date().getTime() / 1000) );
 
 		row += '<tr id="tr' + channelKey + '" data-loaded="true" data-major="' + c.number + '" data-key="' + channelKey + '" data-fullname="' + escape(c.fullname) + '"><td width="50px" ' 
 		if ( c.logo != "" ) {
@@ -915,7 +943,7 @@ function getTableRowHTML(c, channelKey, curChannel) {
 		'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
 		c.nowplaying +
 		'</div></td>'+
-		'<td width="30px" style="text-align: right">' + c.timeleft +'';
+		'<td width="30px" style="text-align: right">' + timeleft +''; 
 	}
 	row += "</td></tr>";
 	return row;
@@ -927,6 +955,10 @@ function PhoneGapReady() {
 	window.onorientationchange = detectOrientation;
     window.onresize = detectOrientation;
     onDeviceReady();
+
+	window.onerror = function(msg, url, line) {
+	    //alert("Error: " + msg + "\nurl: " + url + "\nline #: " + line);
+	};
 
 }
 
@@ -1000,6 +1032,15 @@ function doResize() {
 
 
 	resetVolumeSlider();
+	resetNPSeek();
+
+	setTimeout(function() {
+		setSwipeThresholds();
+	}, 1500)
+}
+
+function resetNPSeek() {
+	$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
 }
 
 function resetVolumeSlider() {
@@ -1008,6 +1049,19 @@ function resetVolumeSlider() {
     var x = max*0.5;
     $("#VolumeSliderSeek").attr("style", "left: " + (x-10) + "px");
     $("#VolumeSliderh").attr("style", "width: " + ((x/max)*100) + "%");
+}
+
+function setSwipeThresholds() {
+	if ( deviceType == "tablet") {
+		HorzLongSwipeThreshold = $("#gestures_canvas").width() * 0.5;
+		VertLongSwipeThreshold = $("#gestures_canvas").height() * 0.5;
+	}
+
+	if ( deviceType == "phone") {
+		HorzLongSwipeThreshold = $("#gestures_canvas").width() * 0.8;
+		VertLongSwipeThreshold = $("#gestures_canvas").height() * 0.7;
+	}	
+	
 }
 
 function onBodyLoad() {
@@ -1077,11 +1131,7 @@ function loadSettings() {
 		playSounds = $(this).text();
 	});
 	
-	$(xml).find('gesturePad > settings > LongSwipeThreshold').each(function() {
-		try {
-			LongSwipeThreshold = parseInt($(this).text());
-		} catch (e) { }
-	});
+
 
 	$(xml).find('gesturePad > settings > SleepThreshold').each(function() {
 		try {
@@ -1183,7 +1233,7 @@ function loadSettings() {
 
 	getRoomStatus()
 	setTimeout( function () {
-		navigator.splashscreen.hide();
+		splash("hide");
 	}, 500)
 	
 	
@@ -1228,13 +1278,19 @@ function updateStatus() {
 }
 
 function hms2(totalSec) {
-	if (totalSec < 0 ) {
-		return "0:00"
+	if (totalSec <= 0 ) {
+		return "0:00";
 	}
-    hours = parseInt( totalSec / 3600 ) % 24;
-    minutes = parseInt( totalSec / 60 ) % 60;
-    seconds = totalSec % 60;
-    return (hours < 10 ? "0" + hours : hours)  + ":" + (minutes < 10 ? "0" + minutes : minutes) ;
+	try {
+		hours = parseInt( totalSec / 3600 ) % 24;
+	    minutes = parseInt( totalSec / 60 ) % 60;
+	    seconds = totalSec % 60;
+	    return (hours < 10 ? "0" + hours : hours)  + ":" + (minutes < 10 ? "0" + minutes : minutes) ;
+	} catch(e) {
+		return "0:00";
+	}
+
+	    
 }
 
 function clearNowPlaying() {
@@ -1273,6 +1329,12 @@ function nowPlaying() {
                    dataType: "json",
                    timeout:10000,
                    success: function(j) {
+                   		try {
+                   			var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
+                   		} catch (e) {
+                   			return;
+                   		}
+                   		
 						if ( j.Data.PlayingControllers.length >= 1 ) {
 
 							var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
@@ -1714,6 +1776,8 @@ jQuery.ajaxq = function (queue, options)
 
 			// Run the next request from the queue
 			if (document.ajaxq.q[queue].length > 0) document.ajaxq.r = jQuery.ajax (document.ajaxq.q[queue][0]);
+
+			//console.log(document.ajaxq)
 		};
 
 		// Enqueue the request
@@ -1734,4 +1798,7 @@ jQuery.ajaxq = function (queue, options)
 	}
 }
 
+$.fn.hasAttr = function(name) {  
+   return this.attr(name) !== undefined;
+};
 

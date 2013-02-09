@@ -6,8 +6,6 @@
 
 		<sounds>false</sounds>
 
-		<LongSwipeThreshold>200</LongSwipeThreshold>
-
 		<SleepThreshold>120000</SleepThreshold>
 
 	</settings>

@@ -62,7 +62,6 @@
 		NSLog(@"gesturePad launchOptions = %@", url);
     }
     
-
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     self.window = [[UIWindow alloc] initWithFrame:screenBounds];
@@ -71,9 +70,15 @@
     self.viewController = [[MainViewController alloc] init];
     self.viewController.useSplashScreen = YES;
     self.viewController.wwwFolderName = @"www";
-    self.viewController.startPage = @"index.html";
-    self.viewController.invokeString = invokeString;
+    
+    if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {
+       self.viewController.startPage = @"tablet.html";
+    } else {
+       self.viewController.startPage = @"index.html";
+    }
 
+    self.viewController.invokeString = invokeString;
+    
     // NOTE: To control the view's frame size, override [self.viewController viewWillAppear:] in your view controller.
     
     // check whether the current orientation is supported: if it is, keep it, rather than forcing a rotation

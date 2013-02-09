@@ -91,11 +91,9 @@ div.five {
 #btnPlay {
 	background: url("img/play.png");
 }
-
 #btnPlay.playing {
 	background: url("img/pause.png");
 }
-
 #btnForward {
 	background: url("img/next.png");
 }
