@@ -28,6 +28,10 @@
 	</array>
 	<key>Plugins</key>
 	<dict>
+		<key>ActionSheet</key>
+		<string>ActionSheet</string>
+		<key>ChildBrowserCommand</key>
+		<string>ChildBrowserCommand</string>
 		<key>Globalization</key>
 		<string>CDVGlobalization</string>
 		<key>Device</key>

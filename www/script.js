@@ -152,11 +152,8 @@ function refreshChannel(server, queueName, channelKey) {
 			}
 		},
 		error: function(x,y,z) {
-			console.log(x+y+z);
+			console.log("Refresh Channel Error: " + server);
 		}
-
-			
-
 	});
 }
 
@@ -214,6 +211,18 @@ function onDeviceReady() {
 
 	splash("show");
 
+                   var root = this;
+                    
+                    cb = window.plugins.childBrowser;
+                    
+                    if (cb != null) {
+                        cb.onLocationChange = function(loc){ root.locChanged(loc); };
+                        cb.onClose = function(){root.onCloseBrowser()};
+                        cb.onOpenExternal = function(){root.onOpenExternal();};
+                        //cb.showWebPage("http://yahoo.com");
+                    }	
+
+
 /*
 	//get xml from json
     $.getJSON('guideChannelList.json', function(data) {
@@ -251,6 +260,10 @@ function onDeviceReady() {
 
 	$.gestures.init();
 	$.gestures.retGesture(function(gesture) {
+		if (gesture == "2.Tap") { //shitty override bc im lazy
+			DoShuffle()
+			return;
+		}
 		doEvent(gesture);
 		clearSleepTimer();
 	});
@@ -633,42 +646,85 @@ function onDeviceReady() {
 	});
 
 	$("#btnRoom").bind(clickEventType, function() {
-		$("#lstRooms").val( localStorage.getItem("roomname") );
-		$("#frmRoom").css({"visibility": "visible"});
-		$("#lstRooms").focus();
-		$("#frmRoom").css({"visibility": "hidden"});
+
+		
+		var actionSheet = window.plugins.actionSheet;
+		var RoomNames = new Array();
+		var RoomIPs = new Array();
+		var RoomShortNames = new Array();
+
+		$(xml).find('gesturePad > rooms > room').each(function(){
+			RoomNames.push( $(this).children("name:first").text() );
+		 	RoomIPs.push( "http://" + $(this).find("IPAddress:first").text() + "/index.html" );
+		 	RoomShortNames.push( $(this).attr("roomshortname") );
+		 	
+		 	//toAppend += '<option data-switch="1" value="' + roomname + '" data-ip="' + IP + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '">' + roomname + '</option>';
+
+		});
+		RoomNames.push( "Cancel" );
+
+		actionSheet.create({title: 'Change Room', items: RoomNames, destructiveButtonIndex: (RoomNames.length-1)}, function(buttonValue, buttonIndex) {
+			if (buttonIndex == -1  || buttonIndex == (RoomNames.length-1)) {
+				return;
+			}
+
+			
+
+	 		localStorage.setItem("roomname", RoomNames[buttonIndex] );
+			localStorage.setItem("roomshortname", RoomShortNames[buttonIndex] );
+
+			$.ajax({
+			    type: "GET",
+				dataType: "text",
+				url: RoomIPs[buttonIndex],
+				success: function(resp) {
+					var obj = jQuery.parseJSON(resp);
+					if ( obj.device != "" ) {
+						localStorage.setItem("shortname", obj.device );
+						localStorage.setItem("devicename", $(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='" + localStorage.getItem("shortname") + "'] > name:first" ).text() );
+						updateStatus();
+					}
+				},
+				error: function(x,y,z) {
+					localStorage.setItem("shortname", "MCE" )
+					localStorage.setItem("shortname", "Media Center" )
+					updateStatus();
+				}	
+			});
+
+		});
+
 	});
 
 	$("#btnTransfer").bind(clickEventType, function() {
 
-		//Populate device picker
-		var toAppend = ""
+		var actionSheet = window.plugins.actionSheet;
+		var RoomNames = new Array();
+		var RoomShortNames = new Array();
+		var RoomDevices = new Array();
+
 		$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device').each(function(){	
-		 	toAppend += '<option ' + ((localStorage.getItem("shortname") != $(this).attr("shortname")) ? '' : ' selected="selected" ') + ' value="' + $(this).attr("shortname") + '" data-shortname="' + $(this).attr("shortname") + '" data-devicename="' + $(this).find("name:first").text() + '">' + $(this).find("name:first").text() + '</option>';
+		 	//toAppend += '<option ' + ((localStorage.getItem("shortname") != $(this).attr("shortname")) ? '' : ' selected="selected" ') + ' value="' + $(this).attr("shortname") + '" data-shortname="' + $(this).attr("shortname") + '" data-devicename="' + $(this).find("name:first").text() + '">' + $(this).find("name:first").text() + '</option>';
+		 	RoomNames.push( $(this).find("name:first").text() );
+		 	RoomShortNames.push( $(this).attr("shortname") );
+		 	RoomDevices.push( $(this).find("name:first").text() );
+		});
+
+		RoomNames.push( "Cancel" );
+
+		actionSheet.create({title: 'Switch Input', items: RoomNames, destructiveButtonIndex: (RoomNames.length-1)}, function(buttonValue, buttonIndex) {
+			if (buttonIndex == -1  || buttonIndex == (RoomNames.length-1)) {
+				return;
+			}
+			
+	 		localStorage.setItem("shortname", RoomShortNames[buttonIndex] );
+			localStorage.setItem("devicename", RoomDevices[buttonIndex] );
+
+		 	var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
+		 	doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
+
 		});
 		
-		$("#lstDevice").html(toAppend);
-		$("#frmDevice").css({"visibility": "visible"});
-		$("#lstDevice").focus();
-		$("#frmDevice").css({"visibility": "hidden"});
-	})
-
-	//bind device swtich events
-	$("#lstDevice").bind("change", function () {
-		if ( $(this).val() == "" ) {
-			return false;
-		}
-		$("#btnPlay").addClass("playing");
-		$(this).parent().submit();
-	    document.activeElement.blur();
-	    $("#lstDevice").blur();
-
- 		localStorage.setItem("shortname", $(this).find("option:selected").attr("data-shortname") );
-		localStorage.setItem("devicename", $(this).find("option:selected").attr("data-devicename") );
-
-	 	var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
-	 	doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
- 		
 	})
 
 
@@ -805,6 +861,66 @@ function loadXML() {
 	});
 }
 
+function DoShuffle() {
+		if (localStorage.getItem("shortname") != "MCE") {
+			return;
+		}
+		var actionSheet = window.plugins.actionSheet;
+		var actions = ["Will Ferrell", "Comedy", "Action", "Romance", "Horror", "Funny TV"];
+		var actionTypes = ["Actor", "Genre", "Genre", "Genre", "Genre", "TV"];
+		actions.push("Cancel")
+
+		actionSheet.create({title: 'Shuffle Surprise!', items: actions, destructiveButtonIndex: (actions.length-1)}, function(buttonValue, buttonIndex) {
+			if (buttonIndex == -1  || buttonIndex == (actions.length-1)) {
+				return;
+			}
+			console.log('http://rss.jed.bz/?t=' + actionTypes[buttonIndex] + '&v=' + actions[buttonIndex] + '')
+			$.getJSON('http://rss.jed.bz/?t=' + actionTypes[buttonIndex] + '&v=' + actions[buttonIndex] + '', function(data) {
+
+				navigator.notification.confirm(
+				   data.Name, 
+					function(buttonIndex) {
+            			playByID(buttonIndex, data.Id);
+        			},
+				   'Play Title?', 
+				   'Play It, Cancel'
+				);
+			});
+
+		})
+
+}
+
+function playByID(buttonIndex, id)  {
+	if (buttonIndex == 2) {
+		DoShuffle()
+	}
+	if (buttonIndex == 1) {
+	
+		var MBUrl = "";
+		
+		$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname")  + '"]:first').each(function(){
+			$(this).find("IPAddress:first").each(function(){
+				MBUrl = "http://" + $(this).text()
+			});				
+			$(this).find("ServicePort:first").each(function(){
+				MBUrl += ":" + $(this).text() + "/mbwebapi/service/"
+			});		
+		});
+		
+		if (MBUrl == "" ) {
+			MBUrl;
+		}
+
+		MBUrl += "ui?command=play&id=" + id
+		$.getJSON(MBUrl, function(x) {
+			setTimeout(function() {
+				nowPlaying();
+			}, 1500)
+         })
+	}
+}
+
 function ShowItems(tr) {
 	clearSleepTimer()
 
@@ -831,7 +947,6 @@ function ShowItems(tr) {
 			setTimeout(function() {
 				nowPlaying();
 			}, 1500)
-
          })
 		return;
 	}
@@ -957,7 +1072,7 @@ function PhoneGapReady() {
     onDeviceReady();
 
 	window.onerror = function(msg, url, line) {
-	    //alert("Error: " + msg + "\nurl: " + url + "\nline #: " + line);
+	    alert("Error: " + msg + "\nurl: " + url + "\nline #: " + line);
 	};
 
 }
@@ -1148,71 +1263,6 @@ function loadSettings() {
 	}
 
 
-	//Populate room picker
-	var toAppend = "<option value=''></option>"
-	var toAppendNoSwitch = ""
-	$(xml).find('gesturePad > rooms > room').each(function(){	
-	 	var roomname = $(this).children("name:first").text();
-	 	var IP = "http://" + $(this).find("IPAddress:first").text() + "/index.html";
-	 	var roomshortname = $(this).attr("roomshortname");
-	 	toAppend += '<option data-switch="1" value="' + roomname + '" data-ip="' + IP + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '">' + roomname + '</option>';
-
-	 	// $(this).children("device[quickswitch='true']").each(function(){
-		 // 	var devicename = $(this).children("name:first").text();
-		 // 	var shortname = $(this).attr("shortname");
-		 // 	toAppend += '<option data-switch="1" value="' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
-		 // 	toAppendNoSwitch += '<option data-switch="0"  value="0' + roomname + shortname + '" data-roomshortname="' + roomshortname + '" data-roomname="' + roomname + '" data-shortname="' + shortname + '" data-devicename="' + devicename + '">' + roomname + ' - ' + devicename + '</option>';
-	 	// });
-
-	});
-	
-	$("#lstRooms").html(  toAppend )
-	//$("#lstRooms").html( "<option value=''>Switch Inputs</option>" + toAppend + "<optgroup label='Dont Switch Inputs'>"  + toAppendNoSwitch + "</optgroup>" )
-	$("#lstRooms").val("");
-
-	//bind room swtich events
-	$("#lstRooms").bind("change", function () {
-		if ( $(this).val() == "" ) {
-			return false;
-		}
-		$("#btnPlay").addClass("playing");
-		$(this).parent().submit();
-	    document.activeElement.blur();
-	    $("#lstRooms").blur();
-
- 		localStorage.setItem("roomname", $(this).find("option:selected").attr("data-roomname") );
- 		localStorage.setItem("roomshortname", $(this).find("option:selected").attr("data-roomshortname") );
- 		//localStorage.setItem("shortname", $(this).find("option:selected").attr("data-shortname") );
-		//localStorage.setItem("devicename", $(this).find("option:selected").attr("data-devicename") );
-
- 		//if ( $(this).find("option:selected").attr("data-switch") == "1" ) {
-	 	//	var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
-	 	//	doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
- 		//}
- 		
- 		$.ajax({
-		    type: "GET",
-			dataType: "text",
-			url: $("#lstRooms option:selected").attr("data-ip"),
-			success: function(resp) {
-				var obj = jQuery.parseJSON(resp);
-				if ( obj.device != "" ) {
-					localStorage.setItem("shortname", obj.device );
-					localStorage.setItem("devicename", $(xml).find("gesturePad > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='" + localStorage.getItem("shortname") + "'] > name:first" ).text() );
-					updateStatus();
-				}
-			},
-			error: function(x,y,z) {
-				localStorage.setItem("shortname", "MCE" )
-				localStorage.setItem("shortname", "Media Center" )
-				updateStatus();
-				//navigator.notification.alert("Error loading channel list: "  + xmlLoc, null, "gesturePad");
-			}	
-		});
-
- 		
-	})
-
 
 	var xmlLoc = "channellist.xml?r=" + Math.random();
 	if ( localStorage.getItem("channelXML") != 'null' ) {
@@ -1296,21 +1346,13 @@ function hms2(totalSec) {
 function clearNowPlaying() {
 	$("#bgPic").attr("class", "noart");
 	$("#bgPic").attr("style", "");
+	$("#bgPic").attr("data-id", ""); 
 	$("#timespanleft").text( "0:00" )
 	$("#timespanright").text( "- 0:00" );
 	$("#NowPlayingTitle").text("");
 }
 
 function nowPlaying() {
-
-	
-
-	//generic repaint for disappearing ui elements
-	// $("#top, #bottom, #seekbarContainer, #toptrans").each(function() {
-	// 	$(this)[0].style.display='none';
-	// 	$(this)[0].offsetHeight; // no need to store this anywhere, the reference is enough
-	// 	$(this)[0].style.display='block';
-	// });
 
 	if ( $("#gestures_canvas:visible").size() == 0 ) {
 		return;
@@ -1352,20 +1394,38 @@ function nowPlaying() {
 		 					var currentID = j.Data.PlayingControllers[0].PlayableItems[0].CurrentMediaIndex;
 		 					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[currentID];
 
-
+		 					
 		 					if ( $("#bgPic").attr("data-id") != guid ) {
-								img = new Image();
-								img.onload = function() {
-									$("#bgPic").attr("style", "background-image: url('" + base + "image/?Id=" + guid + "');")
-									$("#bgPic").attr("class", "");
-									$("#bgPic").attr("data-id", guid);
-								};
-								img.onerror = function() {
-									$("#bgPic").attr("class", "noart");
-									$("#bgPic").attr("style", "");
-									$("#bgPic").attr("data-id", guid);
-								};
-								img.src = base + "image/?Id=" + guid;
+		 						var imgID = "MB_Big_" + guid;
+								getImageFromCache({id: imgID, url: base + "image/?Id=" + guid}, function(r) {
+
+									var img = new Image();
+
+									img.onerror = function() {
+										$("#bgPic").attr("class", "noart");
+										$("#bgPic").attr("style", "");
+										$("#bgPic").attr("data-id", guid);
+									};
+									
+									if (r.cached == false) { 
+										img.onload = function() {
+											saveImageToCache( {id: imgID, img: img } );
+											$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
+											$("#bgPic").attr("class", "");
+											$("#bgPic").attr("data-id", guid);
+										};
+										img.src = r.url;
+									} else {
+										console.log("using Cached: " + r.url.substring(0, 100) );
+										$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
+										$("#bgPic").attr("class", "");
+										$("#bgPic").attr("data-id", guid);
+										//$("#bgPic").html("<img src='" + r.url + "' >")
+									}
+								});
+								
+
+
 		 					}
 						
 							if (j.Data.PlayingControllers[0].IsPaused == true ) {
@@ -1439,31 +1499,56 @@ function nowPlaying() {
 		                   			$("#bgPic").attr("class", "noart");
 									$("#bgPic").attr("style", "");
 		                   		} else {
-				                    $.ajax({
-					                   type: "GET",
-					                   url: "http://thetvdb.com/api/77658293DB487350/series/" + guid + "/",
-					                   dataType: "xml",
-					                   error: function (x,y,z) {
-					                   		$("#bgPic").attr("class", "noart");
-					                   		$("#bgPic").attr("style", "");
-					                   },
-					                   success: function(seriesxml) {
-					                   		var poster = $(seriesxml).find("poster:first")
 
-					                   		if ( $(poster).size() > 0) {
+			 						var imgID = "TVDB_" + guid;
+									getImageFromCache({id: imgID, url: ""}, function(r) {
+										if (r.cached == false) { 
+											
+											//query tvdb for the image
+				                    		$.ajax({
+							                   type: "GET",
+							                   url: "http://thetvdb.com/api/77658293DB487350/series/" + guid + "/",
+							                   dataType: "xml",
+							                   error: function (x,y,z) {
+							                   		$("#bgPic").attr("class", "noart");
+							                   		$("#bgPic").attr("style", "");
+							                   },
+							                   success: function(seriesxml) {
+							                   		var poster = $(seriesxml).find("poster:first")
 
-												if ( $("#bgPic").attr("data-id") != guid  && $(poster).text() != "" ) {
-													$("#bgPic").attr("style", "background-image: url('http://thetvdb.com/banners/_cache/" + $(poster).text() + "');")
-													$("#bgPic").attr("class", "");
-													$("#bgPic").attr("data-id", guid);
-							 					}
-					                   		} else {
-						                   		$("#bgPic").attr("class", "noart");
-						                   		$("#bgPic").attr("style", "");
-					                   		}
-							 		
-					                   }
-					                 })
+							                   		if ( $(poster).size() > 0) {
+
+														if ( $("#bgPic").attr("data-id") != guid  && $(poster).text() != "" ) {
+
+															$("#bgPic").attr("style", "background-image: url('http://thetvdb.com/banners/_cache/" + $(poster).text() + "');")
+															$("#bgPic").attr("class", "");
+															$("#bgPic").attr("data-id", guid);
+
+															//cache this result
+															var img = new Image();
+															img.onload = function() {
+																saveImageToCache( {id: imgID, img: img } );
+																console.log("cached")
+															};
+															img.src = "http://thetvdb.com/banners/_cache/" + $(poster).text() ;
+
+									 					}
+							                   		} else {
+								                   		$("#bgPic").attr("class", "noart");
+								                   		$("#bgPic").attr("style", "");
+							                   		}
+									 		
+							                   }
+							                 })
+										} else {
+											console.log("using Cached tvdb: " + r.url.substring(0, 100) );
+											$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
+											$("#bgPic").attr("class", "");
+											$("#bgPic").attr("data-id", guid);
+										}
+									});
+
+		
 		                   		}
 		                   	}
 		                });
@@ -1802,3 +1887,61 @@ $.fn.hasAttr = function(name) {
    return this.attr(name) !== undefined;
 };
 
+
+function getImageFromCache(request, callback) {
+
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+		function gotFS(fileSystem) {
+        	fileSystem.root.getFile(request.id + '.cache', {create: false, exclusive: false}, 
+        		function gotFileEntry(fileEntry) {
+        			fileEntry.file(
+					    function readDataUrl(file) {
+					        var reader = new FileReader();
+					        reader.onloadend = function(evt) {
+					            callback({cached: true, url: evt.target.result.toString() });
+					        };
+					        reader.readAsText(file); 
+					    },
+        				function fail(evt) { console.log("Error reading Cached File"); callback({cached: false, url: request.url }); }
+        			);
+    			},
+				function fail(evt) { console.log("Cached file doesnt exist");  callback({cached: false, url: request.url }); }
+			);
+    	},
+		function fail(evt) { console.log("Pull cache Error, no access to file system"); callback({cached: false, url: request.url }); }
+	);
+
+}
+
+function saveImageToCache(request) {
+
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+		function gotFS(fileSystem) {
+        	fileSystem.root.getFile(request.id + '.cache', {create: true, exclusive: false}, 
+        		function gotFileEntry(fileEntry) {
+        			fileEntry.createWriter( function gotFileWriter(writer) {
+				            writer.onwriteend = function(evt) {
+				                console.log("Saved to cache: " + request.id)
+				            };
+				            writer.write( getBase64Image(request.img) );
+	        			}, 
+	        			function fail(evt) { console.log("Write to Cache Error");  }
+        			);
+    			},
+				function fail(evt) { console.log("Error initiating cached file");  }
+			);
+    	},
+		function fail(evt) { console.log("Save cache Error, no access to file system"); }
+	);
+
+}
+
+function getBase64Image(img) {  
+	var canvas = document.createElement("canvas");  
+	canvas.width = img.width;  
+	canvas.height = img.height;  
+	var ctx = canvas.getContext("2d");  
+	ctx.drawImage(img, 0, 0);  
+	var dataURL = canvas.toDataURL("image/png"); 
+	return dataURL;
+}  
