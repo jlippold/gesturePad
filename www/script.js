@@ -458,7 +458,7 @@ function onDeviceReady() {
 				MBUrl;
 			}
 
-			$.getJSON(MBUrl, function(d) {
+			var parseJsonResults = function (d) {
 				var tb =  "<table class='listing' style='width: " + $("#card").width() + "px !important'>"
 				$.each(d.Data.Children, function(key, val) { 
 					tb += '<tr data-guid="' + d.Data.Children[key].Id + '" data-type="'+ d.Data.Children[key].Type +'" >'
@@ -473,8 +473,32 @@ function onDeviceReady() {
 				$("#backFace table tr").bind(clickEventType, function () {
 						ShowItems( $(this) );
 				});
+			}
 
-			});	
+			var getJsonFromServer = function(MBUrl, parse) {
+				console.log("server" + MBUrl)
+				$.getJSON(MBUrl, function(d) {
+					saveJsonToCache(MBUrl, d);
+					if (parse) {
+						parseJsonResults(d);	
+					}
+				});	
+			}
+
+			getJsonFromCache(MBUrl, function(d) {
+				if (d == null) {
+					console.log("using non cached: " + MBUrl)
+					//get from server
+					getJsonFromServer(MBUrl, true);
+				} else {
+					console.log("using cached")
+					//display cached
+					parseJsonResults(d);
+					//get from server, to replace cache but dont parse
+					getJsonFromServer(MBUrl, false);
+				}
+			});
+	
 		}
 		
 
@@ -939,8 +963,13 @@ function ShowItems(tr) {
 		MBUrl;
 	}
 
+
 	if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
 		//play title
+        if ( netState() != 'WiFi connection' ) {
+            navigator.notification.alert("You are not on Wifi. To play this title, connect to Wifi and try again", null, "gesturePad");
+            return;
+        }
 		MBUrl += "ui?command=play&id=" + $(tr).attr("data-guid")
 		$.getJSON(MBUrl, function(x) {
 			$("#btnTitles").trigger(clickEventType);
@@ -953,6 +982,10 @@ function ShowItems(tr) {
 
 	if ( $(tr).attr("data-type") == "Shuffle" ) {
 		//play title
+        if ( netState() != 'WiFi connection' ) {
+            navigator.notification.alert("You are not on Wifi. To play this title, connect to Wifi and try again", null, "gesturePad");
+            return;
+        }
 		MBUrl += "ui?command=shuffle&id=" + $(tr).attr("data-guid")
 		$.getJSON(MBUrl, function(x) {
 			$("#btnTitles").trigger(clickEventType);
@@ -963,7 +996,8 @@ function ShowItems(tr) {
 		return;
 	}
 
-	$.getJSON(MBUrl + "library?lightData=1&Id=" + $(tr).attr("data-guid"), function(x) {
+
+	var parseJsonResults = function (x) {
 		$("#backFace table").html( "" );
 		tb = "";
 
@@ -1002,7 +1036,34 @@ function ShowItems(tr) {
 		$("#backFace table tr").bind(clickEventType, function () {
 			ShowItems( $(this) )
 		})
-	})
+	}
+
+	var getJsonFromServer = function(MBUrl, parse) {
+        if ( netState() != 'WiFi connection' ) {
+            navigator.notification.alert("Sorry, you are not on Wifi, and this data is yet to be cached.", null, "gesturePad");
+            return;
+        }
+		$.getJSON(MBUrl, function(d) {
+			saveJsonToCache(MBUrl, d);
+			if (parse) {
+				parseJsonResults(d);	
+			}
+		});	
+	}
+
+	MBUrl += "library?lightData=1&Id=" + $(tr).attr("data-guid");
+	getJsonFromCache(MBUrl, function(d) {
+		if (d == null) {
+			//get from server
+			getJsonFromServer(MBUrl, true);
+		} else {
+			//display cached
+			parseJsonResults(d);
+			//get from server, to replace cache but dont parse
+			getJsonFromServer(MBUrl, false);
+		}
+	});
+
 }
 
 function doSeekEvent() {
@@ -1945,3 +2006,59 @@ function getBase64Image(img) {
 	var dataURL = canvas.toDataURL("image/png"); 
 	return dataURL;
 }  
+
+
+function getJsonFromCache(MBUrl, callback) {
+	var id = MBUrl.replace("http://","");
+	id = id.replace(":","_");
+	id = id.replace(/\//g,"-");
+
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+		function gotFS(fileSystem) {
+        	fileSystem.root.getFile(id + '.json', {create: false, exclusive: false}, 
+        		function gotFileEntry(fileEntry) {
+        			fileEntry.file(
+					    function readDataUrl(file) {
+					        var reader = new FileReader();
+					        reader.onloadend = function(evt) {
+					            callback( jQuery.parseJSON(evt.target.result.toString) );
+					        };
+					        reader.readAsText(file); 
+					    },
+        				function fail(evt) { console.log("Error reading Cached File"); callback(null); }
+        			);
+    			},
+				function fail(evt) { console.log("Cached file doesnt exist");  callback(null); }
+			);
+    	},
+		function fail(evt) { console.log("Pull cache Error, no access to file system"); callback(null); }
+	);
+
+}
+
+function saveJsonToCache(MBUrl, d) {
+
+	var id = MBUrl.replace("http://","");
+	id = id.replace(":","_");
+	id = id.replace(/\//g,"-");
+	
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+		function gotFS(fileSystem) {
+        	fileSystem.root.getFile(id + '.json', {create: true, exclusive: false}, 
+        		function gotFileEntry(fileEntry) {
+        			fileEntry.createWriter( function gotFileWriter(writer) {
+				            writer.onwriteend = function(evt) {
+				                console.log("Saved to cache: " + id)
+				            };
+				            writer.write( JSON.stringify(d) );
+	        			}, 
+	        			function fail(evt) { console.log("Write to Cache Error");  }
+        			);
+    			},
+				function fail(evt) { console.log("Error initiating cached json file");  }
+			);
+    	},
+		function fail(evt) { console.log("Save cache Error, no access to file system"); }
+	);
+
+}
