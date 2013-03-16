@@ -191,7 +191,7 @@ div.five {
 	width: 18px;
 	height: 18px;
 	margin-left: 5%;
-	margin-top: 10px;
+	margin-top: 8px;
 }
 
 #btnTransfer {
@@ -202,13 +202,13 @@ div.five {
 	width: 18px;
 	height: 18px;
 	margin-right: 5%;
-	margin-top: 10px;
+	margin-top: 8px;
 }
 
 .slider {
-	-webkit-border-image: url('img/AudioPlayerScrubberRight.png') 0 5 0 5 stretch stretch;
-	-moz-border-image: url('img/AudioPlayerScrubberRight.png') 0 5 0 5 stretch;
-	height: 9px;
+	-webkit-border-image: url('img/AudioPlayerScrubberRight.png') 0 19 8 14 stretch stretch;
+	-moz-border-image: url('img/AudioPlayerScrubberRight.png') 0 19 8 14 stretch;
+	height: 6px;
 	width: 100%;
 	margin: auto;
 	float: left;
@@ -216,9 +216,9 @@ div.five {
 }
 
 .sliderh {
-	-webkit-border-image: url('img/AudioPlayerScrubberLeft.png') 0 5 0 5 stretch stretch;
-	-moz-border-image: url('img/AudioPlayerScrubberLeft.png') 0 5 0 5 stretch;
-	height: 9px;
+	-webkit-border-image: url('img/AudioPlayerScrubberLeft.png') 0 19 8 14 stretch stretch;
+	-moz-border-image: url('img/AudioPlayerScrubberLeft.png') 0 19 8 14 stretch;
+	height: 6px;
 	width: 0%;
 	margin: -3px 0px 0px -4px;
 	position: relative;
@@ -226,7 +226,7 @@ div.five {
 
 
 div.seekbarContainer {
-	padding-top: 10px;
+	padding-top: 7px;
 	height: 40px;
 }
 
@@ -249,7 +249,7 @@ div.seekto {
 	background: url('img/AudioPlayerScrubberKnob.png') center center;
 	height: 22px;
 	width: 22px;
-	margin: 3px 0px 0px -4px;
+	margin: 5px 0px 0px -4px;
 	float:left;
 	position: relative;
 	top: -21px;
@@ -264,23 +264,25 @@ div.seekto {
 	float: left;
 	font-size: .8em;
 	overflow: hidden;
-	color: #fff;
-	text-align: left;
+	color: #828282;
+	text-align: center;
 	margin-left: 1%;
 	font-weight: bold;
 	white-space: nowrap;
+	margin-top: -1px;
 }
 
 .timespanleft {
-	width: 12%;
+	width: 13%;
 	float: left;
 	font-size: .8em;
 	overflow: hidden;
-	color: #fff;
-	text-align: right;
-	margin-right: 3%;
+	color: #828282;
+	text-align: center;
+	margin-right: 1%;
 	font-weight: bold;
 	white-space: nowrap;
+	margin-top: -2px;
 }
 
 p {
@@ -303,7 +305,7 @@ div.seekbarContainer P {
 	font-weight: bold;
 }
 p.grey {
-	color: #ccc;
+	color: #828282;
 	text-align: center;
 
 }
@@ -540,7 +542,7 @@ table.listing tr > td:last-child {
 }
 
 #NowPlayingTitle {
-	margin-bottom: 5px;
+	margin-bottom: 8px;
 	width: 80%;
 	text-align: center;
 	margin-left: 10%;
@@ -758,8 +760,34 @@ form.frmSettings a {
     color: #FFFFFF;
 }
 
-div.covers {
+div.grabber {
+	margin-top: -6px;
+}
 
+div.grabber span.bars {
+	background-color: transparent;
+	border-top: 1px solid rgba(110,110,110,1);
+	border-bottom: 1px solid rgba(110,110,110,1);
+	height:3px;
+	width: 30px;
+	display:block;
+	margin: 0 auto;
 }
 
 
+div.volume {
+	clear: both;
+}
+
+#bottomGrabber {
+	height: 60px;
+}
+
+#browser {
+	clear: both;
+	height: 0px;
+	display: block;
+	margin: 0;
+	padding: 0;
+	background: rgba(5, 5, 5, 1);
+}

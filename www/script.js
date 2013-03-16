@@ -250,14 +250,17 @@ function onDeviceReady() {
 	splash("show");
 
     var root = this;
-    cb = window.plugins.childBrowser;
-    
-    if (cb != null) {
-        cb.onLocationChange = function(loc){ root.locChanged(loc); };
-        cb.onClose = function(){root.onCloseBrowser()};
-        cb.onOpenExternal = function(){root.onOpenExternal();};
-        //cb.showWebPage("http://yahoo.com");
-    }	
+    try {
+    	cb = window.plugins.childBrowser;    
+	    if (cb != null) {
+	        cb.onLocationChange = function(loc){ root.locChanged(loc); };
+	        cb.onClose = function(){root.onCloseBrowser()};
+	        cb.onOpenExternal = function(){root.onOpenExternal();};
+	        //cb.showWebPage("http://yahoo.com");
+	    }	
+
+    } catch(e) {}
+	
 
 
 	$.gestures.init();
@@ -533,7 +536,64 @@ function onDeviceReady() {
 			$("#frmSettings").hide();
 			nowPlaying();
 		}
-	})
+	});
+
+	$("#bottomGrabber").bind("touchmove", function(e) {
+		e.stopImmediatePropagation();
+		e.preventDefault();
+		var orig = e.originalEvent.targetTouches[0];  
+		var lastY = parseInt($(this).data('lastY'));
+		var position = parseInt($("#bottom").css("bottom"));
+		var maxHeight = 120;
+		var n = 0;
+		$(this).data('lastY', orig.pageY);
+
+	  	if ( lastY < orig.screenY  ) {
+	  		n = position - (orig.pageY - lastY );
+	  		if (n <= maxHeight && n >= 0) {
+	  			$("#bottom").css("bottom", n + "px");	
+	  		}
+		} else {
+	  		n = position + (lastY - orig.pageY);
+	  		if (n <= maxHeight && n >= 0) {
+				$("#bottom").css("bottom", n + "px");
+			}
+		}
+		if (n <= maxHeight && n >= 0) {
+			$("#browser").height(n+"px");
+		}
+			
+	});
+
+	$("#bottomGrabber").bind("touchend",  function(e) {
+		setTimeout( function() {
+			var maxHeight = 120;
+			var position = parseInt($("#bottom").css("bottom"));
+			if (position > (maxHeight/3) ) { //more than 1/3 up push to top
+			    $("#bottom").animate({
+			       bottom: maxHeight + "px"
+			    }, { duration: 200, queue: false });
+			    $("#browser").animate({
+			       height: maxHeight + "px"
+			    }, { duration: 200, queue: false });
+			} else {
+			    $("#bottom").animate({
+			       bottom: "0px"
+			    }, { duration: 200, queue: false });
+			    $("#browser").animate({
+			       height: "0px"
+			    }, { duration: 200, queue: false });
+			}
+		}, 100);
+	}); 
+
+	$("#bottomGrabber").bind("touchstart",  function(e) {
+		if ( $("#gestures_canvas:visible").size() == 0 ) {
+			return;
+		}
+		var lastY = e.originalEvent.touches[0].screenY;
+		$(this).data('lastY', e.originalEvent.touches[0].screenY);
+	}); 
 
 	$("#btnCommands").bind(clickEventType, function() {
 		/* generic flip shit */
@@ -1219,7 +1279,7 @@ function detectOrientation(){
 }
 
 function doResize() {
- 	$("#card").height( $("body").height() - ($("#top").outerHeight() + ( $("#bottom").outerHeight() / 2) ) )
+ 	$("#card").height( $("body").height() - ($("#top").outerHeight() + ( $("#bottom").outerHeight() / 3.5) ) )
 	var h = $("#container").height() - ($("#top").outerHeight() + $("#bottom").outerHeight() + $("div.toptrans").outerHeight() -1) ;
 	var w = $("body").width();
 	$("#gestures_canvas").attr("height", h)
@@ -1417,7 +1477,7 @@ function hms2(totalSec) {
 		hours = parseInt( totalSec / 3600 ) % 24;
 	    minutes = parseInt( totalSec / 60 ) % 60;
 	    seconds = totalSec % 60;
-	    return (hours < 10 ? "0" + hours : hours)  + ":" + (minutes < 10 ? "0" + minutes : minutes) ;
+	    return (hours)  + ":" + (minutes < 10 ? "0" + minutes : minutes) ;
 	} catch(e) {
 		return "0:00";
 	}
