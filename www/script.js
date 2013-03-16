@@ -51,7 +51,6 @@ function setupWorker(channellist) {
 	startWorker();
 }
 
-
 //sort em
 function compare(a,b) {
   if (a.catIndex < b.catIndex)
@@ -127,7 +126,11 @@ function startWorker() {
 }
 
 function refreshChannel(server, queueName, channelKey) {
-	//$("#txtRoom").text(channelKey);
+	
+    if ( netState() != 'WiFi connection' ) {
+        return;
+    }
+
 	var c = guide.channels[channelKey];
 	$.ajaxq(queueName, {
 		url: server + 'tv/getProgInfo',
@@ -207,22 +210,6 @@ function splash(t) {
 	} catch (e) {}
 }
 
-function onDeviceReady() {
-
-	splash("show");
-
-                   var root = this;
-                    
-                    cb = window.plugins.childBrowser;
-                    
-                    if (cb != null) {
-                        cb.onLocationChange = function(loc){ root.locChanged(loc); };
-                        cb.onClose = function(){root.onCloseBrowser()};
-                        cb.onOpenExternal = function(){root.onOpenExternal();};
-                        //cb.showWebPage("http://yahoo.com");
-                    }	
-
-
 /*
 	//get xml from json
     $.getJSON('guideChannelList.json', function(data) {
@@ -257,6 +244,21 @@ function onDeviceReady() {
     });
     return;
 */
+
+function onDeviceReady() {
+
+	splash("show");
+
+    var root = this;
+    cb = window.plugins.childBrowser;
+    
+    if (cb != null) {
+        cb.onLocationChange = function(loc){ root.locChanged(loc); };
+        cb.onClose = function(){root.onCloseBrowser()};
+        cb.onOpenExternal = function(){root.onOpenExternal();};
+        //cb.showWebPage("http://yahoo.com");
+    }	
+
 
 	$.gestures.init();
 	$.gestures.retGesture(function(gesture) {
@@ -349,8 +351,6 @@ function onDeviceReady() {
 			localStorage.setItem("gestureXML",  "gesturePad.xml" );
 		}
 
-		
-		
 		try {
 			navigator.notification.alert("Settings Saved.", null, "gesturePad");
 		} catch(e) {} 
@@ -459,6 +459,7 @@ function onDeviceReady() {
 			}
 
 			var parseJsonResults = function (d) {
+
 				var tb =  "<table class='listing' style='width: " + $("#card").width() + "px !important'>"
 				$.each(d.Data.Children, function(key, val) { 
 					tb += '<tr data-guid="' + d.Data.Children[key].Id + '" data-type="'+ d.Data.Children[key].Type +'" >'
@@ -476,26 +477,39 @@ function onDeviceReady() {
 			}
 
 			var getJsonFromServer = function(MBUrl, parse) {
-				console.log("server" + MBUrl)
-				$.getJSON(MBUrl, function(d) {
-					saveJsonToCache(MBUrl, d);
-					if (parse) {
-						parseJsonResults(d);	
+
+		        if ( netState() != 'WiFi connection' ) {
+		        	if (parse) {
+			            navigator.notification.alert("You are not on Wifi and no cached version exists. To do this, connect to Wifi and try again", null, "gesturePad");
+			            $("#btnTitles").trigger(clickEventType);
+			            return;
+		        	}
+		        }
+
+				$.ajax({
+					url: MBUrl,
+					dataType: 'json',
+					timeout: 5000,
+					success: function(d) {
+						saveJsonToCache(MBUrl, d);
+						if (parse) {
+							parseJsonResults(d);	
+						}
+					}, 
+					error: function() {
+						if (parse) {
+							navigator.notification.alert("The server is not responding in time, and no cached version exists. Try again later", null, "gesturePad"); 
+						}
 					}
-				});	
+				});
 			}
 
 			getJsonFromCache(MBUrl, function(d) {
 				if (d == null) {
-					console.log("using non cached: " + MBUrl)
-					//get from server
 					getJsonFromServer(MBUrl, true);
 				} else {
-					console.log("using cached")
-					//display cached
-					parseJsonResults(d);
-					//get from server, to replace cache but dont parse
-					getJsonFromServer(MBUrl, false);
+					parseJsonResults(d); //display cached
+					getJsonFromServer(MBUrl, false); //get from server, to replace cache but dont parse
 				}
 			});
 	
@@ -692,10 +706,11 @@ function onDeviceReady() {
 				return;
 			}
 
-			
-
+		
 	 		localStorage.setItem("roomname", RoomNames[buttonIndex] );
 			localStorage.setItem("roomshortname", RoomShortNames[buttonIndex] );
+
+			updateStatus();
 
 			$.ajax({
 			    type: "GET",
@@ -743,6 +758,8 @@ function onDeviceReady() {
 			
 	 		localStorage.setItem("shortname", RoomShortNames[buttonIndex] );
 			localStorage.setItem("devicename", RoomDevices[buttonIndex] );
+
+			updateStatus();
 
 		 	var switchshortname = $(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > roomgestures > gesture > device[switchesto="' + localStorage.getItem("shortname") + '"]').attr("shortname")
 		 	doEvent("manual",  $(xml).find('gesturePad > devices > device[shortname="' + switchshortname + '"] > commands > category > command > action > onCompleteSetDevice[shortname="' + localStorage.getItem("shortname") + '"]:first').parent() );			 			
@@ -859,7 +876,6 @@ function onDeviceReady() {
 
 	window.scrollTo(0,0);
 
-
 }
 
 function loadXML() {
@@ -910,9 +926,7 @@ function DoShuffle() {
 				   'Play It, Cancel'
 				);
 			});
-
-		})
-
+		});
 }
 
 function playByID(buttonIndex, id)  {
@@ -966,10 +980,6 @@ function ShowItems(tr) {
 
 	if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
 		//play title
-        if ( netState() != 'WiFi connection' ) {
-            navigator.notification.alert("You are not on Wifi. To play this title, connect to Wifi and try again", null, "gesturePad");
-            return;
-        }
 		MBUrl += "ui?command=play&id=" + $(tr).attr("data-guid")
 		$.getJSON(MBUrl, function(x) {
 			$("#btnTitles").trigger(clickEventType);
@@ -1039,16 +1049,27 @@ function ShowItems(tr) {
 	}
 
 	var getJsonFromServer = function(MBUrl, parse) {
-        if ( netState() != 'WiFi connection' ) {
+        if ( netState() != 'WiFi connection' && parse ) {
             navigator.notification.alert("Sorry, you are not on Wifi, and this data is yet to be cached.", null, "gesturePad");
             return;
         }
-		$.getJSON(MBUrl, function(d) {
-			saveJsonToCache(MBUrl, d);
-			if (parse) {
-				parseJsonResults(d);	
+
+		$.ajax({
+			url: MBUrl,
+			dataType: 'json',
+			timeout: 5000,
+			success: function(d) {
+				saveJsonToCache(MBUrl, d);
+				if (parse) {
+					parseJsonResults(d);	
+				}
+			}, 
+			error: function() {
+				if (parse) {
+					navigator.notification.alert("The server is not responding in time, and no cached version exists. Try again later", null, "gesturePad"); 
+				}
 			}
-		});	
+		});
 	}
 
 	MBUrl += "library?lightData=1&Id=" + $(tr).attr("data-guid");
@@ -1341,8 +1362,8 @@ function loadSettings() {
 			navigator.notification.alert("Error loading channel list: "  + xmlLoc, null, "gesturePad");
 		}		
 	});
-
-	getRoomStatus()
+	updateStatus();
+	getRoomStatus();
 	setTimeout( function () {
 		splash("hide");
 	}, 500)
@@ -2010,7 +2031,7 @@ function getBase64Image(img) {
 
 function getJsonFromCache(MBUrl, callback) {
 	var id = MBUrl.replace("http://","");
-	id = id.replace(":","_");
+	id = id.substring( id.indexOf("/")+1 );
 	id = id.replace(/\//g,"-");
 
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
@@ -2021,9 +2042,10 @@ function getJsonFromCache(MBUrl, callback) {
 					    function readDataUrl(file) {
 					        var reader = new FileReader();
 					        reader.onloadend = function(evt) {
-					            callback( jQuery.parseJSON(evt.target.result.toString) );
+					            callback( jQuery.parseJSON( evt.target.result.toString() ) );
 					        };
 					        reader.readAsText(file); 
+
 					    },
         				function fail(evt) { console.log("Error reading Cached File"); callback(null); }
         			);
@@ -2039,9 +2061,12 @@ function getJsonFromCache(MBUrl, callback) {
 function saveJsonToCache(MBUrl, d) {
 
 	var id = MBUrl.replace("http://","");
-	id = id.replace(":","_");
+	id = id.substring( id.indexOf("/")+1 );
 	id = id.replace(/\//g,"-");
 	
+	console.log(id)
+	
+
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
 		function gotFS(fileSystem) {
         	fileSystem.root.getFile(id + '.json', {create: true, exclusive: false}, 
