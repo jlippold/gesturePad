@@ -7,6 +7,7 @@ var guide =  new Object();
 var workerTimer = null;
 var sleepTimer = null;
 var scrollstop = null;
+var MBServiceTimeout = 120000;
 
 function setupWorker(channellist) {
 
@@ -249,19 +250,6 @@ function onDeviceReady() {
 
 	splash("show");
 
-    var root = this;
-    try {
-    	cb = window.plugins.childBrowser;    
-	    if (cb != null) {
-	        cb.onLocationChange = function(loc){ root.locChanged(loc); };
-	        cb.onClose = function(){root.onCloseBrowser()};
-	        cb.onOpenExternal = function(){root.onOpenExternal();};
-	        //cb.showWebPage("http://yahoo.com");
-	    }	
-
-    } catch(e) {}
-	
-
 
 	$.gestures.init();
 	$.gestures.retGesture(function(gesture) {
@@ -329,14 +317,16 @@ function onDeviceReady() {
 	});
 
 
-	/* UI buttons */
+	/* UI buttons 
 
 	$('div.control').bind('touchstart', function(){
 	    $(this).addClass('active');
 	}).bind('touchend', function(){
+
 	    $(this).removeClass('active');
 	    clearSleepTimer()
 	});
+	*/
 
 	$("#saveSettings").bind(clickEventType, function() {
 		localStorage.clear();
@@ -446,30 +436,18 @@ function onDeviceReady() {
 		if (localStorage.getItem("shortname") == "MCE") {
 			/* populate it */
 
-			var MBUrl = "";
-			
-			$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname")  + '"]:first').each(function(){
-				$(this).find("IPAddress:first").each(function(){
-					MBUrl = "http://" + $(this).text()
-				});				
-				$(this).find("ServicePort:first").each(function(){
-					MBUrl += ":" + $(this).text() + "/mbwebapi/service/library"
-				});		
-			});
-			
-			if (MBUrl == "" ) {
-				MBUrl;
-			}
+			var MBUrl = getMBUrl();
+
 
 			var parseJsonResults = function (d) {
-
-				var tb =  "<table class='listing' style='width: " + $("#card").width() + "px !important'>"
+				var tb =  "<table class='listing' style='width: " + ($("#card").width()-3) + "px !important'>"
 				$.each(d.Data.Children, function(key, val) { 
-					tb += '<tr data-guid="' + d.Data.Children[key].Id + '" data-type="'+ d.Data.Children[key].Type +'" >'
-						+ '<td><div>' + d.Data.Children[key].Name  + '</div></td>'
+					tb += '<tr data-guid="' + d.Data.Children[key].Id + '" data-type="' + d.Data.Children[key].Type + '"  data-imdb="' + ((d.Data.Children[key].ImdbRating > 0) ? "1" : "0")  + '" >';
+					tb += '<td><div>' + d.Data.Children[key].Name  + '</div></td>';
 					tb += '<td width="30px" style="text-align: right">' + d.Data.Children[key].ChildCount  + '</td></tr>';	
 				});
-				  tb += "</table>"
+				 tb += "</table>";
+				 console.log(tb);
 			     $("#backFace").html( tb );
 			     checkScrollOverflow();
 			     showFilter("MCE")
@@ -492,7 +470,7 @@ function onDeviceReady() {
 				$.ajax({
 					url: MBUrl,
 					dataType: 'json',
-					timeout: 5000,
+					timeout: MBServiceTimeout,
 					success: function(d) {
 						saveJsonToCache(MBUrl, d);
 						if (parse) {
@@ -506,6 +484,8 @@ function onDeviceReady() {
 					}
 				});
 			}
+
+			MBUrl += "library/";
 
 			getJsonFromCache(MBUrl, function(d) {
 				if (d == null) {
@@ -521,6 +501,71 @@ function onDeviceReady() {
 
 
 
+	});
+	
+    var hscrollTimer = null;
+	$("#boxCoverContainer").bind("scroll", function() {
+        clearTimeout(hscrollTimer);
+        hscrollTimer = setTimeout(function() { 
+		    var areaWidth = $(this).width();
+
+		    $("#covers > div.pendingImg").each(function() {
+
+		        var left = $(this).offset().left;
+		        var width = $(this).width();
+		        var visible = false;
+		        if (left + width < 0) {
+		            //console.log( $(this).find("p").text() +  'this div is obfuscated above the viewable area');
+		        	visible = false;
+		        } else if (left > areaWidth) {
+		            //console.log($(this).find("p").text() + 'this div is obfuscated below the viewable area')
+		        	visible = false;
+		        } else {
+		            //console.log($(this).find("p").text() + 'this div is at least partially in view');
+		        	visible = true;
+		        }
+
+		        if (visible == true) {
+		       		//console.log($(this).find("p:first").text());
+		        	$(this).removeClass("pendingImg");
+			        var boxImg = $(this).find("img");
+			        var guid = $(boxImg).attr("data-guid");
+			        var prefix = $(boxImg).attr("data-prefix");
+		    		var imgID = "MB_Small_" + guid;
+					$(boxImg).onerror = function() {
+						$(this).attr("src", "img/nobox.png");
+					};
+					getImageFromCache({id: imgID, url: prefix + guid + "&maxwidth=120&maxheight=120"}, function(r) {
+
+						var img = new Image();
+
+						img.onerror = function() {
+							$(boxImg).attr("src", "img/nobox.png");
+						};
+						
+						if (r.cached == false) { 
+							img.onload = function() {
+								saveImageToCache( {id: imgID, img: img } );
+								//console.log("no cache")
+								$(boxImg).attr("src", r.url);
+							};
+							img.src = r.url;
+						} else {
+							//console.log("using Cached: " + r.url.substring(0, 100) );
+							$(boxImg).attr("src", r.url);
+						}
+					});
+
+		        }
+		    });
+
+
+
+        } , 200 );					
+	})
+
+	$("#boxCoverContainer").bind("touchmove touchend", function(e) {
+		window.scrollTo(0,0);		
 	});
 
 	
@@ -544,7 +589,7 @@ function onDeviceReady() {
 		var orig = e.originalEvent.targetTouches[0];  
 		var lastY = parseInt($(this).data('lastY'));
 		var position = parseInt($("#bottom").css("bottom"));
-		var maxHeight = 120;
+		var maxHeight = 140;
 		var n = 0;
 		$(this).data('lastY', orig.pageY);
 
@@ -565,9 +610,17 @@ function onDeviceReady() {
 			
 	});
 
+	$("#boxCoverBack").bind(clickEventType, function() {
+		if ( $("#covers").data("back") != "" ) {
+			var tr = $("<a data-guid='" + $("#covers").data("back") + "' data-type='Folder' data-backwards='1' />");
+			showBottomItems(tr)
+
+		}
+	})
+
 	$("#bottomGrabber").bind("touchend",  function(e) {
 		setTimeout( function() {
-			var maxHeight = 120;
+			var maxHeight = 140;
 			var position = parseInt($("#bottom").css("bottom"));
 			if (position > (maxHeight/3) ) { //more than 1/3 up push to top
 			    $("#bottom").animate({
@@ -576,6 +629,10 @@ function onDeviceReady() {
 			    $("#browser").animate({
 			       height: maxHeight + "px"
 			    }, { duration: 200, queue: false });
+
+			    if ( $("#covers").data("back") == "" || $("#covers").data("back") == undefined ) {
+			    	showBottomItems();
+				}
 			} else {
 			    $("#bottom").animate({
 			       bottom: "0px"
@@ -892,7 +949,7 @@ function onDeviceReady() {
 		return true;
 	})
 
-	$("#top, #bottom, #toptrans").bind("touchmove", function(event) {
+	$("#top, #toptrans").bind("touchmove", function(event) {
 		event.preventDefault();
 	})
 
@@ -974,7 +1031,6 @@ function DoShuffle() {
 			if (buttonIndex == -1  || buttonIndex == (actions.length-1)) {
 				return;
 			}
-			console.log('http://rss.jed.bz/?t=' + actionTypes[buttonIndex] + '&v=' + actions[buttonIndex] + '')
 			$.getJSON('http://rss.jed.bz/?t=' + actionTypes[buttonIndex] + '&v=' + actions[buttonIndex] + '', function(data) {
 
 				navigator.notification.confirm(
@@ -995,20 +1051,7 @@ function playByID(buttonIndex, id)  {
 	}
 	if (buttonIndex == 1) {
 	
-		var MBUrl = "";
-		
-		$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname")  + '"]:first').each(function(){
-			$(this).find("IPAddress:first").each(function(){
-				MBUrl = "http://" + $(this).text()
-			});				
-			$(this).find("ServicePort:first").each(function(){
-				MBUrl += ":" + $(this).text() + "/mbwebapi/service/"
-			});		
-		});
-		
-		if (MBUrl == "" ) {
-			MBUrl;
-		}
+		var MBUrl = getMBUrl();
 
 		MBUrl += "ui?command=play&id=" + id
 		$.getJSON(MBUrl, function(x) {
@@ -1019,11 +1062,84 @@ function playByID(buttonIndex, id)  {
 	}
 }
 
-function ShowItems(tr) {
-	clearSleepTimer()
+function playTitle(tr, movieTitle) {
 
-	var MBUrl = "";
+    if ( netState() != 'WiFi connection' ) {
+        navigator.notification.alert("You are not on Wifi. To play this title, connect to Wifi and try again", null, "gesturePad");
+        return;
+    }
+
+	var actionSheet = window.plugins.actionSheet;
+	var actions = ["Play", "Resume", "View on Screen"];
+
+	if ( $(tr).attr("data-imdb") == "1" ) {
+		actions.push("View Imdb Page")	
+	}
+
+	actions.push("Cancel");
+
+	var MBUrl = getMBUrl();
+	var guid = $(tr).attr("data-guid")
+	var title = "Actions";
+
+	if ( title != undefined ) {
+		title = movieTitle;
+	}
+
+	actionSheet.create({title: title, items: actions, destructiveButtonIndex: (actions.length-1)}, function(buttonValue, buttonIndex) {
+		if (buttonIndex == -1  || buttonIndex == (actions.length-1)) {
+			return;
+		}
+		switch(actions[buttonIndex]) {
+			case "Play":
+				MBUrl += "ui?command=play&id=" + guid
+				break;
+			case "Resume":
+				MBUrl += "ui?command=resume&id=" + guid
+				break;
+			case "View on Screen":
+				MBUrl += "ui?command=navigatetoitem&id=" + guid
+				break;
+			case "View Imdb Page":
+				MBUrl = ""
+				break;
+		}
+		if ( MBUrl != "" ) {
+			$.getJSON(MBUrl, function() {
+				setTimeout(function() {
+					nowPlaying();
+				}, 1500)
+		     })
+		} else {
+			//launch Imdb
+			$.ajax({
+				url: getMBUrl() + "library/?Id=" + guid + "&lightData=1",
+				dataType: 'json',
+				timeout: MBServiceTimeout,
+				success: function(x) {
+					if ( x.Data.ImdbID ) {
+				    	cb = window.plugins.childBrowser;    
+					    if (cb != null) {
+					        cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
+					    }	
+					} else {
+						navigator.notification.alert("Sorry, This title does not have an IMBD id", null, "gesturePad"); 
+					}
+				}, 
+				error: function() {
+					if (parse) {
+						navigator.notification.alert("The server is not responding in time, and no cached version exists. Try again later", null, "gesturePad"); 
+					}
+				}
+			});
+		}
+	});	
+		
 	
+}
+
+function getMBUrl() {
+	var MBUrl = "";	
 	$(xml).find('gesturePad > rooms > room[roomshortname="' + localStorage.getItem("roomshortname") + '"] > device[shortname="' + localStorage.getItem("shortname")  + '"]:first').each(function(){
 		$(this).find("IPAddress:first").each(function(){
 			MBUrl = "http://" + $(this).text()
@@ -1032,21 +1148,189 @@ function ShowItems(tr) {
 			MBUrl += ":" + $(this).text() + "/mbwebapi/service/"
 		});		
 	});
+	return MBUrl;
+}
+
+
+function showBottomItems(tr) {
+
+	var MBUrl = getMBUrl();
+	var boxCoverWidth = 70;
+	var backwards = false;
+	if ( tr ) {
+		if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
+			playTitle( $(tr), $(tr).parent().find("p").text() );
+			return;
+		}
+		if ( $(tr).hasAttr("data-backwards") ) {
+			backwards = true;
+		}
+	}
 	
-	if (MBUrl == "" ) {
-		MBUrl;
+	var animationProps = {"startCoverOpacity": 0.25, "startCoverTop": "140px", "endCoverOpacity": 1, "endCoverTop": "24px"};
+
+	if (backwards) {
+		animationProps = {"startCoverOpacity": 0.25, "startCoverTop": "-164px", "endCoverOpacity": 1, "endCoverTop": "24px"};
 	}
 
+	$('#covers').animate({
+		"opacity": animationProps.startCoverOpacity,
+		"margin-top": animationProps.startCoverTop
+		}, 250, function() {
+			$("#covers").css("margin-top", "24px").width( $(window).width() );
+			$("#covers").html("<div class='boxLoader'><p>Loading Data...</p></div>").css("opacity", "1").fadeIn();
+
+			var parseJsonResults = function (x) {
+				var tb = '<div style="width: 40px; height: 100%; float:left"> </div>';
+
+				$("#covers").width( ((x.Data.Children.length) * boxCoverWidth) + 50 );
+
+				if (localStorage.getItem("SortDate") == 1 && x.Data.Name != "StartupFolder" ) {
+					x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
+				}
+				
+				$.each(x.Data.Children, function(key, val) { 
+					tb += '<div class="smallboxContainer pendingImg" >' 
+					if (x.Data.Children[key].IsFolder == true) {
+						if ( x.Data.Children[key].RecentlyAddedUnplayedItemCount > 0 ) {
+							tb += '<div class="badge" >' + x.Data.Children[key].RecentlyAddedUnplayedItemCount + '</div>' 		
+						}
+					}
+					
+					tb += '<img data-prefix="' + getMBUrl() + 'image/?Id=' + '" data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type + '" class="smallBox" src="img/nobox.png"  data-imdb="' + ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")  + '" />';
+					tb += '<p>' + x.Data.Children[key].Name  + '</p>'
+					tb += '</div>';
+				});
+
+
+				
+				
+				var children = $("<div>" + tb + "</div>");
+				$(children).find("div.pendingImg").each(function() {
+
+			        var boxImg = $(this).find("img");
+			        var guid = $(boxImg).attr("data-guid");
+			        var prefix = $(boxImg).attr("data-prefix");
+		    		var imgID = "MB_Small_" + guid;
+					$(boxImg).onerror = function() {
+						$(this).attr("src", "img/nobox.png");
+					};
+
+					//load data with cached imagery already populated
+					getImageFromCache({id: imgID, url: prefix + guid + "&maxwidth=120&maxheight=120"}, function(r) {
+						var img = new Image();
+						img.onerror = function() {
+							$(boxImg).attr("src", "img/nobox.png");
+						};
+						if (r.cached) { 
+							$(boxImg).attr("src", r.url);
+							$(this).removeClass("pendingImg");
+						}
+					});
+				})
+
+				$('#covers').css("margin-top", "-130px").css("opacity", "0.25");
+
+				$("#covers").empty().append( $(children).children() ) ;
+				$("#covers img").bind(clickEventType, function () {
+					$("#boxCoverBack").data("scrollPosition", $("#boxCoverContainer").scrollLeft() );
+					showBottomItems( $(this) )
+				});
+
+				$('#covers').animate({
+					"opacity": animationProps.endCoverOpacity,
+					"margin-top": animationProps.endCoverTop
+					}, 250, function() {
+						if ( $("#boxCoverBack").data("scrollPosition") && backwards ) {
+							$("#boxCoverContainer").animate({scrollLeft:  parseInt( $("#boxCoverBack").data("scrollPosition") )  }, 500);
+						}
+						$("#boxCoverContainer").trigger("scroll");
+
+						var folderName = x.Data.Name;
+						if (folderName == "StartupFolder") {
+							folderName = "Startup Folder";
+							$("#covers").data("back", "");
+						} else {
+							$("#covers").data("back", x.Data.parentId);
+						}
+
+						$('#bottomText > span:first').animate({
+							"opacity": 0,
+							"margin-left": '-100px'
+							}, 250, function() {
+								$("#bottomText > span:first").text(folderName);
+								$("#bottomText > span:first").animate({
+									"opacity": 1,
+									"margin-left": '0px'
+								}, 250);
+						});
+				});
+
+
+				
+
+			}
+
+			var getJsonFromServer = function(url, parse) {
+		        if ( netState() != 'WiFi connection' && parse ) {
+		            navigator.notification.alert("Sorry, you are not on Wifi, and this data is yet to be cached.", null, "gesturePad");
+		            return;
+		        }
+
+				$.ajax({
+					url: url,
+					dataType: 'json',
+					timeout: MBServiceTimeout,
+					success: function(d) {
+						saveJsonToCache(url, d);
+						if (parse) {
+							parseJsonResults(d);	
+						}
+					}, 
+					error: function() {
+						if (parse) {
+							navigator.notification.alert("The server is not responding in time, and no cached version exists. Try again later", null, "gesturePad"); 
+						}
+					}
+				});
+			}
+
+			if ( tr ) {
+				MBUrl += "library/?lightData=1&Id=" + $(tr).attr("data-guid");
+			} else {
+				MBUrl += "library/";
+			}
+			
+			getJsonFromCache(MBUrl, function(d) {
+				if (d == null) {
+					//get from server
+					getJsonFromServer(MBUrl, true);
+				} else {
+					//display cached
+					parseJsonResults(d);
+					//get from server, to replace cache but dont parse
+					getJsonFromServer(MBUrl, false);
+				}
+			});
+
+
+
+	});
+
+	
+	
+	
+}
+
+
+function ShowItems(tr) {
+	clearSleepTimer()
+
+	var MBUrl = getMBUrl();
 
 	if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
 		//play title
-		MBUrl += "ui?command=play&id=" + $(tr).attr("data-guid")
-		$.getJSON(MBUrl, function(x) {
-			$("#btnTitles").trigger(clickEventType);
-			setTimeout(function() {
-				nowPlaying();
-			}, 1500)
-         })
+		playTitle( $(tr), $(tr).find("td:first").text() );
 		return;
 	}
 
@@ -1084,7 +1368,7 @@ function ShowItems(tr) {
 		}
 		
 		$.each(x.Data.Children, function(key, val) { 
-			tb += '<tr data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type +'">'
+			tb += '<tr data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type +'" data-imdb="' + ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")  + '" >'
 				+ '<td><div>' + ( (x.Data.Children[key].WatchedPercentage < 5) ? "&#10022; " : ""  ) 
 				+ x.Data.Children[key].Name 
 				+ ( (x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""  ) 
@@ -1117,7 +1401,7 @@ function ShowItems(tr) {
 		$.ajax({
 			url: MBUrl,
 			dataType: 'json',
-			timeout: 5000,
+			timeout: MBServiceTimeout,
 			success: function(d) {
 				saveJsonToCache(MBUrl, d);
 				if (parse) {
@@ -1132,7 +1416,8 @@ function ShowItems(tr) {
 		});
 	}
 
-	MBUrl += "library?lightData=1&Id=" + $(tr).attr("data-guid");
+	MBUrl += "library/?lightData=1&Id=" + $(tr).attr("data-guid");
+	console.log(MBUrl)
 	getJsonFromCache(MBUrl, function(d) {
 		if (d == null) {
 			//get from server
@@ -2063,7 +2348,7 @@ function saveImageToCache(request) {
         		function gotFileEntry(fileEntry) {
         			fileEntry.createWriter( function gotFileWriter(writer) {
 				            writer.onwriteend = function(evt) {
-				                console.log("Saved to cache: " + request.id)
+				                //console.log("Saved to cache: " + request.id)
 				            };
 				            writer.write( getBase64Image(request.img) );
 	        			}, 
@@ -2120,16 +2405,16 @@ function getJsonFromCache(MBUrl, callback) {
 
 function saveJsonToCache(MBUrl, d) {
 
+	if (d == null) {
+		return;
+	}
 	var id = MBUrl.replace("http://","");
 	id = id.substring( id.indexOf("/")+1 );
 	id = id.replace(/\//g,"-");
-	
-	console.log(id)
-	
 
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
 		function gotFS(fileSystem) {
-        	fileSystem.root.getFile(id + '.json', {create: true, exclusive: false}, 
+        	fileSystem.root.getFile(id + '.json', {create: true, exclusive: false, append: false}, 
         		function gotFileEntry(fileEntry) {
         			fileEntry.createWriter( function gotFileWriter(writer) {
 				            writer.onwriteend = function(evt) {
@@ -2147,3 +2432,7 @@ function saveJsonToCache(MBUrl, d) {
 	);
 
 }
+
+
+
+
