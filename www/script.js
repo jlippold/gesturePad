@@ -1,13 +1,121 @@
 var xml;
-var SleepThreshold = 60000;
-var playSounds = "true";
 var appendOncetoQueryString = "";
 var navigator, npTimer, inputTimer, clickEventType, slideTimer;
 var guide =  new Object();
 var workerTimer = null;
 var sleepTimer = null;
 var scrollstop = null;
-var MBServiceTimeout = 120000;
+
+
+function loadSettings() {
+	
+	settings = {
+		sounds: false,
+		vibrate: false,
+		SleepThreshold: 60000,
+		MBServiceTimeout :120000,
+		moviesByDate: false,
+		tvByDate: false
+	}
+
+	window.plugins.applicationPreferences.get('sounds', function(result) {
+        if ( result == 1 ) {
+        	settings.sounds = true;
+    	}
+	});
+
+	window.plugins.applicationPreferences.get('vibrate', function(result) {
+        if ( result == 1 ) {
+        	settings.vibrate = true;
+    	}
+	});
+
+	window.plugins.applicationPreferences.get('dateMovies', function(result) {
+        if ( result == 1 ) {
+        	settings.moviesByDate = true;
+    	}
+	});
+	window.plugins.applicationPreferences.get('dateTV', function(result) {
+        if ( result == 1 ) {
+        	settings.tvByDate = true;
+    	}
+	});
+
+
+	var roomname = "";
+	var roomshortname = "";
+	var devicename = "";
+	var shortname = "";
+	try {
+		roomname = localStorage.getItem("roomname");
+		roomshortname = localStorage.getItem("roomshortname");
+	} catch (e) {
+		
+	}
+	try {
+		devicename = localStorage.getItem("devicename");
+		shortname = localStorage.getItem("shortname");
+	} catch (e) {
+		
+	}
+
+	if (roomshortname != "") {
+		if ( $(xml).find('gesturePad > rooms > room[roomshortname="' + roomshortname + '"]').size() == 0 ) {
+			roomname = "";
+			roomshortname = "";
+		}
+	}
+
+	if (shortname != "") {
+		if ( $(xml).find('gesturePad > rooms > room[roomshortname="' + roomshortname + '"] > device[shortname="' + shortname + '"]').size() == 0 ) {
+			devicename = "";
+			shortname = "";
+		}
+	}
+	
+	localStorage.setItem("roomname", roomname);
+	localStorage.setItem("roomshortname", roomshortname);
+	localStorage.setItem("devicename", devicename);
+	localStorage.setItem("shortname", shortname);
+	
+
+
+	if ( localStorage.getItem("gestureXML") != 'null' ) {
+		$("#gestureXML").val(  localStorage.getItem("gestureXML") )
+	}
+
+	if ( localStorage.getItem("channelXML") != 'null' ) {
+		$("#channelXML").val(  localStorage.getItem("channelXML") )
+	}
+
+
+
+
+	var xmlLoc = "channellist.xml?r=" + Math.random();
+	if ( localStorage.getItem("channelXML") != 'null' ) {
+		xmlLoc = localStorage.getItem("channelXML")
+	}
+
+	$.ajax({
+	    type: "GET",
+		url: xmlLoc,
+		dataType: "xml",
+		success: function(resp) {
+          	setupWorker(resp)
+		},
+		error: function() {
+			navigator.notification.alert("Error loading channel list: "  + xmlLoc, null, "gesturePad");
+		}		
+	});
+	updateStatus();
+	getRoomStatus();
+	setTimeout( function () {
+		splash("hide");
+	}, 500)
+	
+	
+
+}
 
 function setupWorker(channellist) {
 
@@ -164,14 +272,14 @@ function refreshChannel(server, queueName, channelKey) {
 function clearSleepTimer() {
 	SleepDevice(false);
  	clearTimeout(sleepTimer)
- 	if (SleepThreshold > 0) {
-		sleepTimer = setTimeout( "SleepDevice(true)", SleepThreshold );
+ 	if (settings.SleepThreshold > 0) {
+		sleepTimer = setTimeout( "SleepDevice(true)", settings.SleepThreshold );
  	}
 }
 
 function SleepDevice(sleep) {
 	return;
-	if (SleepThreshold > 0) {
+	if (settings.SleepThreshold > 0) {
 		if (sleep) {
 			if ( $("#gestures_canvas:visible").size() == 0  ) {
 				return;
@@ -447,7 +555,6 @@ function onDeviceReady() {
 					tb += '<td width="30px" style="text-align: right">' + d.Data.Children[key].ChildCount  + '</td></tr>';	
 				});
 				 tb += "</table>";
-				 console.log(tb);
 			     $("#backFace").html( tb );
 			     checkScrollOverflow();
 			     showFilter("MCE")
@@ -470,7 +577,7 @@ function onDeviceReady() {
 				$.ajax({
 					url: MBUrl,
 					dataType: 'json',
-					timeout: MBServiceTimeout,
+					timeout: settings.MBServiceTimeout,
 					success: function(d) {
 						saveJsonToCache(MBUrl, d);
 						if (parse) {
@@ -583,33 +690,6 @@ function onDeviceReady() {
 		}
 	});
 
-	$("#bottomGrabber").bind("touchmove", function(e) {
-		e.stopImmediatePropagation();
-		e.preventDefault();
-		var orig = e.originalEvent.targetTouches[0];  
-		var lastY = parseInt($(this).data('lastY'));
-		var position = parseInt($("#bottom").css("bottom"));
-		var maxHeight = 140;
-		var n = 0;
-		$(this).data('lastY', orig.pageY);
-
-	  	if ( lastY < orig.screenY  ) {
-	  		n = position - (orig.pageY - lastY );
-	  		if (n <= maxHeight && n >= 0) {
-	  			$("#bottom").css("bottom", n + "px");	
-	  		}
-		} else {
-	  		n = position + (lastY - orig.pageY);
-	  		if (n <= maxHeight && n >= 0) {
-				$("#bottom").css("bottom", n + "px");
-			}
-		}
-		if (n <= maxHeight && n >= 0) {
-			$("#browser").height(n+"px");
-		}
-			
-	});
-
 	$("#boxCoverBack").bind(clickEventType, function() {
 		if ( $("#covers").data("back") != "" ) {
 			var tr = $("<a data-guid='" + $("#covers").data("back") + "' data-type='Folder' data-backwards='1' />");
@@ -618,38 +698,80 @@ function onDeviceReady() {
 		}
 	})
 
+	$("#bottomGrabber").bind("touchstart",  function(e) {
+		if ( $("#gestures_canvas:visible").size() == 0 ) {
+			e.stopImmediatePropagation();
+			e.preventDefault();
+			return;
+		}
+		var lastY = e.originalEvent.touches[0].screenY;
+		$(this).data('lastY', e.originalEvent.touches[0].screenY);
+	}); 
+
+	$("#bottomGrabber").bind("touchmove", function(e) {
+		e.stopImmediatePropagation();
+		e.preventDefault();
+		var orig = e.originalEvent.targetTouches[0];  
+		var lastY = parseInt($(this).data('lastY'));
+		var position = parseInt($("#bottom").css("bottom"));
+		var maxHeight = 140;
+		var n = 0;
+		var bOffset = -140;
+		$(this).data('lastY', orig.pageY);
+
+	  	if ( lastY < orig.screenY  ) {
+	  		n = position - (orig.pageY - lastY );
+	  		if (n <= maxHeight && n >= 0) {
+	  			$("#bottom").css("bottom", n + "px");	
+	  			$("#browser").css("bottom", (bOffset + n) +"px");
+	  		}
+		} else {
+	  		n = position + (lastY - orig.pageY);
+	  		if (n <= maxHeight && n >= 0) {
+				$("#bottom").css("bottom", n + "px");
+				$("#browser").css("bottom", (bOffset + n) +"px");
+			}
+		}
+		if (n <= maxHeight && n >= 0) {
+			
+		}
+			
+	});
+
 	$("#bottomGrabber").bind("touchend",  function(e) {
 		setTimeout( function() {
 			var maxHeight = 140;
 			var position = parseInt($("#bottom").css("bottom"));
 			if (position > (maxHeight/3) ) { //more than 1/3 up push to top
 			    $("#bottom").animate({
-			       bottom: maxHeight + "px"
+			       bottom: "140px"
 			    }, { duration: 200, queue: false });
 			    $("#browser").animate({
-			       height: maxHeight + "px"
-			    }, { duration: 200, queue: false });
+			       bottom: "-1px"
+			    }, { duration: 200, queue: false, complete: function() {
+				    if ( ($("#covers").data("back") == "" || $("#covers").data("back") == undefined )  && ( $("#covers").data("loaded") == false || $("#covers").data("loaded") == undefined)  ) {
+				    	showBottomItems();
+					}
+			    }});
 
-			    if ( $("#covers").data("back") == "" || $("#covers").data("back") == undefined ) {
-			    	showBottomItems();
-				}
 			} else {
 			    $("#bottom").animate({
 			       bottom: "0px"
 			    }, { duration: 200, queue: false });
 			    $("#browser").animate({
-			       height: "0px"
-			    }, { duration: 200, queue: false });
+			       bottom: "-140px"
+			    }, { duration: 200, queue: false, complete: function() {
+			    	if ( ($("#covers").data("back") == "" || $("#covers").data("back") == undefined )   ) {
+			    			$("#covers").data("loaded", false);
+			    			$("#bottomText span").html("&nbsp;");
+			    			$("#covers").html("&nbsp;");
+
+			    	}
+			    }});
+
+
 			}
 		}, 100);
-	}); 
-
-	$("#bottomGrabber").bind("touchstart",  function(e) {
-		if ( $("#gestures_canvas:visible").size() == 0 ) {
-			return;
-		}
-		var lastY = e.originalEvent.touches[0].screenY;
-		$(this).data('lastY', e.originalEvent.touches[0].screenY);
 	}); 
 
 	$("#btnCommands").bind(clickEventType, function() {
@@ -902,15 +1024,6 @@ function onDeviceReady() {
 		executeGestureByCommandName("Mute");
 	});
 	
-	$("#btnSortDate").bind(clickEventType, function () {
-		if ( $(this).hasClass("opaqueEmoji") ) {
-			localStorage.setItem("SortDate", 1)
-		} else {
-			localStorage.setItem("SortDate", 0)
-		}
-		$(this).toggleClass("opaqueEmoji")
-	});
-
 
 	$("#header").bind(clickEventType, function() {
 		//scrolltop
@@ -1115,7 +1228,7 @@ function playTitle(tr, movieTitle) {
 			$.ajax({
 				url: getMBUrl() + "library/?Id=" + guid + "&lightData=1",
 				dataType: 'json',
-				timeout: MBServiceTimeout,
+				timeout: settings.MBServiceTimeout,
 				success: function(x) {
 					if ( x.Data.ImdbID ) {
 				    	cb = window.plugins.childBrowser;    
@@ -1185,7 +1298,11 @@ function showBottomItems(tr) {
 
 				$("#covers").width( ((x.Data.Children.length) * boxCoverWidth) + 50 );
 
-				if (localStorage.getItem("SortDate") == 1 && x.Data.Name != "StartupFolder" ) {
+				if (settings.moviesByDate && x.Data.Type == "Folder"  ) {
+					x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
+				}
+
+				if (settings.tvByDate && ( x.Data.Type == "Season" || x.Data.Type == "Series") ) {
 					x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
 				}
 				
@@ -1206,8 +1323,11 @@ function showBottomItems(tr) {
 				
 				
 				var children = $("<div>" + tb + "</div>");
-				$(children).find("div.pendingImg").each(function() {
+				$(children).find("div.pendingImg").each(function(counter) {
 
+					if (counter > 100) { 
+						return false;
+					}
 			        var boxImg = $(this).find("img");
 			        var guid = $(boxImg).attr("data-guid");
 			        var prefix = $(boxImg).attr("data-prefix");
@@ -1253,6 +1373,7 @@ function showBottomItems(tr) {
 						} else {
 							$("#covers").data("back", x.Data.parentId);
 						}
+						$("#covers").data("loaded", true);
 
 						$('#bottomText > span:first').animate({
 							"opacity": 0,
@@ -1280,7 +1401,7 @@ function showBottomItems(tr) {
 				$.ajax({
 					url: url,
 					dataType: 'json',
-					timeout: MBServiceTimeout,
+					timeout: settings.MBServiceTimeout,
 					success: function(d) {
 						saveJsonToCache(url, d);
 						if (parse) {
@@ -1363,7 +1484,11 @@ function ShowItems(tr) {
 				+ '<td colspan="2" class="shuffle"><div> Shuffle </div></td>';
 		}
 
-		if (localStorage.getItem("SortDate") == 1 && x.Data.Name != "StartupFolder" ) {
+		if (settings.moviesByDate && x.Data.Type == "Folder"  ) {
+			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
+		}
+
+		if (settings.tvByDate && ( x.Data.Type == "Season" || x.Data.Type == "Series") ) {
 			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
 		}
 		
@@ -1401,7 +1526,7 @@ function ShowItems(tr) {
 		$.ajax({
 			url: MBUrl,
 			dataType: 'json',
-			timeout: MBServiceTimeout,
+			timeout: settings.MBServiceTimeout,
 			success: function(d) {
 				saveJsonToCache(MBUrl, d);
 				if (parse) {
@@ -1616,107 +1741,6 @@ function onBodyLoad() {
     }, 10)
 
 }
-
-
-function loadSettings() {
-	
-	var roomname = "";
-	var roomshortname = "";
-	var devicename = "";
-	var shortname = "";
-	try {
-		roomname = localStorage.getItem("roomname");
-		roomshortname = localStorage.getItem("roomshortname");
-	} catch (e) {
-		
-	}
-	try {
-		devicename = localStorage.getItem("devicename");
-		shortname = localStorage.getItem("shortname");
-	} catch (e) {
-		
-	}
-	if (localStorage.getItem("SortDate") == 'null') {
-		localStorage.setItem("SortDate", 0)
-	}
-
-	if (roomshortname != "") {
-		if ( $(xml).find('gesturePad > rooms > room[roomshortname="' + roomshortname + '"]').size() == 0 ) {
-			roomname = "";
-			roomshortname = "";
-		}
-	}
-
-	if (shortname != "") {
-		if ( $(xml).find('gesturePad > rooms > room[roomshortname="' + roomshortname + '"] > device[shortname="' + shortname + '"]').size() == 0 ) {
-			devicename = "";
-			shortname = "";
-		}
-	}
-	
-	localStorage.setItem("roomname", roomname);
-	localStorage.setItem("roomshortname", roomshortname);
-	localStorage.setItem("devicename", devicename);
-	localStorage.setItem("shortname", shortname);
-	
-
-
-	if ( localStorage.getItem("gestureXML") != 'null' ) {
-		$("#gestureXML").val(  localStorage.getItem("gestureXML") )
-	}
-
-	if ( localStorage.getItem("channelXML") != 'null' ) {
-		$("#channelXML").val(  localStorage.getItem("channelXML") )
-	}
-
-	$(xml).find('gesturePad > settings > sounds:first').each(function() {
-		playSounds = $(this).text();
-	});
-	
-
-
-	$(xml).find('gesturePad > settings > SleepThreshold').each(function() {
-		try {
-			SleepThreshold = parseInt($(this).text());
-		} catch (e) { }
-	});
-
-	//set buttons
-
-	if ( localStorage.getItem("SortDate")  ==  1 ) {
-
-	} else {
-		$("#btnSortDate").addClass("opaqueEmoji")
-	}
-
-
-
-	var xmlLoc = "channellist.xml?r=" + Math.random();
-	if ( localStorage.getItem("channelXML") != 'null' ) {
-		xmlLoc = localStorage.getItem("channelXML")
-	}
-
-	$.ajax({
-	    type: "GET",
-		url: xmlLoc,
-		dataType: "xml",
-		success: function(resp) {
-          	setupWorker(resp)
-		},
-		error: function() {
-			navigator.notification.alert("Error loading channel list: "  + xmlLoc, null, "gesturePad");
-		}		
-	});
-	updateStatus();
-	getRoomStatus();
-	setTimeout( function () {
-		splash("hide");
-	}, 500)
-	
-	
-
-}
-
 
 
 function getRoomStatus() {
@@ -2235,9 +2259,14 @@ function doEvent(gesture, actions)  {
 }
 
 function playBeep() {
-	if (playSounds == "true") {
+	if (settings.sounds) {
 		try {
 			navigator.notification.beep();	
+		} catch (e) {;}	
+	}
+	if (settings.vibrate) {
+		try {
+			navigator.notification.vibrate(1000);
 		} catch (e) {;}	
 	}
 }

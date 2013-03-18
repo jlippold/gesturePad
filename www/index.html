@@ -15,6 +15,7 @@
 	<script type="text/javascript" charset="utf-8" src="cordova-2.2.0.js"></script>
 	<script type="text/javascript" charset="utf-8" src="ChildBrowser.js"></script>
 	<script type="text/javascript" charset="utf-8" src="ActionSheet.js"></script>
+	<script type="text/javascript" charset="utf-8" src="applicationPreferences.js"></script>
 	<script type="text/javascript" src="gestures.js?r=1"></script>
 	<script type="text/javascript" src="script.js?r=5"></script>
 
@@ -87,25 +88,24 @@
 			<div class="five control" id="btnForward" ></div>
 			<div class="five control" id="btnRoom" ></div>
 		</div>
-		<div class="belowBrowser">
-			<div class="volume control" id="btnMute" ></div>
-			<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
-				<div class="slider" id="VolumeSlider" >
-					<div class="sliderh" id="VolumeSliderh" ></div>        
-					<div class="seekto" id="VolumeSliderSeek" ></div>
-				</div>
+		<div class="volume control" id="btnMute" ></div>
+		<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
+			<div class="slider" id="VolumeSlider" >
+				<div class="sliderh" id="VolumeSliderh" ></div>        
+				<div class="seekto" id="VolumeSliderSeek" ></div>
 			</div>
 		</div>
-		<div id="browser">
-			<p id="bottomText"><span>&nbsp;</span></p>
-			<div id="boxCoverBack">&crarr;</div>
-			
-			<div id="boxCoverContainer">
-				<div id="covers"></div>
-			</div>
-		</div>
-		
 	</div>
+
+	<div id="browser">
+		<p id="bottomText"><span>&nbsp;</span></p>
+		<div id="boxCoverBack">&crarr;</div>
+		
+		<div id="boxCoverContainer">
+			<div id="covers"></div>
+		</div>
+	</div>
+		
 
 	<form style="display:none;" id="frmNumPad" onsubmit="" >
 		<input type="tel" id="NumPad" value="">
@@ -128,8 +128,6 @@
 					<input type="text" class="searcher" placeholder="Filter Items...">
 				</label>
 			</form>
-			
-			<div class="mce right emoji" id="btnSortDate">📅</div>
 		</div>
 	</div>
 

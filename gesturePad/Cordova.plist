@@ -30,6 +30,8 @@
 	<dict>
 		<key>ActionSheet</key>
 		<string>ActionSheet</string>
+		<key>applicationPreferences</key>
+		<string>applicationPreferences</string>
 		<key>ChildBrowserCommand</key>
 		<string>ChildBrowserCommand</string>
 		<key>Globalization</key>
