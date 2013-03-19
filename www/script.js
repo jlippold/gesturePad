@@ -9,57 +9,97 @@ var scrollstop = null;
 
 function loadSettings() {
 	
+	//defaults
 	settings = {
 		sounds: false,
 		vibrate: false,
 		SleepThreshold: 60000,
 		MBServiceTimeout :120000,
 		moviesByDate: false,
-		tvByDate: false
+		tvByDate: false,
+		configURL: "mbeg.xml",
+		rooms: []
 	}
 
-/*	window.plugins.applicationPreferences.get('sounds', function(result) {
-        if ( result == 1 ) {
-        	settings.sounds = true;
-    	}
-	});
-
-	window.plugins.applicationPreferences.get('vibrate', function(result) {
-        if ( result == 1 ) {
-        	settings.vibrate = true;
-    	}
-	});
-
-	window.plugins.applicationPreferences.get('dateMovies', function(result) {
-        if ( result == 1 ) {
-        	settings.moviesByDate = true;
-    	}
-	});
-	window.plugins.applicationPreferences.get('dateTV', function(result) {
-        if ( result == 1 ) {
-        	settings.tvByDate = true;
-    	}
-	});*/
-
+	//load from IOS prefs
 	window.plugins.applicationPreferences.get('All', function(result) {
 		var d = jQuery.parseJSON(result);
-	 	$.each(d, function(k, v) { 
-	 		console.log(k + " : " + v);
-		});
+
+		//general settings
+        if ( d.sounds == 1 ) {
+        	settings.sounds = true;
+    	}
+        if ( d.vibrate == 1 ) {
+        	settings.vibrate = true;
+    	}
+        if ( d.dateMovies == 1 ) {
+        	settings.moviesByDate = true;
+    	}
+        if ( d.dateTV == 1 ) {
+        	settings.tvByDate = true;
+    	}
+
+    	//gesture XML
+        if ( d.config_source == 1 ) {
+        	settings.configURL = "mbeg.xml";
+    	} else {
+			if ( d.config_source == 2 ) {
+	        	settings.configURL = "mbegdt.xml";
+	    	} else {
+				if ( d.config_source == 3 ) {
+		        	settings.configURL = d.custom_config;
+		    	}
+	    	}
+    	}
+
+    	//get rooms
+    	for (var i=1;i<=5;i++) {
+    		if ( d["S" + i + "_enabled"] ) {
+    			if ( d["S" + i + "_enabled"] == 1 ) {
+    				var room = {
+    					name: "Room " + i,
+    					shortname: i,
+    					DTV: null,
+    					IR: false,
+    					devices: []
+    				};
+
+    				room.name = d["S" + i + "_RoomName"];
+    				
+    				room.devices.push({
+    					"name": "Movies", 
+    					"shortname": "MCE", 
+    					"IPAddress": d["S" + i + "_IP"],
+    					"Port": d["S" + i + "_EGPort"],
+    					"ServicePort": d["S" + i + "_MBPort"],
+    					"timeshift": true
+    				})
+
+    				if ( d["S" + i + "_DTV"] == 1 ) {
+    					room.DTV = d["S" + i + "_DTVIP"];
+	    				room.devices.push({
+	    					"name": "Television", 
+	    					"shortname": "DTV", 
+	    					"IPAddress": d["S" + i + "_DTVIP"],
+	    					"Port": 8080,
+	    					"timeshift": false
+	    				})
+    				}
+
+    				if ( d["S" + i + "_EG"] == 1 ) {
+    					room.IR = true;
+    				}
+    				
+    				settings.rooms.push(room);
+    			}
+    			
+    		}
+    	}
+    	console.log( settings )
 
 	});
 
 	var roomXML = "";
-
-/*	for (var i=1;i<=5;i++) {
-		window.plugins.applicationPreferences.get('S' + i  + '_enabled', function(enabled) {
-	        if ( enabled == 1 ) {
-	        	
-	    	}
-		});
-	}*/
-	
-
 	var roomname = "";
 	var roomshortname = "";
 	var devicename = "";
@@ -107,8 +147,6 @@ function loadSettings() {
 	}
 
 
-
-
 	var xmlLoc = "channellist.xml?r=" + Math.random();
 	if ( localStorage.getItem("channelXML") != 'null' ) {
 		xmlLoc = localStorage.getItem("channelXML")
@@ -122,11 +160,12 @@ function loadSettings() {
           	setupWorker(resp)
 		},
 		error: function() {
-			navigator.notification.alert("Error loading channel list: "  + xmlLoc, null, "gesturePad");
+			doAlert("Error loading channel list: "  + xmlLoc);
 		}		
 	});
 	updateStatus();
 	getRoomStatus();
+
 	setTimeout( function () {
 		splash("hide");
 	}, 500)
@@ -230,7 +269,6 @@ function startWorker() {
 				 		if ( currentServer > dtvServers.length-1 ) {
 				 			currentServer = 0
 				 		}
-				 		//alert(dtvServers[currentServer].room);
 			 			//queue the refesh on that server
 			 			if ( dtvServers[currentServer].room != localStorage.getItem("roomshortname") ) { //dont overload the current room
 			 				refreshChannel(dtvServers[currentServer].url, "DTVWorker"+currentServer, channelKey);
@@ -470,9 +508,7 @@ function onDeviceReady() {
 			localStorage.setItem("gestureXML",  "gesturePad.xml" );
 		}
 
-		try {
-			navigator.notification.alert("Settings Saved.", null, "gesturePad");
-		} catch(e) {} 
+		doAlert("Settings Saved.");
 
 		
 		loadXML(); 
@@ -484,9 +520,8 @@ function onDeviceReady() {
 		window.scrollTo(0,0);
 		/* generic flip shit */
 		if ( localStorage.getItem("roomname") == "" || localStorage.getItem("devicename") == "" ) { //No room selected
-		    try {		        
-		        navigator.notification.alert("Please Select a Room First", null, "gesturePad");
-		    } catch (e) { }
+
+		    doAlert("Please Select a Room First")
 		    $("#btnRoom").trigger(clickEventType);
 		    return;
 		}
@@ -586,7 +621,7 @@ function onDeviceReady() {
 
 		        if ( netState() != 'WiFi connection' ) {
 		        	if (parse) {
-			            navigator.notification.alert("You are not on Wifi and no cached version exists. To do this, connect to Wifi and try again", null, "gesturePad");
+		        		doAlert("You are not on Wifi and no cached version exists. To do this, connect to Wifi and try again");
 			            $("#btnTitles").trigger(clickEventType);
 			            return;
 		        	}
@@ -604,7 +639,7 @@ function onDeviceReady() {
 					}, 
 					error: function() {
 						if (parse) {
-							navigator.notification.alert("The server is not responding in time, and no cached version exists. Try again later", null, "gesturePad"); 
+							doAlert("The server is not responding in time, and no cached version exists. Try again later")
 						}
 					}
 				});
@@ -795,9 +830,7 @@ function onDeviceReady() {
 	$("#btnCommands").bind(clickEventType, function() {
 		/* generic flip shit */
 		if ( localStorage.getItem("roomname") == "" || localStorage.getItem("devicename") == "" ) { //No room selected
-		    try {		        
-		        navigator.notification.alert("Please Select a Room First", null, "gesturePad");
-		    } catch (e) { }
+		    doAlert("Please Select a Room First")
 		    $("#btnRoom").trigger(clickEventType);
 		    return;
 		}
@@ -1142,9 +1175,7 @@ function loadXML() {
 		},
 		error: function() {
 			navigator.splashscreen.hide();
-			try {
-			navigator.notification.alert("Error loading settings: " + xmlLoc , null, "gesturePad");
-			} catch(e) {} 
+			doAlert("Error loading settings: " + xmlLoc );
 		}		
 	});
 }
@@ -1196,7 +1227,7 @@ function playByID(buttonIndex, id)  {
 function playTitle(tr, movieTitle) {
 
     if ( netState() != 'WiFi connection' ) {
-        navigator.notification.alert("You are not on Wifi. To play this title, connect to Wifi and try again", null, "gesturePad");
+        doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
         return;
     }
 
@@ -1254,12 +1285,12 @@ function playTitle(tr, movieTitle) {
 					        cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
 					    }	
 					} else {
-						navigator.notification.alert("Sorry, This title does not have an IMBD id", null, "gesturePad"); 
+						doAlert("Sorry, This title does not have an IMBD id");
 					}
 				}, 
 				error: function() {
 					if (parse) {
-						navigator.notification.alert("The server is not responding in time, and no cached version exists. Try again later", null, "gesturePad"); 
+						doAlert("The server is not responding in time, and no cached version exists. Try again later");
 					}
 				}
 			});
@@ -1412,7 +1443,7 @@ function showBottomItems(tr) {
 
 			var getJsonFromServer = function(url, parse) {
 		        if ( netState() != 'WiFi connection' && parse ) {
-		            navigator.notification.alert("Sorry, you are not on Wifi, and this data is yet to be cached.", null, "gesturePad");
+		            doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.")
 		            return;
 		        }
 
@@ -1428,7 +1459,7 @@ function showBottomItems(tr) {
 					}, 
 					error: function() {
 						if (parse) {
-							navigator.notification.alert("The server is not responding in time, and no cached version exists. Try again later", null, "gesturePad"); 
+							doAlert("The server is not responding in time, and no cached version exists. Try again later")
 						}
 					}
 				});
@@ -1476,7 +1507,8 @@ function ShowItems(tr) {
 	if ( $(tr).attr("data-type") == "Shuffle" ) {
 		//play title
         if ( netState() != 'WiFi connection' ) {
-            navigator.notification.alert("You are not on Wifi. To play this title, connect to Wifi and try again", null, "gesturePad");
+
+            doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
             return;
         }
 		MBUrl += "ui?command=shuffle&id=" + $(tr).attr("data-guid")
@@ -1537,7 +1569,7 @@ function ShowItems(tr) {
 
 	var getJsonFromServer = function(MBUrl, parse) {
         if ( netState() != 'WiFi connection' && parse ) {
-            navigator.notification.alert("Sorry, you are not on Wifi, and this data is yet to be cached.", null, "gesturePad");
+            doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.");
             return;
         }
 
@@ -1553,7 +1585,7 @@ function ShowItems(tr) {
 			}, 
 			error: function() {
 				if (parse) {
-					navigator.notification.alert("The server is not responding in time, and no cached version exists. Try again later", null, "gesturePad"); 
+					doAlert("The server is not responding in time, and no cached version exists. Try again later")
 				}
 			}
 		});
@@ -1602,7 +1634,6 @@ function getTableRowHTML(c, channelKey, curChannel) {
 	var row = "";
 	var timeleft = hms2( (c.startTime+c.duration) - Math.floor(new Date().getTime() / 1000)  );
 	
-	//alert(c.logo)
 	if (c.nowplaying == "" || timeleft == "0:00" || timeleft == "00:00" ) { //needs refresh
 		row += '<tr id="tr' + channelKey + '" data-loaded="false" data-major="' + c.number + '" data-key="' + channelKey + '" data-fullname="' + escape(c.fullname) + '"><td width="50px" ' 
 		if ( c.logo != "" ) {
@@ -1642,7 +1673,7 @@ function PhoneGapReady() {
     onDeviceReady();
 
 	window.onerror = function(msg, url, line) {
-	    alert("Error: " + msg + "\nurl: " + url + "\nline #: " + line);
+		doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line)
 	};
 
 }
@@ -1762,7 +1793,6 @@ function onBodyLoad() {
 
 
 function getRoomStatus() {
-	//alert("http://" + "xml > rooms > room[roomshortname='" + localStorage.getItem("roomshortname") + "'] > device[shortname='MCE'] > IPAddress" + "/")
 	$.ajax({
 	    type: "GET",
 		dataType: "text",
@@ -2083,7 +2113,7 @@ function doEvent(gesture, actions)  {
     
     try {
         if ( netState() != 'WiFi connection' ) {
-            navigator.notification.alert("You are not on Wifi. Connect to Wifi and try again", null, "gesturePad");
+            doAlert("You are not on Wifi. Connect to Wifi and try again")
             return;
         }
     }
@@ -2480,6 +2510,13 @@ function saveJsonToCache(MBUrl, d) {
 
 }
 
-
+function doAlert(msg) {
+	try {
+		navigator.notification.alert(msg, null, "gesturePad");
+	} catch (e) {
+		alert(msg);
+	}
+	
+}
 
 

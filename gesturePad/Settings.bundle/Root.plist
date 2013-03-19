@@ -68,7 +68,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
-			<string>All gestures can be defined by using a custom config file. See gihtub.com/treason/gesturePad for more information</string>
+			<string>All gestures can be defined by using a custom config file. See github.com/treason/gesturePad for more information</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -81,7 +81,7 @@
 			<string>0</string>
 			<key>Values</key>
 			<array>
-				<string>http://</string>
+				<string>1</string>
 				<string>2</string>
 				<string>3</string>
 			</array>
