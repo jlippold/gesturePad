@@ -292,7 +292,7 @@ function startWorker() {
 
 function refreshChannel(server, queueName, channelKey) {
 	
-    if ( netState() != 'WiFi connection' ) {
+    if ( isWifi() == false ) {
         return;
     }
 
@@ -619,7 +619,7 @@ function onDeviceReady() {
 
 			var getJsonFromServer = function(MBUrl, parse) {
 
-		        if ( netState() != 'WiFi connection' ) {
+		        if ( isWifi() == false ) {
 		        	if (parse) {
 		        		doAlert("You are not on Wifi and no cached version exists. To do this, connect to Wifi and try again");
 			            $("#btnTitles").trigger(clickEventType);
@@ -1226,7 +1226,7 @@ function playByID(buttonIndex, id)  {
 
 function playTitle(tr, movieTitle) {
 
-    if ( netState() != 'WiFi connection' ) {
+    if ( isWifi() == false ) {
         doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
         return;
     }
@@ -1442,7 +1442,7 @@ function showBottomItems(tr) {
 			}
 
 			var getJsonFromServer = function(url, parse) {
-		        if ( netState() != 'WiFi connection' && parse ) {
+		        if ( isWifi() == false && parse) {
 		            doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.")
 		            return;
 		        }
@@ -1506,7 +1506,7 @@ function ShowItems(tr) {
 
 	if ( $(tr).attr("data-type") == "Shuffle" ) {
 		//play title
-        if ( netState() != 'WiFi connection' ) {
+        if ( isWifi() == false ) {
 
             doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
             return;
@@ -1568,7 +1568,7 @@ function ShowItems(tr) {
 	}
 
 	var getJsonFromServer = function(MBUrl, parse) {
-        if ( netState() != 'WiFi connection' && parse ) {
+        if ( isWifi() == false && parse ) {
             doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.");
             return;
         }
@@ -2091,37 +2091,16 @@ function executeGestureByCommandName(command) {
 	}
 }
 
-function netState() {
-
-    var networkState = navigator.connection.type;
-
-
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI]     = 'WiFi connection';
-    states[Connection.CELL_2G]  = 'Cell 2G connection';
-    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    states[Connection.CELL_4G]  = 'Cell 4G connection';
-    states[Connection.NONE]     = 'No network connection';
-    return( states[networkState] );
-
-}
 
 function doEvent(gesture, actions)  {
 	window.scrollTo(0,0);
     
-    try {
-        if ( netState() != 'WiFi connection' ) {
-            doAlert("You are not on Wifi. Connect to Wifi and try again")
-            return;
-        }
-    }
-    catch (e) {
-        
+    
+    if ( isWifi() == false ) {
+        doAlert("You are not on Wifi. Connect to Wifi and try again")
+        return;
     }
 
-	
 	clearCallers(false);
 
 	var showCallback = true;
@@ -2517,6 +2496,35 @@ function doAlert(msg) {
 		alert(msg);
 	}
 	
+}
+
+function isWifi() {
+	try {
+		if ( netState() == 'WiFi connection' ) {
+			return true;
+		} else {
+			return false;
+		}
+	} catch (e) {
+		return true;
+	}
+}
+
+function netState() {
+	try {
+	    var networkState = navigator.connection.type;
+	    var states = {};
+	    states[Connection.UNKNOWN]  = 'Unknown connection';
+	    states[Connection.ETHERNET] = 'Ethernet connection';
+	    states[Connection.WIFI]     = 'WiFi connection';
+	    states[Connection.CELL_2G]  = 'Cell 2G connection';
+	    states[Connection.CELL_3G]  = 'Cell 3G connection';
+	    states[Connection.CELL_4G]  = 'Cell 4G connection';
+	    states[Connection.NONE]     = 'No network connection';
+	    return( states[networkState] );
+	} catch (e) {
+		return 'WiFi connection';
+	}
 }
 
 
