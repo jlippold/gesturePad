@@ -214,7 +214,7 @@
 			<key>Key</key>
 			<string>S1_DTV</string>
 			<key>Title</key>
-			<string>Use DirectV</string>
+			<string>Use DirecTV</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -344,7 +344,7 @@
 			<key>Key</key>
 			<string>S2_DTV</string>
 			<key>Title</key>
-			<string>Use DirectV</string>
+			<string>Use DirecTV</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -471,7 +471,7 @@
 			<key>Key</key>
 			<string>S3_DTV</string>
 			<key>Title</key>
-			<string>Use DirectV</string>
+			<string>Use DirecTV</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -598,7 +598,7 @@
 			<key>Key</key>
 			<string>S4_DTV</string>
 			<key>Title</key>
-			<string>Use DirectV</string>
+			<string>Use DirecTV</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -725,7 +725,7 @@
 			<key>Key</key>
 			<string>S5_DTV</string>
 			<key>Title</key>
-			<string>Use DirectV</string>
+			<string>Use DirecTV</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>

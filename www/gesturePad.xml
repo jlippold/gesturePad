@@ -2,14 +2,6 @@
 
 <gesturePad>
 
-	<settings>
-
-		<sounds>false</sounds>
-
-		<SleepThreshold>120000</SleepThreshold>
-
-	</settings>
-
 	<rooms>
 
 		<room roomshortname='LR'>

@@ -15,9 +15,6 @@
 
 }
 
--	(void) getSetting:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+-	(void) getSetting:(CDVInvokedUrlCommand*)command;
 -	(void) setSetting:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
--	(NSString*) getSettingFromBundle:(NSString*)settingName;
-
-
 @end

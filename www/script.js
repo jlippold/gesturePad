@@ -18,7 +18,7 @@ function loadSettings() {
 		tvByDate: false
 	}
 
-	window.plugins.applicationPreferences.get('sounds', function(result) {
+/*	window.plugins.applicationPreferences.get('sounds', function(result) {
         if ( result == 1 ) {
         	settings.sounds = true;
     	}
@@ -39,8 +39,26 @@ function loadSettings() {
         if ( result == 1 ) {
         	settings.tvByDate = true;
     	}
+	});*/
+
+	window.plugins.applicationPreferences.get('All', function(result) {
+		var d = jQuery.parseJSON(result);
+	 	$.each(d, function(k, v) { 
+	 		console.log(k + " : " + v);
+		});
+
 	});
 
+	var roomXML = "";
+
+/*	for (var i=1;i<=5;i++) {
+		window.plugins.applicationPreferences.get('S' + i  + '_enabled', function(enabled) {
+	        if ( enabled == 1 ) {
+	        	
+	    	}
+		});
+	}*/
+	
 
 	var roomname = "";
 	var roomshortname = "";
