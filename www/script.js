@@ -24,6 +24,8 @@ function getSettingsObject() {
 	//load from IOS prefs
 	if ( isPhoneGap() ) {
 		window.plugins.applicationPreferences.get('All', function(result) {
+				var hasRoom = false;
+				
 				var d = jQuery.parseJSON(result);
 
 				//general settings
@@ -57,6 +59,7 @@ function getSettingsObject() {
 		    	for (var i=1;i<=5;i++) {
 		    		if ( d["S" + i + "_enabled"] ) {
 		    			if ( d["S" + i + "_enabled"] == 1 ) {
+		    				hasRoom = true;
 		    				var room = {
 		    					name: "Room " + i,
 		    					index: (i-1),
@@ -97,6 +100,12 @@ function getSettingsObject() {
 		    			}
 		    			
 		    		}
+		    	}
+
+		    	if (hasRoom == false) {
+					navigator.notification.alert("No Servers are defined. Go to settings to add a server.", function() {
+						executeObjC("http://gesturepad/kill?do=it");
+					}, "gesturePad");
 		    	}
 
 		});
@@ -830,11 +839,6 @@ function onDeviceReady() {
 
 	loadSettings();
 
-	if ( settings.rooms.length == 0 ) {
-		doAlert("No Servers are defined, Go to settings > gesturePad to define");
-		return;
-	}
-
 	window.plugins.tapToScroll.initListener();
 
     window.addEventListener("statusTap", function() {
@@ -1020,7 +1024,6 @@ function SleepDevice(sleep) {
 }
 
 function executeObjC(url) {
-  return;
   var iframe = document.createElement("IFRAME");
   iframe.setAttribute("src", url);
   document.documentElement.appendChild(iframe);
@@ -1893,10 +1896,8 @@ function updateStatus() {
 	
 	if (room.IR == true) {
 		$("#overallVolumeContainer").show();
-		$("#btnPower").attr("style", "");
 	} else {
 		$("#overallVolumeContainer").hide();
-		$("#btnPower").attr("style", "visibility: hidden;");
 	}
 
 	if ( (getItem("deviceIndex") != settings.deviceIndex) || (getItem("roomIndex") != settings.roomIndex) ) {
@@ -2655,6 +2656,7 @@ function getItem(key, defaultVal) {
 }
 
 function reloadPage() {
+	console.log("reloading");
 	splash("show");
 	window.location.reload();
 }
