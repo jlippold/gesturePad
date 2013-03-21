@@ -1,4 +1,4 @@
-var xml;
+var xml, settings;
 var appendOncetoQueryString = "";
 var navigator, npTimer, inputTimer, clickEventType, slideTimer;
 var guide =  new Object();
@@ -9,6 +9,7 @@ var scrollstop = null;
 function loadSettings() {
 	
 	//defaults
+	settings = null;
 	settings = {
 		sounds: false,
 		vibrate: false,
@@ -107,17 +108,8 @@ function loadSettings() {
 		settings = {"sounds":false,"vibrate":false,"SleepThreshold":60000,"MBServiceTimeout":120000,"moviesByDate":true,"tvByDate":false,"configURL":"mbegdt.xml","roomIndex":0,"deviceIndex":0,"rooms":[{"name":"Living Room","index":0,"DTV":"192.168.1.149","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.105","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.149","Port":8080,"timeshift":false,"index":1}]},{"name":"Bedroom","index":1,"DTV":"192.168.1.123","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.144","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.123","Port":8080,"timeshift":false,"index":1}]},{"name":"Kitchen","index":2,"DTV":"192.168.1.107","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.129","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.107","Port":8080,"timeshift":false,"index":1}]}]}
 	}
 	
-
-	var roomshortname = getItem("roomshortname", "Room 1");
-	var shortname = getItem("shortname", "Movies");
-	
-	if ( settings.rooms.length == 0 ) {
-		doAlert("No Servers are defined, Go to settings > gesturePad to define");
-		return;
-	}
-
-	settings.roomIndex = getItem("roomIndex", 0);
 	settings.deviceIndex = getItem("deviceIndex", 0);
+	settings.roomIndex = getItem("roomIndex", 0);
 
 	if ( isNumeric( settings.roomIndex ) == false || isNumeric( settings.deviceIndex ) == false) {
 		setItem("roomIndex", 0);
@@ -126,22 +118,12 @@ function loadSettings() {
 		settings.deviceIndex = 0;
 	}
 
-	if ( settings.roomIndex > settings.rooms.length ) {
-		settings.roomIndex = 0;
-		setItem("roomIndex", 0);
-	}
-
-	if ( settings.deviceIndex > settings.rooms[ settings.roomIndex ].devices.length ) {
-		settings.deviceIndex = 0;
-		setItem("deviceIndex", 0);
-	} 
-
 	//load channels for DTV, if defined in settings
  	if ( hasDirecTV() ) {
  		loadChannelList();
  	}
 
-	setItem("configURL", "")
+	setItem("configURL", "");
 	if ( getItem("configURL", "") != settings.configURL ) {
 		loadXML();
 	}
@@ -700,11 +682,13 @@ function onDeviceReady() {
 	$("#VolumeSliderSeek").bind("touchend", function(event) {  
 		if ( $("#VolumeContainer").attr("data-sendval") != "0" ) {
 			doSlideEvent();
+		} else {
+			resetVolumeSlider();
 		}
 	})
 
 	$("#seekbarContainer").bind("touchmove", function(event) {  
-			clearSleepTimer()
+			clearSleepTimer();
 			clearTimeout(slideTimer);
 			if ( getCurrentDevice().shortname == "MCE" ) {
 				event.preventDefault();
@@ -875,6 +859,11 @@ function onDeviceReady() {
 	})
 
 	loadSettings();
+
+	if ( settings.rooms.length == 0 ) {
+		doAlert("No Servers are defined, Go to settings > gesturePad to define");
+		return;
+	}
 
  	npTimer = setInterval(function() {
       nowPlaying()
@@ -1637,7 +1626,7 @@ function ShowItems(tr) {
 	}
 
 	MBUrl += "library/?lightData=1&Id=" + $(tr).attr("data-guid");
-	console.log(MBUrl)
+
 	getJsonFromCache(MBUrl, function(d) {
 		if (d == null) {
 			//get from server
@@ -1742,9 +1731,10 @@ function hideFilter() {
 
 
 function onResume() {
-	clearNowPlaying()
-	getRoomStatus()
+	loadSettings();
+	getRoomStatus();
 	SleepDevice(false);
+	nowPlaying();
 
  	npTimer = setInterval(function() {
       nowPlaying()
@@ -1770,7 +1760,6 @@ function doResize() {
 	$("#gestures_canvas").attr("width", w)
 	$("#gestures_canvas").height(h)
 	$("#gestures_canvas").width(w)
-
 
 	resetVolumeSlider();
 	resetNPSeek();
@@ -1918,16 +1907,25 @@ function updateStatus() {
 	$("#txtDevice").text( device.name );
 	$("#txtRoom").text( room.name );
 	
-	if (room.IR) {
-		$("#overallVolumeContainer").show()
-		$("#btnPower").css("visibiility", "visible")
+	if (room.IR == true) {
+		$("#overallVolumeContainer").show();
+		$("#btnPower").attr("style", "");
 	} else {
-		$("#overallVolumeContainer").hide()
-		$("#btnPower").css("visibiility", "hidden")
+		$("#overallVolumeContainer").hide();
+		$("#btnPower").attr("style", "visibility: hidden;");
 	}
-	setTimeout(function () {
-    	nowPlaying()
-	}, 500);
+
+	if ( (getItem("deviceIndex") != settings.deviceIndex) || (getItem("roomIndex") != settings.roomIndex) ) {
+		clearNowPlaying();	
+		setTimeout(function () {
+	    	nowPlaying()
+		}, 1500);
+	}
+
+	setItem("deviceIndex", settings.deviceIndex);
+	setItem("roomIndex", settings.roomIndex);
+
+
 }
 
 function hms2(totalSec) {
@@ -1951,6 +1949,9 @@ function clearNowPlaying() {
 	$("#timespanleft").text( "0:00" )
 	$("#timespanright").text( "- 0:00" );
 	$("#NowPlayingTitle").text("");
+	$("#NowPlayingTitle").removeClass("doMarquee");
+    $("#timeseek").attr("style", "left: 0px");
+    $("#timebar").attr("style", "width: 0%");
 }
 
 function nowPlaying() {
@@ -1978,17 +1979,25 @@ function nowPlaying() {
                		
 					if ( j.Data.PlayingControllers.length >= 1 ) {
 
+						clearNowPlaying();
+
 						var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
 						var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
                    		var perc = offset / duration;
 
 	    				$("#timebar").attr("style", "width: " + Math.floor(perc*100) + "%");
 	    				$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
-	    				$("#timespanleft").text( hms2(offset) )
+	    				$("#timespanleft").text( hms2(offset) );
 	    				$("#timespanright").text( "- " + hms2(duration - offset) );
 	    				$("#timespanright").attr("data-duration", j.Data.PlayingControllers[0].CurrentFileDuration.Ticks );
 	    				$("#timespanright").attr("data-controller", j.Data.PlayingControllers[0].ControllerName );
   						$("#NowPlayingTitle").text( j.Data.PlayingControllers[0].PlayableItems[0].DisplayName );
+
+						if ( parseInt($('#NowPlayingTitle')[0].scrollWidth) > parseInt($('#NowPlayingTitle').width())) {
+						    $("#NowPlayingTitle").attr("class", "doMarquee");
+						} else {
+							$("#NowPlayingTitle").removeClass("doMarquee");
+						}
 
 	 					var currentID = j.Data.PlayingControllers[0].PlayableItems[0].CurrentMediaIndex;
 	 					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[currentID];
@@ -2026,6 +2035,8 @@ function nowPlaying() {
 
 
 	 					}
+
+
 					
 						if (j.Data.PlayingControllers[0].IsPaused == true ) {
 							$("#btnPlay").removeClass("playing");
@@ -2039,7 +2050,7 @@ function nowPlaying() {
 						
 	         }, 
 	         error: function() {
-	         	
+	         	clearNowPlaying();
 	         }
              
         });
@@ -2148,7 +2159,9 @@ function nowPlaying() {
 	                });
 					
 					if ( parseInt($('#NowPlayingTitle')[0].scrollWidth) > parseInt($('#NowPlayingTitle').width())) {
-					    $("#NowPlayingTitle").attr("class", "doMarquee")
+					    $("#NowPlayingTitle").attr("class", "doMarquee");
+					} else {
+						$("#NowPlayingTitle").removeClass("doMarquee");
 					}
                    
                 }
@@ -2194,7 +2207,6 @@ function executeGestureByCommandName(command) {
 
 function doEvent(gesture, actions, overRideDevice)  {
 	window.scrollTo(0,0);
-    
     
     if ( isWifi() == false ) {
         doAlert("You are not on Wifi. Connect to Wifi and try again")
@@ -2256,7 +2268,10 @@ function doEvent(gesture, actions, overRideDevice)  {
 		playBeep();
 		
 		//show pending notification
-		$(message).find("span.t").text( $(actionNodes).parent().find("name:first").text() + ' - ' + $(message).attr("data-gest") );
+
+		var gestureName = $(actionNodes).parent().find("name:first").text();
+		console.log(gestureName);
+		$(message).find("span.t").text( gestureName + ' - ' + $(message).attr("data-gest") );
 		$(message).find("span.i").text('🔄');
 		$(message).show()
 
@@ -2265,7 +2280,11 @@ function doEvent(gesture, actions, overRideDevice)  {
 			width: '100%',
 		}, 250, function() {
 			var totalActions = ($(actionNodes).size()-1)
-					
+			
+			if (gestureName == "Stop") {
+				clearNowPlaying();	
+			}
+
 			//Trigger ajax events
 			$(actionNodes).each(function(i) {
 				var thisnode = $(actionNodes);
