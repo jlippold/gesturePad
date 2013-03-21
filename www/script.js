@@ -6,11 +6,10 @@ var workerTimer = null;
 var sleepTimer = null;
 var scrollstop = null;
 
-function loadSettings() {
-	
-	//defaults
-	settings = null;
-	settings = {
+
+function getSettingsObject() {
+
+	var settingsObj = {
 		sounds: false,
 		vibrate: false,
 		SleepThreshold: 60000,
@@ -21,7 +20,7 @@ function loadSettings() {
 		roomIndex: 0,
 		deviceIndex: 0,
 		rooms: []
-	}
+	};
 
 	//load from IOS prefs
 	if ( isPhoneGap() ) {
@@ -30,27 +29,27 @@ function loadSettings() {
 
 				//general settings
 		        if ( d.sounds == 1 ) {
-		        	settings.sounds = true;
+		        	settingsObj.sounds = true;
 		    	}
 		        if ( d.vibrate == 1 ) {
-		        	settings.vibrate = true;
+		        	settingsObj.vibrate = true;
 		    	}
 		        if ( d.dateMovies == 1 ) {
-		        	settings.moviesByDate = true;
+		        	settingsObj.moviesByDate = true;
 		    	}
 		        if ( d.dateTV == 1 ) {
-		        	settings.tvByDate = true;
+		        	settingsObj.tvByDate = true;
 		    	}
 
 		    	//gesture XML
 		        if ( d.config_source == 1 ) {
-		        	settings.configURL = "mbeg.xml";
+		        	settingsObj.configURL = "mbeg.xml";
 		    	} else {
 					if ( d.config_source == 2 ) {
-			        	settings.configURL = "mbegdt.xml";
+			        	settingsObj.configURL = "mbegdt.xml";
 			    	} else {
 						if ( d.config_source == 3 ) {
-				        	settings.configURL = d.custom_config;
+				        	settingsObj.configURL = d.custom_config;
 				    	}
 			    	}
 		    	}
@@ -95,7 +94,7 @@ function loadSettings() {
 		    					room.IR = true;
 		    				}
 		    				
-		    				settings.rooms.push(room);
+		    				settingsObj.rooms.push(room);
 		    			}
 		    			
 		    		}
@@ -105,8 +104,16 @@ function loadSettings() {
 		
 	} else {
 		//push in a fake room, since it's a reg browser, for debugging
-		settings = {"sounds":false,"vibrate":false,"SleepThreshold":60000,"MBServiceTimeout":120000,"moviesByDate":true,"tvByDate":false,"configURL":"mbegdt.xml","roomIndex":0,"deviceIndex":0,"rooms":[{"name":"Living Room","index":0,"DTV":"192.168.1.149","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.105","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.149","Port":8080,"timeshift":false,"index":1}]},{"name":"Bedroom","index":1,"DTV":"192.168.1.123","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.144","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.123","Port":8080,"timeshift":false,"index":1}]},{"name":"Kitchen","index":2,"DTV":"192.168.1.107","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.129","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.107","Port":8080,"timeshift":false,"index":1}]}]}
+		settingsObj = {"sounds":false,"vibrate":false,"SleepThreshold":60000,"MBServiceTimeout":120000,"moviesByDate":true,"tvByDate":false,"configURL":"mbegdt.xml","roomIndex":0,"deviceIndex":0,"rooms":[{"name":"Living Room","index":0,"DTV":"192.168.1.149","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.105","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.149","Port":8080,"timeshift":false,"index":1}]},{"name":"Bedroom","index":1,"DTV":"192.168.1.123","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.144","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.123","Port":8080,"timeshift":false,"index":1}]},{"name":"Kitchen","index":2,"DTV":"192.168.1.107","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.129","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.107","Port":8080,"timeshift":false,"index":1}]}]}
 	}
+
+	return settingsObj;
+}
+
+function loadSettings() {
+	
+	//defaults
+	settings = getSettingsObject();
 	
 	settings.deviceIndex = getItem("deviceIndex", 0);
 	settings.roomIndex = getItem("roomIndex", 0);
@@ -456,7 +463,7 @@ function onDeviceReady() {
 		    checkScrollOverflow()
 			
 			//scroll to current channel
-			var scrollToDiv = 0
+			var scrollToDiv = 0;
 			if ( $("#ScrollToMe").size() > 0 ) {
 				scrollToDiv = $("#ScrollToMe").position().top - ($("#card").height()/2) + 50 ;
 			}
@@ -1730,8 +1737,13 @@ function hideFilter() {
 }
 
 
+function checkSettingsForUpdate() {
+	if (settings !== getSettingsObject() ) {
+		reloadPage()
+	}
+}
 function onResume() {
-	loadSettings();
+	checkSettingsForUpdate();
 	getRoomStatus();
 	SleepDevice(false);
 	nowPlaying();
@@ -1917,10 +1929,10 @@ function updateStatus() {
 
 	if ( (getItem("deviceIndex") != settings.deviceIndex) || (getItem("roomIndex") != settings.roomIndex) ) {
 		clearNowPlaying();	
-		setTimeout(function () {
-	    	nowPlaying()
-		}, 1500);
 	}
+	setTimeout(function () {
+    	nowPlaying()
+	}, 1500);
 
 	setItem("deviceIndex", settings.deviceIndex);
 	setItem("roomIndex", settings.roomIndex);
@@ -1979,7 +1991,7 @@ function nowPlaying() {
                		
 					if ( j.Data.PlayingControllers.length >= 1 ) {
 
-						clearNowPlaying();
+						
 
 						var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
 						var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
@@ -2024,19 +2036,15 @@ function nowPlaying() {
 									};
 									img.src = r.url;
 								} else {
-									console.log("using Cached: " + r.url.substring(0, 100) );
 									$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
 									$("#bgPic").attr("class", "");
 									$("#bgPic").attr("data-id", guid);
-									//$("#bgPic").html("<img src='" + r.url + "' >")
 								}
 							});
 							
 
 
 	 					}
-
-
 					
 						if (j.Data.PlayingControllers[0].IsPaused == true ) {
 							$("#btnPlay").removeClass("playing");
@@ -2180,7 +2188,6 @@ function clearCallers(force) {
 }
 
 function executeGestureByCommandName(command) {
-	console.log(command)
 	var room = getCurrentRoom();
 	var device = getCurrentDevice();	
 
@@ -2280,10 +2287,6 @@ function doEvent(gesture, actions, overRideDevice)  {
 			width: '100%',
 		}, 250, function() {
 			var totalActions = ($(actionNodes).size()-1)
-			
-			if (gestureName == "Stop") {
-				clearNowPlaying();	
-			}
 
 			//Trigger ajax events
 			$(actionNodes).each(function(i) {
@@ -2320,6 +2323,11 @@ function doEvent(gesture, actions, overRideDevice)  {
 								$(message).hide().remove();
 							})
 						}
+
+						if (gestureName == "Stop" || gestureName.indexOf("channel") > -1 ) {
+							clearNowPlaying();	
+						}
+
 						setTimeout(function() {
 							nowPlaying();	
 						}, 1500)
@@ -2615,6 +2623,7 @@ function changeChannel(major) {
 	var device = getCurrentDevice();
 	// change channel
     $.getJSON("http://" + device.IPAddress + ":" + device.Port + '/tv/tune?major=' + major, function() {
+    	clearNowPlaying();
 		// update whats on
 		setTimeout(function() {
 			nowPlaying();
@@ -2635,6 +2644,10 @@ function getItem(key, defaultVal) {
 			return "";
 		}
 	}
+}
+
+function reloadPage() {
+	window.location.reload();
 }
 
 function isPhoneGap() {

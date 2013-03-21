@@ -419,6 +419,7 @@ div.searchContainer div.right {
 	top: 40px;
 	height: 48px;
 	z-index: 2;
+	border-bottom: 1px solid black;
 }
 div.searchContainer {
 	width: 92%;
