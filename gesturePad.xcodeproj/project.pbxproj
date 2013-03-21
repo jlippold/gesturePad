@@ -61,6 +61,7 @@
 		85F78A201676DBD80057A296 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85F78A1F1676DBD80057A296 /* Default@2x.png */; };
 		85FCE7FE16F76CE400E14785 /* applicationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FCE7FD16F76CE400E14785 /* applicationPreferences.m */; };
 		85FCE80416F7775800E14785 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85FCE80316F7775800E14785 /* Settings.bundle */; };
+		85FCE80716FB43D100E14785 /* TapToScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FCE80616FB43D100E14785 /* TapToScroll.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +145,8 @@
 		85FCE7FC16F76CE400E14785 /* applicationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = applicationPreferences.h; sourceTree = "<group>"; };
 		85FCE7FD16F76CE400E14785 /* applicationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = applicationPreferences.m; sourceTree = "<group>"; };
 		85FCE80316F7775800E14785 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = gesturePad/Settings.bundle; sourceTree = "<group>"; };
+		85FCE80516FB43D100E14785 /* TapToScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapToScroll.h; sourceTree = "<group>"; };
+		85FCE80616FB43D100E14785 /* TapToScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapToScroll.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* gesturePad-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "gesturePad-Info.plist"; path = "../gesturePad-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -293,6 +296,8 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				85FCE80516FB43D100E14785 /* TapToScroll.h */,
+				85FCE80616FB43D100E14785 /* TapToScroll.m */,
 				85FCE7FC16F76CE400E14785 /* applicationPreferences.h */,
 				85FCE7FD16F76CE400E14785 /* applicationPreferences.m */,
 				85699E8A16C8226400DA7C25 /* ActionSheet.h */,
@@ -492,6 +497,7 @@
 				8572E6CC16C6D87D00759910 /* ChildBrowserViewController.m in Sources */,
 				85699E8C16C8226400DA7C25 /* ActionSheet.m in Sources */,
 				85FCE7FE16F76CE400E14785 /* applicationPreferences.m in Sources */,
+				85FCE80716FB43D100E14785 /* TapToScroll.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -34,6 +34,8 @@
 		<string>applicationPreferences</string>
 		<key>ChildBrowserCommand</key>
 		<string>ChildBrowserCommand</string>
+		<key>TapToScroll</key>
+		<string>TapToScroll</string>
 		<key>Globalization</key>
 		<string>CDVGlobalization</string>
 		<key>Device</key>

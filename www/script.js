@@ -6,7 +6,6 @@ var workerTimer = null;
 var sleepTimer = null;
 var scrollstop = null;
 
-
 function getSettingsObject() {
 
 	var settingsObj = {
@@ -148,6 +147,7 @@ function PhoneGapReady() {
     document.addEventListener("pause", onBackground, false);
 	window.onorientationchange = detectOrientation;
     window.onresize = detectOrientation;
+
     onDeviceReady();
 
 	window.onerror = function(msg, url, line) {
@@ -834,13 +834,6 @@ function onDeviceReady() {
 	});
 	
 
-	$("#header").bind(clickEventType, function() {
-		//scrolltop
-		if ( $("#backFace table").size() > 0 ) {
-			$("#backFace").scrollTop(0);
-		}
-	});
-
 	$("#searchform").bind("submit", function(event) {
 		event.preventDefault();
 
@@ -871,6 +864,13 @@ function onDeviceReady() {
 		doAlert("No Servers are defined, Go to settings > gesturePad to define");
 		return;
 	}
+
+	window.plugins.tapToScroll.initListener();
+    window.addEventListener("statusTap", function() {
+		if ( $("#backFace table").size() > 0 ) {
+			$("#backFace").scrollTop(0);
+		}
+    });
 
  	npTimer = setInterval(function() {
       nowPlaying()
