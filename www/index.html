@@ -51,17 +51,10 @@
 
 						<div class="left" id="btnConfig" ></div>
 						<div class="right" id="btnTransfer"></div>
-
 					</div>
-
 				</div>
 				<div class="gradientBorder bottom" style="top: 79px"></div>
 				<div id="bgPic" class="noart">
-					<form style="" id="frmSettings" class="frmSettings">
-						<input type="text" id="gestureXML" value="" placeholder="gesturePad.xml Web Location" /> <br />
-						<input type="text" id="channelXML" value="" placeholder="channelList.xml Web Location" />
-						<a href="#" class="redButton" id="saveSettings">Save Changes</a>
-					</form>
 				</div>
 				<div id="gestureCallback">
 
@@ -88,11 +81,13 @@
 			<div class="five control" id="btnForward" ></div>
 			<div class="five control" id="btnRoom" ></div>
 		</div>
-		<div class="volume control" id="btnMute" ></div>
-		<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
-			<div class="slider" id="VolumeSlider" >
-				<div class="sliderh" id="VolumeSliderh" ></div>        
-				<div class="seekto" id="VolumeSliderSeek" ></div>
+		<div id="overallVolumeContainer">
+			<div class="volume control" id="btnMute" ></div>
+			<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
+				<div class="slider" id="VolumeSlider" >
+					<div class="sliderh" id="VolumeSliderh" ></div>        
+					<div class="seekto" id="VolumeSliderSeek" ></div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -107,12 +102,6 @@
 	</div>
 		
 
-	<form style="display:none;" id="frmNumPad" onsubmit="" >
-		<input type="tel" id="NumPad" value="">
-		<input type="submit" value="OK" />  
-	</form>
-
-
 	<div style="display:none" id="tmpSpinner">
 	  <div class="spincontainer">
 	    <div class="spinner">
@@ -121,6 +110,7 @@
 	  </div>
 	</div>
 	<div style="display:none" id='Filter'>
+		<div class="gradientBorder top"></div>
 		<div class="searchContainer">
 			<form id="searchform" class="searchform">
 				<span class="icon-search"></span>
@@ -129,7 +119,10 @@
 				</label>
 			</form>
 		</div>
+		<div class="gradientBorder bottom" style="margin-top: 19px"></div>
 	</div>
+
+	<p id="hud">2X</p>
 
   
 </body>

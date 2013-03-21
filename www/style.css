@@ -24,6 +24,7 @@ div.gradientBorder {
 	height: 1px;
 	position: relative;
 	clear: both;
+	-webkit-backface-visibility: hidden;
 }
 div.gradientBorder.top {
 	top: 0px;
@@ -399,12 +400,11 @@ div.searchContainer div.right {
 	transform: rotateY(180deg);
 	box-sizing: border-box;
 	width: 100%;
-	padding: 72px 0px;
-	background: -moz-radial-gradient(circle , #767777, #394147);
-	background:  -webkit-radial-gradient(50% 0%, circle , #767777, #282828);
-		overflow: auto;
-		overflow-x: hidden;
-	
+	padding: 48px 0px;
+	overflow: auto;
+	overflow-x: hidden;
+	background: url('img/tablebg.png');
+	background-position-y: 48px;
 	border-collapse: collapse;
 }
 
@@ -413,12 +413,11 @@ div.searchContainer div.right {
 }
 
 #Filter {
-	background: rgba(0,0,0,0.75);
-	border-bottom: 1px solid black;
+	background: -webkit-linear-gradient(top, rgba(30,30,30,0.9) 0%,rgba(0,0,0,0.9) 40%,rgba(0,0,0,0.9) 60%,rgba(30,30,30,0.9) 100%);
 	position: fixed;
 	width: 100%;
 	top: 40px;
-	height: 70px;
+	height: 48px;
 	z-index: 2;
 }
 div.searchContainer {
@@ -466,9 +465,11 @@ table.listing tr td {
 	padding: 5px 10px;
 	font-weight: bold;
 	height: 30px;
-	font-size: 13px;
+	font-size: 14px;
 	text-overflow: ellipsis;
 	line-height: 26px;
+	text-shadow: 2px 2px 2px #000;
+	font-family: "Helvetica Neue", "Helvetica";
 }
 
 table.listing tr td span {
@@ -503,17 +504,16 @@ table.listing tr td div {
 
 
 table.listing tr.head td {
-	height: 14px;
-	line-height: 14px;
-	font-size: 12px;
+	height: 18px;
+	line-height: 18px;
+	font-size: 14px;
 	text-align: center;
+	background-image: -moz-linear-gradient(top, rgba(133, 133, 133, 1), rgba(0, 0, 0, 0.699219));
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(
-			rgba(133, 133, 133, 0.699219)), color-stop(0.03, 
-			rgba(99, 99, 99, 0.699219)), color-stop(0.5, 
-			rgba(32, 32, 32, 0.699219)), color-stop(0.51, 
-			rgba(0, 0, 0, 0.699219)), color-stop(0.97, 
-			rgba(0, 0, 0, 0.699219)), to(
-			rgba(38, 38, 38, 0.699219)));
+			rgba(32, 32, 32, 1)), to(
+			rgba(5, 5, 5, 1)));
+	text-shadow: 2px 2px 2px #000;
+	font-family: "Helvetica Neue", "Helvetica";
 }
 
 table.listing tr:first-child td {
@@ -531,8 +531,6 @@ table.listing tr:active td {
 table.listing tr > td:first-child {
 	border-left: none !important;
 }
-
-
 table.listing tr > td:last-child {
 	border-right: none !important;
 }
@@ -596,6 +594,7 @@ div.message {
     margin: auto;
     opacity: 0;
 	overflow:hidden;
+	-webkit-backface-visibility: hidden;
 
 }
 
@@ -907,6 +906,24 @@ div.boxLoader {
 	text-align: center;
 }
 
+p.boxLoading {
+	margin-top: -18px;
+}
+
+#hud {
+	position: absolute;
+	top: 120px;
+	font-size: 6em;
+	width: 100%;
+	text-shadow: 2px 2px 2px #000;
+	font-family: "Helvetica Neue", "Helvetica";
+	text-align: center;
+	z-index: 10;
+	color: white;
+	display: none;
+	font-weight: bold;
+}
+
 img.smallBox {
 	width: 60px;
 	max-width: 60px;
@@ -915,6 +932,28 @@ img.smallBox {
 	float: left;
 	border-radius: 5px;
 	-webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), to(rgba(255,255,255,0.2)));
+}
+
+div.channelContainer {
+	width: 57px;
+	height: 57px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(
+			rgba(133, 133, 133, 0.699219)), color-stop(0.03,
+			rgba(99, 99, 99, 0.699219)), color-stop(0.5,
+			rgba(32, 32, 32, 0.699219)), color-stop(0.51,
+			rgba(0, 0, 0, 0.699219)), color-stop(0.97,
+			rgba(0, 0, 0, 0.699219)), to(
+			rgba(38, 38, 38, 0.699219)));
+}
+div.smallChannel {
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	width: 49px;
+	height: 57px;
+	margin-left: 4px;
 }
 
 #boxCoverBack {
@@ -928,5 +967,9 @@ img.smallBox {
 	line-height: 140px;
 	text-align: center;
 	z-index: 1;
+}
+
+span.sSpan {
+	display: inline !important;
 }
 
