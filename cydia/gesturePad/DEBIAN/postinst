@@ -1,4 +1,8 @@
 #!/bin/bash
 chown -R mobile:mobile /var/mobile/Applications/gesturePad.app
 chmod 0755 /var/mobile/Applications/gesturePad/gesturePad.app/gesturePad
+mkdir /var/mobile/Applications/gesturePad/Documents
+mkdir /var/mobile/Applications/gesturePad/Library
+mkdir /var/mobile/Applications/gesturePad/tmp
+killall -HUP SpringBoard
 exit 0
