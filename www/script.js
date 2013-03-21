@@ -1920,8 +1920,8 @@ function updateStatus() {
 	var device = getCurrentDevice();
 	var room = getCurrentRoom();
 
-	//$("#txtDevice").text( device.name );
-	//$("#txtRoom").text( room.name );
+	$("#txtDevice").text( device.name );
+	$("#txtRoom").text( room.name );
 	
 	if (room.IR == true) {
 		$("#overallVolumeContainer").show();

@@ -15,8 +15,10 @@
 	<script type="text/javascript" charset="utf-8" src="cordova-2.2.0.js"></script>
 	<script type="text/javascript" charset="utf-8" src="ChildBrowser.js"></script>
 	<script type="text/javascript" charset="utf-8" src="ActionSheet.js"></script>
-	<script type="text/javascript" src="gestures.js"></script>
-	<script type="text/javascript" src="script.js?r=1"></script>
+	<script type="text/javascript" charset="utf-8" src="taptoscroll.js"></script>
+	<script type="text/javascript" charset="utf-8" src="applicationPreferences.js"></script>
+	<script type="text/javascript" src="gestures.js?r=1"></script>
+	<script type="text/javascript" src="script.js?r=5"></script>
 
 	<link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" href="tablet.css" />
@@ -26,12 +28,14 @@
 <body onload="onBodyLoad()">
 
 	<div id="top">
+		<div class="gradientBorder top"></div>
 		<div class="left control" id="btnCommands"></div>
 		<div class="head" id="header">
 			<p class="bold" id="txtRoom">&nbsp;</p>
 			<p class="grey" id="txtDevice">&nbsp;</p>
 		</div>
 		<div class="right control" id="btnTitles"></div>
+		<div class="gradientBorder bottom"></div>
 	</div>
 
 	<div id="container">
@@ -49,15 +53,10 @@
 
 						<div class="left" id="btnConfig" ></div>
 						<div class="right" id="btnTransfer"></div>
-
 					</div>
 				</div>
+				<div class="gradientBorder bottom" style="top: 79px"></div>
 				<div id="bgPic" class="noart">
-					<form style="" id="frmSettings" class="frmSettings">
-						<input type="text" id="gestureXML" value="" placeholder="gesturePad.xml Web Location" /> <br />
-						<input type="text" id="channelXML" value="" placeholder="channelList.xml Web Location" />
-						<a href="#" class="redButton" id="saveSettings">Save Changes</a>
-					</form>
 				</div>
 				<div id="gestureCallback">
 
@@ -73,34 +72,37 @@
 	
 
 	<div id="bottom">
-		<div class="gradientBorder top" style="margin-bottom: 10px;"></div>
-		<div class="grabber">
-			<span class="bars"></span>
-		</div>
-		<div class="five control" id="btnPower" ></div>
-		<div class="five control" id="btnRewind" ></div>
-		<div class="five control" id="btnPlay" ></div>
-		<div class="five control" id="btnForward" ></div>
-		<div class="five control" id="btnRoom" ></div>
-		<div style="clear:both">
-
-		<div class="volume control" id="btnMute" ></div>
-		<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
-			
-			<div class="slider" id="VolumeSlider" >
-				<div class="sliderh" id="VolumeSliderh" ></div>        
-				<div class="seekto" id="VolumeSliderSeek" ></div>
+		<div id="bottomGrabber">
+			<div class="gradientBorder top" style="margin-bottom: 10px;"></div>
+			<div class="grabber">
+				<span class="bars"></span>
 			</div>
-
+			<div class="five control" id="btnPower" ></div>
+			<div class="five control" id="btnRewind" ></div>
+			<div class="five control" id="btnPlay" ></div>
+			<div class="five control" id="btnForward" ></div>
+			<div class="five control" id="btnRoom" ></div>
 		</div>
+		<div id="overallVolumeContainer">
+			<div class="volume control" id="btnMute" ></div>
+			<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
+				<div class="slider" id="VolumeSlider" >
+					<div class="sliderh" id="VolumeSliderh" ></div>        
+					<div class="seekto" id="VolumeSliderSeek" ></div>
+				</div>
+			</div>
 		</div>
 	</div>
 
-	<form style="display:none;" id="frmNumPad" onsubmit="" >
-		<input type="tel" id="NumPad" value="">
-		<input type="submit" value="OK" />  
-	</form>
-
+	<div id="browser">
+		<p id="bottomText"><span>&nbsp;</span></p>
+		<div id="boxCoverBack">&crarr;</div>
+		
+		<div id="boxCoverContainer">
+			<div id="covers"></div>
+		</div>
+	</div>
+		
 
 	<div style="display:none" id="tmpSpinner">
 	  <div class="spincontainer">
@@ -110,17 +112,19 @@
 	  </div>
 	</div>
 	<div style="display:none" id='Filter'>
+		<div class="gradientBorder top"></div>
 		<div class="searchContainer">
 			<form id="searchform" class="searchform">
 				<span class="icon-search"></span>
-				<label>
-					<input type="text" class="searcher" placeholder="Filter Items...">
-				</label>
+					<input id="searchbox" type="text" class="searcher" placeholder="Filter List">
+				<span class="icon-clear" id="searchClear" style="display: none;"></span>
 			</form>
-			
-			<div class="mce right emoji" id="btnSortDate">📅</div>
 		</div>
 	</div>
+
+	<p id="hud"></p>
+
+  
 </body>
 
 </html>
