@@ -168,7 +168,7 @@ function loadXML() {
           	setItem("configURL", settings.configURL) 
 		},
 		error: function() {
-			navigator.splashscreen.hide();
+			splash("hide");
 			doAlert("Error loading xml settings: " + xmlLoc );
 		}		
 	});
@@ -202,7 +202,7 @@ function onDeviceReady() {
 	
 	doResize();
 
-	clickEventType = ((document.ontouchstart!==null)?'click':'click'); //never inplemented custom tap
+	clickEventType = ((document.ontouchstart!==null)?'tap':'click'); //never inplemented custom tap
 
 	//event when scrolling ends to refresh dtv channels
 	$("#backFace").bind("scroll", function() {
@@ -372,37 +372,7 @@ function onDeviceReady() {
 
 	$("#bottomGrabber").bind("touchend",  function(e) {
 		setTimeout( function() {
-			var maxHeight = 140;
-			var position = parseInt($("#bottom").css("bottom"));
-			if (position > (maxHeight/3) ) { //more than 1/3 up push to top
-			    $("#bottom").animate({
-			       bottom: "140px"
-			    }, { duration: 200, queue: false });
-			    $("#browser").animate({
-			       bottom: "-1px"
-			    }, { duration: 200, queue: false, complete: function() {
-				    if ( ($("#covers").data("back") == "" || $("#covers").data("back") == undefined )  && ( $("#covers").data("loaded") == false || $("#covers").data("loaded") == undefined)  ) {
-				    	showBottomItems();
-					}
-			    }});
-
-			} else {
-			    $("#bottom").animate({
-			       bottom: "0px"
-			    }, { duration: 200, queue: false });
-			    $("#browser").animate({
-			       bottom: "-140px"
-			    }, { duration: 200, queue: false, complete: function() {
-			    	if ( ($("#covers").data("back") == "" || $("#covers").data("back") == undefined )   ) {
-		    			$("#covers").data("loaded", false);
-		    			$("#bottomText span").html("&nbsp;");
-		    			$("#covers").html("&nbsp;");
-
-			    	}
-			    }});
-
-
-			}
+			refreshBottomDrawer();
 		}, 100);
 	}); 
 
@@ -866,6 +836,7 @@ function onDeviceReady() {
 	}
 
 	window.plugins.tapToScroll.initListener();
+
     window.addEventListener("statusTap", function() {
 		if ( $("#backFace table").size() > 0 ) {
 			$("#backFace").scrollTop(0);
@@ -1738,7 +1709,8 @@ function hideFilter() {
 
 
 function checkSettingsForUpdate() {
-	if (settings !== getSettingsObject() ) {
+
+	if ( JSON.stringify(settings) !== JSON.stringify(getSettingsObject()) ) {
 		reloadPage()
 	}
 }
@@ -1928,6 +1900,10 @@ function updateStatus() {
 	}
 
 	if ( (getItem("deviceIndex") != settings.deviceIndex) || (getItem("roomIndex") != settings.roomIndex) ) {
+
+		if (getItem("deviceIndex") != settings.deviceIndex) {
+			updateBottomContents();
+		}
 		clearNowPlaying();	
 	}
 	setTimeout(function () {
@@ -2581,6 +2557,38 @@ function saveJsonToCache(MBUrl, d) {
 
 }
 
+function refreshBottomDrawer() {
+	var maxHeight = 140;
+	var position = parseInt($("#bottom").css("bottom"));
+	if (position > (maxHeight/3) ) { //more than 1/3 up push to top
+	    $("#bottom").animate({
+	       bottom: "140px"
+	    }, { duration: 200, queue: false });
+	    $("#browser").animate({
+	       bottom: "-1px"
+	    }, { duration: 200, queue: false, complete: function() {
+		    if ( ($("#covers").data("back") == "" || $("#covers").data("back") == undefined )  && ( $("#covers").data("loaded") == false || $("#covers").data("loaded") == undefined)  ) {
+		    	showBottomItems();
+			}
+	    }});
+
+	} else {
+	    $("#bottom").animate({
+	       bottom: "0px"
+	    }, { duration: 200, queue: false });
+	    $("#browser").animate({
+	       bottom: "-140px"
+	    }, { duration: 200, queue: false, complete: function() {
+	    	if ( ($("#covers").data("back") == "" || $("#covers").data("back") == undefined )   ) {
+    			$("#covers").data("loaded", false);
+    			$("#bottomText span").html("&nbsp;");
+    			$("#covers").html("&nbsp;");
+
+	    	}
+	    }});
+	}
+}
+
 function doAlert(msg) {
 	try {
 		navigator.notification.alert(msg, null, "gesturePad");
@@ -2647,6 +2655,7 @@ function getItem(key, defaultVal) {
 }
 
 function reloadPage() {
+	splash("show");
 	window.location.reload();
 }
 
@@ -2654,6 +2663,16 @@ function isPhoneGap() {
     return (cordova || PhoneGap || phonegap) 
     && /^file:\/{3}[^\/]/i.test(window.location.href) 
     && /ios|iphone|ipod|ipad|android/i.test(navigator.userAgent);
+}
+
+function updateBottomContents() {
+	$("#covers").data("back", "");
+	$("#covers").data("loaded", false);
+	$("#bottomText span").html("&nbsp;");
+	$("#covers").html("&nbsp;");
+
+	refreshBottomDrawer();
+	
 }
 
 function hasDirecTV() {
