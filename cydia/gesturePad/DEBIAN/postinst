@@ -1,4 +1,4 @@
 #!/bin/bash
-chown -R mobile:mobile /Applications/gesturePad.app
-chmod 0755 /Applications/gesturePad.app/gesturePad
+chown -R mobile:mobile /var/mobile/Applications/gesturePad.app
+chmod 0755 /var/mobile/Applications/gesturePad/gesturePad.app/gesturePad
 exit 0

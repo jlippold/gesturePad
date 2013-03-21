@@ -1,6 +1,7 @@
 # Xcode
 build/*
 cydia/gesturePad/Applications/*
+cydia/gesturePad/var/*
 *.pbxuser
 !default.pbxuser
 *.mode1v3
