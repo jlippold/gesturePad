@@ -648,7 +648,6 @@ function onDeviceReady() {
 			event.preventDefault();
 			clearTimeout(slideTimer);
 			clearSleepTimer()
-			//event.preventDefault();
 			var e = event.originalEvent;
 		    var touch = e.touches[0]; 
 
@@ -1920,9 +1919,11 @@ function updateStatus() {
 	$("#txtRoom").text( room.name );
 	
 	if (room.IR) {
-		$("#overallVolumeContainer, #btnPower").show()
+		$("#overallVolumeContainer").show()
+		$("#btnPower").css("visibiility", "visible")
 	} else {
-		$("#overallVolumeContainer, #btnPower").hide()
+		$("#overallVolumeContainer").hide()
+		$("#btnPower").css("visibiility", "hidden")
 	}
 	setTimeout(function () {
     	nowPlaying()

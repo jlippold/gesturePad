@@ -403,7 +403,7 @@ div.searchContainer div.right {
 	padding: 48px 0px;
 	overflow: auto;
 	overflow-x: hidden;
-	background: url('img/tablebg.png');
+	background: -webkit-radial-gradient(50% 0%, circle , #767777, #282828);
 	background-position-y: 48px;
 	border-collapse: collapse;
 }
@@ -465,10 +465,9 @@ table.listing tr td {
 	padding: 5px 10px;
 	font-weight: bold;
 	height: 30px;
-	font-size: 14px;
+	font-size: 12px;
 	text-overflow: ellipsis;
 	line-height: 26px;
-	text-shadow: 2px 2px 2px #000;
 	font-family: "Helvetica Neue", "Helvetica";
 }
 
@@ -510,8 +509,12 @@ table.listing tr.head td {
 	text-align: center;
 	background-image: -moz-linear-gradient(top, rgba(133, 133, 133, 1), rgba(0, 0, 0, 0.699219));
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(
-			rgba(32, 32, 32, 1)), to(
-			rgba(5, 5, 5, 1)));
+			rgba(133, 133, 133, 0.699219)), color-stop(0.03, 
+			rgba(99, 99, 99, 0.699219)), color-stop(0.5, 
+			rgba(32, 32, 32, 0.699219)), color-stop(0.51, 
+			rgba(0, 0, 0, 0.699219)), color-stop(0.97, 
+			rgba(0, 0, 0, 0.699219)), to(
+			rgba(38, 38, 38, 0.699219)));
 	text-shadow: 2px 2px 2px #000;
 	font-family: "Helvetica Neue", "Helvetica";
 }
