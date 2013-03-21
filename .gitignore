@@ -1,5 +1,6 @@
 # Xcode
 build/*
+cydia/*
 *.pbxuser
 !default.pbxuser
 *.mode1v3

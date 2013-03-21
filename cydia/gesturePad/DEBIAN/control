@@ -2,12 +2,12 @@ Author: treAson <shitburg@yahoo.com>
 Maintainer: treAson <shitburg@yahoo.com>
 Name: gesturePad
 Package: com.treason.gesturePad
-Depends: firmware (>= 4.0)
+Depends: firmware (>= 6.1)
 Section: Utilities
-Version: 1.1.6
+Version: 1.1.7
 Architecture: iphoneos-arm
 Description: HTTP to IR gateway
-Depiction: http://jed.bz
-Homepage: http://jed.bz
+Depiction: http://treason.github.com/gesturePad/
+Homepage: http://treason.github.com/gesturePad/
 Sponsor: treAson <shitburg@yahoo.com>>
 dev: treason

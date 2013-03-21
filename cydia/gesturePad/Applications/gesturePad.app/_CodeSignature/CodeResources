@@ -12,6 +12,10 @@
 		<data>
 		/JjoVIaovIBao+GcSbUR+J/uH80=
 		</data>
+		<key>Capture.bundle/controls_bg@2x~ipad.png</key>
+		<data>
+		WAxs/wl5r3Vdmfe+LEOoC35D3kw=
+		</data>
 		<key>Capture.bundle/controls_bg~ipad.png</key>
 		<data>
 		dXhIxrANYjO4ggr9DvL4LugtNtw=
@@ -23,6 +27,10 @@
 		<key>Capture.bundle/microphone@2x.png</key>
 		<data>
 		8wPpeqT7rFRPwKnLKeNLp3XDTvs=
+		</data>
+		<key>Capture.bundle/microphone@2x~ipad.png</key>
+		<data>
+		IIs7cGjL1SwLOj/hgHjz6FAmb1g=
 		</data>
 		<key>Capture.bundle/microphone~ipad.png</key>
 		<data>
@@ -36,6 +44,10 @@
 		<data>
 		c5mCMIk/dVEzWqpx5bhd7/+ShUw=
 		</data>
+		<key>Capture.bundle/record_button@2x~ipad.png</key>
+		<data>
+		63F6LZKIHrJuNCXGXZuIt0A5kv8=
+		</data>
 		<key>Capture.bundle/record_button~ipad.png</key>
 		<data>
 		HC/YPukmDtEt6OAQYxLdkxNyc7Y=
@@ -47,6 +59,10 @@
 		<key>Capture.bundle/recording_bg@2x.png</key>
 		<data>
 		iKckW54kjD4zsIDtHGJsxQzF1Wg=
+		</data>
+		<key>Capture.bundle/recording_bg@2x~ipad.png</key>
+		<data>
+		eWYnNM5t90TEdIlwhn+mO1uV0+w=
 		</data>
 		<key>Capture.bundle/recording_bg~ipad.png</key>
 		<data>
@@ -60,37 +76,137 @@
 		<data>
 		oPThgxKhZvW3158u1HLALLJKPeU=
 		</data>
+		<key>Capture.bundle/stop_button@2x~ipad.png</key>
+		<data>
+		tKI2Zkc7WAHZgX8uywAdRZ2zCtw=
+		</data>
 		<key>Capture.bundle/stop_button~ipad.png</key>
 		<data>
 		BwsYSepAdB0lzFaojBFNr2yMphI=
 		</data>
+		<key>ChildBrowser.bundle/arrow_left.png</key>
+		<data>
+		K8nkdB84CO1u1HxdEr+axlqxd5c=
+		</data>
+		<key>ChildBrowser.bundle/arrow_left@2x.png</key>
+		<data>
+		K8nkdB84CO1u1HxdEr+axlqxd5c=
+		</data>
+		<key>ChildBrowser.bundle/arrow_right.png</key>
+		<data>
+		864rNDk8UUrJtxBHF7jdwTCOME0=
+		</data>
+		<key>ChildBrowser.bundle/arrow_right@2x.png</key>
+		<data>
+		864rNDk8UUrJtxBHF7jdwTCOME0=
+		</data>
+		<key>ChildBrowser.bundle/but_refresh.png</key>
+		<data>
+		R451tbrJd3CjMQeDSsCTA6c6vAE=
+		</data>
+		<key>ChildBrowser.bundle/but_refresh@2x.png</key>
+		<data>
+		R451tbrJd3CjMQeDSsCTA6c6vAE=
+		</data>
+		<key>ChildBrowser.bundle/compass.png</key>
+		<data>
+		O9w70TqmG8Ay3R2bxnfvbu1NoIs=
+		</data>
+		<key>ChildBrowser.bundle/compass@2x.png</key>
+		<data>
+		O9w70TqmG8Ay3R2bxnfvbu1NoIs=
+		</data>
+		<key>ChildBrowserViewController.nib</key>
+		<data>
+		kHxibZSlWU7ibJWc+CLN9L2UIto=
+		</data>
 		<key>Cordova.plist</key>
 		<data>
-		HeqhrProu+/hu0gF28Q9mTvpsTM=
+		ItgmJ9RnEGIIuu3/DlXzElMkYFg=
+		</data>
+		<key>Default-568h@2x.png</key>
+		<data>
+		+XpzlHOkMp5B153PF+zUhY9UU/g=
+		</data>
+		<key>Default-568h@2x~iphone.png</key>
+		<data>
+		eR6RqIjcp1+9s4Lrz0fPO/uUm+w=
+		</data>
+		<key>Default-Landscape@2x~ipad.png</key>
+		<data>
+		GAYfzntU3eVjnD/d7hDzEHJLA7I=
+		</data>
+		<key>Default-Landscape~ipad.png</key>
+		<data>
+		F+iF/Wm6bDX3l52huwbymrblmOo=
+		</data>
+		<key>Default-Portrait@2x~ipad.png</key>
+		<data>
+		O5/oEZg57ERqPcM8M3XKKML+ur0=
+		</data>
+		<key>Default-Portrait~ipad.png</key>
+		<data>
+		jB5fZBRBXT0xo6kch9sDSiMZO1g=
 		</data>
 		<key>Default.png</key>
 		<data>
-		tg80ie8ocaJVt15/g6OfHJv9Mw0=
+		gN6xhm0N56TMOP9rvEU7eUA0C6o=
 		</data>
 		<key>Default@2x.png</key>
 		<data>
-		MqRJilkkqEwKzP5md+T3+n09TQM=
+		shBc5dcnk3gwqi8gtkzK4hbwRiA=
+		</data>
+		<key>Default@2x~iphone.png</key>
+		<data>
+		OlFxZi8onRpDg4MlbYC80Tjt0TY=
+		</data>
+		<key>Default~iphone.png</key>
+		<data>
+		XnJ0M3ZkNZuMXbfYVuEYuJfnv/A=
+		</data>
+		<key>Icon-72@2x.png</key>
+		<data>
+		uT7ew+Lp8B3Fegrmzq2QEQ8Veig=
+		</data>
+		<key>Icon-Small-50.png</key>
+		<data>
+		mZUVV00mEOS31r3yTqTcRFpaemY=
+		</data>
+		<key>Icon-Small-50@2x.png</key>
+		<data>
+		QlKuy7L9IxASUGtoyh0mnLo+W0o=
+		</data>
+		<key>Icon-Small.png</key>
+		<data>
+		WcvQHHqvpxOErledPIAfUbJQ/eI=
+		</data>
+		<key>Icon-Small@2x.png</key>
+		<data>
+		Su9y2NYZIHss/AhZ1YMzKL66yD8=
 		</data>
 		<key>MainViewController.nib</key>
 		<data>
-		HD0i6erkEl9pyfo5PfsE3pbxBXE=
+		55b3p5FciqAwyyXfuTcPY3S0Cpk=
 		</data>
 		<key>PkgInfo</key>
 		<data>
 		n57qDP4tZfLD1rCS43W0B4LQjzE=
 		</data>
+		<key>Settings.bundle/Root.plist</key>
+		<data>
+		bwohX9ck1fiRcMqbMw9k9Er9Bwc=
+		</data>
+		<key>Settings.bundle/en.lproj/Root.strings</key>
+		<data>
+		t4KY9Gh4uIiOv7VnHtRrKEuPRY8=
+		</data>
 		<key>de.lproj/Localizable.strings</key>
 		<data>
 		xAv8yP0OJZEefoquFT1xlyzHYNk=
 		</data>
-		<key>en.lproj/InfoPlist.strings</key>
+		<key>embedded.mobileprovision</key>
 		<data>
-		zmV6UqBSo6r1NOz798vd5O4zTBA=
+		BJX9T74yQbApZddTmfjEhXYdf8Y=
 		</data>
 		<key>en.lproj/Localizable.strings</key>
 		<data>
@@ -102,219 +218,955 @@
 		</data>
 		<key>icon-72.png</key>
 		<data>
-		+5X9Q1EwYIHOx/iqmzssDv4p1eE=
+		0FDa5ZUdAXyWP/L+vIJMZZvC+AE=
 		</data>
 		<key>icon.png</key>
 		<data>
-		ktfLrhOFX2wuqJD22f56AKvleJg=
+		avSqFmYfH0shTxDGW/EmHxfcabA=
 		</data>
 		<key>icon@2x.png</key>
 		<data>
-		KcGF+RTT94kxLFtv83FvblnyE9Q=
+		qbYgEhJRZSQa0VD37u6IGDFbsY0=
 		</data>
 		<key>se.lproj/Localizable.strings</key>
 		<data>
 		2xHvlRK9oHxOhF/pa8c2UfyRjgg=
 		</data>
-		<key>verify.sh</key>
+		<key>www/ActionSheet.js</key>
 		<data>
-		UNJEbobXmWHDg7Ljwa1Op0MaVkk=
+		LKKMsDIaktcZ2HhJfQwIThdNoc4=
 		</data>
-		<key>www/PhoneGap.plist</key>
+		<key>www/ChildBrowser.js</key>
 		<data>
-		Y46Q7BQmpyQ/wKuwTxCpQuZpokw=
+		az15V0UMNoUOC33niO8ILVjA3fE=
+		</data>
+		<key>www/Custom.xml</key>
+		<data>
+		R/aqhJt/8eD0Yk9ASPWcrB8v8hE=
+		</data>
+		<key>www/applicationPreferences.js</key>
+		<data>
+		o08xC5tFbzcr7eHJRFrJ40OVKcY=
 		</data>
 		<key>www/beep.wav</key>
 		<data>
 		zZMuccHPGvEjRPB+aR2d7Ne4EGE=
 		</data>
-		<key>www/cordova-1.5.0.js</key>
+		<key>www/channellist.xml</key>
 		<data>
-		Zk/OtL+W5P3c2rdY5PFh4tYEJDg=
+		IO3xIqLWigBL04LP6JMUyCniitk=
+		</data>
+		<key>www/cordova-2.2.0.js</key>
+		<data>
+		uS2l065im7PZGWwurgClUiW9sb4=
 		</data>
 		<key>www/gesturePad.xml</key>
 		<data>
-		pszzVXiZrh0q7AVcxhlHQ+CtILc=
+		4udRaOeP8rYAX2/27Yt2VMiwllc=
 		</data>
 		<key>www/gestures.js</key>
 		<data>
-		p8bH/AE5rxMev5Whl8RgjmLjyCU=
+		Wzne23kV2NefmPpH7cqtp+woCSU=
 		</data>
-		<key>www/images/AudioPlayerScrubberKnob.png</key>
+		<key>www/guideChannelList.json</key>
 		<data>
-		RpqxPVGVZXArJzrlQtnYAqhC3Y0=
+		NQJu4LfF2RW6N27bz5ClX3QQBZk=
 		</data>
-		<key>www/images/AudioPlayerScrubberLeft.png</key>
+		<key>www/img/AudioPlayerScrubberKnob.png</key>
 		<data>
-		hdlEl4czIeyo5lnK2tcil/qdRLQ=
+		zFeNZlk5+hyvAKqwLiMx37hYfI8=
 		</data>
-		<key>www/images/AudioPlayerScrubberRight.png</key>
+		<key>www/img/AudioPlayerScrubberLeft.png</key>
 		<data>
-		use6pC2ST5m53LOwFvhn12mAl9U=
+		LqRYF/vO50tLeQYpAbXADo9re0g=
 		</data>
-		<key>www/images/ajax-loader.gif</key>
+		<key>www/img/AudioPlayerScrubberRight.png</key>
 		<data>
-		r7Wo1RXseyxOXYv8y0kPtbYDEcM=
+		7T7E71WwfdDTMXE5KlayRgXdils=
 		</data>
-		<key>www/images/ajax-loader.png</key>
+		<key>www/img/back.png</key>
 		<data>
-		NQ0i8lCHscwfrHzUBOM75uVDUjg=
+		LhPrnPHAOHyGPYxk2OsAEMhywSM=
 		</data>
-		<key>www/images/appResources/Default.png</key>
+		<key>www/img/channels/001_Dark_DISe.png</key>
 		<data>
-		TgLDstOvK2fNKMxYD9fA11gcWBU=
+		KgkhpkrkjDyBSosQKO4bOa9Vzqs=
 		</data>
-		<key>www/images/appResources/Default@2x.png</key>
+		<key>www/img/channels/015_Dark_CNe.png</key>
 		<data>
-		2XQCrGjpC0eqyYiIdYZ3TJ4swJE=
+		NQult9btmHs1dUL29Z9OrqorMY4=
 		</data>
-		<key>www/images/appResources/PhoneGap.plist</key>
+		<key>www/img/channels/022_Dark_PBS.png</key>
 		<data>
-		VEngESXyI12vjutAQ8Xpg88JR0s=
+		tYciPHv0LP9Y987yfQnlqhaA+Co=
 		</data>
-		<key>www/images/appResources/icon-72.png</key>
+		<key>www/img/channels/024_Dark_PBTV.png</key>
 		<data>
-		aAWyShlUEnjy1O33jJEoF6CgfLs=
+		rvTIB8ikjKa56XZ3ynk559VELLU=
 		</data>
-		<key>www/images/appResources/icon.png</key>
+		<key>www/img/channels/030_Dark_NIKe.png</key>
 		<data>
-		R4QgXL+MLoEUtE+9i1R6ZkPIn9U=
+		zAyeOubUL3koZ/ohUN3H1rDShL4=
 		</data>
-		<key>www/images/appResources/icon.psd</key>
+		<key>www/img/channels/036_Dark_ENCe.png</key>
 		<data>
-		MiCZZ3jTmWBXnSJpEGt8zHiErt0=
+		HxgLydYp/8eN7z2vyu58lQT2jnw=
 		</data>
-		<key>www/images/appResources/icon@2x.png</key>
+		<key>www/img/channels/056_Dark_CSP1.png</key>
 		<data>
-		7jbZtvfq9x+XGrZJSz5U/4kzAyg=
+		WDPg/Ssx0XyIqtlxVgoDR4EECKA=
 		</data>
-		<key>www/images/checkmark.png</key>
+		<key>www/img/channels/057_Dark_CSP2.png</key>
 		<data>
-		3ukYQULiJIy4Tm9A6S8gKqpE+Gc=
+		/OTH+1m/FTixN35igqd88EduDYw=
 		</data>
-		<key>www/images/clear.png</key>
+		<key>www/img/channels/060_Dark_TMCe.png</key>
 		<data>
-		LqX6YyRLDNR1zLXgISuLniv6RQY=
+		q1A/erfsbvgpIeoU8G5+92ooha4=
 		</data>
-		<key>www/images/clear2.png</key>
+		<key>www/img/channels/063_Dark_EWST.png</key>
 		<data>
-		9eRug7RqAXrr0qxhwr5w6oqEVFk=
+		TUAM/oSGzVR2GQsEMVrePbrvnmU=
 		</data>
-		<key>www/images/clipboard.png</key>
+		<key>www/img/channels/064_Dark_EACT.png</key>
 		<data>
-		cSjZGALFTYwsH/maBtWkrz/ZhVg=
+		H3Kbz3YIf6UDjZTLJQhtaZAx6d4=
 		</data>
-		<key>www/images/couch.png</key>
+		<key>www/img/channels/065_Dark_EDRA.png</key>
 		<data>
-		I/zKFb07DclOLs3N7zzcDqLhfmk=
+		pIsAMbN6Gd52OENlipZYx6dzvq8=
 		</data>
-		<key>www/images/default.png</key>
+		<key>www/img/channels/066_Dark_ELOV.png</key>
 		<data>
-		IxscKpibCFuJMBD91PuZoKWYo6w=
+		O7eCv2rRW6q9SfH/cnPEEWBSg8o=
 		</data>
-		<key>www/images/forward.png</key>
+		<key>www/img/channels/101_Dark_BET.png</key>
 		<data>
-		6H5L7wEbjVIjuwVb0HFifKEGO8E=
+		Efeie05cJ7HuR5LM8behWanBym4=
 		</data>
-		<key>www/images/icons-18-black.png</key>
+		<key>www/img/channels/114_Dark_IFC.png</key>
 		<data>
-		2zOURmgG7TYicOGnxfSucQo6Lxg=
+		a7VUXoEiRnnN+pimeOqMpEfFToY=
 		</data>
-		<key>www/images/icons-18-white.png</key>
+		<key>www/img/channels/127_Dark_QVC.png</key>
 		<data>
-		Sg/1e3EgtouxOiw7H+43z5uv5Xo=
+		7Pr1WxWHGm3dcnL7mrcEISTXKKk=
 		</data>
-		<key>www/images/icons-36-black.png</key>
+		<key>www/img/channels/129_Dark_TBN.png</key>
 		<data>
-		DGqbtw+P5PhIuHjyBMRH028+Ewk=
+		slWXhCBoZ8APYF4eTm4XWlXfsQk=
 		</data>
-		<key>www/images/icons-36-white.png</key>
+		<key>www/img/channels/215_Dark_SOAP.png</key>
 		<data>
-		vIWVJEKtjCzYnYP40K7owpeZbWA=
+		baiBpLnY9gAfR3ZJGghv5wK9f8A=
 		</data>
-		<key>www/images/left.png</key>
+		<key>www/img/channels/217_Dark_BOOM.png</key>
 		<data>
-		Bkerf0dMR7W7N/ypYW47sxnOPOw=
+		s2ty1b8XOKk5WJcf2KYvC8M/kEo=
 		</data>
-		<key>www/images/movie.png</key>
+		<key>www/img/channels/240_Dark_VH1C.png</key>
 		<data>
-		7LpRGSYo3uribOaNFVcbPdCre/8=
+		0AEQqKpzrxwbBuf1PDPDzR+2UDc=
 		</data>
-		<key>www/images/pause.png</key>
+		<key>www/img/channels/243_Dark_SNBC.png</key>
 		<data>
-		NytZMJrkE6NuA391DFVreub/6qw=
+		zVdvBcDZKmIQoSijg5sNjfnxD3w=
 		</data>
-		<key>www/images/play.png</key>
+		<key>www/img/channels/245_Dark_MUN2.png</key>
 		<data>
-		Fgjl4UJMzWTOAaZ4BCWOuQnTXvY=
+		4/Ge/pQFpRerJPBU3AftUusB/Bo=
 		</data>
-		<key>www/images/power.png</key>
+		<key>www/img/channels/248_Dark_FMC.png</key>
 		<data>
-		f4wwMc9j7t5fnvt7zXhGOqeqIhA=
+		CN3+EL0p4r2ZLQJgGqmjpN/46pc=
 		</data>
-		<key>www/images/refresh.png</key>
+		<key>www/img/channels/254_Dark_HUB.png</key>
 		<data>
-		rju+qBWw63WhDrIf/lJ8ue4IGoo=
+		5hkWwO3QYtCtlwJKbI45gLHaWWk=
 		</data>
-		<key>www/images/rewind.png</key>
+		<key>www/img/channels/264_Dark_RKTV.png</key>
 		<data>
-		MP7dhnacluT467am38tIbEevL3s=
+		Ki1dpFJoRWUduVN2e3TbhzuKDp8=
 		</data>
-		<key>www/images/right.png</key>
+		<key>www/img/channels/267_Dark_HUST.png</key>
 		<data>
-		BhaHIekVuCbFIoP78tnmY+kiXRo=
+		GGoQ4lMorZSDvLyYBecST5gMFYo=
 		</data>
-		<key>www/images/search.png</key>
+		<key>www/img/channels/268_Dark_ION.png</key>
 		<data>
-		Kvy+d+Avr8A19HxHcY7QhiNSRcQ=
+		Sj/kpmHNnDMjfO2nAdIounbZXuI=
 		</data>
-		<key>www/images/stop.png</key>
+		<key>www/img/channels/271_Dark_HGTVHD.png</key>
 		<data>
-		csP3ZS/y6Cu26+1I1IUv3FNSDLM=
+		rt3N8wPg7zLPJZ+cmDdTPB0BJXQ=
 		</data>
-		<key>www/images/volume2.png</key>
+		<key>www/img/channels/273_Dark_OWN.png</key>
 		<data>
-		5XLB1tIVnRLOFA1sdIqrj4ArBLU=
+		Ugywf7Ram+JOdTG28oo4rQVR7JA=
 		</data>
-		<key>www/images/warning1.png</key>
+		<key>www/img/channels/276_Dark_3net.png</key>
 		<data>
-		dqbf4hB9hfSBzIuj372MknEHQNk=
+		0CS7O8i5JfbTSpMvtES3EXjb8XU=
 		</data>
-		<key>www/images/wifi.png</key>
+		<key>www/img/channels/279_Dark_PENT.png</key>
 		<data>
-		NqxZrQh3aVcdlQjY2bL6p+S+rTE=
+		eHtQnDLq1yJOzgLNU9uz3R77Bdg=
+		</data>
+		<key>www/img/channels/280_DARK_XTSY.png</key>
+		<data>
+		Spar/cKThjSagzbKS0mcOx83ZRk=
+		</data>
+		<key>www/img/channels/285_Dark_CBSSN.png</key>
+		<data>
+		Zrx8/IuYxyHokMJ5EKUeL5oQZyg=
+		</data>
+		<key>www/img/channels/287_Dark_Audience.png</key>
+		<data>
+		9C3l6LpOw7PZdviEnaBfftBXvEo=
+		</data>
+		<key>www/img/channels/288_Dark_Playboy_Espanol.png</key>
+		<data>
+		7Cy9WhTMQT35HyhREP1NkQI5H90=
+		</data>
+		<key>www/img/channels/304_Dark_Encore_Family.png</key>
+		<data>
+		DvOik0xn0ZG5xjZmfHtq04NcLT4=
+		</data>
+		<key>www/img/channels/305_Dark_ENCSUS.png</key>
+		<data>
+		MGFV/QChcvh4EnTWrFGr80K43O4=
+		</data>
+		<key>www/img/channels/306_Dark_Cloo.png</key>
+		<data>
+		9235asF7YlGMrKjZUQ3vFnL6saE=
+		</data>
+		<key>www/img/channels/313_Dark_AMCHD.png</key>
+		<data>
+		6cBxBdLoxcgKZjXNE0m+zWYFTQc=
+		</data>
+		<key>www/img/channels/320_Dark_LMN.png</key>
+		<data>
+		vBzGCGHftTnpDV7+ZlOunOugqHE=
+		</data>
+		<key>www/img/channels/321_Dark_NBCS.png</key>
+		<data>
+		6ZAAHWlqXAJeQEWnMqH6J4NzNV8=
+		</data>
+		<key>www/img/channels/323_Dark_MHZW.png</key>
+		<data>
+		cQqGtG3g60XWwJdVOUTQrsqyTkA=
+		</data>
+		<key>www/img/channels/330_Dark_WE.png</key>
+		<data>
+		Y2HJc+6ZPYVXuU/2CqFECiIcgbA=
+		</data>
+		<key>www/img/channels/331_Dark_TRUTVHD.png</key>
+		<data>
+		yopaSANqQ9Sgo9nxbls8+2oCtfQ=
+		</data>
+		<key>www/img/channels/332_Dark_E!HD.png</key>
+		<data>
+		A42X2jN92SzXGS/MfZ4AByblMjw=
+		</data>
+		<key>www/img/channels/333_Dark_DESTHD.png</key>
+		<data>
+		h/dXUeVBRYw7+pK9IZLAgaaLp2M=
+		</data>
+		<key>www/img/channels/335_Dark_LIFEHD.png</key>
+		<data>
+		Cs7bj7hRgcIRJGhnph+EEce/UBU=
+		</data>
+		<key>www/img/channels/339_Dark_AXSTVHD.jpg</key>
+		<data>
+		M5kwev6UGbLnR7y0ApvHuoYq2Iw=
+		</data>
+		<key>www/img/channels/340_Dark_TCMHD.png</key>
+		<data>
+		3/kfClwVkyIt2L9S5hdLnDJ517k=
+		</data>
+		<key>www/img/channels/342_Dark_NFL.png</key>
+		<data>
+		sT6POWE7aRcm+NSaG5YlBb5yc44=
+		</data>
+		<key>www/img/channels/343_Dark_NGWHD.png</key>
+		<data>
+		Gblbs87kjZWX9ckiuf9nLSPYITo=
+		</data>
+		<key>www/img/channels/344_Dark_BBCAHD.png</key>
+		<data>
+		MK4YfzlkUT38EmUqmms+FtZB97s=
+		</data>
+		<key>www/img/channels/345_Dark_DSJRHD.png</key>
+		<data>
+		vtFH36+A2l7efOMO8ORNicDDz9Q=
+		</data>
+		<key>www/img/channels/348_Dark_AZA.png</key>
+		<data>
+		UyIJBnKzPz5AwGCbV5ycTSQPxQ8=
+		</data>
+		<key>www/img/channels/349_Dark_BRAZ.png</key>
+		<data>
+		8+kkTP0qMnNZKOtq84qsF9ADUO4=
+		</data>
+		<key>www/img/channels/350_Dark_MOF.png</key>
+		<data>
+		ID0MgJcx9VVBqM1qfUZXhULlQ2o=
+		</data>
+		<key>www/img/channels/351_Dark_TVLD.png</key>
+		<data>
+		kuS/V/QwOg5EBRctE6z/47IQ9HU=
+		</data>
+		<key>www/img/channels/355_Dark_DIYHD.png</key>
+		<data>
+		RBl02hMFIhcTZaN19KFWhhF9gE4=
+		</data>
+		<key>www/img/channels/517_Dark_TCC.png</key>
+		<data>
+		d6GkLDQ4ohkxfJqMvSr6Y/W0w48=
+		</data>
+		<key>www/img/channels/523_Dark_YES.png</key>
+		<data>
+		gTv/aJmjx3b4DoWyO3EhQ5II6xs=
+		</data>
+		<key>www/img/channels/528_Dark_CNBW.png</key>
+		<data>
+		R0NfOkq7+h90VWSYzSD/i6H0eSs=
+		</data>
+		<key>www/img/channels/529_Dark_CSN.png</key>
+		<data>
+		ALBOMFk/jyAWoEKaUd2FgvVLjLw=
+		</data>
+		<key>www/img/channels/532_Dark_HITN.png</key>
+		<data>
+		1HUaLDOsbFsEp7/IbGVv8iE0Yd8=
+		</data>
+		<key>www/img/channels/541_Dark_TVG.png</key>
+		<data>
+		3alJeQ8CdfopTTO3e/PQfJZxDfc=
+		</data>
+		<key>www/img/channels/544_Dark_ESPNHD.png</key>
+		<data>
+		QYqmYJENcuv7jodSY8DNXVS7PbA=
+		</data>
+		<key>www/img/channels/551_Dark_HSN.png</key>
+		<data>
+		YP8ChjVIa50TCdbIKm7Uavgsgs0=
+		</data>
+		<key>www/img/channels/552_Dark_EWTN.png</key>
+		<data>
+		BeY+jgHDlWHog2N0pS4EWmKoOtY=
+		</data>
+		<key>www/img/channels/556_Dark_TVGN.png</key>
+		<data>
+		KEDg5vDeNsgMxWxvlLtwNxRW56M=
+		</data>
+		<key>www/img/channels/557_Dark_NKTN.png</key>
+		<data>
+		TP/EyDq3A0f4xWPDkvLvGbWdKks=
+		</data>
+		<key>www/img/channels/563_Dark_GSN.png</key>
+		<data>
+		FCkfVqCA1PY48YIFKBE4tVQU1Mo=
+		</data>
+		<key>www/img/channels/567_Dark_ONCE.png</key>
+		<data>
+		GG2LKbzPJ8ab2+d+mZy3tcFZM1U=
+		</data>
+		<key>www/img/channels/570_Dark_RFD.png</key>
+		<data>
+		s4oqAWhyciI5K9bnHlQkt+oWMMA=
+		</data>
+		<key>www/img/channels/571_Dark_NASA.png</key>
+		<data>
+		20+EME3URXKia/q8eqhDpWD6yjo=
+		</data>
+		<key>www/img/channels/573_Dark_LINK.png</key>
+		<data>
+		IjHrGcun8q+arMbnuCR0ucfXTVo=
+		</data>
+		<key>www/img/channels/575_Dark_WORD.png</key>
+		<data>
+		X+6MElZmtpehfvcWw8MyIZhtzqk=
+		</data>
+		<key>www/img/channels/579_Dark_BRVOHD.png</key>
+		<data>
+		Vprl7uo4eCgTAYKavJ5NxP8kC2I=
+		</data>
+		<key>www/img/channels/580_Dark_GAC.png</key>
+		<data>
+		ZBaMysYZEbcADHmf9MM6XgzeQ6o=
+		</data>
+		<key>www/img/channels/582_Dark_DSTR.png</key>
+		<data>
+		zd0SNqGl05g7h1EPgE17oR3I6Hw=
+		</data>
+		<key>www/img/channels/587_Dark_ALT.png</key>
+		<data>
+		/rzafbTlyOdvoIbNGCW46thoSPk=
+		</data>
+		<key>www/img/channels/599_Dark_MILT.png</key>
+		<data>
+		r+gCKRzCAz5SFyQmoRJJCPKI/Rc=
+		</data>
+		<key>www/img/channels/601_Dark_TV1.png</key>
+		<data>
+		Dp6LZq/bfqxPpZOl75DAMGlpGBQ=
+		</data>
+		<key>www/img/channels/605_Dark_SUN.png</key>
+		<data>
+		h72lr/1A0K+6/KRg0dYyv9yj/kU=
+		</data>
+		<key>www/img/channels/616_Dark_ESN2HD.png</key>
+		<data>
+		PxMxEyzOU1yGKkYE5Q7BZsoB2yQ=
+		</data>
+		<key>www/img/channels/624_Dark__current.png</key>
+		<data>
+		qOf3IKzRhi/3itHDVcdW/KlLopE=
+		</data>
+		<key>www/img/channels/625_Dark_MTV2.png</key>
+		<data>
+		2PS6yc+WlDt3BNTmfI/zJ3HIhXg=
+		</data>
+		<key>www/img/channels/633_Dark_MLS.png</key>
+		<data>
+		MSZbZ3NHFP7hVd7tpJpI8Bfqmlo=
+		</data>
+		<key>www/img/channels/634_Dark_NFL.png</key>
+		<data>
+		uEGHnTxjpMUUKmKetygLgVRB924=
+		</data>
+		<key>www/img/channels/637_Dark_SPRT.png</key>
+		<data>
+		IQjt52nYy00hylDOllWmg/6KUVI=
+		</data>
+		<key>www/img/channels/650_Dark_CTN.png</key>
+		<data>
+		/6RZLoIMrBFg9yhzBkWLfVCBJ58=
+		</data>
+		<key>www/img/channels/652_Dark_NRB.png</key>
+		<data>
+		GWXfpqrEAfjsJn681ZvqMkkUvjg=
+		</data>
+		<key>www/img/channels/656_Dark_TNTHD.png</key>
+		<data>
+		Tr/z9pODFlxLoLcKJWRvqY9H3DM=
+		</data>
+		<key>www/img/channels/673_Dark_BABY.png</key>
+		<data>
+		zbWyYh63MP3NBfIDnl7l2PfJzI8=
+		</data>
+		<key>www/img/channels/677_Dark_CWHD.png</key>
+		<data>
+		OItMy7lx+yidK3VlzEmgy7JQzNQ=
+		</data>
+		<key>www/img/channels/681_Dark_GTV.png</key>
+		<data>
+		bTMP/mOByvhvI3tKfIWcDXC8VLA=
+		</data>
+		<key>www/img/channels/682_Dark_GAME.png</key>
+		<data>
+		FwB3uWzay6kzSW4FORNlG962DlM=
+		</data>
+		<key>www/img/channels/683_Dark_NBA.png</key>
+		<data>
+		iNBzZvBAZCro+0Wf72HigTymN1o=
+		</data>
+		<key>www/img/channels/697_Dark_Style.png</key>
+		<data>
+		/rj1Pe7suS8rn4RpRtKtOy4Jt8c=
+		</data>
+		<key>www/img/channels/699_Dark_CHLL.png</key>
+		<data>
+		FtFhn0jsHAhrLbCN5bpfV9RSf68=
+		</data>
+		<key>www/img/channels/705_Dark_GEMN.png</key>
+		<data>
+		1OyI7Yhe38oa3yU1P1P50HWybYg=
+		</data>
+		<key>www/img/channels/708_Dark_REEL.png</key>
+		<data>
+		lMTuhkpaZbqy9zjX7CTOfAArLKE=
+		</data>
+		<key>www/img/channels/709_Dark_JTV.png</key>
+		<data>
+		57CqVaSdW2G8zU1nSNCYG+sR8Zw=
+		</data>
+		<key>www/img/channels/711_Dark_OVTN.png</key>
+		<data>
+		36djqnV0grBJPoA5lGPJ7ug5hdc=
+		</data>
+		<key>www/img/channels/722_Dark_BTNHD.png</key>
+		<data>
+		xVwdg2mFA7nlxn1GVPyRw0JS78Q=
+		</data>
+		<key>www/img/channels/723_Dark_BIOHD.png</key>
+		<data>
+		d2xgwPRtoyfSnJByxPX9CCoJpuc=
+		</data>
+		<key>www/img/channels/724_Dark_CNeHD_Dark.png</key>
+		<data>
+		KKZ8NpfYzNuuDf2zTI9pR4fE9cA=
+		</data>
+		<key>www/img/channels/727_Dark_CNNHD.png</key>
+		<data>
+		m3E8R2EtIA2lAKIJh3262m+NieQ=
+		</data>
+		<key>www/img/channels/728_Dark_DSCHD.png</key>
+		<data>
+		UNzPwPDNUN3wXrvgWYqKnEqZo4U=
+		</data>
+		<key>www/img/channels/729_Dark_FOODHD.png</key>
+		<data>
+		rheDWYYlvLIABQNjJKt9FLNGQi0=
+		</data>
+		<key>www/img/channels/734_Dark_HISTHD.png</key>
+		<data>
+		HLUQpprkYDrmD3G4InUkwa4g81U=
+		</data>
+		<key>www/img/channels/738_Dark_NGCHD.png</key>
+		<data>
+		uo6CcYG+CZi8wy+uFNiMUKQMLg8=
+		</data>
+		<key>www/img/channels/739_Dark_NHLHD.png</key>
+		<data>
+		OVWwR+2/lqjAVMWz0It6Yn1T6tM=
+		</data>
+		<key>www/img/channels/744_Dark_SPEEDHD.png</key>
+		<data>
+		T28OKdXFFZVfi5RNclYnjjNKCNQ=
+		</data>
+		<key>www/img/channels/750_Dark_TBSHD.png</key>
+		<data>
+		6gtGuXi7iGZCuoqWaM30NGSO5rI=
+		</data>
+		<key>www/img/channels/751_Dark_TMCEAST_Dark.png</key>
+		<data>
+		vA4vhzf9bJbRJ5ALgDm3Wpd4LkQ=
+		</data>
+		<key>www/img/channels/753_Dark_USAHD.png</key>
+		<data>
+		wKEkyF1SsWJg1jwS7bOOKzaFyg4=
+		</data>
+		<key>www/img/channels/755_Dark_TWCHD.png</key>
+		<data>
+		25RVBtCOnhKoTVldnrcgW0xCxVs=
+		</data>
+		<key>www/img/channels/756_Dark_CMTHD.png</key>
+		<data>
+		9TBueMoQLfQnYfBbzjwXWJhf5I0=
+		</data>
+		<key>www/img/channels/757_Dark_FBN.png</key>
+		<data>
+		kzUFZX4wO4tdBzqa3gp3tEb5ANo=
+		</data>
+		<key>www/img/channels/758_Dark_MTVHD.png</key>
+		<data>
+		qLJtPpUWF9qd1DsudwH6BPbLrg0=
+		</data>
+		<key>www/img/channels/759_Dark_NIKeHD.png</key>
+		<data>
+		R34JnAKq5t8t13d17piiGVpCCXY=
+		</data>
+		<key>www/img/channels/760_Dark_SPKEHD.png</key>
+		<data>
+		FhFa0WLpFtMZajCXVQCLuZA0O/Q=
+		</data>
+		<key>www/img/channels/762_Dark_VH1HD.png</key>
+		<data>
+		aljqS8s6x7EkeINW9Nizh3c9xjE=
+		</data>
+		<key>www/img/channels/764_Dark_DISeHD.png</key>
+		<data>
+		oUZPTOBAM4NZgzJQGwzdTmRtvAU=
+		</data>
+		<key>www/img/channels/766_Dark_ABCFHD.png</key>
+		<data>
+		AyAxTi29I8nDGgZrFbj5Q2payok=
+		</data>
+		<key>www/img/channels/768_Dark_CNBCHD.png</key>
+		<data>
+		apYFyi2OZo53u1WTt6Vz9BxZbbM=
+		</data>
+		<key>www/img/channels/769_Dark_ESNHD.png</key>
+		<data>
+		cRqWy3ioVarSSC3Koa/j2enJn9k=
+		</data>
+		<key>www/img/channels/772_Dark_TNNSHD.png</key>
+		<data>
+		CVY8sXUp1Riz7M2VvEIRbjGVn3U=
+		</data>
+		<key>www/img/channels/776_Dark_CSNCHD.png</key>
+		<data>
+		1XPvDFdxtwPU1zhUcE5BEImmY5E=
+		</data>
+		<key>www/img/channels/778_Dark_NESNHD.png</key>
+		<data>
+		Jr5H99i7E+euQvx8GeA9yZZfFa4=
+		</data>
+		<key>www/img/channels/779_Dark_SNYHD.png</key>
+		<data>
+		3VFGKlf1OFU5IikPdXlIricNsx4=
+		</data>
+		<key>www/img/channels/780_Dark_YESHD.png</key>
+		<data>
+		GjzLbR+QScTyKBfA8qQqHQ3EPJY=
+		</data>
+		<key>www/img/channels/781_Dark_MSGHD.png</key>
+		<data>
+		i7+T0EvKc9nC5fGF4BOpapFK/3c=
+		</data>
+		<key>www/img/channels/795_Dark_VME.png</key>
+		<data>
+		nh1HPjNjPlPFbCZu6C1ks2pBXFo=
+		</data>
+		<key>www/img/channels/800_Dark_SCIHD.png</key>
+		<data>
+		aMiyHPxpXCsy0EeHHLpH5oxqSas=
+		</data>
+		<key>www/img/channels/802_Dark_ID.png</key>
+		<data>
+		LG1B9yITrgCpczZ/RINHG60snS0=
+		</data>
+		<key>www/img/channels/808_Dark_APLHD.png</key>
+		<data>
+		7GpTgX/sZCgFxA0Lq0JsYEG2jlk=
+		</data>
+		<key>www/img/channels/810_Dark_GMC.png</key>
+		<data>
+		rtIGEaV4XtFDxRirbYhSpzoQbdQ=
+		</data>
+		<key>www/img/channels/811_Dark_MSGplus.png</key>
+		<data>
+		7SrouMAN4lCoaouqWGDqJlDF3Xk=
+		</data>
+		<key>www/img/channels/818_Dark_TCT.png</key>
+		<data>
+		/DciW3JXLPqgwc2U0DSxwKae9Uc=
+		</data>
+		<key>www/img/channels/823_Dark_OXGN.png</key>
+		<data>
+		MPBYTNWdWySHHBlhC3dn5namMns=
+		</data>
+		<key>www/img/channels/824_Dark_FUSE.png</key>
+		<data>
+		fC/eaZ1qn3RfdLnW1I269NR/TLI=
+		</data>
+		<key>www/img/channels/825_Dark_A&amp;EHD.png</key>
+		<data>
+		vgX5NDf3H8gX8ZgCKC494pTSfFU=
+		</data>
+		<key>www/img/channels/829_Dark_FSNHD.png</key>
+		<data>
+		N7F0azfieSrJka9tpUZBHwNUrh0=
+		</data>
+		<key>www/img/channels/838_Dark_INSP.png</key>
+		<data>
+		6EWKPFumjO7X06Zm8jsEWGjqhxQ=
+		</data>
+		<key>www/img/channels/840_Dark_TLCHD.png</key>
+		<data>
+		/k0phLr8BVHZ0Re6o7IrQGdYv2Q=
+		</data>
+		<key>www/img/channels/842_Dark_BTNHD.png</key>
+		<data>
+		8ttflPOIaDDy1zLuTEx2ipQ/jsk=
+		</data>
+		<key>www/img/channels/844_Dark_CSCA.png</key>
+		<data>
+		RIWeiGYrtKDMUHeSZTDbyG4/M4E=
+		</data>
+		<key>www/img/channels/848_Dark__FOXHD.png</key>
+		<data>
+		9zspbYLme1kkkY1Es7QVchxHq/s=
+		</data>
+		<key>www/img/channels/851_Dark_SONIC.png</key>
+		<data>
+		s0sdUz34h7qt4YpJHI0m8TRWVP8=
+		</data>
+		<key>www/img/channels/852_Dark_GOLFHD.png</key>
+		<data>
+		pJTr3iNo0vgpor9YWL8n04FvAtU=
+		</data>
+		<key>www/img/channels/859_Dark_SPMNHD.png</key>
+		<data>
+		iw5kXbqeX34rzxlx/Aj03RO/yRg=
+		</data>
+		<key>www/img/channels/860_Dark_HLN.png</key>
+		<data>
+		BP8qOt1v+YDeSehlEXHLtmM/DBg=
+		</data>
+		<key>www/img/channels/862_Dark_DXD.png</key>
+		<data>
+		+p5vwDy6f+4pwiP4k21hFiFCKcs=
+		</data>
+		<key>www/img/channels/863_Dark_MLB_HD.png</key>
+		<data>
+		3SfnAfhPCFW+xLT6kanfNSFc8xc=
+		</data>
+		<key>www/img/channels/864_Dark_HUNT.png</key>
+		<data>
+		yMcO21dpuRv8+xBrWGB3e7ZZFm0=
+		</data>
+		<key>www/img/channels/865_Dark_NFLHD.png</key>
+		<data>
+		0pn5UBQ/+4KgNJqIA6qghbWunvs=
+		</data>
+		<key>www/img/channels/869_Dark_WHT.png</key>
+		<data>
+		KYjUjDTufGWtujrmDkNSuL6Cnpw=
+		</data>
+		<key>www/img/channels/870_Dark_SUND.png</key>
+		<data>
+		9NQxDC9jJ0/9hebvqyGQPBQeakI=
+		</data>
+		<key>www/img/channels/871_Dark_FX.png</key>
+		<data>
+		EUbHPl5k3plslWIaFe067qxverQ=
+		</data>
+		<key>www/img/channels/872_Dark__ABCHD.png</key>
+		<data>
+		wDseftxsLvWfUbndRkvCDKo+PaA=
+		</data>
+		<key>www/img/channels/873_Dark_CBS_HD.png</key>
+		<data>
+		eizCJZ5kt4LEh4rLVpxJm+6+soY=
+		</data>
+		<key>www/img/channels/874_Dark_FOXHD.png</key>
+		<data>
+		nLNlqP9D5PvgvjABy6arFnQdC7E=
+		</data>
+		<key>www/img/channels/875_Dark__NBCHD.png</key>
+		<data>
+		Fgyity+u0kTEnUpnZuJMwx2OYS0=
+		</data>
+		<key>www/img/channels/891_Dark_CCTVN.png</key>
+		<data>
+		m0AWAaX2enWLvmxhzTHkfzfqT2M=
+		</data>
+		<key>www/img/channels/892_Dark_JLTV.png</key>
+		<data>
+		J9IDKonuuGu7DD7yzzVir65Qu9I=
+		</data>
+		<key>www/img/channels/894_Dark_HOPE.png</key>
+		<data>
+		pEIwXhoIP9SXotEkppzsx1dV3GY=
+		</data>
+		<key>www/img/channels/895_Dark_CINE.png</key>
+		<data>
+		w3f4rNotvPebNnf7Xbfh4T+fXAY=
+		</data>
+		<key>www/img/channels/905_Dark_SYFYHD.png</key>
+		<data>
+		l835drbTRcsVf2zFdh1NTMw/+sQ=
+		</data>
+		<key>www/img/channels/908_Dark_CTRC.png</key>
+		<data>
+		BAd3Qd7X6+F15m/yY1JY7TQd5aw=
+		</data>
+		<key>www/img/channels/911_Dark_NKJR.png</key>
+		<data>
+		3+PpuGI9g7K4HdYqFZJW5U6oM+k=
+		</data>
+		<key>www/img/channels/912_Dark_TNCK.png</key>
+		<data>
+		+3nVhMXYE1hCYqt/ZXPBM+AAX3g=
+		</data>
+		<key>www/img/channels/918_Dark_ENLC.png</key>
+		<data>
+		cLO712ULTt1BXWN+fPVJM+rIczg=
+		</data>
+		<key>www/img/channels/922_Dark_FSC.png</key>
+		<data>
+		QSMy+O9PBQ75hPOZ0IBoYOYt4JI=
+		</data>
+		<key>www/img/channels/924_Dark_BYU.png</key>
+		<data>
+		zkfRi/WMeNGA6+qQ1Vmg5Fqp6zA=
+		</data>
+		<key>www/img/channels/925_Dark_DOC.png</key>
+		<data>
+		aGoiZzYJUQRvCb2LMBizGTV3IVE=
+		</data>
+		<key>www/img/channels/926_Dark_ESPN3D.png</key>
+		<data>
+		c7vt/bwW2IiZCMJUw7q4I3r8n2w=
+		</data>
+		<key>www/img/channels/927_Dark_HALLHD.png</key>
+		<data>
+		ettoqEoP933HdWzolYPBu6/JLJg=
+		</data>
+		<key>www/img/channels/933_Dark_COOK.png</key>
+		<data>
+		UiagZQpwyJO8oevb3j5PNVCe+fI=
+		</data>
+		<key>www/img/channels/935_Dark_n3D.png</key>
+		<data>
+		KUsklPxAcLLIS82TJnBubcEIPHs=
+		</data>
+		<key>www/img/channels/937_Dark_TFTwHD_Dark.png</key>
+		<data>
+		47H/sN6b6qprJSIrFpx3ifzuUQQ=
+		</data>
+		<key>www/img/channels/938_Dark_EPSNUHD.png</key>
+		<data>
+		MUAoteJz4YCo1wFGAU2Y3AbDMWs=
+		</data>
+		<key>www/img/channels/939_Dark_TRAVHD.png</key>
+		<data>
+		a1d3kjxCXeo/Qi/9fEhTpYnFVW8=
+		</data>
+		<key>www/img/channels/940_Dark_MSNBCHD.png</key>
+		<data>
+		uLzWoRcGZCGc3GRcfey0n+87ols=
+		</data>
+		<key>www/img/channels/945_Dark_FSTV.png</key>
+		<data>
+		e+Js9QGbEiNfp6xUWr5fhkndKZg=
+		</data>
+		<key>www/img/channels/946_Dark_GEB.png</key>
+		<data>
+		l0b6EckGzqxAk6fEPuoN7NhZA/0=
+		</data>
+		<key>www/img/channels/953_Dark_ENCeHD.png</key>
+		<data>
+		HxgLydYp/8eN7z2vyu58lQT2jnw=
+		</data>
+		<key>www/img/channels/955_Dark_GALA.png</key>
+		<data>
+		0goDRM7hv1huw/3GaVNPe+xgNj8=
+		</data>
+		<key>www/img/commands.png</key>
+		<data>
+		Jmj1QsFyO+0WR53teTs9b+MZCUU=
+		</data>
+		<key>www/img/commands_nobg.png</key>
+		<data>
+		FKPnrbhK0jWCNJZIlOJZaRPEIl8=
+		</data>
+		<key>www/img/dtv.png</key>
+		<data>
+		39AzRabWJo/GvWvLcVpcoKeHF64=
+		</data>
+		<key>www/img/gear.png</key>
+		<data>
+		Rig54LKIJpx/jzwKkoB4LtsDbi4=
+		</data>
+		<key>www/img/info.png</key>
+		<data>
+		i7mW3GjywdML0/g6kx/pStt9oUs=
+		</data>
+		<key>www/img/linen.png</key>
+		<data>
+		2iuqNO9DefOky6pDOYbHEYh6Dpg=
+		</data>
+		<key>www/img/logo3.png</key>
+		<data>
+		QKLedLDYGFRwdnD58ww4A2VUr9c=
+		</data>
+		<key>www/img/mb.png</key>
+		<data>
+		y5q3Ikv6FVtuUvMN/bklJhHnzpQ=
+		</data>
+		<key>www/img/mute.png</key>
+		<data>
+		o6O8p9AGa9IviXSlIjRMBQ4JFJE=
+		</data>
+		<key>www/img/navbarbckgrd.png</key>
+		<data>
+		4Zc5nnrY25/l5pFQBNLfYkcdwTU=
+		</data>
+		<key>www/img/navbutton.png</key>
+		<data>
+		Gy/0zmpVHbzL6wtex2+0xnplvsY=
+		</data>
+		<key>www/img/next.png</key>
+		<data>
+		HlQ2r1mlK+m+yUKZBP0jkAsXzhQ=
+		</data>
+		<key>www/img/nobox.png</key>
+		<data>
+		E2z2rI0e7QzIUuh0E2paWWol+7w=
+		</data>
+		<key>www/img/numberpad.png</key>
+		<data>
+		/qUsfrIS8t2JZ3JxmLxrloSODuM=
+		</data>
+		<key>www/img/pause.png</key>
+		<data>
+		jE0C5oRwC80Fb/GKihXK8nFsO44=
+		</data>
+		<key>www/img/play.png</key>
+		<data>
+		utMcyv5r4rp74oS1R8cDBigSlng=
+		</data>
+		<key>www/img/power.png</key>
+		<data>
+		ML0Dp+BpMhMlA+6lB7ay5oGZ6Mo=
+		</data>
+		<key>www/img/refresh.png</key>
+		<data>
+		lxasRMp7GXavABdqU60QqbaajWU=
+		</data>
+		<key>www/img/room.png</key>
+		<data>
+		jIelC5Idj1Hg5iRUHmzK/Tnd/ro=
+		</data>
+		<key>www/img/searchfield.png</key>
+		<data>
+		MtV0O3mF4+olSn9CrJjPfuwceLw=
+		</data>
+		<key>www/img/searchfield_close.gif</key>
+		<data>
+		2FICieAgpuIzHc/t47ClhyUbDp8=
+		</data>
+		<key>www/img/titles.png</key>
+		<data>
+		cyTfq8CpM39pIadzjCbAYqE5yo8=
+		</data>
+		<key>www/img/titles_nobg.png</key>
+		<data>
+		j4u2IsEZFbtsARWvJKG3j2DCKwU=
+		</data>
+		<key>www/img/transfer.png</key>
+		<data>
+		Bi5W/Q9t0lKjQQUpMu9Y/F5nBhM=
 		</data>
 		<key>www/index.html</key>
 		<data>
-		Q4xNQZMxJ505gBCtnhSxp6EOyWQ=
+		YL5r48EtKf7H04fHNxz6oh46Ub8=
 		</data>
 		<key>www/jquery-1.7.1.min.js</key>
 		<data>
 		nrmsWV6bVUTi3Hn/980tC0te9x8=
 		</data>
-		<key>www/jquery.gestures.js</key>
+		<key>www/mbeg.xml</key>
 		<data>
-		p8bH/AE5rxMev5Whl8RgjmLjyCU=
+		0BgWpSukYt1naLKLDyAfgNDuR8g=
 		</data>
-		<key>www/jquery.mobile-1.1.0.min.css</key>
+		<key>www/mbegdt.xml</key>
 		<data>
-		u9lywPzFZKO8MyVwfNQ2/dDkwo0=
-		</data>
-		<key>www/jquery.mobile-1.1.0.min.js</key>
-		<data>
-		uCoLwheGMCuDGAogCLrRQsMBQDw=
-		</data>
-		<key>www/localstoragedb.min.js</key>
-		<data>
-		kOatrZ6AXXvBsZ7zjJEwX5Ojqic=
+		SE7xNqxZ3aP8ln+AinjAaFWtvnA=
 		</data>
 		<key>www/script.js</key>
 		<data>
-		+YPchX1ArM4p7G8lynnCRvKatng=
+		OlnGu8KXiXLeEpt29mV1NIpfyxk=
 		</data>
 		<key>www/style.css</key>
 		<data>
-		lY2vvAG1Q/HQvmLqO7VEKNqSMm8=
+		qx1X9/4oshZpLC4HiLzkgBSQzMI=
+		</data>
+		<key>www/tablet.css</key>
+		<data>
+		wFSfO+L6z0iVnZ3ZLgyJymTlq2w=
+		</data>
+		<key>www/tablet.html</key>
+		<data>
+		UPRCoe0+UYFwgZtKHu7W4xTnpmE=
+		</data>
+		<key>www/taptoscroll.js</key>
+		<data>
+		CkffIA8Aa07M8G3bIKvNAYDbrvM=
 		</data>
 	</dict>
 	<key>rules</key>
