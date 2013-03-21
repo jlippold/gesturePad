@@ -438,21 +438,31 @@ form.searchform {
 
 
 form.searchform .icon-search:before {
-    content: "🔎";
+    content: url('img/searchfield.png') ;
     display: inline-block;
     position: absolute;
-	right: 10px;
-	top: 7px;
+	left: 6px;
+	top: 4px;
 }
+
+form.searchform .icon-clear:before {
+    content: url('img/searchfield_close.gif') ;
+    position: absolute;
+	right: 8px;
+	top: 6px;
+	height: 16px;
+}
+
 
 form.searchform input  {
     background: none repeat scroll 0 0 transparent;
     border: medium none;
-    color: #555555;
+    color: #000;
     padding: 0;
     width: 100%;
     -webkit-appearance: textarea;
-
+    padding-left: 12px;
+    font-size: 0.7em;
 }
 
 div.tableContainer {

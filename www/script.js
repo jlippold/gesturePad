@@ -210,7 +210,7 @@ function onDeviceReady() {
 	
 	doResize();
 
-	clickEventType = ((document.ontouchstart!==null)?'tap':'click'); //never inplemented custom tap
+	clickEventType = (( isPhoneGap() == true )?'click':'click'); //never inplemented custom tap
 
 	//event when scrolling ends to refresh dtv channels
 	$("#backFace").bind("scroll", function() {
@@ -805,12 +805,25 @@ function onDeviceReady() {
 		} else {
 			executeGestureByCommandName("Play");
 		}
-		
 	});
 	$("#btnMute").bind(clickEventType, function() {
 		executeGestureByCommandName("Mute");
 	});
 	
+
+	$("#searchbox").bind("keypress", function(e) {
+		if ( $("#searchbox").val() == "" ) {
+			$("#searchClear").attr("style", "display: none;");
+		} else {
+			$("#searchClear").attr("style", "");
+		}
+	});
+
+	$("#searchClear").bind(clickEventType, function() {
+		$("#searchbox").val("");
+		$("#searchClear").attr("style", "display: none;");
+		$("#searchform").submit();
+	});
 
 	$("#searchform").bind("submit", function(event) {
 		event.preventDefault();
@@ -818,6 +831,9 @@ function onDeviceReady() {
     	var s = $("#Filter input.searcher").val().toLowerCase();
     	$("#backFace tr").each(function() {
     		var t = $(this).text().toLowerCase();
+    		if (t == ".. ") {
+    			return;
+    		}
     		if ( $(this).hasAttr("data-fullname") ) {
     			t += " " + $(this).attr("data-fullname").toLowerCase();
     		} 
@@ -1521,17 +1537,25 @@ function ShowItems(tr) {
 	if ( $(tr).attr("data-type") == "Shuffle" ) {
 		//play title
         if ( isWifi() == false ) {
-
             doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
             return;
         }
-		MBUrl += "ui?command=shuffle&id=" + $(tr).attr("data-guid")
-		$.getJSON(MBUrl, function(x) {
-			$("#btnTitles").trigger(clickEventType);
-			setTimeout(function() {
-				nowPlaying();
-			}, 1500)
-         })
+
+		navigator.notification.confirm(
+		   "Shuffle these Titles?", 
+			function(buttonIndex) {
+    			if ( buttonIndex == 1 ) {
+					MBUrl += "ui?command=shuffle&id=" + $(tr).attr("data-guid")
+					$.getJSON(MBUrl, function() {
+						setTimeout(function() {
+							nowPlaying();
+						}, 1500)
+			         })
+    			}
+			},
+		   '', 
+		   'Yes, Cancel'
+		);
 		return;
 	}
 
