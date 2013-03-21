@@ -107,6 +107,9 @@ function getSettingsObject() {
 					}, "gesturePad");
 		    	}
 
+		    	settingsObj.roomIndex = getItem("roomIndex", 0);
+		    	settingsObj.deviceIndex = getItem("deviceIndex", 0);
+
 		});
 		
 	} else {
@@ -1917,8 +1920,8 @@ function updateStatus() {
 	var device = getCurrentDevice();
 	var room = getCurrentRoom();
 
-	$("#txtDevice").text( device.name );
-	$("#txtRoom").text( room.name );
+	//$("#txtDevice").text( device.name );
+	//$("#txtRoom").text( room.name );
 	
 	if (room.IR == true) {
 		$("#overallVolumeContainer").show();
