@@ -12,120 +12,6 @@
 
 				<category>
 
-					<name>Home Automation</name>
-					<!--
-					<command>
-
-						<name>Lamp On</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.108/0?131=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Lamp Off</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.108/0?131=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-					-->
-					<command>
-
-						<name>Fireplace On</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.109/0?111=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Fireplace Off</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.109/0?131=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Office On</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.109/0?113=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Office Off</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.109/0?133=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-					
-				</category>
-
-				<category>
-
 					<name>Inputs</name>
 
 					<command>
@@ -637,820 +523,93 @@
 			</commands>
 
 		</device>
-
-		<device shortname='DTV' useNumberPad="true">
-
-			<name>DirecTV</name>
-
-			<numberpad>
-
-				<method>GET</method>					
-
-				<dataType>json</dataType>
-
-				<addtobaseurl><![CDATA[remote/processKey?key=]]></addtobaseurl>
-
-			</numberpad>
-
-			<commands>
-
-				<category>
-
-					<name>Home Automation</name>
-					<!-- 
-					<command>
-
-						<name>Lamp On</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.108/0?111=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Lamp Off</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.108/0?131=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-					-->
-					<command>
-
-						<name>Fireplace On</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.109/0?111=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Fireplace Off</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.109/0?131=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Office On</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.109/0?113=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Office Off</name>
-
-						<action>
-
-							<method>POST</method>
-
-							<data><![CDATA[]]></data>				
-
-							<dataType>text</dataType>
-
-							<replacebaseurl>http://192.168.1.109/0?133=I=0</replacebaseurl>
-
-						</action>
-
-					</command>
-					
-				</category>
-
-				<category>
-
-					<name>Navigation</name>
-
-					<command>
-
-						<name>Channel Up</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=chanup]]></data> 				      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.U.D' />
-
-					</command>
-
-					<command>
-
-						<name>Channel Down</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=chandown]]></data> 				      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.D.U' />
-
-					</command>
-
-					<command>
-
-						<name>Up</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=up]]></data> 				      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.U' />
-
-					</command>
-
-					<command>
-
-						<name>Down</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=down]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.D' />
-
-					</command>
-
-					<command>
-
-						<name>Left</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=left]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.L' />
-
-					</command>
-
-					<command>
-
-						<name>Right</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=right]]></data>					      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.R' />
-
-					</command>
-
-					<command>
-
-						<name>OK</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=select]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.Tap' />
-
-					</command>
-
-					<command>
-
-						<name>Exit</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=exit]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.DblTap' />
-
-					</command>
-
-					<command>
-
-						<name>Page Up</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=chanup]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.LSU' />
-
-					</command>
-
-					<command>
-
-						<name>Page Down</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=chandown]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.LSD' />
-
-					</command>
-
-				</category>
-
-				<category>
-
-					<name>Playback</name>
-
-					<command>
-
-						<name>Play</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=play]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Pause</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=pause]]></data>					      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Stop</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=stop]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-						
-						<gesture definition='1.L.R.L' />
-
-					</command>
-
-					<command>
-
-						<name>Rewind</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=rew]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.L.R' />
-
-					</command>
-
-					<command>
-
-						<name>Forward</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=ffwd]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.R.L' />
-
-					</command>
-
-					<command>
-
-						<name>Replay</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=replay]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Advance</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=advance]]></data>					      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Record</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=record]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-				</category>
-
-				<category>
-
-					<name>Menus</name>
-
-					<command>
-
-						<name>Guide</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=guide]]></data>					      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.D.L' />	
-
-					</command>
-
-					<command>
-
-						<name>List</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=list]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-						<gesture definition='1.D.R' />
-
-					</command>
-
-					<command>
-
-						<name>Menu</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=menu]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-				</category>
-
-				<category>
-
-					<name>Other</name>
-
-					<command>
-
-						<name>Power Toggle</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=power]]></data>					      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Power On</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=poweron]]></data>					      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Power Off</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=poweroff]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Format</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=format]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Red</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=red]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Green</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=green]]></data>					      
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Yellow</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=yellow]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Blue</name>
-
-						<action>
-
-							<method>GET</method>
-
-							<data><![CDATA[key=blue]]></data>						
-
-							<dataType>json</dataType>
-
-							<addtobaseurl>remote/processKey</addtobaseurl>
-
-						</action>
-
-					</command>
-
-				</category>
-
-			</commands>
-
-		</device>
 		
 	</devices>
 
-	<roomgestures> <!-- gestures that run globally / independant of current device -->
+	<rooms>
+		<room index="0" />
+		<room index="1" />
+		<room index="2" />
+		<room index="3" />
+		<room index="4" />
 
-		<gesture definition='nothing'>	  
+		<roomgestures> <!-- gestures that run globally / independant of current device -->
 
-			<device shortname='MCE'>
+			<gesture definition='nothing'>	  
 
-				<command>
+				<device shortname='MCE'>
 
-					<name>Mute</name>
+					<command>
 
-				</command>
+						<name>Mute</name>
 
-			</device>
+					</command>
 
-		</gesture>
-		
-		<gesture definition='1.U.R'>	  
+				</device>
 
-			<device shortname='MCE'>
+			</gesture>
+			
+			<gesture definition='1.U.R'>	  
 
-				<command>
+				<device shortname='MCE'>
 
-					<name>VolumeUp</name>
+					<command>
 
-				</command>
+						<name>VolumeUp</name>
 
-			</device>
+					</command>
 
-		</gesture>
+				</device>
 
-		<gesture definition='1.U.L'>	  
+			</gesture>
 
-			<device shortname='MCE'>
+			<gesture definition='1.U.L'>	  
 
-				<command>
+				<device shortname='MCE'>
 
-					<name>VolumeDown</name>
+					<command>
 
-				</command>
+						<name>VolumeDown</name>
 
-			</device>
+					</command>
 
-		</gesture>     
-		
-		<gesture definition='1.U.R.D.L'>	
+				</device>
 
-			<device shortname='MCE'>
+			</gesture>     
+			
+			<gesture definition='1.U.R.D.L'>	
 
-				<command>
+				<device shortname='MCE'>
 
-					<name>Power</name>
+					<command>
 
-				</command>
+						<name>Power</name>
 
-			</device>
+					</command>
 
-		</gesture>	  
-		
-		<gesture definition='1.U.R.L'>	
+				</device>
 
-			<device shortname='MCE'>
+			</gesture>	  
+			
+			<gesture definition='1.U.R.L'>	
 
-				<command>
+				<device shortname='MCE'>
 
-					<name>Power</name>
+					<command>
 
-				</command>
+						<name>Power</name>
 
-			</device>
+					</command>
 
-		</gesture>	 
+				</device>
 
-		<gesture definition='1.U.D.U.D'>	
+			</gesture>	 
+   
 
-			<device shortname='MCE' switchesto='MCE' >
+		</roomgestures>
+	</rooms>
 
-				<command>
 
-					<name>Media Center</name>
-
-				</command>
-
-			</device>
-
-		</gesture>	      
-
-		<gesture definition='1.D.L.U.R'>	
-
-			<device shortname='MCE' switchesto='DTV'>
-
-				<command>
-
-					<name>DirecTV</name>
-
-				</command>
-
-			</device>
-
-		</gesture>	    
-
-	</roomgestures>
 
 </gesturePad>
 

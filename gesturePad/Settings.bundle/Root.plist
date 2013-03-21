@@ -30,6 +30,16 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
+			<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>wifi</string>
+			<key>Title</key>
+			<string>Wifi Only</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
 		<dict>
 			<key>Title</key>
 			<string>Folder Sorting</string>
@@ -87,8 +97,8 @@
 			</array>
 			<key>Titles</key>
 			<array>
-				<string>MediaBrowser/EventGhost</string>
-				<string>MediaBrowser/EventGhost/DirecTV</string>
+				<string>MediaBrowser/EG</string>
+				<string>MediaBrowser/EG/DirecTV</string>
 				<string>Custom URL</string>
 			</array>
 		</dict>
@@ -132,7 +142,7 @@
 			<key>AutocorrectionType</key>
 			<string>Yes</string>
 			<key>DefaultValue</key>
-			<string>Bedroom</string>
+			<string>Living Room</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -224,7 +234,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>192.168.1.0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -354,7 +364,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>192.168.1.0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -389,7 +399,7 @@
 			<key>AutocorrectionType</key>
 			<string>Yes</string>
 			<key>DefaultValue</key>
-			<string>Bedroom</string>
+			<string>Kitchen</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -481,7 +491,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>192.168.1.0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -516,7 +526,7 @@
 			<key>AutocorrectionType</key>
 			<string>Yes</string>
 			<key>DefaultValue</key>
-			<string>Bedroom</string>
+			<string>Room 4</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -608,7 +618,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>192.168.1.0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -643,7 +653,7 @@
 			<key>AutocorrectionType</key>
 			<string>Yes</string>
 			<key>DefaultValue</key>
-			<string>Bedroom</string>
+			<string>Room 5</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -735,7 +745,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>192.168.1.0</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>

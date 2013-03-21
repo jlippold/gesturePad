@@ -1,4 +1,4 @@
-var xml, settings;
+var xml, settings, appSettings;
 var appendOncetoQueryString = "";
 var navigator, npTimer, inputTimer, clickEventType, slideTimer;
 var guide =  new Object();
@@ -11,6 +11,7 @@ function getSettingsObject() {
 	var settingsObj = {
 		sounds: false,
 		vibrate: false,
+		wifi: true,
 		SleepThreshold: 60000,
 		MBServiceTimeout :120000,
 		moviesByDate: false,
@@ -25,7 +26,7 @@ function getSettingsObject() {
 	if ( isPhoneGap() ) {
 		window.plugins.applicationPreferences.get('All', function(result) {
 				var hasRoom = false;
-				
+				appSettings = result;
 				var d = jQuery.parseJSON(result);
 
 				//general settings
@@ -34,6 +35,9 @@ function getSettingsObject() {
 		    	}
 		        if ( d.vibrate == 1 ) {
 		        	settingsObj.vibrate = true;
+		    	}
+		        if ( d.wifi == 0 ) {
+		        	settingsObj.wifi = false;
 		    	}
 		        if ( d.dateMovies == 1 ) {
 		        	settingsObj.moviesByDate = true;
@@ -59,8 +63,9 @@ function getSettingsObject() {
 		    	for (var i=1;i<=5;i++) {
 		    		if ( d["S" + i + "_enabled"] ) {
 		    			if ( d["S" + i + "_enabled"] == 1 ) {
+
 		    				hasRoom = true;
-		    				var room = {
+		    				var thisroom = {
 		    					name: "Room " + i,
 		    					index: (i-1),
 		    					DTV: null,
@@ -68,9 +73,9 @@ function getSettingsObject() {
 		    					devices: []
 		    				};
 
-		    				room.name = d["S" + i + "_RoomName"];
+		    				thisroom.name = d["S" + i + "_RoomName"];
 		    				
-		    				room.devices.push({
+		    				thisroom.devices.push({
 		    					"name": "Movies", 
 		    					"shortname": "MCE", 
 		    					"IPAddress": d["S" + i + "_IP"],
@@ -81,8 +86,8 @@ function getSettingsObject() {
 		    				})
 
 		    				if ( d["S" + i + "_DTV"] == 1 ) {
-		    					room.DTV = d["S" + i + "_DTVIP"];
-			    				room.devices.push({
+		    					thisroom.DTV = d["S" + i + "_DTVIP"];
+			    				thisroom.devices.push({
 			    					"name": "Television", 
 			    					"shortname": "DTV", 
 			    					"IPAddress": d["S" + i + "_DTVIP"],
@@ -93,10 +98,10 @@ function getSettingsObject() {
 		    				}
 
 		    				if ( d["S" + i + "_EG"] == 1 ) {
-		    					room.IR = true;
+		    					thisroom.IR = true;
 		    				}
 		    				
-		    				settingsObj.rooms.push(room);
+		    				settingsObj.rooms.push(thisroom);
 		    			}
 		    			
 		    		}
@@ -1740,17 +1745,22 @@ function hideFilter() {
 
 
 function checkSettingsForUpdate() {
+	
+	window.plugins.applicationPreferences.get('All', function(result) {
+		if (result != appSettings) {
+			doAlert("Your settings have changed. Quit the app from the app switcher to reload.");
+			reloadPage();
+		}
+	})
 
-	if ( JSON.stringify(settings) !== JSON.stringify(getSettingsObject()) ) {
-		doAlert("Your settings have changed. Quit the app from the app switcher to reload.");
-		reloadPage();
-	}
 }
 function onResume() {
-	checkSettingsForUpdate();
+	
 	getRoomStatus();
 	SleepDevice(false);
 	nowPlaying();
+
+	checkSettingsForUpdate();
 
  	npTimer = setInterval(function() {
       nowPlaying()
@@ -2629,6 +2639,11 @@ function doAlert(msg) {
 }
 
 function isWifi() {
+
+	if ( settings.wifi == false ) {
+		return true;
+	}
+
 	try {
 		if ( netState() == 'WiFi connection' ) {
 			return true;
