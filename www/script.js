@@ -104,7 +104,6 @@ function getSettingsObject() {
 
 		    	if (hasRoom == false) {
 					navigator.notification.alert("No Servers are defined. Go to settings to add a server.", function() {
-						executeObjC("http://gesturepad/kill?do=it");
 					}, "gesturePad");
 		    	}
 
@@ -422,7 +421,7 @@ function onDeviceReady() {
 		if (device.shortname  == "DTV") {
 			$("#card").data("flipTo", "DTV");
 			//build table for channel list 
-			var tb = "<table class='listing'>"
+			var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >"
 			
 			var cat = ""
 		 	$.each(guide.channels, function(channelKey, c) { 
@@ -433,7 +432,7 @@ function onDeviceReady() {
 				tb += getTableRowHTML(c, channelKey, curChannel);
 			});
 
-			tb += "</table>"
+			tb += "</table></div>"
 
 			
 				   
@@ -468,18 +467,18 @@ function onDeviceReady() {
 
 
 			var parseJsonResults = function (d) {
-				var tb =  "<table class='listing' style='width: " + ($("#card").width()-3) + "px !important'>"
+				var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >"
 				$.each(d.Data.Children, function(key, val) { 
 					tb += '<tr data-guid="' + d.Data.Children[key].Id + '" data-type="' + d.Data.Children[key].Type + '"  data-imdb="' + ((d.Data.Children[key].ImdbRating > 0) ? "1" : "0")  + '" >';
-					tb += '<td><div>' + d.Data.Children[key].Name  + '</div></td>';
+					tb += '<td><div class="movieTitle">' + d.Data.Children[key].Name  + '</div></td>';
 					tb += '<td width="30px" style="text-align: right">' + d.Data.Children[key].ChildCount  + '</td></tr>';	
 				});
-				 tb += "</table>";
+				 tb += "</table></div>";
 			     $("#backFace").html( tb );
 			     checkScrollOverflow();
 				
 				$("#backFace table tr").bind(clickEventType, function () {
-						ShowItems( $(this) );
+					ShowItems( $(this) );
 				});
 			}
 
@@ -539,7 +538,7 @@ function onDeviceReady() {
 
 		/* populate it */
 		var category = "";
-		var tb = "<table class='listing'>"
+		var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >"
 
 		var room  = getCurrentRoom();
 		var device = getCurrentDevice();
@@ -602,7 +601,7 @@ function onDeviceReady() {
 							+ '</td><td style="width: 50px !important"><div style="width: 50px !important; overflow:hidden">' + gestureDefinition + '</div></td></tr>';
 			});
 		});
-		tb += "</table>"
+		tb += "</table></div>"
 	
 		$("#backFace").html( tb );
 		checkScrollOverflow()
@@ -1538,8 +1537,8 @@ function ShowItems(tr) {
 
 
 	var parseJsonResults = function (x) {
-		$("#backFace table").html( "" );
-		tb = "";
+		$("#backFace table").remove();
+		var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >"
 
 		if ( x.Data.Name != "StartupFolder" ) {
 			tb += '<tr data-guid="' + x.Data.parentId + '" data-type="Folder">'
@@ -1557,9 +1556,10 @@ function ShowItems(tr) {
 			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
 		}
 		
+
 		$.each(x.Data.Children, function(key, val) { 
 			tb += '<tr data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type +'" data-imdb="' + ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")  + '" >'
-				+ '<td><div>' + ( (x.Data.Children[key].WatchedPercentage < 5) ? "&#10022; " : ""  ) 
+				+ '<td><div class="movieTitle">' + ( (x.Data.Children[key].WatchedPercentage < 5) ? "&#10022; " : ""  ) 
 				+ x.Data.Children[key].Name 
 				+ ( (x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""  ) 
 				+ '</div></td>';
@@ -1575,7 +1575,8 @@ function ShowItems(tr) {
 			}
 
 		});
-		$("#backFace table").html( tb );
+		tb += "</table></div>"
+		$("#backFace").append( tb );
 		checkScrollOverflow();
 		$("#backFace table tr").bind(clickEventType, function () {
 			ShowItems( $(this) )
@@ -1714,7 +1715,8 @@ function hideFilter() {
 function checkSettingsForUpdate() {
 
 	if ( JSON.stringify(settings) !== JSON.stringify(getSettingsObject()) ) {
-		reloadPage()
+		doAlert("Your settings have changed. Quit the app from the app switcher to reload.");
+		reloadPage();
 	}
 }
 function onResume() {

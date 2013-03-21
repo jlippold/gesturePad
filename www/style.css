@@ -455,6 +455,11 @@ form.searchform input  {
 
 }
 
+div.tableContainer {
+	width: 100%;
+	overflow: hidden;
+}
+
 table.listing {
 	width: 100%;
 	border-collapse: collapse;
@@ -470,6 +475,12 @@ table.listing tr td {
 	text-overflow: ellipsis;
 	line-height: 26px;
 	font-family: "Helvetica Neue", "Helvetica";
+}
+
+table.listing td div.movieTitle {
+	width: 90%;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 table.listing tr td span {

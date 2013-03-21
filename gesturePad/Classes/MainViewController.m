@@ -180,10 +180,6 @@
         [[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO];
         return NO;
     }
-    else if ([url hasPrefix:@"http://gesturepad/kill"]) {
-        NSLog(@"Killing");
-        exit(0);
-    }
     else {
         [[UIScreen mainScreen] setBrightness:0.8];
         return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
