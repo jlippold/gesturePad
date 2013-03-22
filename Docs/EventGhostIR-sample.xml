@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<EventGhost Version="1568" Guid="{ACA78A5C-462F-4EEA-98BC-299E734497CC}" Time="1363867827.72">
+    <Autostart Name="Autostart">
+        <Plugin Identifier="MCE_Vista" Guid="{A7DB04BB-9F0A-486A-BCA1-CA87B9620D54}" File="MceRemote_Vista">
+            gAIpLg==
+        </Plugin>
+        <Action Enabled="False">
+            EventGhost.EnableExclusive(XmlIdLink(-1))
+        </Action>
+        <Plugin Identifier="Webserver" Guid="{E4305D8E-A3D3-4672-B06E-4EA1F0F6C673}" File="Webserver">
+            gAIoWAQAAABIVFRQcQBLUFgaAAAAQzpcVXNlcnNcdHJlYXNvblxEb2N1bWVudHNxAVgKAAAARXZlbnRHaG9zdHECWAAAAABxA2gDdHEELg==
+        </Plugin>
+        <Plugin Identifier="Task" Guid="{D1748551-C605-4423-B392-FB77E6842437}" File="Task">
+            gAIpLg==
+        </Plugin>
+        <Action Enabled="False">
+            MCE_Vista.GetDeviceInfo()
+        </Action>
+        <Action Enabled="False">
+            MCE_Vista.TransmitIR(u'0000 006D 0000 0022 0157 00AC 0015 0016 0015 0041 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0041 0015 0041 0015 0016 0015 0016 0015 0041 0015 0016 0015 0016 0015 0016 0015 0016 0015 0016 0015 0041 0015 0041 0015 0016 0015 0041 0015 0689', 0)
+        </Action>
+        <Plugin Identifier="MCE" Guid="{921D3571-92D9-43BE-B7F2-C1369F3ABACD}" File="MCE">
+            gAIpLg==
+        </Plugin>
+    </Autostart>
+    <Folder Name="Kill Subs">
+        <Macro Name="Emulate Keystrokes: w">
+            <Event Name="Task.Activated.mpc-hc" />
+            <Action>
+                EventGhost.Wait(1.0)
+            </Action>
+            <Action>
+                Window.FindWindow(u'mpc-hc.exe', None, None, None, None, None, False, 0.0, 0)
+            </Action>
+            <Action>
+                Window.SendKeys(u'w', False)
+            </Action>
+        </Macro>
+    </Folder>
+    <Folder Name="Web">
+        <Macro Name="GreenButton">
+            <Event Name="HTTP.GreenButton" />
+            <Event Name="MceRemote.Mce.Start" />
+            <Action>
+                MCE.Start()
+            </Action>
+            <Action>
+                System.Execute(u'c:\\windows\\ehome\\ehshell.exe', u'', 0, False, 2, u'', False)
+            </Action>
+        </Macro>
+        <Macro Name="Guide">
+            <Event Name="HTTP.Guide" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+G}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Up">
+            <Event Name="HTTP.Up" />
+            <Action>
+                Window.SendKeys(u'{Up}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Down">
+            <Event Name="HTTP.Down" />
+            <Action>
+                Window.SendKeys(u'{Down}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Left">
+            <Event Name="HTTP.Left" />
+            <Action>
+                Window.SendKeys(u'{Left}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Right">
+            <Event Name="HTTP.Right" />
+            <Action>
+                Window.SendKeys(u'{Right}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Ok">
+            <Event Name="HTTP.Ok" />
+            <Action>
+                Window.SendKeys(u'{Return}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Back">
+            <Event Name="HTTP.Back" />
+            <Action>
+                Window.SendKeys(u'{BackSpace}', False)
+            </Action>
+        </Macro>
+        <Macro Name="ChannelDown">
+            <Event Name="HTTP.ChannelDown" />
+            <Action>
+                Window.SendKeys(u'{PageDown}', False)
+            </Action>
+        </Macro>
+        <Macro Name="ChannelUp">
+            <Event Name="HTTP.ChannelUp" />
+            <Action>
+                Window.SendKeys(u'{PageUp}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Play">
+            <Event Name="HTTP.Play" />
+            <Action>
+                Window.SendKeys(u'{Shift+Ctrl+P}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Pause">
+            <Event Name="HTTP.Pause" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+P}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Stop">
+            <Event Name="HTTP.Stop" />
+            <Action>
+                Window.SendKeys(u'{Backspace}', False)
+            </Action>
+        </Macro>
+        <Macro Name="SkipForward">
+            <Event Name="HTTP.SkipForward" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+F}', False)
+            </Action>
+        </Macro>
+        <Macro Name="SkipBack">
+            <Event Name="HTTP.SkipBack" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+B}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Lang">
+            <Event Name="HTTP.Lang" />
+            <Action>
+                Window.SendKeys(u'A', False)
+            </Action>
+        </Macro>
+        <Macro Name="Sub">
+            <Event Name="HTTP.Sub" />
+            <Action>
+                Window.SendKeys(u's', False)
+            </Action>
+        </Macro>
+        <Macro Name="SubOff">
+            <Event Name="HTTP.SubOff" />
+            <Action>
+                Window.SendKeys(u'w', False)
+            </Action>
+        </Macro>
+        <Macro Name="Info">
+            <Event Name="HTTP.Info" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+D}', False)
+            </Action>
+        </Macro>
+        <Macro Name="Star">
+            <Event Name="HTTP.Star" />
+            <Action>
+                Window.SendKeys(u'*', False)
+            </Action>
+        </Macro>
+    </Folder>
+    <Folder Name="Panasonic" Expanded="True">
+        <Macro Name="Switch MCE" Expanded="True">
+            <Event Name="HTTP.Switch_MCE" />
+            <Action Name="Discreet On">
+                MCE_Vista.TransmitIR(u'0000 0071 0000 0032 0080 003f 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0010 0010 0010 0010 0030 0010 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0030 0010 0a98', 0)
+            </Action>
+            <Action Name="Input Menu">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action>
+                EventGhost.Wait(0.5)
+            </Action>
+            <Action Name="1" Enabled="False">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action Name="2" Enabled="False">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 003f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 002f 0011 0abe', 0)
+            </Action>
+            <Action Name="3">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action>
+                EventGhost.Wait(0.25)
+            </Action>
+            <Action>
+                EventGhost.PythonCommand(u'eg.globals.input="MCE"')
+            </Action>
+            <Action>
+                Window.FindWindow(u'ehshell.exe', None, None, None, None, 1, False, 0.0, 1)
+            </Action>
+            <Action>
+                System.Execute(u'c:\\windows\\ehome\\ehshell.exe', u'', 0, False, 2, u'', False)
+            </Action>
+        </Macro>
+        <Macro Name="TV Power">
+            <Event Name="TV_Power" />
+            <Action>
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+        </Macro>
+        <Macro Name="Mute">
+            <Event Name="Volume_Mute" />
+            <Action>
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0030 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0030 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+        </Macro>
+        <Macro Name="Volume Up">
+            <Event Name="Volume_Up" />
+            <Action>
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action>
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action>
+                EventGhost.PythonScript(u'#convert after &amp; in QS to integer\nQS = \'\'.join(c for c in eg.event.payload if c.isdigit())\n\nif QS.isdigit():\n\treq = int(float(QS))\n\tif req == 0:\n\t\tprint \'no change, aborting\';\n\t\teg.Exit()\n\n\tfor i in range(0, req ):\n\t\teg.TriggerEvent("V1U")\n\tprint \'Moving volume down by {0}\'.format(req);')
+            </Action>
+        </Macro>
+        <Macro Name="Volume Down">
+            <Event Name="Volume_Down" />
+            <Action>
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action>
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action>
+                EventGhost.PythonScript(u'#convert after &amp; in QS to integer\nQS = \'\'.join(c for c in eg.event.payload if c.isdigit())\n\nif QS.isdigit():\n\treq = int(float(QS))\n\tif req == 0:\n\t\tprint \'no change, aborting\';\n\t\teg.Exit()\n\n\tfor i in range(0, req ):\n\t\teg.TriggerEvent("V1D")\n\tprint \'Moving volume down by {0}\'.format(req);')
+            </Action>
+        </Macro>
+        <Macro Name="Switch TV">
+            <Event Name="HTTP.Switch_TV" />
+            <Action>
+                Window.SendKeys(u'{Shift+Ctrl+S}', False)
+            </Action>
+            <Action Name="Discreet On">
+                MCE_Vista.TransmitIR(u'0000 0071 0000 0032 0080 003f 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0010 0010 0010 0010 0030 0010 0030 0010 0030 0010 0030 0010 0030 0010 0010 0010 0030 0010 0a98', 0)
+            </Action>
+            <Action Name="Input Menu">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action>
+                EventGhost.Wait(0.5)
+            </Action>
+            <Action Name="1" Enabled="False">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action Name="2">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 003f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 000f 0011 002f 0011 000f 0011 000f 0011 002f 0011 0abe', 0)
+            </Action>
+            <Action Name="3" Enabled="False">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action Enabled="False">
+                EventGhost.Wait(0.25)
+            </Action>
+            <Action Name="4" Enabled="False">
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0030 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+            <Action>
+                EventGhost.PythonCommand(u'eg.globals.input="DTV"')
+            </Action>
+        </Macro>
+        <Macro Name="V1U">
+            <Event Name="Main.V1U" />
+            <Action>
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+        </Macro>
+        <Macro Name="V1D">
+            <Event Name="Main.V1D" />
+            <Action>
+                MCE_Vista.TransmitIR(u'0000 0070 0000 0032 0080 0040 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0030 0010 0010 0010 0010 0010 0010 0010 0010 0010 0030 0010 0010 0010 0030 0010 0abe', 0)
+            </Action>
+        </Macro>
+    </Folder>
+    <Folder Name="AirPlay">
+        <Macro Name="Minimize MCE on Airplay start" Expanded="True">
+            <Event Name="Task.NewWindow.AirServer" />
+            <Action>
+                System.Execute(u'C:\\Windows\\System32\\taskkill.exe', u'/F /IM mpc-hc.exe', 3, False, 2, u'C:\\Windows\\System32\\', False)
+            </Action>
+            <Action>
+                Window.FindWindow(u'ehshell.exe', None, None, None, None, None, False, 0.0, 0)
+            </Action>
+            <Action>
+                Window.Minimize()
+            </Action>
+            <Action>
+                EventGhost.Wait(2.0)
+            </Action>
+            <Action>
+                Window.FindWindow(u'ehshell.exe', None, None, None, None, None, False, 0.0, 0)
+            </Action>
+            <Action>
+                Window.Minimize()
+            </Action>
+        </Macro>
+        <Macro Name="Restore MCE on Airplay End" Expanded="True">
+            <Event Name="Task.Destroyed.AirServer" />
+            <Action>
+                System.Execute(u'c:\\windows\\ehome\\ehshell.exe', u'/directmedia:general', 0, False, 2, u'', False)
+            </Action>
+        </Macro>
+    </Folder>
+    <Folder Name="mce" Expanded="True">
+        <Macro Name="MCE: Back">
+            <Event Name="MceRemote.Mce.Back" />
+            <Action>
+                Window.SendKeys(u'{Backspace}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Start">
+            <Event Name="MceRemote.Mce.Start" />
+            <Action>
+                MCE.Start()
+            </Action>
+            <Action>
+                System.Execute(u'c:\\windows\\ehome\\ehshell.exe', u'/directmedia:general', 0, False, 2, u'', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Star">
+            <Event Name="MceRemote.Mce.Star" />
+            <Action>
+                Window.SendKeys(u'*', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Play">
+            <Event Name="MceRemote.Mce.Play" />
+            <Action>
+                Window.SendKeys(u'{Shift+Ctrl+P}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Pause">
+            <Event Name="MceRemote.Mce.Pause" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+P}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Stop">
+            <Event Name="MceRemote.Mce.Stop" />
+            <Action>
+                Window.SendKeys(u'{Shift+Ctrl+S}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Skip">
+            <Event Name="MceRemote.Mce.Skip" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+F}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Replay">
+            <Event Name="MceRemote.Mce.Replay" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+B}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: ChannelUp">
+            <Event Name="MceRemote.Mce.ChannelUp" />
+            <Action>
+                Window.SendKeys(u'{PageUp}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: ChannelDown">
+            <Event Name="MceRemote.Mce.ChannelDown" />
+            <Action>
+                Window.SendKeys(u'{PageDown}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num0">
+            <Event Name="MceRemote.Mce.Num0" />
+            <Action>
+                Window.SendKeys(u'{Numpad0}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num1">
+            <Event Name="MceRemote.Mce.Num1" />
+            <Action>
+                Window.SendKeys(u'{Numpad1}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num2">
+            <Event Name="MceRemote.Mce.Num2" />
+            <Action>
+                Window.SendKeys(u'{Numpad2}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num3">
+            <Event Name="MceRemote.Mce.Num3" />
+            <Action>
+                Window.SendKeys(u'{Numpad3}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num4">
+            <Event Name="MceRemote.Mce.Num4" />
+            <Action>
+                Window.SendKeys(u'{Numpad4}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num5">
+            <Event Name="MceRemote.Mce.Num5" />
+            <Action>
+                Window.SendKeys(u'{Numpad5}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num6">
+            <Event Name="MceRemote.Mce.Num6" />
+            <Action>
+                Window.SendKeys(u'{Numpad6}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num7">
+            <Event Name="MceRemote.Mce.Num7" />
+            <Action>
+                Window.SendKeys(u'{Numpad7}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num8">
+            <Event Name="MceRemote.Mce.Num8" />
+            <Action>
+                Window.SendKeys(u'{Numpad8}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Num9">
+            <Event Name="MceRemote.Mce.Num9" />
+            <Action>
+                Window.SendKeys(u'{Numpad9}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Forward">
+            <Event Name="MceRemote.Mce.Forward" />
+            <Action>
+                Window.SendKeys(u'{Numpad4}', False)
+            </Action>
+            <Action>
+                Window.SendKeys(u'{Ctrl+F}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Rewind">
+            <Event Name="MceRemote.Mce.Rewind" />
+            <Action>
+                Window.SendKeys(u'{Numpad4}', False)
+            </Action>
+            <Action>
+                Window.SendKeys(u'{Ctrl+B}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Details">
+            <Event Name="MceRemote.Mce.Details" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+D}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Up">
+            <Event Name="MceRemote.Mce.Up" />
+            <Action>
+                Window.SendKeys(u'{Up}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Down">
+            <Event Name="MceRemote.Mce.Down" />
+            <Action>
+                Window.SendKeys(u'{Down}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Left">
+            <Event Name="MceRemote.Mce.Left" />
+            <Action>
+                Window.SendKeys(u'{Left}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Right">
+            <Event Name="MceRemote.Mce.Right" />
+            <Action>
+                Window.SendKeys(u'{Right}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Guide">
+            <Event Name="MceRemote.Mce.Guide" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+G}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: Ok">
+            <Event Name="MceRemote.Mce.Ok" />
+            <Action>
+                Window.SendKeys(u'{Return}', False)
+            </Action>
+        </Macro>
+        <Macro Name="MCE: E or #">
+            <Event Name="MceRemote.Mce.Enter" />
+            <Action>
+                System.Execute(u'C:\\Windows\\System32\\taskkill.exe', u'/f /t /im ehshell.exe /im ehexthost.exe /im MediaBrowserService.exe', 3, True, 2, u'C:\\Windows\\System32\\', False)
+            </Action>
+            <Action>
+                EventGhost.Wait(2.0)
+            </Action>
+            <Action>
+                System.Execute(u'c:\\windows\\ehome\\ehshell.exe', u'', 0, False, 2, u'', False)
+            </Action>
+        </Macro>
+        <Macro Name="MB: Search">
+            <Event Name="MB_Search" />
+            <Action>
+                Window.SendKeys(u'{Ctrl+S}', False)
+            </Action>
+        </Macro>
+    </Folder>
+    <Macro Name="Restart_MCE">
+        <Event Name="HTTP.Restart_MCE" />
+        <Action>
+            System.Execute(u'C:\\Windows\\System32\\taskkill.exe', u'/f /t /im ehshell.exe /im ehexthost.exe /im MediaBrowserService.exe', 3, True, 2, u'C:\\Windows\\System32\\', False)
+        </Action>
+        <Action>
+            EventGhost.Wait(2.0)
+        </Action>
+        <Action>
+            System.Execute(u'c:\\windows\\ehome\\ehshell.exe', u'', 0, False, 2, u'', False)
+        </Action>
+    </Macro>
+    <Macro Name="Restart_PC">
+        <Event Name="HTTP.Restart_PC" />
+        <Action>
+            System.Reboot(True)
+        </Action>
+    </Macro>
+</EventGhost>
