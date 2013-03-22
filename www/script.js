@@ -108,8 +108,8 @@ function getSettingsObject() {
 		    	}
 
 		    	if (hasRoom == false) {
-					navigator.notification.alert("No Servers are defined. Go to settings to add a server.", function() {
-					}, "gesturePad");
+					doAlert("No Servers are defined. Go to settings to add a server.");
+					splash("hide");
 		    	}
 
 		    	settingsObj.roomIndex = getItem("roomIndex", 0);
@@ -1756,12 +1756,13 @@ function checkSettingsForUpdate() {
 }
 function onResume() {
 	
+	checkSettingsForUpdate();
+
 	getRoomStatus();
 	SleepDevice(false);
 	nowPlaying();
 
-	checkSettingsForUpdate();
-
+	
  	npTimer = setInterval(function() {
       nowPlaying()
 	}, 30000);
