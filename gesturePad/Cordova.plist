@@ -32,6 +32,8 @@
 		<string>ActionSheet</string>
 		<key>applicationPreferences</key>
 		<string>applicationPreferences</string>
+		<key>PushNotification</key>
+		<string>PushNotification</string>
 		<key>ChildBrowserCommand</key>
 		<string>ChildBrowserCommand</string>
 		<key>TapToScroll</key>

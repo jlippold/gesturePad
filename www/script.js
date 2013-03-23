@@ -167,7 +167,7 @@ function PhoneGapReady() {
     onDeviceReady();
 
 	window.onerror = function(msg, url, line) {
-		//doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line)
+		doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line)
 	};
 }
 
@@ -205,6 +205,17 @@ function loadChannelList() {
 	});
 }
 
+function clearAllBadges() {
+	var pushNotification = window.plugins.pushNotification;
+	pushNotification.setApplicationIconBadgeNumber(0, function(status) {
+		//console.log('setApplicationIconBadgeNumber: ' +  status );
+	});
+
+	pushNotification.cancelAllLocalNotifications(function() {
+	    //console.log('cancelAllLocalNotifications');
+	});
+}
+
 //bind all events, PG equivelant to doc.ready
 function onDeviceReady() {
 
@@ -217,6 +228,16 @@ function onDeviceReady() {
 	});
 	
 	doResize();
+
+	var pushNotification = window.plugins.pushNotification;
+	pushNotification.registerDevice({alert:true, badge:true, sound:false}, function(status) {
+	    //navigator.notification.alert(JSON.stringify(['registerDevice', status]));
+	    console.log('registerDevice: ' +  status.deviceToken );
+	    //probably should sent this to the server here...
+
+	});
+
+	clearAllBadges();
 
 	clickEventType = (( isPhoneGap() == true )?'click':'click'); //never inplemented custom tap
 
@@ -1757,7 +1778,7 @@ function checkSettingsForUpdate() {
 function onResume() {
 	
 	checkSettingsForUpdate();
-
+	clearAllBadges();
 	getRoomStatus();
 	SleepDevice(false);
 	nowPlaying();

@@ -63,6 +63,7 @@
 		8572E6CB16C6D87D00759910 /* ChildBrowserCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 8572E6C616C6D87D00759910 /* ChildBrowserCommand.m */; };
 		8572E6CC16C6D87D00759910 /* ChildBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8572E6C816C6D87D00759910 /* ChildBrowserViewController.m */; };
 		8572E6CD16C6D87D00759910 /* ChildBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8572E6C916C6D87D00759910 /* ChildBrowserViewController.xib */; };
+		857ECB8116FE1A5900B9D1FA /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 857ECB8016FE1A5900B9D1FA /* PushNotification.m */; };
 		85FCE7FE16F76CE400E14785 /* applicationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FCE7FD16F76CE400E14785 /* applicationPreferences.m */; };
 		85FCE80416F7775800E14785 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85FCE80316F7775800E14785 /* Settings.bundle */; };
 		85FCE80716FB43D100E14785 /* TapToScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FCE80616FB43D100E14785 /* TapToScroll.m */; };
@@ -150,6 +151,9 @@
 		8572E6C716C6D87D00759910 /* ChildBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildBrowserViewController.h; sourceTree = "<group>"; };
 		8572E6C816C6D87D00759910 /* ChildBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildBrowserViewController.m; sourceTree = "<group>"; };
 		8572E6C916C6D87D00759910 /* ChildBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChildBrowserViewController.xib; sourceTree = "<group>"; };
+		857ECB7E16FE157000B9D1FA /* gesturePad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = gesturePad.entitlements; path = gesturePad/gesturePad.entitlements; sourceTree = "<group>"; };
+		857ECB7F16FE1A5900B9D1FA /* PushNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotification.h; sourceTree = "<group>"; };
+		857ECB8016FE1A5900B9D1FA /* PushNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotification.m; sourceTree = "<group>"; };
 		85FCE7FC16F76CE400E14785 /* applicationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = applicationPreferences.h; sourceTree = "<group>"; };
 		85FCE7FD16F76CE400E14785 /* applicationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = applicationPreferences.m; sourceTree = "<group>"; };
 		85FCE80316F7775800E14785 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = gesturePad/Settings.bundle; sourceTree = "<group>"; };
@@ -224,6 +228,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				857ECB7E16FE157000B9D1FA /* gesturePad.entitlements */,
 				853DA18E16FBDCA200DD339B /* Default-Portrait@2x~ipad.png */,
 				853DA18C16FBDC9800DD339B /* Default-Portrait~ipad.png */,
 				853DA18A16FBDC9400DD339B /* Default-Landscape~ipad.png */,
@@ -304,6 +309,8 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				857ECB7F16FE1A5900B9D1FA /* PushNotification.h */,
+				857ECB8016FE1A5900B9D1FA /* PushNotification.m */,
 				85FCE80516FB43D100E14785 /* TapToScroll.h */,
 				85FCE80616FB43D100E14785 /* TapToScroll.m */,
 				85FCE7FC16F76CE400E14785 /* applicationPreferences.h */,
@@ -514,6 +521,7 @@
 				85699E8C16C8226400DA7C25 /* ActionSheet.m in Sources */,
 				85FCE7FE16F76CE400E14785 /* applicationPreferences.m in Sources */,
 				85FCE80716FB43D100E14785 /* TapToScroll.m in Sources */,
+				857ECB8116FE1A5900B9D1FA /* PushNotification.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +576,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_ENTITLEMENTS = gesturePad/gesturePad.entitlements;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -590,6 +599,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_ENTITLEMENTS = gesturePad/gesturePad.entitlements;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "gesturePad/gesturePad-Prefix.pch";
@@ -616,6 +626,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jed Lippold (B8MVHC6NYE)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_THUMB_SUPPORT = NO;
@@ -629,7 +640,7 @@
 					"\"$(BUILT_PRODUCTS_DIR)\"",
 				);
 				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					CoreFoundation,
@@ -643,6 +654,7 @@
 					"-all_load",
 					"-Obj-C",
 				);
+				PROVISIONING_PROFILE = "E89C28B2-0176-4FE2-8711-0C51532A6110";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				SYMROOT = build;
@@ -662,6 +674,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jed Lippold (B8MVHC6NYE)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_THUMB_SUPPORT = NO;
@@ -675,7 +688,7 @@
 					"\"$(BUILT_PRODUCTS_DIR)\"",
 				);
 				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					CoreFoundation,
@@ -689,6 +702,7 @@
 					"-all_load",
 					"-Obj-C",
 				);
+				PROVISIONING_PROFILE = "E89C28B2-0176-4FE2-8711-0C51532A6110";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				SYMROOT = build;
