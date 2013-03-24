@@ -5,8 +5,8 @@
 //  Created by Justin McNally on 2/11/13.
 //
 //
+#import <Foundation/Foundation.h>
 
-#import <Cordova/CDV.h>
 #import <Cordova/CDVPlugin.h>
 
 @interface TapToScroll : CDVPlugin {

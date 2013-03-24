@@ -8,7 +8,9 @@
 // MIT Licensed
 
 #import <Foundation/Foundation.h>
+
 #import <Cordova/CDVPlugin.h>
+
 
 @interface PushNotification : CDVPlugin {
 

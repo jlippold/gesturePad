@@ -27,9 +27,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import <Cordova/CDVViewController.h>
-#import "PushNotification.h"
 
+#import "PushNotification.h"
+#import <Cordova/CDVViewController.h>
 
 @interface AppDelegate : NSObject < UIApplicationDelegate > {
 

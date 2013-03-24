@@ -6,9 +6,10 @@
 //  Copyright 2011 Sugee. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
+#import <Foundation/Foundation.h>
 #import <Cordova/CDVPlugin.h>
+
 
 @interface applicationPreferences : CDVPlugin 
 {

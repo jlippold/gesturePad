@@ -36,37 +36,23 @@
 		30A0434914DC770100060A13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30A0434614DC770100060A13 /* Localizable.strings */; };
 		30E1352710E2C1420031B30D /* Cordova.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30E1352610E2C1420031B30D /* Cordova.plist */; };
 		30E5649213A7FCAF007403D8 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E5649113A7FCAF007403D8 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		853DA18316FBDC7700DD339B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA18216FBDC7700DD339B /* Default.png */; };
-		853DA18516FBDC7F00DD339B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA18416FBDC7F00DD339B /* Default@2x.png */; };
-		853DA18716FBDC8300DD339B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA18616FBDC8300DD339B /* Default-568h@2x.png */; };
-		853DA18916FBDC8E00DD339B /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA18816FBDC8E00DD339B /* Default-Landscape@2x~ipad.png */; };
-		853DA18B16FBDC9400DD339B /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA18A16FBDC9400DD339B /* Default-Landscape~ipad.png */; };
-		853DA18D16FBDC9800DD339B /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA18C16FBDC9800DD339B /* Default-Portrait~ipad.png */; };
-		853DA18F16FBDCA200DD339B /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA18E16FBDCA200DD339B /* Default-Portrait@2x~ipad.png */; };
-		853DA19716FBDD5600DD339B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA19016FBDD5600DD339B /* Default-568h@2x.png */; };
-		853DA19816FBDD5600DD339B /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA19116FBDD5600DD339B /* Default-Landscape@2x~ipad.png */; };
-		853DA19916FBDD5600DD339B /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA19216FBDD5600DD339B /* Default-Landscape~ipad.png */; };
-		853DA19A16FBDD5600DD339B /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA19316FBDD5600DD339B /* Default-Portrait@2x~ipad.png */; };
-		853DA19B16FBDD5600DD339B /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA19416FBDD5600DD339B /* Default-Portrait~ipad.png */; };
-		853DA19C16FBDD5600DD339B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA19516FBDD5600DD339B /* Default.png */; };
-		853DA19D16FBDD5600DD339B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 853DA19616FBDD5600DD339B /* Default@2x.png */; };
-		8544CCAE1637871C00A52D3C /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8544CCA31637871C00A52D3C /* Icon-72.png */; };
-		8544CCAF1637871C00A52D3C /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8544CCA41637871C00A52D3C /* Icon-72@2x.png */; };
-		8544CCB01637871C00A52D3C /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 8544CCA51637871C00A52D3C /* Icon-Small-50.png */; };
-		8544CCB11637871C00A52D3C /* Icon-Small-50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8544CCA61637871C00A52D3C /* Icon-Small-50@2x.png */; };
-		8544CCB21637871C00A52D3C /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 8544CCA71637871C00A52D3C /* Icon-Small.png */; };
-		8544CCB31637871C00A52D3C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8544CCA81637871C00A52D3C /* Icon-Small@2x.png */; };
-		8544CCB41637871C00A52D3C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8544CCA91637871C00A52D3C /* Icon.png */; };
-		8544CCB51637871C00A52D3C /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8544CCAA1637871C00A52D3C /* Icon@2x.png */; };
-		85699E8C16C8226400DA7C25 /* ActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 85699E8B16C8226400DA7C25 /* ActionSheet.m */; };
-		8572E6CA16C6D87D00759910 /* ChildBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8572E6C416C6D87D00759910 /* ChildBrowser.bundle */; };
-		8572E6CB16C6D87D00759910 /* ChildBrowserCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 8572E6C616C6D87D00759910 /* ChildBrowserCommand.m */; };
-		8572E6CC16C6D87D00759910 /* ChildBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8572E6C816C6D87D00759910 /* ChildBrowserViewController.m */; };
-		8572E6CD16C6D87D00759910 /* ChildBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8572E6C916C6D87D00759910 /* ChildBrowserViewController.xib */; };
-		857ECB8116FE1A5900B9D1FA /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 857ECB8016FE1A5900B9D1FA /* PushNotification.m */; };
-		85FCE7FE16F76CE400E14785 /* applicationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FCE7FD16F76CE400E14785 /* applicationPreferences.m */; };
-		85FCE80416F7775800E14785 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85FCE80316F7775800E14785 /* Settings.bundle */; };
-		85FCE80716FB43D100E14785 /* TapToScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 85FCE80616FB43D100E14785 /* TapToScroll.m */; };
+		859C77D016FF5BC800C9ABD4 /* ActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77C316FF5BC800C9ABD4 /* ActionSheet.m */; };
+		859C77D116FF5BC800C9ABD4 /* applicationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77C516FF5BC800C9ABD4 /* applicationPreferences.m */; };
+		859C77D216FF5BC800C9ABD4 /* ChildBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 859C77C616FF5BC800C9ABD4 /* ChildBrowser.bundle */; };
+		859C77D316FF5BC800C9ABD4 /* ChildBrowserCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77C816FF5BC800C9ABD4 /* ChildBrowserCommand.m */; };
+		859C77D416FF5BC800C9ABD4 /* ChildBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77CA16FF5BC800C9ABD4 /* ChildBrowserViewController.m */; };
+		859C77D516FF5BC800C9ABD4 /* ChildBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 859C77CB16FF5BC800C9ABD4 /* ChildBrowserViewController.xib */; };
+		859C77D616FF5BC800C9ABD4 /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77CD16FF5BC800C9ABD4 /* PushNotification.m */; };
+		859C77D716FF5BC800C9ABD4 /* TapToScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77CF16FF5BC800C9ABD4 /* TapToScroll.m */; };
+		859C77DA16FF5F1D00C9ABD4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 859C77D916FF5F1D00C9ABD4 /* Settings.bundle */; };
+		859C77DE16FF606600C9ABD4 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77DD16FF606600C9ABD4 /* Icon-72@2x.png */; };
+		859C77E016FF608100C9ABD4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77DF16FF608100C9ABD4 /* Default-568h@2x.png */; };
+		859C77E216FF60BD00C9ABD4 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77E116FF60BD00C9ABD4 /* Default.png */; };
+		859C77E416FF60C000C9ABD4 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77E316FF60C000C9ABD4 /* Default@2x.png */; };
+		859C77E616FF60C600C9ABD4 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77E516FF60C600C9ABD4 /* Default-Portrait~ipad.png */; };
+		859C77E816FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77E716FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png */; };
+		859C77EA16FF60CC00C9ABD4 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77E916FF60CC00C9ABD4 /* Default-Landscape~ipad.png */; };
+		859C77EC16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77EB16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,7 +82,7 @@
 		1F766FE013BBADB100FB74C0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		301BF52D109A57CC0062928A /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = ../phoneGap/phonegap220/lib/ios/CordovaLib/CordovaLib.xcodeproj; sourceTree = "<group>"; };
+		301BF52D109A57CC0062928A /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = CordovaLib/CordovaLib.xcodeproj; sourceTree = "<group>"; };
 		301BF56E109A69640062928A /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = SOURCE_ROOT; };
 		301BF5B4109A6A2B0062928A /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		301BF5B6109A6A2B0062928A /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
@@ -112,7 +98,6 @@
 		302D95F014D2391D003F00A1 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
 		305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		3072F99613A8081B00425683 /* Capture.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Capture.bundle; sourceTree = "<group>"; };
-		307D28A1123043350040C0FA /* CordovaBuildSettings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CordovaBuildSettings.xcconfig; path = ../CordovaBuildSettings.xcconfig; sourceTree = "<group>"; };
 		308D052E1370CCF300D202BF /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72.png"; sourceTree = "<group>"; };
 		308D052F1370CCF300D202BF /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		308D05301370CCF300D202BF /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
@@ -121,44 +106,30 @@
 		30E1352610E2C1420031B30D /* Cordova.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Cordova.plist; path = ../Cordova.plist; sourceTree = "<group>"; };
 		30E5649113A7FCAF007403D8 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* gesturePad-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gesturePad-Prefix.pch"; sourceTree = "<group>"; };
-		853DA18216FBDC7700DD339B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		853DA18416FBDC7F00DD339B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		853DA18616FBDC8300DD339B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		853DA18816FBDC8E00DD339B /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
-		853DA18A16FBDC9400DD339B /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
-		853DA18C16FBDC9800DD339B /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
-		853DA18E16FBDCA200DD339B /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
-		853DA19016FBDD5600DD339B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		853DA19116FBDD5600DD339B /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
-		853DA19216FBDD5600DD339B /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
-		853DA19316FBDD5600DD339B /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
-		853DA19416FBDD5600DD339B /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
-		853DA19516FBDD5600DD339B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		853DA19616FBDD5600DD339B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		8544CCA31637871C00A52D3C /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
-		8544CCA41637871C00A52D3C /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
-		8544CCA51637871C00A52D3C /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50.png"; sourceTree = "<group>"; };
-		8544CCA61637871C00A52D3C /* Icon-Small-50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50@2x.png"; sourceTree = "<group>"; };
-		8544CCA71637871C00A52D3C /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
-		8544CCA81637871C00A52D3C /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
-		8544CCA91637871C00A52D3C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		8544CCAA1637871C00A52D3C /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		85699E8A16C8226400DA7C25 /* ActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionSheet.h; sourceTree = "<group>"; };
-		85699E8B16C8226400DA7C25 /* ActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheet.m; sourceTree = "<group>"; };
-		8572E6C416C6D87D00759910 /* ChildBrowser.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ChildBrowser.bundle; sourceTree = "<group>"; };
-		8572E6C516C6D87D00759910 /* ChildBrowserCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildBrowserCommand.h; sourceTree = "<group>"; };
-		8572E6C616C6D87D00759910 /* ChildBrowserCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildBrowserCommand.m; sourceTree = "<group>"; };
-		8572E6C716C6D87D00759910 /* ChildBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildBrowserViewController.h; sourceTree = "<group>"; };
-		8572E6C816C6D87D00759910 /* ChildBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildBrowserViewController.m; sourceTree = "<group>"; };
-		8572E6C916C6D87D00759910 /* ChildBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChildBrowserViewController.xib; sourceTree = "<group>"; };
-		857ECB7E16FE157000B9D1FA /* gesturePad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = gesturePad.entitlements; path = gesturePad/gesturePad.entitlements; sourceTree = "<group>"; };
-		857ECB7F16FE1A5900B9D1FA /* PushNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotification.h; sourceTree = "<group>"; };
-		857ECB8016FE1A5900B9D1FA /* PushNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotification.m; sourceTree = "<group>"; };
-		85FCE7FC16F76CE400E14785 /* applicationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = applicationPreferences.h; sourceTree = "<group>"; };
-		85FCE7FD16F76CE400E14785 /* applicationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = applicationPreferences.m; sourceTree = "<group>"; };
-		85FCE80316F7775800E14785 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = gesturePad/Settings.bundle; sourceTree = "<group>"; };
-		85FCE80516FB43D100E14785 /* TapToScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapToScroll.h; sourceTree = "<group>"; };
-		85FCE80616FB43D100E14785 /* TapToScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapToScroll.m; sourceTree = "<group>"; };
+		859C77C216FF5BC800C9ABD4 /* ActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionSheet.h; sourceTree = "<group>"; };
+		859C77C316FF5BC800C9ABD4 /* ActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheet.m; sourceTree = "<group>"; };
+		859C77C416FF5BC800C9ABD4 /* applicationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = applicationPreferences.h; sourceTree = "<group>"; };
+		859C77C516FF5BC800C9ABD4 /* applicationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = applicationPreferences.m; sourceTree = "<group>"; };
+		859C77C616FF5BC800C9ABD4 /* ChildBrowser.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ChildBrowser.bundle; sourceTree = "<group>"; };
+		859C77C716FF5BC800C9ABD4 /* ChildBrowserCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildBrowserCommand.h; sourceTree = "<group>"; };
+		859C77C816FF5BC800C9ABD4 /* ChildBrowserCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildBrowserCommand.m; sourceTree = "<group>"; };
+		859C77C916FF5BC800C9ABD4 /* ChildBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildBrowserViewController.h; sourceTree = "<group>"; };
+		859C77CA16FF5BC800C9ABD4 /* ChildBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildBrowserViewController.m; sourceTree = "<group>"; };
+		859C77CB16FF5BC800C9ABD4 /* ChildBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChildBrowserViewController.xib; sourceTree = "<group>"; };
+		859C77CC16FF5BC800C9ABD4 /* PushNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotification.h; sourceTree = "<group>"; };
+		859C77CD16FF5BC800C9ABD4 /* PushNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotification.m; sourceTree = "<group>"; };
+		859C77CE16FF5BC800C9ABD4 /* TapToScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapToScroll.h; sourceTree = "<group>"; };
+		859C77CF16FF5BC800C9ABD4 /* TapToScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapToScroll.m; sourceTree = "<group>"; };
+		859C77D916FF5F1D00C9ABD4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = gesturePad/Settings.bundle; sourceTree = "<group>"; };
+		859C77DC16FF5FC300C9ABD4 /* gesturePad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = gesturePad.entitlements; path = gesturePad/gesturePad.entitlements; sourceTree = "<group>"; };
+		859C77DD16FF606600C9ABD4 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		859C77DF16FF608100C9ABD4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		859C77E116FF60BD00C9ABD4 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		859C77E316FF60C000C9ABD4 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		859C77E516FF60C600C9ABD4 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
+		859C77E716FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
+		859C77E916FF60CC00C9ABD4 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		859C77EB16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* gesturePad-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "gesturePad-Info.plist"; path = "../gesturePad-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -228,15 +199,16 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				857ECB7E16FE157000B9D1FA /* gesturePad.entitlements */,
-				853DA18E16FBDCA200DD339B /* Default-Portrait@2x~ipad.png */,
-				853DA18C16FBDC9800DD339B /* Default-Portrait~ipad.png */,
-				853DA18A16FBDC9400DD339B /* Default-Landscape~ipad.png */,
-				853DA18816FBDC8E00DD339B /* Default-Landscape@2x~ipad.png */,
-				853DA18616FBDC8300DD339B /* Default-568h@2x.png */,
-				853DA18416FBDC7F00DD339B /* Default@2x.png */,
-				853DA18216FBDC7700DD339B /* Default.png */,
-				85FCE80316F7775800E14785 /* Settings.bundle */,
+				859C77EB16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png */,
+				859C77E916FF60CC00C9ABD4 /* Default-Landscape~ipad.png */,
+				859C77E716FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png */,
+				859C77E516FF60C600C9ABD4 /* Default-Portrait~ipad.png */,
+				859C77E316FF60C000C9ABD4 /* Default@2x.png */,
+				859C77E116FF60BD00C9ABD4 /* Default.png */,
+				859C77DF16FF608100C9ABD4 /* Default-568h@2x.png */,
+				859C77DD16FF606600C9ABD4 /* Icon-72@2x.png */,
+				859C77DC16FF5FC300C9ABD4 /* gesturePad.entitlements */,
+				859C77D916FF5F1D00C9ABD4 /* Settings.bundle */,
 				301BF56E109A69640062928A /* www */,
 				301BF52D109A57CC0062928A /* CordovaLib.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -271,7 +243,6 @@
 				308D05311370CCF300D202BF /* splash */,
 				30E1352610E2C1420031B30D /* Cordova.plist */,
 				8D1107310486CEB800E47090 /* gesturePad-Info.plist */,
-				307D28A1123043350040C0FA /* CordovaBuildSettings.xcconfig */,
 			);
 			name = Resources;
 			path = gesturePad/Resources;
@@ -309,20 +280,20 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
-				857ECB7F16FE1A5900B9D1FA /* PushNotification.h */,
-				857ECB8016FE1A5900B9D1FA /* PushNotification.m */,
-				85FCE80516FB43D100E14785 /* TapToScroll.h */,
-				85FCE80616FB43D100E14785 /* TapToScroll.m */,
-				85FCE7FC16F76CE400E14785 /* applicationPreferences.h */,
-				85FCE7FD16F76CE400E14785 /* applicationPreferences.m */,
-				85699E8A16C8226400DA7C25 /* ActionSheet.h */,
-				85699E8B16C8226400DA7C25 /* ActionSheet.m */,
-				8572E6C416C6D87D00759910 /* ChildBrowser.bundle */,
-				8572E6C516C6D87D00759910 /* ChildBrowserCommand.h */,
-				8572E6C616C6D87D00759910 /* ChildBrowserCommand.m */,
-				8572E6C716C6D87D00759910 /* ChildBrowserViewController.h */,
-				8572E6C816C6D87D00759910 /* ChildBrowserViewController.m */,
-				8572E6C916C6D87D00759910 /* ChildBrowserViewController.xib */,
+				859C77C216FF5BC800C9ABD4 /* ActionSheet.h */,
+				859C77C316FF5BC800C9ABD4 /* ActionSheet.m */,
+				859C77C416FF5BC800C9ABD4 /* applicationPreferences.h */,
+				859C77C516FF5BC800C9ABD4 /* applicationPreferences.m */,
+				859C77C616FF5BC800C9ABD4 /* ChildBrowser.bundle */,
+				859C77C716FF5BC800C9ABD4 /* ChildBrowserCommand.h */,
+				859C77C816FF5BC800C9ABD4 /* ChildBrowserCommand.m */,
+				859C77C916FF5BC800C9ABD4 /* ChildBrowserViewController.h */,
+				859C77CA16FF5BC800C9ABD4 /* ChildBrowserViewController.m */,
+				859C77CB16FF5BC800C9ABD4 /* ChildBrowserViewController.xib */,
+				859C77CC16FF5BC800C9ABD4 /* PushNotification.h */,
+				859C77CD16FF5BC800C9ABD4 /* PushNotification.m */,
+				859C77CE16FF5BC800C9ABD4 /* TapToScroll.h */,
+				859C77CF16FF5BC800C9ABD4 /* TapToScroll.m */,
 			);
 			name = Plugins;
 			path = gesturePad/Plugins;
@@ -332,14 +303,6 @@
 			isa = PBXGroup;
 			children = (
 				308D052E1370CCF300D202BF /* icon-72.png */,
-				8544CCA31637871C00A52D3C /* Icon-72.png */,
-				8544CCA41637871C00A52D3C /* Icon-72@2x.png */,
-				8544CCA51637871C00A52D3C /* Icon-Small-50.png */,
-				8544CCA61637871C00A52D3C /* Icon-Small-50@2x.png */,
-				8544CCA71637871C00A52D3C /* Icon-Small.png */,
-				8544CCA81637871C00A52D3C /* Icon-Small@2x.png */,
-				8544CCA91637871C00A52D3C /* Icon.png */,
-				8544CCAA1637871C00A52D3C /* Icon@2x.png */,
 				308D052F1370CCF300D202BF /* icon.png */,
 				308D05301370CCF300D202BF /* icon@2x.png */,
 			);
@@ -349,13 +312,6 @@
 		308D05311370CCF300D202BF /* splash */ = {
 			isa = PBXGroup;
 			children = (
-				853DA19016FBDD5600DD339B /* Default-568h@2x.png */,
-				853DA19116FBDD5600DD339B /* Default-Landscape@2x~ipad.png */,
-				853DA19216FBDD5600DD339B /* Default-Landscape~ipad.png */,
-				853DA19316FBDD5600DD339B /* Default-Portrait@2x~ipad.png */,
-				853DA19416FBDD5600DD339B /* Default-Portrait~ipad.png */,
-				853DA19516FBDD5600DD339B /* Default.png */,
-				853DA19616FBDD5600DD339B /* Default@2x.png */,
 			);
 			path = splash;
 			sourceTree = "<group>";
@@ -404,7 +360,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "gesturePad" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -461,31 +417,17 @@
 				302D95F214D2391D003F00A1 /* MainViewController.xib in Resources */,
 				30A0434814DC770100060A13 /* Localizable.strings in Resources */,
 				30A0434914DC770100060A13 /* Localizable.strings in Resources */,
-				8544CCAE1637871C00A52D3C /* Icon-72.png in Resources */,
-				8544CCAF1637871C00A52D3C /* Icon-72@2x.png in Resources */,
-				8544CCB01637871C00A52D3C /* Icon-Small-50.png in Resources */,
-				8544CCB11637871C00A52D3C /* Icon-Small-50@2x.png in Resources */,
-				8544CCB21637871C00A52D3C /* Icon-Small.png in Resources */,
-				8544CCB31637871C00A52D3C /* Icon-Small@2x.png in Resources */,
-				8544CCB41637871C00A52D3C /* Icon.png in Resources */,
-				8544CCB51637871C00A52D3C /* Icon@2x.png in Resources */,
-				8572E6CA16C6D87D00759910 /* ChildBrowser.bundle in Resources */,
-				8572E6CD16C6D87D00759910 /* ChildBrowserViewController.xib in Resources */,
-				85FCE80416F7775800E14785 /* Settings.bundle in Resources */,
-				853DA18316FBDC7700DD339B /* Default.png in Resources */,
-				853DA18516FBDC7F00DD339B /* Default@2x.png in Resources */,
-				853DA18716FBDC8300DD339B /* Default-568h@2x.png in Resources */,
-				853DA18916FBDC8E00DD339B /* Default-Landscape@2x~ipad.png in Resources */,
-				853DA18B16FBDC9400DD339B /* Default-Landscape~ipad.png in Resources */,
-				853DA18D16FBDC9800DD339B /* Default-Portrait~ipad.png in Resources */,
-				853DA18F16FBDCA200DD339B /* Default-Portrait@2x~ipad.png in Resources */,
-				853DA19716FBDD5600DD339B /* Default-568h@2x.png in Resources */,
-				853DA19816FBDD5600DD339B /* Default-Landscape@2x~ipad.png in Resources */,
-				853DA19916FBDD5600DD339B /* Default-Landscape~ipad.png in Resources */,
-				853DA19A16FBDD5600DD339B /* Default-Portrait@2x~ipad.png in Resources */,
-				853DA19B16FBDD5600DD339B /* Default-Portrait~ipad.png in Resources */,
-				853DA19C16FBDD5600DD339B /* Default.png in Resources */,
-				853DA19D16FBDD5600DD339B /* Default@2x.png in Resources */,
+				859C77D216FF5BC800C9ABD4 /* ChildBrowser.bundle in Resources */,
+				859C77D516FF5BC800C9ABD4 /* ChildBrowserViewController.xib in Resources */,
+				859C77DA16FF5F1D00C9ABD4 /* Settings.bundle in Resources */,
+				859C77DE16FF606600C9ABD4 /* Icon-72@2x.png in Resources */,
+				859C77E016FF608100C9ABD4 /* Default-568h@2x.png in Resources */,
+				859C77E216FF60BD00C9ABD4 /* Default.png in Resources */,
+				859C77E416FF60C000C9ABD4 /* Default@2x.png in Resources */,
+				859C77E616FF60C600C9ABD4 /* Default-Portrait~ipad.png in Resources */,
+				859C77E816FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png in Resources */,
+				859C77EA16FF60CC00C9ABD4 /* Default-Landscape~ipad.png in Resources */,
+				859C77EC16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,12 +458,12 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
-				8572E6CB16C6D87D00759910 /* ChildBrowserCommand.m in Sources */,
-				8572E6CC16C6D87D00759910 /* ChildBrowserViewController.m in Sources */,
-				85699E8C16C8226400DA7C25 /* ActionSheet.m in Sources */,
-				85FCE7FE16F76CE400E14785 /* applicationPreferences.m in Sources */,
-				85FCE80716FB43D100E14785 /* TapToScroll.m in Sources */,
-				857ECB8116FE1A5900B9D1FA /* PushNotification.m in Sources */,
+				859C77D016FF5BC800C9ABD4 /* ActionSheet.m in Sources */,
+				859C77D116FF5BC800C9ABD4 /* applicationPreferences.m in Sources */,
+				859C77D316FF5BC800C9ABD4 /* ChildBrowserCommand.m in Sources */,
+				859C77D416FF5BC800C9ABD4 /* ChildBrowserViewController.m in Sources */,
+				859C77D616FF5BC800C9ABD4 /* PushNotification.m in Sources */,
+				859C77D716FF5BC800C9ABD4 /* TapToScroll.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,6 +518,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CODE_SIGN_ENTITLEMENTS = gesturePad/gesturePad.entitlements;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -584,12 +527,9 @@
 				GCC_PREFIX_HEADER = "gesturePad/gesturePad-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				"HEADER_SEARCH_PATHS[arch=*]" = "$(CORDOVALIB)/Classes";
 				INFOPLIST_FILE = "gesturePad/gesturePad-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = gesturePad;
-				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -599,6 +539,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CODE_SIGN_ENTITLEMENTS = gesturePad/gesturePad.entitlements;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -606,41 +547,28 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "gesturePad/gesturePad-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = gesturePad;
-				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 307D28A1123043350040C0FA /* CordovaBuildSettings.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-				);
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jed Lippold (B8MVHC6NYE)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
 					"\"$(BUILT_PRODUCTS_DIR)\"",
 				);
-				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					CoreFoundation,
@@ -654,41 +582,28 @@
 					"-all_load",
 					"-Obj-C",
 				);
-				PROVISIONING_PROFILE = "F0EEEC56-E9CE-481E-B0EF-CBDCC9E93116";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
-				SYMROOT = build;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 307D28A1123043350040C0FA /* CordovaBuildSettings.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-				);
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jed Lippold (B8MVHC6NYE)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
 					"\"$(BUILT_PRODUCTS_DIR)\"",
 				);
-				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					CoreFoundation,
@@ -702,10 +617,8 @@
 					"-all_load",
 					"-Obj-C",
 				);
-				PROVISIONING_PROFILE = "F0EEEC56-E9CE-481E-B0EF-CBDCC9E93116";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
-				SYMROOT = build;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;

@@ -17,7 +17,7 @@
 		<string>icon-Small.png</string>
 		<string>icon-Small@2x.png</string>
 		<string>icon-72.png</string>
-		<string>icon-72@2x.png</string>
+		<string>Icon-72@2x.png</string>
 		<string>icon-Small-50.png</string>
 		<string>icon-Small-50@2x.png</string>
 		<string>Icon-57.png</string>
@@ -33,7 +33,7 @@
 				<string>icon-Small.png</string>
 				<string>icon-Small@2x.png</string>
 				<string>icon-72.png</string>
-				<string>icon-72@2x.png</string>
+				<string>Icon-72@2x.png</string>
 				<string>icon-Small-50.png</string>
 				<string>icon-Small-50@2x.png</string>
 				<string>Icon-57.png</string>
@@ -65,7 +65,7 @@
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleBlackOpaque</string>
+	<string>UIStatusBarStyleBlackTranslucent</string>
 	<key>UIStatusBarTintParameters</key>
 	<dict>
 		<key>UINavigationBar</key>
