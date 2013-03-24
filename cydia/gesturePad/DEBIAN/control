@@ -2,7 +2,7 @@ Author: treAson <shitburg@yahoo.com>
 Maintainer: treAson <shitburg@yahoo.com>
 Name: gesturePad
 Package: com.treason.gesturePad
-Depends: firmware (>= 6.1)
+Depends: firmware (>= 5.0)
 Section: Utilities
 Version: 1.1.7
 Architecture: iphoneos-arm
