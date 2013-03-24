@@ -20,7 +20,6 @@
 
         <p class="view"><a href="https://github.com/treason/gesturePad">View the Project on GitHub <small>treason/gesturePad</small></a></p>
 
-
         <ul>
           <li><a href="https://github.com/treason/gesturePad/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/treason/gesturePad/tarball/master">Download <strong>TAR Ball</strong></a></li>
@@ -30,7 +29,7 @@
       <section>
         <h3>gesturePad</h3>
 
-<p>gesturePad is a gesture based remote control application for controlling device's with an http API. Run on iOS 6+, iPhone, iTouch and iPad.</p>
+<p>gesturePad is a gesture based remote control application for controlling device's with an http API. Run on iOS 5+, iPhone, iTouch and iPad.</p>
 
 <p>Currently controls MediaBrowser 2 (mb3 in testing), eventghost and DirecTV natively. Also tested with insteon devices, and is totally extendable to any device with an http api</p>
 
@@ -45,8 +44,11 @@
 
 <h3>gesturePad</h3>
 
-<p><strong>Setup</strong></p>
-<p>Add device info into iphone settings</p>
+<p><strong>Setup (required)</strong></p>
+<p>If you are jailbroken on iOS 5.1+, you can get <a href='https://github.com/treason/gesturePad/blob/master/deb/gesturePad.deb?raw=true'>the deb here</a></p>
+<p>If you don't know how to install a deb, download iFile in cydia, open this page in safari and click the deb link above</p>
+<p>Once installed, add device info into iphone settings</p>
+<p>Runs on ipad/iphone</p>
 
 <p><strong>Features</strong></p>
 <p>Offine mode, image caching, multiple rooms &amp; devices, local DB, volume slider with repeat, gesture list.</p>
@@ -54,7 +56,9 @@
 <h3>MediaBrowser <small><a href='http://www.mediabrowser.tv/'>mediabrowser.tv</a></small> </h3>
 
 <p><strong>Setup (required)</strong></p>
-<p>If you are jailbroken on iOS 6.1+, you can get <a href='https://github.com/treason/gesturePad/blob/master/deb/gesturePad.deb?raw=true'>the deb here</a></p>
+<p>Download the WebAPI, for MediaBrowser2  <a href='https://github.com/treason/gesturePad/blob/master/Docs/WebAPI.dll?raw=true'>here</a> and save it to C:\ProgramData\MediaBrowser\Plugins</p>
+
+<p>Open Port 8092 in firewall</p>
 
 <p><strong>Features</strong></p>
 <p>Time shifting, library browsing, list view, resuming, imdb lookup, navigation.</p>
@@ -62,7 +66,7 @@
 <h3>Eventghost <small><a href='http://www.eventghost.org/'>eventghost.org</a></small></h3>
 
 <p><strong>Setup (required)</strong></p>
-<p>You will need to setup eventghost with the webserver plugin to allow remote control. Sample eventghost config can be found here:</p>
+<p>You will need to setup eventghost with the webserver plugin to allow remote control. Sample eventghost config can be found <a href='https://github.com/treason/gesturePad/blob/master/Docs/EventGhostIR-sample.xml?raw=true'>here</a></p>
 
 <p><strong>Features</strong></p>
 <p>Whatever you can do with eventghost, you can fire from gesturePad. :-)</p>
