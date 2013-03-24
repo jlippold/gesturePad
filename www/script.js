@@ -506,9 +506,23 @@ function onDeviceReady() {
 			     $("#backFace").html( tb );
 			     checkScrollOverflow();
 				
-				$("#backFace table tr").bind(clickEventType, function () {
-					ShowItems( $(this) );
+
+				$("#backFace table tr").each(function() {
+					var itemType = $(this).attr("data-type");
+					if ( itemType == "Movie" || itemType == "Episode" ) {
+						$(this).longclick( function(evt) {
+			            	ShowItems( evt.currentTarget, "taphold" )
+			            }, 750);
+						$(this).bind("click", function() {
+							ShowItems( $(this) )
+						});
+					} else {
+						$(this).bind("click", function() {
+							ShowItems( $(this) )
+						});
+					}
 				});
+
 			}
 
 			var getJsonFromServer = function(MBUrl, parse) {
@@ -1175,82 +1189,102 @@ function playByID(buttonIndex, id)  {
 	}
 }
 
-function playTitle(tr, movieTitle) {
+function playTitle(tr, movieTitle, playNow) {
 
     if ( isWifi() == false ) {
         doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
         return;
     }
 
-	var actionSheet = window.plugins.actionSheet;
-	var actions = ["Play", "Resume", "View on Screen"];
+    if (playNow) {
+		var MBUrl = getMBUrl();
+		var guid = $(tr).attr("data-guid");
+		MBUrl += "ui?command=play&id=" + guid;
+		$.getJSON(MBUrl, function() {
+			setTimeout(function() {
+				nowPlaying();
+			}, 1500)
+	     });
+		doAlert("Now Playing\n" + movieTitle );
 
-	if ( $(tr).attr("data-imdb") == "1" ) {
-		actions.push("View Imdb Page")	
-	}
+    } else {
+		var actionSheet = window.plugins.actionSheet;
+		var actions = ["Play", "Resume", "View on Screen"];
 
-	actions.push("Cancel");
-
-	var MBUrl = getMBUrl();
-	var guid = $(tr).attr("data-guid")
-	var title = "Actions";
-
-	if ( title != undefined ) {
-		title = movieTitle;
-	}
-
-	actionSheet.create({title: title, items: actions, destructiveButtonIndex: (actions.length-1)}, function(buttonValue, buttonIndex) {
-		if (buttonIndex == -1  || buttonIndex == (actions.length-1)) {
-			return;
+		if ( $(tr).attr("data-imdb") == "1" ) {
+			actions.push("View Imdb Page")	
 		}
-		switch(actions[buttonIndex]) {
-			case "Play":
-				MBUrl += "ui?command=play&id=" + guid
-				break;
-			case "Resume":
-				MBUrl += "ui?command=resume&id=" + guid
-				break;
-			case "View on Screen":
-				MBUrl += "ui?command=navigatetoitem&id=" + guid
-				break;
-			case "View Imdb Page":
-				MBUrl = ""
-				break;
+
+		actions.push("Cancel");
+
+		var MBUrl = getMBUrl();
+		var guid = $(tr).attr("data-guid")
+		var title = "Actions";
+
+		if ( title != undefined ) {
+			title = movieTitle;
 		}
-		if ( MBUrl != "" ) {
-			$.getJSON(MBUrl, function() {
-				setTimeout(function() {
-					nowPlaying();
-				}, 1500)
-		     })
-		} else {
-			//launch Imdb
-			$.ajax({
-				url: getMBUrl() + "library/?Id=" + guid + "&lightData=1",
-				dataType: 'json',
-				timeout: settings.MBServiceTimeout,
-				success: function(x) {
-					if ( x.Data.ImdbID ) {
-				    	cb = window.plugins.childBrowser;    
-					    if (cb != null) {
-					        cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
-					    }	
-					} else {
-						doAlert("Sorry, This title does not have an IMBD id");
+
+		actionSheet.create({title: title, items: actions, destructiveButtonIndex: (actions.length-1)}, function(buttonValue, buttonIndex) {
+			if (buttonIndex == -1  || buttonIndex == (actions.length-1)) {
+				return;
+			}
+			switch(actions[buttonIndex]) {
+				case "Play":
+					MBUrl += "ui?command=play&id=" + guid
+					break;
+				case "Resume":
+					MBUrl += "ui?command=resume&id=" + guid
+					break;
+				case "View on Screen":
+					MBUrl += "ui?command=navigatetoitem&id=" + guid
+					break;
+				case "View Imdb Page":
+					MBUrl = ""
+					break;
+			}
+			if ( MBUrl != "" ) {
+				$.getJSON(MBUrl, function() {
+					setTimeout(function() {
+						nowPlaying();
+					}, 1500)
+			     })
+			} else {
+				//launch Imdb
+				$.ajax({
+					url: getMBUrl() + "library/?Id=" + guid + "&lightData=1",
+					dataType: 'json',
+					timeout: settings.MBServiceTimeout,
+					success: function(x) {
+						if ( x.Data.ImdbID ) {
+					    	cb = window.plugins.childBrowser;    
+						    if (cb != null) {
+						        cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
+						    }	
+						} else {
+							doAlert("Sorry, This title does not have an IMBD id");
+						}
+					}, 
+					error: function() {
+						if (parse) {
+							doAlert("The server is not responding in time, and no cached version exists. Try again later");
+						}
 					}
-				}, 
-				error: function() {
-					if (parse) {
-						doAlert("The server is not responding in time, and no cached version exists. Try again later");
-					}
-				}
-			});
-		}
-	});	
+				});
+			}
+		});	
+    }
+
+
 }
 
-function showBottomItems(tr) {
+function showBottomItems(tr, sentEventType) {
 
+	var eventType = "click";
+	if ( sentEventType ) {
+		eventType = sentEventType;
+	}
+	
 	var device = getCurrentDevice();
 
 	if (device.shortname == "MCE") {
@@ -1261,7 +1295,12 @@ function showBottomItems(tr) {
 		var backwards = false;
 		if ( tr ) {
 			if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
-				playTitle( $(tr), $(tr).parent().find("p").text() );
+				if (eventType == "taphold") {
+					playTitle( $(tr), $(tr).parent().find("p").text(), false );
+				} else {
+					playTitle( $(tr), $(tr).parent().find("p").text(), true );
+				}
+				
 				return;
 			}
 			if ( $(tr).hasAttr("data-backwards") ) {
@@ -1283,6 +1322,7 @@ function showBottomItems(tr) {
 				$("#covers").html("<div class='boxLoader'><p class='boxLoading'>Loading Data...</p></div>").css("opacity", "1").hide().fadeIn();
 
 				var parseJsonResults = function (x) {
+
 					var tb = '<div style="width: 40px; height: 100%; float:left"> </div>';
 
 					$("#covers").width( ((x.Data.Children.length) * boxCoverWidth) + 50 );
@@ -1341,9 +1381,22 @@ function showBottomItems(tr) {
 					$('#covers').css("margin-top", "-130px").css("opacity", "0.25");
 
 					$("#covers").empty().append( $(children).children() ) ;
-					$("#covers img").bind(clickEventType, function () {
-						$("#boxCoverBack").data("scrollPosition", $("#boxCoverContainer").scrollLeft() );
-						showBottomItems( $(this) )
+
+					$("#covers img").each(function() {
+						var itemType = $(this).attr("data-type");
+						if ( itemType == "Movie" || itemType == "Episode" ) {
+							$(this).longclick( function(evt) {
+				            	showBottomItems( evt.currentTarget, "taphold" )
+				            }, 750);
+							$(this).bind("click", function() {
+								showBottomItems( $(this) )
+							});
+						} else {
+							$(this).bind("click", function() {
+								$("#boxCoverBack").data("scrollPosition", $("#boxCoverContainer").scrollLeft() );
+								showBottomItems( $(this) )
+							});
+						}
 					});
 
 					$('#covers').animate({
@@ -1552,14 +1605,25 @@ function showBottomItems(tr) {
 }
 
 
-function ShowItems(tr) {
-	clearSleepTimer()
+function ShowItems(tr, sentEventType) {
+	clearSleepTimer();
+
+	var eventType = "click";
+	if ( sentEventType ) {
+		eventType = sentEventType;
+	}
 
 	var MBUrl = getMBUrl();
 
 	if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
 		//play title
-		playTitle( $(tr), $(tr).find("td:first").text() );
+
+		if (eventType == "taphold") {
+			playTitle( $(tr), $(tr).find("td:first").text(), false );
+		} else {
+			playTitle( $(tr), $(tr).find("td:first").text(), true );
+		}
+				
 		return;
 	}
 
@@ -2430,77 +2494,6 @@ function playBeep() {
 
 
 
-/*
- * jQuery AjaxQ - AJAX request queueing for jQuery
- *
- * Version: 0.0.1
- * Date: July 22, 2008
- *
- * Copyright (c) 2008 Oleg Podolsky (oleg.podolsky@gmail.com)
- * Licensed under the MIT (MIT-LICENSE.txt) license.
- *
- * http://plugins.jquery.com/project/ajaxq
- * http://code.google.com/p/jquery-ajaxq/
- */
-
-jQuery.ajaxq = function (queue, options)
-{
-	// Initialize storage for request queues if it's not initialized yet
-	if (typeof document.ajaxq == "undefined") document.ajaxq = {q:{}, r:null};
-
-	// Initialize current queue if it's not initialized yet
-	if (typeof document.ajaxq.q[queue] == "undefined") document.ajaxq.q[queue] = [];
-	
-	if (typeof options != "undefined") // Request settings are given, enqueue the new request
-	{
-		// Copy the original options, because options.complete is going to be overridden
-
-		var optionsCopy = {};
-		for (var o in options) optionsCopy[o] = options[o];
-		options = optionsCopy;
-		
-		// Override the original callback
-
-		var originalCompleteCallback = options.complete;
-
-		options.complete = function (request, status)
-		{
-			// Dequeue the current request
-			document.ajaxq.q[queue].shift ();
-			document.ajaxq.r = null;
-			
-			// Run the original callback
-			if (originalCompleteCallback) originalCompleteCallback (request, status);
-
-			// Run the next request from the queue
-			if (document.ajaxq.q[queue].length > 0) document.ajaxq.r = jQuery.ajax (document.ajaxq.q[queue][0]);
-
-			//console.log(document.ajaxq)
-		};
-
-		// Enqueue the request
-		document.ajaxq.q[queue].push (options);
-
-		// Also, if no request is currently running, start it
-		if (document.ajaxq.q[queue].length == 1) document.ajaxq.r = jQuery.ajax (options);
-	}
-	else // No request settings are given, stop current request and clear the queue
-	{
-		if (document.ajaxq.r)
-		{
-			document.ajaxq.r.abort ();
-			document.ajaxq.r = null;
-		}
-
-		document.ajaxq.q[queue] = [];
-	}
-}
-
-$.fn.hasAttr = function(name) {  
-   return this.attr(name) !== undefined;
-};
-
-
 function getImageFromCache(request, callback) {
 
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
@@ -2518,7 +2511,7 @@ function getImageFromCache(request, callback) {
         				function fail(evt) { console.log("Error reading Cached File"); callback({cached: false, url: request.url }); }
         			);
     			},
-				function fail(evt) { console.log("Cached file doesnt exist");  callback({cached: false, url: request.url }); }
+				function fail(evt) { /* console.log("Cached file doesnt exist"); */ callback({cached: false, url: request.url }); }
 			);
     	},
 		function fail(evt) { console.log("Pull cache Error, no access to file system"); callback({cached: false, url: request.url }); }
@@ -2581,7 +2574,7 @@ function getJsonFromCache(MBUrl, callback) {
         				function fail(evt) { console.log("Error reading Cached File"); callback(null); }
         			);
     			},
-				function fail(evt) { console.log("Cached file doesnt exist");  callback(null); }
+				function fail(evt) { /* console.log("Cached file doesnt exist");  */ callback(null); }
 			);
     	},
 		function fail(evt) { console.log("Pull cache Error, no access to file system"); callback(null); }
@@ -2753,3 +2746,106 @@ function hasDirecTV() {
 	}
 	return retVal;
 }
+
+
+
+/*
+ * jQuery AjaxQ - AJAX request queueing for jQuery
+ *
+ * Version: 0.0.1
+ * Date: July 22, 2008
+ *
+ * Copyright (c) 2008 Oleg Podolsky (oleg.podolsky@gmail.com)
+ * Licensed under the MIT (MIT-LICENSE.txt) license.
+ *
+ * http://plugins.jquery.com/project/ajaxq
+ * http://code.google.com/p/jquery-ajaxq/
+ */
+
+jQuery.ajaxq = function (queue, options)
+{
+	// Initialize storage for request queues if it's not initialized yet
+	if (typeof document.ajaxq == "undefined") document.ajaxq = {q:{}, r:null};
+
+	// Initialize current queue if it's not initialized yet
+	if (typeof document.ajaxq.q[queue] == "undefined") document.ajaxq.q[queue] = [];
+	
+	if (typeof options != "undefined") // Request settings are given, enqueue the new request
+	{
+		// Copy the original options, because options.complete is going to be overridden
+
+		var optionsCopy = {};
+		for (var o in options) optionsCopy[o] = options[o];
+		options = optionsCopy;
+		
+		// Override the original callback
+
+		var originalCompleteCallback = options.complete;
+
+		options.complete = function (request, status)
+		{
+			// Dequeue the current request
+			document.ajaxq.q[queue].shift ();
+			document.ajaxq.r = null;
+			
+			// Run the original callback
+			if (originalCompleteCallback) originalCompleteCallback (request, status);
+
+			// Run the next request from the queue
+			if (document.ajaxq.q[queue].length > 0) document.ajaxq.r = jQuery.ajax (document.ajaxq.q[queue][0]);
+
+			//console.log(document.ajaxq)
+		};
+
+		// Enqueue the request
+		document.ajaxq.q[queue].push (options);
+
+		// Also, if no request is currently running, start it
+		if (document.ajaxq.q[queue].length == 1) document.ajaxq.r = jQuery.ajax (options);
+	}
+	else // No request settings are given, stop current request and clear the queue
+	{
+		if (document.ajaxq.r)
+		{
+			document.ajaxq.r.abort ();
+			document.ajaxq.r = null;
+		}
+
+		document.ajaxq.q[queue] = [];
+	}
+}
+
+$.fn.hasAttr = function(name) {  
+   return this.attr(name) !== undefined;
+};
+
+
+(function ($) {
+ $.fn.longclick = function (callback, timeout) {
+   var isIPad = true;
+ 
+   var startEvents = isIPad ? "touchstart" :  "mousedown";
+   var endEvents   = isIPad ? "touchend touchcancel" : "mouseup";
+ 
+   $(this).bind(startEvents, function (event) {
+    // save the initial event object
+    var initialEvent = event;
+    //var initialElement = $(this);
+    // set delay after which the callback will be called
+    var timer = window.setTimeout(function () { callback( initialEvent ); }, timeout);
+    // bind to global event(s) for clearance
+    $(document).bind(endEvents, function () {
+        // clear timer
+        window.clearTimeout(timer);
+        // reset global event handlers
+        $(document).unbind(endEvents);
+        return true;
+        // use 'return false;' if you need to prevent default handler and
+        // stop event bubbling
+    });
+    return true;
+    // use 'return false;' if you need to prevent default handler and
+    // stop event bubbling
+   });
+ };
+})(jQuery);
