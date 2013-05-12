@@ -8,6 +8,44 @@
 
 			<name>Media Center</name>
 
+				<category>
+
+					<name>Subtitles</name>
+
+					<command>
+
+						<name>Subtitles Toggle</name>
+
+						<action>
+
+							<dataType>text</dataType>
+
+							<method>GET</method>
+
+							<data><![CDATA[SubOff]]></data>	
+
+						</action>
+
+					</command>
+					
+					<command>
+
+						<name>Subtitles</name>
+
+						<action>
+
+							<dataType>text</dataType>
+
+							<method>GET</method>
+
+							<data><![CDATA[Sub]]></data>	
+
+						</action>
+
+					</command>
+
+				</category>
+
 			<commands>
 
 				<category>
@@ -516,38 +554,6 @@
 							<method>GET</method>
 
 							<data><![CDATA[Lang]]></data>	
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Subtitles</name>
-
-						<action>
-
-							<dataType>text</dataType>
-
-							<method>GET</method>
-
-							<data><![CDATA[Sub]]></data>	
-
-						</action>
-
-					</command>
-
-					<command>
-
-						<name>Subtitles Off</name>
-
-						<action>
-
-							<dataType>text</dataType>
-
-							<method>GET</method>
-
-							<data><![CDATA[SubOff]]></data>	
 
 						</action>
 

@@ -167,7 +167,7 @@ function PhoneGapReady() {
     onDeviceReady();
 
 	window.onerror = function(msg, url, line) {
-		doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line)
+		//doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line)
 	};
 }
 
@@ -220,7 +220,7 @@ function clearAllBadges() {
 function onDeviceReady() {
 
 	splash("show");
-
+	
 	$.gestures.init();
 	$.gestures.retGesture(function(gesture) {
 		doEvent(gesture);
@@ -567,6 +567,20 @@ function onDeviceReady() {
 		}
 	});
 	
+	$("#btnConfig").bind(clickEventType, function() {
+		navigator.notification.confirm(
+		   'Delete cached data?', 
+			function(buttonIndex) {
+				if (buttonIndex == 1) {
+					deleteCache();
+				}
+			},
+		   'Warning', 
+		   'Yes, No'
+		);
+		
+	})
+
 	$("#btnCommands").bind(clickEventType, function() {
 		/* generic flip shit */
 		if ( $("#card").attr("class") == "doFlip" ) {
@@ -1026,7 +1040,7 @@ function startWorker() {
 function refreshChannel(server, queueName, channelKey) {
 	
     if ( isWifi() == false ) {
-        return;
+        //return;
     }
 
 	var c = guide.channels[channelKey];
@@ -1655,7 +1669,7 @@ function ShowItems(tr, sentEventType) {
 
 	var parseJsonResults = function (x) {
 		$("#backFace table").remove();
-		var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >"
+		var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >";
 
 		if ( x.Data.Name != "StartupFolder" ) {
 			tb += '<tr data-guid="' + x.Data.parentId + '" data-type="Folder">'
@@ -1711,7 +1725,10 @@ function ShowItems(tr, sentEventType) {
 			dataType: 'json',
 			timeout: settings.MBServiceTimeout,
 			success: function(d) {
-				saveJsonToCache(MBUrl, d);
+				if (d.Data !== null) {
+					saveJsonToCache(MBUrl, d);
+				}
+				
 				if (parse) {
 					parseJsonResults(d);	
 				}
@@ -2344,6 +2361,7 @@ function doEvent(gesture, actions, overRideDevice)  {
 
 	var blnGoodGesture = true;
 	var blnisGlobalGesture = false;
+	var actionNodes = null;
 
 	if (gesture != 'manual') { //search for it in the XML
 
@@ -2371,7 +2389,9 @@ function doEvent(gesture, actions, overRideDevice)  {
 	} else { //adtion node is already supplied, so run em
 		actionNodes = $(actions);
 	}
-
+	if ( actionNodes == null ) {
+		blnGoodGesture = false;
+	}
 	if (blnGoodGesture) {
 		//Run commands for gesture
 		playBeep();
@@ -2493,6 +2513,20 @@ function playBeep() {
 }
 
 
+function deleteCache() {
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+		function gotFS(fileSystem) {
+			var directoryReader = fileSystem.root.createReader();
+			directoryReader.readEntries(function(entries) {
+				for (i=0; i<entries.length; i++) {
+					entries[i].remove(function() { }, function(x) {  } );
+
+				}
+			}, function() { } );
+    	},
+		function fail(evt) { console.log("Pull cache Error, no access to file system"); callback({cached: false, url: request.url }); }
+	);
+}
 
 function getImageFromCache(request, callback) {
 

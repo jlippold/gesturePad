@@ -248,9 +248,9 @@ div.seekbarContainer div.right {
 
 div.seekto {
 	background: url('img/AudioPlayerScrubberKnob.png') center center;
-	height: 22px;
+	height: 40px;
 	width: 22px;
-	margin: 5px 0px 0px -4px;
+	margin: -3px 0px 0px -4px;
 	float:left;
 	position: relative;
 	top: -21px;
@@ -996,5 +996,28 @@ div.smallChannel {
 
 span.sSpan {
 	display: inline !important;
+}
+
+@media all and (orientation:landscape) {
+	#btnPower, #btnRewind, #btnPlay, #btnForward, #btnRoom, #btnMute {
+		background-size: auto 27px !important;
+	}
+
+	#btnTitles, #btnCommands {
+		background-size: 26px 19px !important;	
+	}
+
+	#frmRoom {
+		position: absolute;
+		height: 100px;
+		bottom: 0px;
+		right: 0px;
+	}
+
+	#frmDevice {
+		position: absolute;
+		top: 100px;
+		right: 0px;
+	}
 }
 
