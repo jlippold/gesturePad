@@ -484,7 +484,7 @@ function onDeviceReady() {
 		    		return;
 		    	}
 		    	changeChannel( $(this).attr("data-major") );
-		   		$("#btnTitles").trigger(clickEventType);
+		   		//$("#btnTitles").trigger(clickEventType);
 			});
 
 		}

@@ -8,6 +8,9 @@
 
 			<name>Media Center</name>
 
+
+			<commands>
+
 				<category>
 
 					<name>Subtitles</name>
@@ -45,8 +48,6 @@
 					</command>
 
 				</category>
-
-			<commands>
 
 				<category>
 
