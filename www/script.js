@@ -1,7 +1,7 @@
 var xml, settings, appSettings;
 var appendOncetoQueryString = "";
-var navigator, npTimer, inputTimer, clickEventType, slideTimer;
-var guide =  new Object();
+var npTimer, inputTimer, clickEventType, slideTimer;
+var guide = {};
 var workerTimer = null;
 var sleepTimer = null;
 var scrollstop = null;
@@ -15,7 +15,7 @@ function getSettingsObject() {
 		vibrate: false,
 		wifi: true,
 		SleepThreshold: 60000,
-		MBServiceTimeout :120000,
+		MBServiceTimeout: 120000,
 		moviesByDate: false,
 		tvByDate: false,
 		configURL: "mbeg.xml",
@@ -25,117 +25,113 @@ function getSettingsObject() {
 	};
 
 	//load from IOS prefs
-	if ( isPhoneGap() ) {
-		window.plugins.applicationPreferences.get('All', function(result) {
-				var hasRoom = false;
-				appSettings = result;
-				var d = jQuery.parseJSON(result);
 
-				//general settings
-		        if ( d.sounds == 1 ) {
-		        	settingsObj.sounds = true;
-		    	}
-		        if ( d.vibrate == 1 ) {
-		        	settingsObj.vibrate = true;
-		    	}
-		        if ( d.wifi == 0 ) {
-		        	settingsObj.wifi = false;
-		    	}
-		        if ( d.dateMovies == 1 ) {
-		        	settingsObj.moviesByDate = true;
-		    	}
-		        if ( d.dateTV == 1 ) {
-		        	settingsObj.tvByDate = true;
-		    	}
+	window.plugins.applicationPreferences.get('All', function (result) {
+		var hasRoom = false;
+		appSettings = result;
+		var d = jQuery.parseJSON(result);
 
-		    	//gesture XML
-		        if ( d.config_source == 1 ) {
-		        	settingsObj.configURL = "mbeg.xml";
-		    	} else {
-					if ( d.config_source == 2 ) {
-			        	settingsObj.configURL = "mbegdt.xml";
-			    	} else {
-						if ( d.config_source == 3 ) {
-				        	settingsObj.configURL = d.custom_config;
-				    	}
-			    	}
-		    	}
+		//general settings
+		if (d.sounds == 1) {
+			settingsObj.sounds = true;
+		}
+		if (d.vibrate == 1) {
+			settingsObj.vibrate = true;
+		}
+		if (d.wifi === 0) {
+			settingsObj.wifi = false;
+		}
+		if (d.dateMovies == 1) {
+			settingsObj.moviesByDate = true;
+		}
+		if (d.dateTV == 1) {
+			settingsObj.tvByDate = true;
+		}
 
-		    	//get rooms
-		    	for (var i=1;i<=5;i++) {
-		    		if ( d["S" + i + "_enabled"] ) {
-		    			if ( d["S" + i + "_enabled"] == 1 ) {
+		//gesture XML
+		if (d.config_source == 1) {
+			settingsObj.configURL = "mbeg.xml";
+		} else {
+			if (d.config_source == 2) {
+				settingsObj.configURL = "mbegdt.xml";
+			} else {
+				if (d.config_source == 3) {
+					settingsObj.configURL = d.custom_config;
+				}
+			}
+		}
 
-		    				hasRoom = true;
-		    				var thisroom = {
-		    					name: "Room " + i,
-		    					index: (i-1),
-		    					DTV: null,
-		    					IR: false,
-		    					devices: []
-		    				};
+		//get rooms
+		for (var i = 1; i <= 5; i++) {
+			if (d["S" + i + "_enabled"]) {
+				if (d["S" + i + "_enabled"] == 1) {
 
-		    				thisroom.name = d["S" + i + "_RoomName"];
-		    				
-		    				thisroom.devices.push({
-		    					"name": "Movies", 
-		    					"shortname": "MCE", 
-		    					"IPAddress": d["S" + i + "_IP"],
-		    					"Port": d["S" + i + "_EGPort"],
-		    					"ServicePort": d["S" + i + "_MBPort"],
-		    					"timeshift": true,
-		    					"index": 0
-		    				})
+					hasRoom = true;
+					var thisroom = {
+						name: "Room " + i,
+						index: (i - 1),
+						DTV: null,
+						IR: false,
+						devices: []
+					};
 
-		    				if ( d["S" + i + "_DTV"] == 1 ) {
-		    					thisroom.DTV = d["S" + i + "_DTVIP"];
-			    				thisroom.devices.push({
-			    					"name": "Television", 
-			    					"shortname": "DTV", 
-			    					"IPAddress": d["S" + i + "_DTVIP"],
-			    					"Port": 8080,
-			    					"timeshift": false,
-			    					"index": 1
-			    				})
-		    				}
+					thisroom.name = d["S" + i + "_RoomName"];
 
-		    				if ( d["S" + i + "_EG"] == 1 ) {
-		    					thisroom.IR = true;
-		    				}
-		    				
-		    				settingsObj.rooms.push(thisroom);
-		    			}
-		    			
-		    		}
-		    	}
+					thisroom.devices.push({
+						"name": "Movies",
+						"shortname": "MCE",
+						"IPAddress": d["S" + i + "_IP"],
+						"Port": d["S" + i + "_EGPort"],
+						"ServicePort": d["S" + i + "_MBPort"],
+						"timeshift": true,
+						"index": 0
+					});
 
-		    	if (hasRoom == false) {
-					doAlert("No Servers are defined. Go to settings to add a server.");
-					splash("hide");
-		    	}
+					if (d["S" + i + "_DTV"] == 1) {
+						thisroom.DTV = d["S" + i + "_DTVIP"];
+						thisroom.devices.push({
+							"name": "Television",
+							"shortname": "DTV",
+							"IPAddress": d["S" + i + "_DTVIP"],
+							"Port": 8080,
+							"timeshift": false,
+							"index": 1
+						});
+					}
 
-		    	settingsObj.roomIndex = getItem("roomIndex", 0);
-		    	settingsObj.deviceIndex = getItem("deviceIndex", 0);
+					if (d["S" + i + "_EG"] == 1) {
+						thisroom.IR = true;
+					}
 
-		});
-		
-	} else {
-		//push in a fake room, since it's a reg browser, for debugging
-		settingsObj = {"sounds":false,"vibrate":false,"SleepThreshold":60000,"MBServiceTimeout":120000,"moviesByDate":true,"tvByDate":false,"configURL":"mbegdt.xml","roomIndex":0,"deviceIndex":0,"rooms":[{"name":"Living Room","index":0,"DTV":"192.168.1.149","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.105","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.149","Port":8080,"timeshift":false,"index":1}]},{"name":"Bedroom","index":1,"DTV":"192.168.1.123","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.144","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.123","Port":8080,"timeshift":false,"index":1}]},{"name":"Kitchen","index":2,"DTV":"192.168.1.107","IR":true,"devices":[{"name":"Movies","shortname":"MCE","IPAddress":"192.168.1.129","Port":"80","ServicePort":"8092","timeshift":true,"index":0},{"name":"Television","shortname":"DTV","IPAddress":"192.168.1.107","Port":8080,"timeshift":false,"index":1}]}]}
-	}
+					settingsObj.rooms.push(thisroom);
+				}
+
+			}
+		}
+
+		if (hasRoom === false) {
+			doAlert("No Servers are defined. Go to settings to add a server.");
+			splash("hide");
+		}
+
+		settingsObj.roomIndex = getItem("roomIndex", 0);
+		settingsObj.deviceIndex = getItem("deviceIndex", 0);
+
+	});
+
 
 	return settingsObj;
 }
 
 function loadSettings() {
-	
+
 	//defaults
 	settings = getSettingsObject();
-	
+
 	settings.deviceIndex = getItem("deviceIndex", 0);
 	settings.roomIndex = getItem("roomIndex", 0);
 
-	if ( isNumeric( settings.roomIndex ) == false || isNumeric( settings.deviceIndex ) == false) {
+	if (isNumeric(settings.roomIndex) === false || isNumeric(settings.deviceIndex) === false) {
 		setItem("roomIndex", 0);
 		setItem("deviceIndex", 0);
 		settings.roomIndex = 0;
@@ -143,109 +139,114 @@ function loadSettings() {
 	}
 
 	//load channels for DTV, if defined in settings
- 	if ( hasDirecTV() ) {
- 		loadChannelList();
- 	}
+	if (hasDirecTV()) {
+		loadChannelList();
+	}
 
 	setItem("configURL", "");
-	if ( getItem("configURL", "") != settings.configURL ) {
+	if (getItem("configURL", "") != settings.configURL) {
 		loadXML();
 	}
 
 	updateStatus();
 	getRoomStatus();
 
-	setTimeout( function () {
+	setTimeout(function () {
 		splash("hide");
-	}, 500)
+	}, 500);
 }
 
 function PhoneGapReady() {
-    document.addEventListener("resume", onResume, false);
-    document.addEventListener("pause", onBackground, false);
+	document.addEventListener("resume", onResume, false);
+	document.addEventListener("pause", onBackground, false);
 	window.onorientationchange = detectOrientation;
-    window.onresize = detectOrientation;
+	window.onresize = detectOrientation;
 
-    onDeviceReady();
+	onDeviceReady();
 
-	window.onerror = function(msg, url, line) {
-		doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line)
+	window.onerror = function (msg, url, line) {
+		//doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line);
 	};
 }
 
 
 function loadXML() {
-	var xmlLoc = settings.configURL + "?r=" + Math.random()
-	
+	var xmlLoc = settings.configURL + "?r=" + Math.random();
+
 	$.ajax({
-	    type: "GET",
+		type: "GET",
 		url: xmlLoc,
 		dataType: "xml",
-		success: function(resp) {
-          	xml = resp;
-          	setItem("configURL", settings.configURL) 
+		success: function (resp) {
+			xml = resp;
+			setItem("configURL", settings.configURL);
 		},
-		error: function() {
+		error: function () {
 			splash("hide");
-			doAlert("Error loading xml settings: " + xmlLoc );
-		}		
+			doAlert("Error loading xml settings: " + xmlLoc);
+		}
 	});
 }
 
 function loadChannelList() {
 	var xmlLoc = "channellist.xml?r=" + Math.random(); //possibly let this be user defined.
 	$.ajax({
-	    type: "GET",
+		type: "GET",
 		url: xmlLoc,
 		dataType: "xml",
-		success: function(resp) {
-          	setupWorker(resp)
+		success: function (resp) {
+			setupWorker(resp)
 		},
-		error: function() {
-			doAlert("Error loading channel list: "  + xmlLoc);
-		}		
+		error: function () {
+			doAlert("Error loading channel list: " + xmlLoc);
+		}
 	});
 }
 
 function clearAllBadges() {
 	var pushNotification = window.plugins.pushNotification;
-	pushNotification.setApplicationIconBadgeNumber(0, function(status) {
+	pushNotification.setApplicationIconBadgeNumber(0, function (status) {
 		//console.log('setApplicationIconBadgeNumber: ' +  status );
 	});
 
-	pushNotification.cancelAllLocalNotifications(function() {
-	    //console.log('cancelAllLocalNotifications');
+	pushNotification.cancelAllLocalNotifications(function () {
+		//console.log('cancelAllLocalNotifications');
 	});
 }
 
 //bind all events, PG equivelant to doc.ready
+
 function onDeviceReady() {
 
 	splash("show");
-	
+
 	$.gestures.init();
-	$.gestures.retGesture(function(gesture) {
+	$.gestures.retGesture(function (gesture) {
 		doEvent(gesture);
 		clearSleepTimer();
 	});
-	
+
 	doResize();
 
 	var pushNotification = window.plugins.pushNotification;
-	pushNotification.registerDevice({alert:true, badge:true, sound:false}, function(status) {
-	    //navigator.notification.alert(JSON.stringify(['registerDevice', status]));
-	    console.log('registerDevice: ' +  status.deviceToken );
-	    //probably should sent this to the server here...
+	pushNotification.registerDevice({
+		alert: true,
+		badge: true,
+		sound: false
+	}, function (status) {
+		//navigator.notification.alert(JSON.stringify(['registerDevice', status]));
+		console.log('registerDevice: ' + status.deviceToken);
+		//probably should sent this to the server here...
 
 	});
 
 	clearAllBadges();
 
-	clickEventType = (( isPhoneGap() == true )?'click':'click'); //never inplemented custom tap
+	clickEventType = ((isPhoneGap() === true) ? 'click' : 'click'); //never inplemented custom tap
 
 	//event when scrolling ends to refresh dtv channels
-	$("#backFace").bind("scroll", function() {
-		window.scrollTo(0,0);
+	$("#backFace").bind("scroll", function () {
+		window.scrollTo(0, 0);
 
 		var device = getCurrentDevice();
 		if (device != "DTV") {
@@ -253,14 +254,14 @@ function onDeviceReady() {
 		}
 		clearTimeout(scrollstop);
 
-		var dtvServers = new Array();
+		var dtvServers = [];
 		var currentServer = 0;
 
 		//pull all dtv servers for a round-robin guide pull
-		for (var i=0;i<settings.rooms.length;i++) {
-			for (var x=0;x<settings.rooms[i].devices.length;x++) {
-				if ( settings.rooms[i].devices[x].shortname == "DTV" ) {
-					dtvServers[currentServer] = "http://" + settings.rooms[i].devices[x].IPAddress + ":" + settings.rooms[i].devices[x].Port + "/" ;
+		for (var i = 0; i < settings.rooms.length; i++) {
+			for (var x = 0; x < settings.rooms[i].devices.length; x++) {
+				if (settings.rooms[i].devices[x].shortname == "DTV") {
+					dtvServers[currentServer] = "http://" + settings.rooms[i].devices[x].IPAddress + ":" + settings.rooms[i].devices[x].Port + "/";
 					currentServer += 1;
 				}
 			}
@@ -268,81 +269,87 @@ function onDeviceReady() {
 
 		currentServer = 0;
 
-		if (dtvServers.length == 0 ) {
+		if (dtvServers.length === 0) {
 			return;
 		}
 
-	    scrollstop = setTimeout(function() {
+		scrollstop = setTimeout(function () {
 
 			var threadcounter = 0;
-		    $("#backFace tr").each(function () {
-		    	var row = $(this);
-		    	if ($(row).attr("data-loaded") != "false") {
-		    		return;
-		    	}
+			$("#backFace tr").each(function () {
+				var row = $(this);
+				if ($(row).attr("data-loaded") != "false") {
+					return;
+				}
 
-		        if ( $(row).position().top + $(row).height() > 0 && $(row).position().top < $("#backFace").height()+180 ) {  //is the row scrolled into view   
-		        	$(row).find("td:eq(1) div").text( "Loading..." )
-	            	if (threadcounter > dtvServers.length-1) {
-	            		threadcounter = 0
-	            	}
-	            	refreshChannel(dtvServers[threadcounter], "DTVImmediate" + threadcounter, $(row).attr("data-key"));
-		            threadcounter += 1;					            
-		        }
-		    });
-		    clearSleepTimer()
-	    }, 100);
+				if ($(row).position().top + $(row).height() > 0 && $(row).position().top < $("#backFace").height() + 180) { //is the row scrolled into view   
+					$(row).find("td:eq(1) div").text("Loading...");
+					if (threadcounter > dtvServers.length - 1) {
+						threadcounter = 0;
+					}
+					refreshChannel(dtvServers[threadcounter], "DTVImmediate" + threadcounter, $(row).attr("data-key"));
+					threadcounter += 1;
+				}
+			});
+			clearSleepTimer();
+		}, 100);
 	});
 
-    var hscrollTimer = null;
-	$("#boxCoverContainer").bind("scroll", function() {
-        clearTimeout(hscrollTimer);
-        hscrollTimer = setTimeout(function() { 
+	var hscrollTimer = null;
+	$("#boxCoverContainer").bind("scroll", function () {
+		clearTimeout(hscrollTimer);
+		hscrollTimer = setTimeout(function () {
 
-        	var device = getCurrentDevice();
+			var device = getCurrentDevice();
 
-        	if (device.shortname != "MCE") {
-        		return;
-        	}
-		    var areaWidth = $(this).width();
+			if (device.shortname != "MCE") {
+				return;
+			}
+			var areaWidth = $(this).width();
 
-		    $("#covers > div.pendingImg").each(function() {
+			$("#covers > div.pendingImg").each(function () {
 
-		        var left = $(this).offset().left;
-		        var width = $(this).width();
-		        var visible = false;
-		        if (left + width < 0) {
-		            //console.log( $(this).find("p").text() +  'this div is obfuscated above the viewable area');
-		        	visible = false;
-		        } else if (left > areaWidth) {
-		            //console.log($(this).find("p").text() + 'this div is obfuscated below the viewable area')
-		        	visible = false;
-		        } else {
-		            //console.log($(this).find("p").text() + 'this div is at least partially in view');
-		        	visible = true;
-		        }
+				var left = $(this).offset().left;
+				var width = $(this).width();
+				var visible = false;
+				if (left + width < 0) {
+					//console.log( $(this).find("p").text() +  'this div is obfuscated above the viewable area');
+					visible = false;
+				} else if (left > areaWidth) {
+					//console.log($(this).find("p").text() + 'this div is obfuscated below the viewable area')
+					visible = false;
+				} else {
+					//console.log($(this).find("p").text() + 'this div is at least partially in view');
+					visible = true;
+				}
 
-		        if (visible == true) {
-		       		//console.log($(this).find("p:first").text());
-		        	$(this).removeClass("pendingImg");
-			        var boxImg = $(this).find("img");
-			        var guid = $(boxImg).attr("data-guid");
-			        var prefix = $(boxImg).attr("data-prefix");
-		    		var imgID = "MB_Small_" + guid;
-					$(boxImg).onerror = function() {
+				if (visible == true) {
+					//console.log($(this).find("p:first").text());
+					$(this).removeClass("pendingImg");
+					var boxImg = $(this).find("img");
+					var guid = $(boxImg).attr("data-guid");
+					var prefix = $(boxImg).attr("data-prefix");
+					var imgID = "MB_Small_" + guid;
+					$(boxImg).onerror = function () {
 						$(this).attr("src", "img/nobox.png");
 					};
-					getImageFromCache({id: imgID, url: prefix + guid + "&maxwidth=120&maxheight=120"}, function(r) {
+					getImageFromCache({
+						id: imgID,
+						url: prefix + guid + "&maxwidth=120&maxheight=120"
+					}, function (r) {
 
 						var img = new Image();
 
-						img.onerror = function() {
+						img.onerror = function () {
 							$(boxImg).attr("src", "img/nobox.png");
 						};
-						
-						if (r.cached == false) { 
-							img.onload = function() {
-								saveImageToCache( {id: imgID, img: img } );
+
+						if (r.cached == false) {
+							img.onload = function () {
+								saveImageToCache({
+									id: imgID,
+									img: img
+								});
 								//console.log("no cache")
 								$(boxImg).attr("src", r.url);
 							};
@@ -353,21 +360,22 @@ function onDeviceReady() {
 						}
 					});
 
-		        }
-		    });
+				}
+			});
 
 
 
-        } , 200 );					
+		}, 200);
 	})
 
-	$("#boxCoverContainer").bind("touchmove touchend", function(e) {
-		window.scrollTo(0,0);		
+	$("#boxCoverContainer").bind("touchmove touchend", function (e) {
+		window.scrollTo(0, 0);
 	});
 
-	$("#boxCoverBack").bind(clickEventType, function() {
-		if ( $("#covers").data("back") != "" ) {
-			if ( $("#covers").data("back") == "ChannelHome" ) { 
+	$("#boxCoverBack").fastClick(function () {
+
+		if ($("#covers").data("back") != "") {
+			if ($("#covers").data("back") == "ChannelHome") {
 				showBottomItems();
 			} else {
 				var tr = $("<a data-guid='" + $("#covers").data("back") + "' data-type='Folder' data-backwards='1' />");
@@ -378,15 +386,15 @@ function onDeviceReady() {
 		}
 	})
 
-	$("#bottomGrabber").bind("touchstart",  function(e) {
+	$("#bottomGrabber").bind("touchstart", function (e) {
 		var lastY = e.originalEvent.touches[0].screenY;
 		$(this).data('lastY', e.originalEvent.touches[0].screenY);
-	}); 
+	});
 
-	$("#bottomGrabber").bind("touchmove", function(e) {
+	$("#bottomGrabber").bind("touchmove", function (e) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
-		var orig = e.originalEvent.targetTouches[0];  
+		var orig = e.originalEvent.targetTouches[0];
 		var lastY = parseInt($(this).data('lastY'));
 		var position = parseInt($("#bottom").css("bottom"));
 		var maxHeight = 140;
@@ -394,152 +402,152 @@ function onDeviceReady() {
 		var bOffset = -140;
 		$(this).data('lastY', orig.pageY);
 
-	  	if ( lastY < orig.screenY  ) {
-	  		n = position - (orig.pageY - lastY );
-	  		if (n <= maxHeight && n >= 0) {
-	  			$("#bottom").css("bottom", n + "px");	
-	  			$("#browser").css("bottom", (bOffset + n) +"px");
-	  		}
-		} else {
-	  		n = position + (lastY - orig.pageY);
-	  		if (n <= maxHeight && n >= 0) {
+		if (lastY < orig.screenY) {
+			n = position - (orig.pageY - lastY);
+			if (n <= maxHeight && n >= 0) {
 				$("#bottom").css("bottom", n + "px");
-				$("#browser").css("bottom", (bOffset + n) +"px");
+				$("#browser").css("bottom", (bOffset + n) + "px");
+			}
+		} else {
+			n = position + (lastY - orig.pageY);
+			if (n <= maxHeight && n >= 0) {
+				$("#bottom").css("bottom", n + "px");
+				$("#browser").css("bottom", (bOffset + n) + "px");
 			}
 		}
 	});
 
-	$("#bottomGrabber").bind("touchend",  function(e) {
-		setTimeout( function() {
+	$("#bottomGrabber").bind("touchend", function (e) {
+		setTimeout(function () {
 			refreshBottomDrawer();
 		}, 100);
-	}); 
+	});
 
-	$("#card").bind('transitionend webkitTransitionEnd', function() {
-	    if (  $("#card").attr("class") == "doFlip" ) {
-	    	//showing table list
-	    	$("#gestureCallback").empty();
+	$("#card").bind('transitionend webkitTransitionEnd', function () {
+		if ($("#card").attr("class") == "doFlip") {
+			//showing table list
+			$("#gestureCallback").empty();
 			$("#gestures_canvas").hide();
-			showFilter( $("#card").data('flipTo') );
-	    }
-		if (  $("#card").attr("class") == "" ) {
-	    	//showing gesturePad
-	    	$("#seekbarContainer").show();
-	    	$("#gestures_canvas").show();
-	    	$("#backFace").html( "" );	
-	    	
-	    }
-	}); 
+			showFilter($("#card").data('flipTo'));
+		}
+		if ($("#card").attr("class") == "") {
+			//showing gesturePad
+			$("#seekbarContainer").show();
+			$("#gestures_canvas").show();
+			$("#backFace").html("");
 
-	$("#btnTitles").bind(clickEventType, function() {
-		window.scrollTo(0,0);
+		}
+	});
+
+	$("#btnTitles").fastClick(function () {
+		window.scrollTo(0, 0);
 
 		var curChannel = $("#NowPlayingTitle").attr("data-item");
-		var room  = getCurrentRoom();
+		var room = getCurrentRoom();
 		var device = getCurrentDevice();
 
-		if (device.shortname  == "DTV") {
-			
-			var tableView = [];	
-		 	$.each(guide.channels, function(channelKey, c) { 
-		 		var timeleft = hms2( (c.startTime+c.duration) - Math.floor(new Date().getTime() / 1000)  );
-		 		tableView.push({
-	               'textLabel' : c.number + " " + c.fullname + " " + c.callsign,
-	               'detailTextLabel' : c.nowplaying + (timeleft == "0:00" ? "" : " Time Left: " + timeleft ),
-	               'icon': "none",
-	               'sectionHeader': c.category,
-	               'major': c.number
-			    });
+		if (device.shortname == "DTV") {
+
+			var tableView = [];
+			$.each(guide.channels, function (channelKey, c) {
+				var timeleft = hms2((c.startTime + c.duration) - Math.floor(new Date().getTime() / 1000));
+				tableView.push({
+					'textLabel': c.number + " " + c.fullname + " " + c.callsign,
+					'detailTextLabel': c.nowplaying + (timeleft == "0:00" ? "" : " Time Left: " + timeleft),
+					'icon': "none",
+					'sectionHeader': c.category,
+					'major': c.number
+				});
 			});
 
 			var nt = window.plugins.NativeTable;
 			nt.createTable({
-				'height': $(window).height(), 
-				'showSearchBar': true, 
-				'showNavBar': true, 
+				'height': $(window).height(),
+				'showSearchBar': true,
+				'showNavBar': true,
 				'navTitle': "Channels",
 				'navBarColor': 'black',
-				'showRightButton': true, 
+				'showRightButton': true,
 				'RightButtonText': 'Close',
 				'showBackButton': false
 			});
 
-			nt.onRightButtonTap(function(){
-		       nt.hideTable(function() {});
+			nt.onRightButtonTap(function () {
+				nt.hideTable(function () {});
 			});
-			nt.setRowSelectCallBackFunction(function(rowId) {
+			nt.setRowSelectCallBackFunction(function (rowId) {
 				var item = tableView[rowId];
-				changeChannel( item.major );
+				changeChannel(item.major);
 			});
 			nt.setTableData(tableView);
-			nt.showTable(function() {});
+			nt.showTable(function () {});
 		}
 
-		if (device.shortname  == "MCE") {
+		if (device.shortname == "MCE") {
 
 			var MBUrl = getMBUrl();
 
 			var parseJsonResults = function (d) {
-				var tableView = [];	
-				$.each(d.Data.Children, function(key, val) { 
-			 		tableView.push({
-		               'textLabel' : d.Data.Children[key].Name,
-		               'detailTextLabel' : "" + d.Data.Children[key].ChildCount + " total, " + d.Data.Children[key].UnwatchedCount + " not watched, " + d.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
-		               'icon': "greyarrow",
-		               'sectionHeader': "Folders",
-		               'guid': d.Data.Children[key].Id,
-		               'type': d.Data.Children[key].Type,
-		               'imdb': d.Data.Children[key].ImdbRating
-				    });
+				var tableView = [];
+				$.each(d.Data.Children, function (key, val) {
+					tableView.push({
+						'textLabel': d.Data.Children[key].Name,
+						'detailTextLabel': "" + d.Data.Children[key].ChildCount + " total, " + d.Data.Children[key].UnwatchedCount + " not watched, " + d.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
+						'icon': "greyarrow",
+						'sectionHeader': "Folders",
+						'guid': d.Data.Children[key].Id,
+						'type': d.Data.Children[key].Type,
+						'imdb': d.Data.Children[key].ImdbRating
+					});
 				});
 
 				var nt = window.plugins.NativeTable;
 				nt.createTable({
-					'height': $(window).height(), 
-					'showSearchBar': true, 
-					'showNavBar': true, 
+					'height': $(window).height(),
+					'showSearchBar': true,
+					'showNavBar': true,
 					'navTitle': "Folders",
 					'navBarColor': 'black',
-					'showRightButton': true, 
+					'showRightButton': true,
 					'RightButtonText': 'Close',
 					'showBackButton': false
 				});
 
-				nt.onRightButtonTap(function(){
-			       nt.hideTable(function() {});
+				nt.onRightButtonTap(function () {
+					nt.hideTable(function () {});
 				});
-				nt.setRowSelectCallBackFunction(function(rowId) {
+				nt.setRowSelectCallBackFunction(function (rowId) {
 					var item = tableView[rowId];
-					nt.hideTable(function() {
-						ShowItems( item );
+					nt.hideTable(function () {
+						ShowItems(item);
 					});
 				});
 				nt.setTableData(tableView);
-				nt.showTable(function() {});
+				nt.showTable(function () {});
 
 			}
 
-			var getJsonFromServer = function(MBUrl, parse) {
+			var getJsonFromServer = function (MBUrl, parse) {
 
-		        if ( isWifi() == false ) {
-		        	if (parse) {
-		        		doAlert("You are not on Wifi and no cached version exists. To do this, connect to Wifi and try again");
-			            $("#btnTitles").trigger(clickEventType);
-			            return;
-		        	}
-		        }
+				if (isWifi() == false) {
+					if (parse) {
+						doAlert("You are not on Wifi and no cached version exists. To do this, connect to Wifi and try again");
+						$("#btnTitles").trigger(clickEventType);
+						return;
+					}
+				}
 
 				$.ajax({
 					url: MBUrl,
 					dataType: 'json',
 					timeout: settings.MBServiceTimeout,
-					success: function(d) {
+					success: function (d) {
 						saveJsonToCache(MBUrl, d);
 						if (parse) {
-							parseJsonResults(d);	
+							parseJsonResults(d);
 						}
-					}, 
-					error: function() {
+					},
+					error: function () {
 						if (parse) {
 							doAlert("The server is not responding in time, and no cached version exists. Try again later")
 						}
@@ -549,7 +557,7 @@ function onDeviceReady() {
 
 			MBUrl += "library/";
 
-			getJsonFromCache(MBUrl, function(d) {
+			getJsonFromCache(MBUrl, function (d) {
 				if (d == null) {
 					getJsonFromServer(MBUrl, true);
 				} else {
@@ -557,375 +565,369 @@ function onDeviceReady() {
 					getJsonFromServer(MBUrl, false); //get from server, to replace cache but dont parse
 				}
 			});
-	
+
 		}
 	});
-	
-	$("#btnConfig").bind(clickEventType, function() {
-		navigator.notification.confirm(
-		   'Delete cached data?', 
-			function(buttonIndex) {
-				if (buttonIndex == 1) {
-					deleteCache();
-				}
-			},
-		   'Warning', 
-		   'Yes, No'
-		);
-		
-	})
 
-	$("#btnCommands").bind(clickEventType, function() {
-		var tableView = [];	
+
+	$("#btnConfig").fastClick(function () {
+		navigator.notification.confirm(
+			'Delete cached data?', function (buttonIndex) {
+			if (buttonIndex == 1) {
+				deleteCache();
+			}
+		},
+			'Warning',
+			'Yes, No');
+
+	});
+
+	$("#btnCommands").fastClick(function () {
+		var tableView = [];
 
 		/* populate it */
-		var room  = getCurrentRoom();
+		var room = getCurrentRoom();
 		var device = getCurrentDevice();
 		var category = ""
 		//write globals
 		var globals = $(xml).find('gesturePad > rooms > room[index="' + room.index + '"] ~ roomgestures > gesture > device')
-		if ( $(globals).size() > 0 ) {
+		if ($(globals).size() > 0) {
 			category = "Global Commands"
 
 			var currentItems = new Array();
-			$(globals).each( function(i) {
+			$(globals).each(function (i) {
 				var devicenode = $(this);
 				var devicename = $(this).children("name:first").text();
 				var roomname = room.name;
-				
-				$(devicenode).find("command").each(function() {
+
+				$(devicenode).find("command").each(function () {
 					var commandname = $(this).children("name:first").text();
 					var gestureDefinition = "";
 
 					gestureDefinition = $(devicenode).parent().attr("definition");
-				 	if (gestureDefinition == "nothing") {
-				 		gestureDefinition = "";
-				 	}
-				 	if ( jQuery.inArray(commandname, currentItems) == -1 ) {
+					if (gestureDefinition == "nothing") {
+						gestureDefinition = "";
+					}
+					if (jQuery.inArray(commandname, currentItems) == -1) {
 						currentItems.push(commandname);
 						tableView.push({
-			               'textLabel' :  commandname,
-			               'detailTextLabel' : gestureDefinition == "" ? "No Gesture Defined" : "👆 " + gestureDefinition,
-			               'icon': 'greyarrow',
-			               'sectionHeader': category
-					    });
-				 	}
+							'textLabel': commandname,
+							'detailTextLabel': gestureDefinition == "" ? "No Gesture Defined" : "👆 " + gestureDefinition,
+							'icon': 'greyarrow',
+							'sectionHeader': category
+						});
+					}
 				});
 			})
 		}
 
 		//write device specific
-		$(xml).find('gesturePad > devices > device[shortname="' + device.shortname + '"]').each( function() {
+		$(xml).find('gesturePad > devices > device[shortname="' + device.shortname + '"]').each(function () {
 			var devicenode = $(this);
 			var devicename = $(this).children("name:first").text();
 			var roomname = room.name;
-			
-			$(devicenode).find("command").each(function(i){
+
+			$(devicenode).find("command").each(function (i) {
 				var actions = $(this).find("action");
 				var gestureDefinition = "";
 				var commandname = $(this).children("name:first").text();
-			
-				$(this).find("gesture").each(function(i){ 
-					if (i==0) {
+
+				$(this).find("gesture").each(function (i) {
+					if (i == 0) {
 						gestureDefinition = ""
 						gestureDefinition = $(this).attr("definition");
-					} 
+					}
 				});
-				
-			 	if (category != ( $(this).parent().children("name:first").text() ) ) {
-			 		category = $(this).parent().children("name:first").text();
-			 	}
+
+				if (category != ($(this).parent().children("name:first").text())) {
+					category = $(this).parent().children("name:first").text();
+				}
 				tableView.push({
-	               'textLabel' :  commandname,
-	               'detailTextLabel' : gestureDefinition == "" ? "No Gesture Defined" : "👆 " + gestureDefinition,
-	               'icon': 'greyarrow',
-	               'sectionHeader': category
-			    });
+					'textLabel': commandname,
+					'detailTextLabel': gestureDefinition == "" ? "No Gesture Defined" : "👆 " + gestureDefinition,
+					'icon': 'greyarrow',
+					'sectionHeader': category
+				});
 			});
 		});
 
-		// create a reference to the NativeTable Object
 		var nt = window.plugins.NativeTable;
 
-		// create the UITableView instance (height parameter is required)
 		nt.createTable({
-			'height': $(window).height(), 
-			'showSearchBar': true, 
-			'showNavBar': true, 
+			'height': $(window).height(),
+			'showSearchBar': true,
+			'showNavBar': true,
 			'navTitle': 'Commands',
 			'navBarColor': 'black',
-			'showRightButton': true, 
+			'showRightButton': true,
 			'RightButtonText': 'Close',
 			'showBackButton': false
 		});
 
-		nt.onRightButtonTap(function(){
-	        //console.log("foo");
-	       nt.hideTable(function() {
-			console.log("hidden");
-		   });
+		nt.onRightButtonTap(function () {
+			nt.hideTable(function () {});
 		});
 
-		nt.onBackButtonTap(function(){
-	       nt.hideTable(function() {
-			console.log("hidden");
-		   });
+		nt.onBackButtonTap(function () {
+			nt.hideTable(function () {});
 		});
 
-
-		// set the callback function for the row selections
-		nt.setRowSelectCallBackFunction(function(rowId) {
-	        // callback code goes here
-	        executeGestureByCommandName( tableView[rowId].textLabel )
+		nt.setRowSelectCallBackFunction(function (rowId) {
+			executeGestureByCommandName(tableView[rowId].textLabel)
 		});
 
-		// set the table data
 		nt.setTableData(tableView);
-
-		// to display the UITableView
-		nt.showTable(function() {
-			console.log("shown");
-		});
+		nt.showTable(function () {});
 	});
 
-	$("#VolumeSliderSeek").bind("touchmove", function(event) {  
-			event.preventDefault();
-			clearTimeout(slideTimer);
-			clearSleepTimer()
-			var e = event.originalEvent;
-		    var touch = e.touches[0]; 
+	$("#VolumeSliderSeek").bind("touchmove", function (event) {
+		event.preventDefault();
+		clearTimeout(slideTimer);
+		clearSleepTimer()
+		var e = event.originalEvent;
+		var touch = e.touches[0];
 
-		    var max = $("#VolumeSlider").width();
-		    var x = touch.pageX - 50;
-		    if (x > max) {
-		    	x = max;
-		    }
-		    
-		    var percentageDragged =  x/max ;
-		    var left = (x-10);
-		    if (left < 0) {
-		    	left = 0;
-		    }
-		    $("#VolumeSliderSeek").attr("style", "left: " + left + "px");
-		    $("#VolumeSliderh").attr("style", "width: " + Math.floor(percentageDragged*100) + "%");
-			
-		    var MaxVolumeJump = 20;
-	    	var seekTo = Math.round( MaxVolumeJump - (MaxVolumeJump * percentageDragged) );
-		    var sendval = 0;
-		    if ( seekTo >= (MaxVolumeJump/2) ) {
-		    	//down
-		    	sendval = (seekTo-(MaxVolumeJump/2));
-		    	if (sendval > 0 ) {
-				    $("#VolumeContainer").attr("data-command", "VolumeDown");
-				    $("#VolumeContainer").attr("data-sendval", sendval);
-					if (sendval < 3) {
-						$("#hud").hide();
-						$("#VolumeContainer").attr("data-sendval", "0");
-					} else {
-						$("#hud").text("-" + sendval + "x").show();
-					}
+		var max = $("#VolumeSlider").width();
+		var x = touch.pageX - 50;
+		if (x > max) {
+			x = max;
+		}
+
+		var percentageDragged = x / max;
+		var left = (x - 10);
+		if (left < 0) {
+			left = 0;
+		}
+		$("#VolumeSliderSeek").attr("style", "left: " + left + "px");
+		$("#VolumeSliderh").attr("style", "width: " + Math.floor(percentageDragged * 100) + "%");
+
+		var MaxVolumeJump = 20;
+		var seekTo = Math.round(MaxVolumeJump - (MaxVolumeJump * percentageDragged));
+		var sendval = 0;
+		if (seekTo >= (MaxVolumeJump / 2)) {
+			//down
+			sendval = (seekTo - (MaxVolumeJump / 2));
+			if (sendval > 0) {
+				$("#VolumeContainer").attr("data-command", "VolumeDown");
+				$("#VolumeContainer").attr("data-sendval", sendval);
+				if (sendval < 3) {
+					$("#hud").hide();
+					$("#VolumeContainer").attr("data-sendval", "0");
+				} else {
+					$("#hud").text("-" + sendval + "x").show();
 				}
-			} else {
-				// Up	
-				sendval = ((MaxVolumeJump/2)-seekTo );
-				if (sendval > 0 ) {
-				    $("#VolumeContainer").attr("data-command", "VolumeUp");
-				    $("#VolumeContainer").attr("data-sendval", sendval);
-					if (sendval < 3) {
-						$("#hud").hide();
-						$("#VolumeContainer").attr("data-sendval", "0");
-					} else {
-						$("#hud").text("+" + sendval + "x").show();
-					}
+			}
+		} else {
+			// Up	
+			sendval = ((MaxVolumeJump / 2) - seekTo);
+			if (sendval > 0) {
+				$("#VolumeContainer").attr("data-command", "VolumeUp");
+				$("#VolumeContainer").attr("data-sendval", sendval);
+				if (sendval < 3) {
+					$("#hud").hide();
+					$("#VolumeContainer").attr("data-sendval", "0");
+				} else {
+					$("#hud").text("+" + sendval + "x").show();
 				}
-			}	
+			}
+		}
 	});
 
-	$("#VolumeSliderSeek").bind("touchend", function(event) {  
-		if ( $("#VolumeContainer").attr("data-sendval") != "0" ) {
+	$("#VolumeSliderSeek").bind("touchend", function (event) {
+		if ($("#VolumeContainer").attr("data-sendval") != "0") {
 			doSlideEvent();
 		} else {
 			resetVolumeSlider();
 		}
 	})
 
-	$("#seekbarContainer").bind("touchmove", function(event) {  
-			clearSleepTimer();
-			clearTimeout(slideTimer);
-			if ( getCurrentDevice().shortname == "MCE" ) {
-				event.preventDefault();
-				var e = event.originalEvent;
-			    var touch = e.touches[0]; 
+	$("#seekbarContainer").bind("touchmove", function (event) {
+		clearSleepTimer();
+		clearTimeout(slideTimer);
+		if (getCurrentDevice().shortname == "MCE") {
+			event.preventDefault();
+			var e = event.originalEvent;
+			var touch = e.touches[0];
 
-			    var max = $("#slider").width();
-			    var x = touch.pageX - 50;
-			    if (x > max) {
-			    	x = max;
-			    }
-
-			    var duration = $("#timespanright").attr("data-duration");
-
-			    if (isNumeric(duration)) {
-
-				    var percentageDragged =  x/max ;
-				    $("#timeseek").attr("style", "left: " + (x-10) + "px");
-				    $("#timebar").attr("style", "width: " + Math.floor(percentageDragged*100) + "%");
-					
-			    	var seekTo = Math.floor(  duration * percentageDragged );
-
-				    $(this).attr("data-sendval", seekTo);
-				     
-				    //slideTimer = setTimeout(doSeekEvent, 500);
-			    }
-			    
-
+			var max = $("#slider").width();
+			var x = touch.pageX - 50;
+			if (x > max) {
+				x = max;
 			}
+
+			var duration = $("#timespanright").attr("data-duration");
+
+			if (isNumeric(duration)) {
+
+				var percentageDragged = x / max;
+				$("#timeseek").attr("style", "left: " + (x - 10) + "px");
+				$("#timebar").attr("style", "width: " + Math.floor(percentageDragged * 100) + "%");
+
+				var seekTo = Math.floor(duration * percentageDragged);
+
+				$(this).attr("data-sendval", seekTo);
+
+				//slideTimer = setTimeout(doSeekEvent, 500);
+			}
+
+
+		}
 	});
 
-	$("#seekbarContainer").bind("touchend", function(event) {  
+	$("#seekbarContainer").bind("touchend", function (event) {
 		doSeekEvent()
 	})
 
-	$("#btnRoom").bind(clickEventType, function() {
+	$("#btnRoom").fastClick(function () {
 
-		var oncomplete = function(buttonIndex) {
-				settings.roomIndex = buttonIndex;
-				settings.deviceIndex = 0;
-				updateStatus();
-				getRoomStatus();
+		var oncomplete = function (buttonIndex) {
+			settings.roomIndex = buttonIndex;
+			settings.deviceIndex = 0;
+			updateStatus();
+			getRoomStatus();
 		}
 
-		if ( isPhoneGap() ) {
+		if (isPhoneGap()) {
 			var actionSheet = window.plugins.actionSheet;
 			var RoomNames = new Array();
 
 			var rooms = settings.rooms;
-			for (var i=0;i<rooms.length;i++) {
-				RoomNames.push( rooms[i].name )
+			for (var i = 0; i < rooms.length; i++) {
+				RoomNames.push(rooms[i].name)
 			}
 
-			RoomNames.push( "Cancel" );
+			RoomNames.push("Cancel");
 
-			actionSheet.create({title: 'Change Room', items: RoomNames, destructiveButtonIndex: (RoomNames.length-1)}, function(buttonValue, buttonIndex) {
-				if (buttonIndex == -1  || buttonIndex == (RoomNames.length-1)) {
+			actionSheet.create({
+				title: 'Change Room',
+				items: RoomNames,
+				destructiveButtonIndex: (RoomNames.length - 1)
+			}, function (buttonValue, buttonIndex) {
+				if (buttonIndex == -1 || buttonIndex == (RoomNames.length - 1)) {
 					return;
 				} else {
 					oncomplete(buttonIndex);
 				}
-				
+
 			});
 		} else {
-			var answer = prompt ("Enter a room index?","0");
-			if ( isNumeric(answer) ) {
-				if ( parseInt(answer) < settings.rooms.length ) {
-					oncomplete( parseInt(answer) )
+			var answer = prompt("Enter a room index?", "0");
+			if (isNumeric(answer)) {
+				if (parseInt(answer) < settings.rooms.length) {
+					oncomplete(parseInt(answer))
 				}
 			}
 		}
 	});
 
-	$("#btnTransfer").bind(clickEventType, function() {
+	$("#btnTransfer").fastClick(function () {
 
-		var oncomplete = function(buttonIndex) {
+		var oncomplete = function (buttonIndex) {
 			var room = getCurrentRoom();
 			settings.deviceIndex = buttonIndex;
 			var device = getCurrentDevice();
 			var deviceShortName = device.shortname;
 
-			if ( room.IR ) {
+			if (room.IR) {
 				setDeviceByShortName("MCE"); //force device back to MCE, because EG swithces the inputs
 				var switchInputNode = $(xml).find('gesturePad > devices > device[shortname="MCE"] > commands > category > command > action > onCompleteSetDevice[shortname="' + deviceShortName + '"]:first');
-				if ( $(switchInputNode).size() > 0 ) {
-					doEvent("manual",  $(switchInputNode).parent() );	
-					getRoomStatus();		 			
+				if ($(switchInputNode).size() > 0) {
+					doEvent("manual", $(switchInputNode).parent());
+					getRoomStatus();
 				}
 			}
 			updateStatus();
 		}
 
-		if ( isPhoneGap() ) {
+		if (isPhoneGap()) {
 			var actionSheet = window.plugins.actionSheet;
 			var RoomDevices = new Array();
 
 			var devices = getCurrentRoom().devices;
-			for (var i=0;i<devices.length;i++) {
-				RoomDevices.push( devices[i].name )
+			for (var i = 0; i < devices.length; i++) {
+				RoomDevices.push(devices[i].name)
 			}
-			RoomDevices.push( "Cancel" );
-			actionSheet.create({title: 'Switch Input', items: RoomDevices, destructiveButtonIndex: (RoomDevices.length-1)}, function(buttonValue, buttonIndex) {
-				if (buttonIndex == -1  || buttonIndex == (RoomDevices.length-1)) {
+			RoomDevices.push("Cancel");
+			actionSheet.create({
+				title: 'Switch Input',
+				items: RoomDevices,
+				destructiveButtonIndex: (RoomDevices.length - 1)
+			}, function (buttonValue, buttonIndex) {
+				if (buttonIndex == -1 || buttonIndex == (RoomDevices.length - 1)) {
 					return;
 				} else {
 					oncomplete(buttonIndex);
 				}
 			});
 		} else {
-			var answer = prompt ("Enter a device index?","0");
-			if ( isNumeric(answer) ) {
+			var answer = prompt("Enter a device index?", "0");
+			if (isNumeric(answer)) {
 				var room = getCurrentRoom();
 				var devices = room.devices;
-				if ( parseInt(answer) < devices.length ) {
-					oncomplete( parseInt(answer) )
+				if (parseInt(answer) < devices.length) {
+					oncomplete(parseInt(answer))
 				}
 			}
 
 		}
 	})
 
-	$("#btnPower").bind(clickEventType, function() {
+	$("#btnPower").fastClick(function () {
 		executeGestureByCommandName("Power");
 	});
-	$("#btnPlay").bind(clickEventType, function() {
-		if ( $(this).hasClass("playing") ) {
+
+	$("#btnPlay").fastClick(function () {
+		if ($(this).hasClass("playing")) {
 			executeGestureByCommandName("Pause");
 			$(this).removeClass("playing");
 		} else {
 			executeGestureByCommandName("Play");
 		}
 	});
-	$("#btnMute").bind(clickEventType, function() {
+
+	$("#btnMute").fastClick(function () {
 		executeGestureByCommandName("Mute");
 	});
-	
 
-	$("#searchbox").bind("keypress", function(e) {
-		if ( $("#searchbox").val() == "" ) {
+
+	$("#searchbox").bind("keypress", function (e) {
+		if ($("#searchbox").val() == "") {
 			$("#searchClear").attr("style", "display: none;");
 		} else {
 			$("#searchClear").attr("style", "");
 		}
 	});
 
-	$("#searchClear").bind(clickEventType, function() {
+	$("#searchClear").fastClick(function () {
 		$("#searchbox").val("");
 		$("#searchClear").attr("style", "display: none;");
 		$("#searchform").submit();
 	});
 
-	$("#searchform").bind("submit", function(event) {
+	$("#searchform").bind("submit", function (event) {
 		event.preventDefault();
 
-    	var s = $("#Filter input.searcher").val().toLowerCase();
-    	$("#backFace tr").each(function() {
-    		var t = $(this).text().toLowerCase();
-    		if (t == ".. ") {
-    			return;
-    		}
-    		if ( $(this).hasAttr("data-fullname") ) {
-    			t += " " + $(this).attr("data-fullname").toLowerCase();
-    		} 
-    		if ( t.indexOf(s) == -1 ) {
-    			$(this).hide()
-    		} else {
-    			$(this).show()
-    		}
-    	})
+		var s = $("#Filter input.searcher").val().toLowerCase();
+		$("#backFace tr").each(function () {
+			var t = $(this).text().toLowerCase();
+			if (t == ".. ") {
+				return;
+			}
+			if ($(this).hasAttr("data-fullname")) {
+				t += " " + $(this).attr("data-fullname").toLowerCase();
+			}
+			if (t.indexOf(s) == -1) {
+				$(this).hide()
+			} else {
+				$(this).show()
+			}
+		})
 		$("#backFace").trigger("scroll");
 		checkScrollOverflow();
 		return true;
 	});
 
-	$("#top, #toptrans, #overallVolumeContainer").bind("touchmove", function(event) {
+	$("#top, #toptrans, #overallVolumeContainer").bind("touchmove", function (event) {
 		event.preventDefault();
 	})
 
@@ -933,56 +935,58 @@ function onDeviceReady() {
 
 	window.plugins.tapToScroll.initListener();
 
-    window.addEventListener("statusTap", function() {
-		if ( $("#backFace table").size() > 0 ) {
+	window.addEventListener("statusTap", function () {
+		if ($("#backFace table").size() > 0) {
 			$("#backFace").scrollTop(0);
 		}
-    });
+	});
 
- 	npTimer = setInterval(function() {
-      nowPlaying()
-      getRoomStatus()
+	npTimer = setInterval(function () {
+		nowPlaying()
+		getRoomStatus()
 	}, 30000);
 
 	clearSleepTimer();
 
-	window.scrollTo(0,0);
+	window.scrollTo(0, 0);
 
 }
 
 function setupWorker(channellist) {
 
-	if ( hasDirecTV() == false ) { 
+	if (hasDirecTV() == false) {
 		return;
 	}
 	guide.channels = new Array();
 
 	//setup base structures
 	var dedupe = ""
-	$(channellist).find('channels > channel').each(function() {
-		if (dedupe != $(this).find("number").text() ) {
-	  		var channel = new Object();
-		  	channel.number = $(this).find("number").text() ;
-		  	channel.logo = $(this).find("logo").text();
-		  	channel.callsign = $(this).find("callsign").text();
-		  	channel.nowplaying = "";
-		  	channel.ending = 0;
-		  	channel.timeleft = "";
-		  	channel.fullname = $(this).find("fullname").text();
-		  	channel.startTime = 0;
-		  	channel.duration = 0;
+	$(channellist).find('channels > channel').each(function () {
+		if (dedupe != $(this).find("number").text()) {
+			var channel = new Object();
+			channel.number = $(this).find("number").text();
+			channel.logo = $(this).find("logo").text();
+			channel.callsign = $(this).find("callsign").text();
+			channel.nowplaying = "";
+			channel.ending = 0;
+			channel.timeleft = "";
+			channel.fullname = $(this).find("fullname").text();
+			channel.startTime = 0;
+			channel.duration = 0;
 
-		  	var fav = $(channellist).find('channels > favorites > category > number').filter(function() { return $(this).text() == channel.number  });;
+			var fav = $(channellist).find('channels > favorites > category > number').filter(function () {
+				return $(this).text() == channel.number
+			});;
 
-		  	if ( $(fav).size() > 0 ) {
-		  		channel.category = $(fav).parent().attr("name");
-		  		channel.catIndex = parseInt($(fav).parent().attr("idx"));
-		  	}  else {
-		  		channel.category = "Unsorted";
-		  		channel.catIndex = 999;
-		  	}
+			if ($(fav).size() > 0) {
+				channel.category = $(fav).parent().attr("name");
+				channel.catIndex = parseInt($(fav).parent().attr("idx"));
+			} else {
+				channel.category = "Unsorted";
+				channel.catIndex = 999;
+			}
 
-			guide.channels.push( channel );
+			guide.channels.push(channel);
 			dedupe = channel.number;
 		}
 	});
@@ -993,12 +997,13 @@ function setupWorker(channellist) {
 }
 
 //sort em
-function compare(a,b) {
-  if (a.catIndex < b.catIndex)
-     return -1;
-  if (a.catIndex > b.catIndex)
-    return 1;
-  return 0;
+
+function compare(a, b) {
+	if (a.catIndex < b.catIndex)
+		return -1;
+	if (a.catIndex > b.catIndex)
+		return 1;
+	return 0;
 }
 
 function startWorker() {
@@ -1006,17 +1011,17 @@ function startWorker() {
 		clearTimeout(workerTimer)
 	} catch (e) {}
 
-	if ( isPhoneGap() ) {
-		 
+	if (isPhoneGap()) {
+
 		//save all dtv servers to an array
 		var dtvServers = new Array();
 		var currentServer = 0;
 
 		//pull all dtv servers for a round-robin guide pull
-		for (var i=0;i<settings.rooms.length;i++) {
-			for (var x=0;x<settings.rooms[i].devices.length;x++) {
-				if ( settings.rooms[i].devices[x].shortname == "DTV" ) {
-					dtvServers[currentServer] = "http://" + settings.rooms[i].devices[x].IPAddress + ":" + settings.rooms[i].devices[x].Port + "/" ;
+		for (var i = 0; i < settings.rooms.length; i++) {
+			for (var x = 0; x < settings.rooms[i].devices.length; x++) {
+				if (settings.rooms[i].devices[x].shortname == "DTV") {
+					dtvServers[currentServer] = "http://" + settings.rooms[i].devices[x].IPAddress + ":" + settings.rooms[i].devices[x].Port + "/";
 					currentServer += 1;
 				}
 			}
@@ -1024,44 +1029,44 @@ function startWorker() {
 
 
 		currentServer = 0;
-	 	$.each(guide.channels, function(channelKey) { 
-	 		var c = guide.channels[channelKey];
+		$.each(guide.channels, function (channelKey) {
+			var c = guide.channels[channelKey];
 
-	 		//first determine if the channel needs a refresh
-	 		if (c.nowplaying == "" || (c.ending) > (new Date).getTime() ) {
-	 			c.nowplaying = "";
+			//first determine if the channel needs a refresh
+			if (c.nowplaying == "" || (c.ending) > (new Date).getTime()) {
+				c.nowplaying = "";
 
-	 			var blnFoundServer = false;
-	 			while(blnFoundServer == false) {
-	 				//pick a server
-			 		if ( currentServer > dtvServers.length-1 ) {
-			 			currentServer = 0
-			 		}
-		 			//queue the refresh on that server
-		 			if ( dtvServers[currentServer].room != getCurrentDevice().shortname ) { //dont overload the current room
-		 				refreshChannel(dtvServers[currentServer], "DTVWorker"+currentServer, channelKey);
-		 				blnFoundServer = true;
-		 			}
+				var blnFoundServer = false;
+				while (blnFoundServer == false) {
+					//pick a server
+					if (currentServer > dtvServers.length - 1) {
+						currentServer = 0
+					}
+					//queue the refresh on that server
+					if (dtvServers[currentServer].room != getCurrentDevice().shortname) { //dont overload the current room
+						refreshChannel(dtvServers[currentServer], "DTVWorker" + currentServer, channelKey);
+						blnFoundServer = true;
+					}
 
-		 			currentServer += 1;
-	 			}
+					currentServer += 1;
+				}
 
-	 		}
+			}
 
 
 		});
 
-	 	workerTimer = setTimeout( "startWorker()", 10000 );
+		workerTimer = setTimeout("startWorker()", 10000);
 	} else {
 		return;
 	}
 }
 
 function refreshChannel(server, queueName, channelKey) {
-	
-    if ( isWifi() == false ) {
-        //return;
-    }
+
+	if (isWifi() == false) {
+		//return;
+	}
 
 	var c = guide.channels[channelKey];
 	$.ajaxq(queueName, {
@@ -1070,23 +1075,23 @@ function refreshChannel(server, queueName, channelKey) {
 		type: "GET",
 		timeout: 10000,
 		data: 'major=' + c.number,
-		success: function(response) {
+		success: function (response) {
 			c.nowplaying = response.title;
 			c.startTime = response.startTime;
 			c.duration = response.duration;
-			c.timeleft = hms2( (response.startTime+response.duration) - Math.floor(new Date().getTime() / 1000)  );
-			c.ending = (response.startTime+response.duration);
+			c.timeleft = hms2((response.startTime + response.duration) - Math.floor(new Date().getTime() / 1000));
+			c.ending = (response.startTime + response.duration);
 
-			if ( $("#tr"+channelKey).size() > 0 ) {
-				var row = $("#tr"+channelKey);
+			if ($("#tr" + channelKey).size() > 0) {
+				var row = $("#tr" + channelKey);
 				//update on screen info
-				$(row).find("td:eq(1) div").text( c.nowplaying )
-            	$(row).find("td:eq(2)").text( c.timeleft ) 
-            	$(row).attr("data-loaded", "true")
+				$(row).find("td:eq(1) div").text(c.nowplaying)
+				$(row).find("td:eq(2)").text(c.timeleft)
+				$(row).attr("data-loaded", "true")
 
 			}
 		},
-		error: function(x,y,z) {
+		error: function (x, y, z) {
 			console.log("Refresh Channel Error: " + server);
 		}
 	});
@@ -1094,20 +1099,20 @@ function refreshChannel(server, queueName, channelKey) {
 
 function clearSleepTimer() {
 	SleepDevice(false);
- 	clearTimeout(sleepTimer);
- 	return;
- 	if (settings.SleepThreshold > 0) {
-		sleepTimer = setTimeout( "SleepDevice(true)", settings.SleepThreshold );
- 	}
+	clearTimeout(sleepTimer);
+	return;
+	if (settings.SleepThreshold > 0) {
+		sleepTimer = setTimeout("SleepDevice(true)", settings.SleepThreshold);
+	}
 }
 
 function SleepDevice(sleep) {
 	return;
 	if (settings.SleepThreshold > 0) {
 		if (sleep) {
-			if ( $("#gestures_canvas:visible").size() == 0  ) {
+			if ($("#gestures_canvas:visible").size() == 0) {
 				return;
-			} 
+			}
 			executeObjC("http://gesturepad/sleep/?do=true")
 		} else {
 			executeObjC("http://gesturepad/wake/?do=true")
@@ -1116,25 +1121,25 @@ function SleepDevice(sleep) {
 }
 
 function executeObjC(url) {
-  var iframe = document.createElement("IFRAME");
-  iframe.setAttribute("src", url);
-  document.documentElement.appendChild(iframe);
-  iframe.parentNode.removeChild(iframe);
-  iframe = null;
+	var iframe = document.createElement("IFRAME");
+	iframe.setAttribute("src", url);
+	document.documentElement.appendChild(iframe);
+	iframe.parentNode.removeChild(iframe);
+	iframe = null;
 }
 
 function htmlEscape(str) {
-    return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;');
 }
 
 function splash(t) {
 	try {
-		if ( t == "hide" ) {
+		if (t == "hide") {
 			navigator.splashscreen.hide();
 		} else {
 			navigator.splashscreen.show();
@@ -1179,74 +1184,76 @@ function splash(t) {
 
 
 function DoShuffle() {
-		//i dunno if this will come back, twas cool
-		if (localStorage.getItem("shortname") != "MCE") {
+	//i dunno if this will come back, twas cool
+	if (localStorage.getItem("shortname") != "MCE") {
+		return;
+	}
+	var actionSheet = window.plugins.actionSheet;
+	var actions = ["Will Ferrell", "Comedy", "Action", "Romance", "Horror", "Funny TV"];
+	var actionTypes = ["Actor", "Genre", "Genre", "Genre", "Genre", "TV"];
+	actions.push("Cancel")
+
+	actionSheet.create({
+		title: 'Shuffle Surprise!',
+		items: actions,
+		destructiveButtonIndex: (actions.length - 1)
+	}, function (buttonValue, buttonIndex) {
+		if (buttonIndex == -1 || buttonIndex == (actions.length - 1)) {
 			return;
 		}
-		var actionSheet = window.plugins.actionSheet;
-		var actions = ["Will Ferrell", "Comedy", "Action", "Romance", "Horror", "Funny TV"];
-		var actionTypes = ["Actor", "Genre", "Genre", "Genre", "Genre", "TV"];
-		actions.push("Cancel")
+		$.getJSON('http://rss.jed.bz/?t=' + actionTypes[buttonIndex] + '&v=' + actions[buttonIndex] + '', function (data) {
 
-		actionSheet.create({title: 'Shuffle Surprise!', items: actions, destructiveButtonIndex: (actions.length-1)}, function(buttonValue, buttonIndex) {
-			if (buttonIndex == -1  || buttonIndex == (actions.length-1)) {
-				return;
-			}
-			$.getJSON('http://rss.jed.bz/?t=' + actionTypes[buttonIndex] + '&v=' + actions[buttonIndex] + '', function(data) {
-
-				navigator.notification.confirm(
-				   data.Name, 
-					function(buttonIndex) {
-            			playByID(buttonIndex, data.Id);
-        			},
-				   'Play Title?', 
-				   'Play It, Cancel'
-				);
-			});
+			navigator.notification.confirm(
+				data.Name, function (buttonIndex) {
+				playByID(buttonIndex, data.Id);
+			},
+				'Play Title?',
+				'Play It, Cancel');
 		});
+	});
 }
 
-function playByID(buttonIndex, id)  {
+function playByID(buttonIndex, id) {
 	if (buttonIndex == 2) {
 		DoShuffle()
 	}
 	if (buttonIndex == 1) {
-	
+
 		var MBUrl = getMBUrl();
 
 		MBUrl += "ui?command=play&id=" + id
-		$.getJSON(MBUrl, function(x) {
-			setTimeout(function() {
+		$.getJSON(MBUrl, function (x) {
+			setTimeout(function () {
 				nowPlaying();
 			}, 1500)
-         })
+		})
 	}
 }
 
 function playTitle(tr, movieTitle, playNow) {
 
-    if ( isWifi() == false ) {
-        doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
-        return;
-    }
+	if (isWifi() == false) {
+		doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
+		return;
+	}
 
-    if (playNow) {
+	if (playNow) {
 		var MBUrl = getMBUrl();
 		var guid = $(tr).attr("data-guid");
 		MBUrl += "ui?command=play&id=" + guid;
-		$.getJSON(MBUrl, function() {
-			setTimeout(function() {
+		$.getJSON(MBUrl, function () {
+			setTimeout(function () {
 				nowPlaying();
 			}, 1500)
-	     });
-		doAlert("Now Playing\n" + movieTitle );
+		});
+		doAlert("Now Playing\n" + movieTitle);
 
-    } else {
+	} else {
 		var actionSheet = window.plugins.actionSheet;
 		var actions = ["Play", "Resume", "View on Screen"];
 
-		if ( $(tr).attr("data-imdb") == "1" ) {
-			actions.push("View Imdb Page")	
+		if ($(tr).attr("data-imdb") == "1") {
+			actions.push("View Imdb Page")
 		}
 
 		actions.push("Cancel");
@@ -1255,59 +1262,63 @@ function playTitle(tr, movieTitle, playNow) {
 		var guid = $(tr).attr("data-guid")
 		var title = "Actions";
 
-		if ( title != undefined ) {
+		if (title != undefined) {
 			title = movieTitle;
 		}
 
-		actionSheet.create({title: title, items: actions, destructiveButtonIndex: (actions.length-1)}, function(buttonValue, buttonIndex) {
-			if (buttonIndex == -1  || buttonIndex == (actions.length-1)) {
+		actionSheet.create({
+			title: title,
+			items: actions,
+			destructiveButtonIndex: (actions.length - 1)
+		}, function (buttonValue, buttonIndex) {
+			if (buttonIndex == -1 || buttonIndex == (actions.length - 1)) {
 				return;
 			}
-			switch(actions[buttonIndex]) {
-				case "Play":
-					MBUrl += "ui?command=play&id=" + guid
-					break;
-				case "Resume":
-					MBUrl += "ui?command=resume&id=" + guid
-					break;
-				case "View on Screen":
-					MBUrl += "ui?command=navigatetoitem&id=" + guid
-					break;
-				case "View Imdb Page":
-					MBUrl = ""
-					break;
+			switch (actions[buttonIndex]) {
+			case "Play":
+				MBUrl += "ui?command=play&id=" + guid
+				break;
+			case "Resume":
+				MBUrl += "ui?command=resume&id=" + guid
+				break;
+			case "View on Screen":
+				MBUrl += "ui?command=navigatetoitem&id=" + guid
+				break;
+			case "View Imdb Page":
+				MBUrl = ""
+				break;
 			}
-			if ( MBUrl != "" ) {
-				$.getJSON(MBUrl, function() {
-					setTimeout(function() {
+			if (MBUrl != "") {
+				$.getJSON(MBUrl, function () {
+					setTimeout(function () {
 						nowPlaying();
 					}, 1500)
-			     })
+				})
 			} else {
 				//launch Imdb
 				$.ajax({
 					url: getMBUrl() + "library/?Id=" + guid + "&lightData=1",
 					dataType: 'json',
 					timeout: settings.MBServiceTimeout,
-					success: function(x) {
-						if ( x.Data.ImdbID ) {
-					    	cb = window.plugins.childBrowser;    
-						    if (cb != null) {
-						        cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
-						    }	
+					success: function (x) {
+						if (x.Data.ImdbID) {
+							cb = window.plugins.childBrowser;
+							if (cb != null) {
+								cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
+							}
 						} else {
 							doAlert("Sorry, This title does not have an IMBD id");
 						}
-					}, 
-					error: function() {
+					},
+					error: function () {
 						if (parse) {
 							doAlert("The server is not responding in time, and no cached version exists. Try again later");
 						}
 					}
 				});
 			}
-		});	
-    }
+		});
+	}
 
 
 }
@@ -1315,321 +1326,356 @@ function playTitle(tr, movieTitle, playNow) {
 function showBottomItems(tr, sentEventType) {
 
 	var eventType = "click";
-	if ( sentEventType ) {
+	if (sentEventType) {
 		eventType = sentEventType;
 	}
-	
+
 	var device = getCurrentDevice();
 
 	if (device.shortname == "MCE") {
 
 		var MBUrl = getMBUrl();
-		
+
 		var boxCoverWidth = 70;
 		var backwards = false;
-		if ( tr ) {
-			if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
+		if (tr) {
+			if ($(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") == "Episode") {
 				if (eventType == "taphold") {
-					playTitle( $(tr), $(tr).parent().find("p").text(), false );
+					playTitle($(tr), $(tr).parent().find("p").text(), false);
 				} else {
-					playTitle( $(tr), $(tr).parent().find("p").text(), true );
+					playTitle($(tr), $(tr).parent().find("p").text(), true);
 				}
-				
+
 				return;
 			}
-			if ( $(tr).hasAttr("data-backwards") ) {
+			if ($(tr).hasAttr("data-backwards")) {
 				backwards = true;
 			}
 		}
-		
-		var animationProps = {"startCoverOpacity": 0.25, "startCoverTop": "140px", "endCoverOpacity": 1, "endCoverTop": "24px"};
+
+		var animationProps = {
+			"startCoverOpacity": 0.25,
+			"startCoverTop": "140px",
+			"endCoverOpacity": 1,
+			"endCoverTop": "24px"
+		};
 
 		if (backwards) {
-			animationProps = {"startCoverOpacity": 0.25, "startCoverTop": "-164px", "endCoverOpacity": 1, "endCoverTop": "24px"};
+			animationProps = {
+				"startCoverOpacity": 0.25,
+				"startCoverTop": "-164px",
+				"endCoverOpacity": 1,
+				"endCoverTop": "24px"
+			};
 		}
 
 		$('#covers').animate({
 			"opacity": animationProps.startCoverOpacity,
 			"margin-top": animationProps.startCoverTop
-			}, 250, function() {
-				$("#covers").css("margin-top", "24px").width( $(window).width() );
-				$("#covers").html("<div class='boxLoader'><p class='boxLoading'>Loading Data...</p></div>").css("opacity", "1").hide().fadeIn();
+		}, 250, function () {
+			$("#covers").css("margin-top", "24px").width($(window).width());
+			$("#covers").html("<div class='boxLoader'><p class='boxLoading'>Loading Data...</p></div>").css("opacity", "1").hide().fadeIn();
 
-				var parseJsonResults = function (x) {
+			var parseJsonResults = function (x) {
 
-					var tb = '<div style="width: 40px; height: 100%; float:left"> </div>';
+				var tb = '<div style="width: 40px; height: 100%; float:left"> </div>';
 
-					$("#covers").width( ((x.Data.Children.length) * boxCoverWidth) + 50 );
+				$("#covers").width(((x.Data.Children.length) * boxCoverWidth) + 50);
 
-					if (settings.moviesByDate && x.Data.Type == "Folder"  ) {
-						x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
-					}
-
-					if (settings.tvByDate && ( x.Data.Type == "Season" || x.Data.Type == "Series") ) {
-						x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
-					}
-					
-					$.each(x.Data.Children, function(key, val) { 
-						tb += '<div class="smallboxContainer pendingImg" >' 
-						if (x.Data.Children[key].IsFolder == true) {
-							if ( x.Data.Children[key].RecentlyAddedUnplayedItemCount > 0 ) {
-								tb += '<div class="badge" >' + x.Data.Children[key].RecentlyAddedUnplayedItemCount + '</div>' 		
-							}
-						}
-						
-						tb += '<img data-prefix="' + getMBUrl() + 'image/?Id=' + '" data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type + '" class="smallBox" src="img/nobox.png"  data-imdb="' + ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")  + '" />';
-						tb += '<p>' + x.Data.Children[key].Name  + '</p>'
-						tb += '</div>';
-					});
-
-
-					
-					
-					var children = $("<div>" + tb + "</div>");
-					$(children).find("div.pendingImg").each(function(counter) {
-
-						if (counter > 100) { 
-							return false;
-						}
-				        var boxImg = $(this).find("img");
-				        var guid = $(boxImg).attr("data-guid");
-				        var prefix = $(boxImg).attr("data-prefix");
-			    		var imgID = "MB_Small_" + guid;
-						$(boxImg).onerror = function() {
-							$(this).attr("src", "img/nobox.png");
-						};
-
-						//load data with cached imagery already populated
-						getImageFromCache({id: imgID, url: prefix + guid + "&maxwidth=120&maxheight=120"}, function(r) {
-							var img = new Image();
-							img.onerror = function() {
-								$(boxImg).attr("src", "img/nobox.png");
-							};
-							if (r.cached) { 
-								$(boxImg).attr("src", r.url);
-								$(this).removeClass("pendingImg");
-							}
-						});
-					})
-
-					$('#covers').css("margin-top", "-130px").css("opacity", "0.25");
-
-					$("#covers").empty().append( $(children).children() ) ;
-
-					$("#covers img").each(function() {
-						var itemType = $(this).attr("data-type");
-						if ( itemType == "Movie" || itemType == "Episode" ) {
-							$(this).longclick( function(evt) {
-				            	showBottomItems( evt.currentTarget, "taphold" )
-				            }, 750);
-							$(this).bind("click", function() {
-								showBottomItems( $(this) )
-							});
-						} else {
-							$(this).bind("click", function() {
-								$("#boxCoverBack").data("scrollPosition", $("#boxCoverContainer").scrollLeft() );
-								showBottomItems( $(this) )
-							});
-						}
-					});
-
-					$('#covers').animate({
-						"opacity": animationProps.endCoverOpacity,
-						"margin-top": animationProps.endCoverTop
-						}, 250, function() {
-							if ( $("#boxCoverBack").data("scrollPosition") && backwards ) {
-								$("#boxCoverContainer").animate({scrollLeft:  parseInt( $("#boxCoverBack").data("scrollPosition") )  }, 500);
-							}
-							$("#boxCoverContainer").trigger("scroll");
-
-							var folderName = x.Data.Name;
-							if (folderName == "StartupFolder") {
-								folderName = "Startup Folder";
-								$("#covers").data("back", "");
-							} else {
-								$("#covers").data("back", x.Data.parentId);
-							}
-							$("#covers").data("loaded", true);
-
-							$('#bottomText > span:first').animate({
-								"opacity": 0,
-								"margin-left": '-100px'
-								}, 250, function() {
-									$("#bottomText > span:first").text(folderName);
-									$("#bottomText > span:first").animate({
-										"opacity": 1,
-										"margin-left": '0px'
-									}, 250);
-							});
+				if (settings.moviesByDate && x.Data.Type == "Folder") {
+					x.Data.Children.sort(function (a, b) {
+						return Date.parse(b.DateCreated) - Date.parse(a.DateCreated)
 					});
 				}
 
-				var getJsonFromServer = function(url, parse) {
-
-			        if ( isWifi() == false && parse) {
-			            doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.")
-			            $("#covers").html("<div class='boxLoader'><p class='boxLoading'>No data found.</p></div>")
-			            return;
-			        }
-
-					$.ajax({
-						url: url,
-						dataType: 'json',
-						timeout: settings.MBServiceTimeout,
-						success: function(d) {
-							saveJsonToCache(url, d);
-							if (parse) {
-								parseJsonResults(d);	
-							}
-						}, 
-						error: function() {
-							if (parse) {
-								doAlert("The server is not responding in time, and no cached version exists. Try again later")
-								$("#covers").html("<div class='boxLoader'><p class='boxLoading'>No data found.</p></div>")
-							}
-						}
+				if (settings.tvByDate && (x.Data.Type == "Season" || x.Data.Type == "Series")) {
+					x.Data.Children.sort(function (a, b) {
+						return Date.parse(b.DateCreated) - Date.parse(a.DateCreated)
 					});
 				}
 
-				if ( tr ) {
-					MBUrl += "library/?lightData=1&Id=" + $(tr).attr("data-guid");
-				} else {
-					MBUrl += "library/";
-				}
-				
-				getJsonFromCache(MBUrl, function(d) {
-					if (d == null) {
-						//get from server
-						getJsonFromServer(MBUrl, true);
-					} else {
-						//display cached
-						parseJsonResults(d);
-						//get from server, to replace cache but dont parse
-						getJsonFromServer(MBUrl, false);
+				$.each(x.Data.Children, function (key, val) {
+					tb += '<div class="smallboxContainer pendingImg" >'
+					if (x.Data.Children[key].IsFolder == true) {
+						if (x.Data.Children[key].RecentlyAddedUnplayedItemCount > 0) {
+							tb += '<div class="badge" >' + x.Data.Children[key].RecentlyAddedUnplayedItemCount + '</div>'
+						}
 					}
+
+					tb += '<img data-prefix="' + getMBUrl() + 'image/?Id=' + '" data-guid="' + x.Data.Children[key].Id + '" data-type="' + x.Data.Children[key].Type + '" class="smallBox" src="img/nobox.png"  data-imdb="' + ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0") + '" />';
+					tb += '<p>' + x.Data.Children[key].Name + '</p>'
+					tb += '</div>';
 				});
 
 
 
-		});
-	} 
-
-	if (device.shortname == "DTV") {
-
-		var boxCoverWidth = 70;
-		var backwards = false;
-		if ( tr ) {
-			if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
-				playTitle( $(tr), $(tr).parent().find("p").text() );
-				return;
-			}
-			if ( $(tr).hasAttr("data-backwards") ) {
-				backwards = true;
-			}
-		}
-		
-		var animationProps = {"startCoverOpacity": 0.25, "startCoverTop": "140px", "endCoverOpacity": 1, "endCoverTop": "24px"};
-
-		if (backwards) {
-			animationProps = {"startCoverOpacity": 0.25, "startCoverTop": "-164px", "endCoverOpacity": 1, "endCoverTop": "24px"};
-		}
-
-		$('#covers').animate({
-			"opacity": animationProps.startCoverOpacity,
-			"margin-top": animationProps.startCoverTop
-			}, 250, function() {
-				$("#covers").css("margin-top", "24px").width( $(window).width() );
-				$("#covers").html("<div class='boxLoader'><p class='boxLoading'>Loading Data...</p></div>").css("opacity", "1").hide().fadeIn();
-
-				var tb = '<div style="width: 40px; height: 100%; float:left"> </div>';
-				if ( tr ) {
-					//load a group
-					var category = $(tr).attr("data-category");
-					var i = 0;
-					$.each(guide.channels, function(channelKey, c) { 
-						if (c.category == category) {
-							tb += '<div class="smallboxContainer" >' 
-							tb += '<div class="channelContainer"><div data-minor="' + c.number + '" class="smallChannel" style="background-image: url(' + c.logo + ')" ></div></div>';
-							tb += '<p>' + c.fullname + '</p>'
-							tb += '</div>';
-							i++
-						}
-					});
-					$("#covers").width( (( i ) * boxCoverWidth) + 50 );
-
-				} else {
-					//get channel categories
-					var categories = [];
-
-					$.each(guide.channels, function(channelKey, c) { 
-
-						var chanObject = {category: c.category, logo: c.logo, name: c.fullname };
-						var blnFound = false;
-						$.each(categories, function(x, y) {
-							if ( y.category == c.category ) {
-								blnFound = true;
-								return false;
-							}
-						});
-
-						if (blnFound == false) {
-							categories.push(chanObject);
-						}
-					});
-
-					$.each(categories, function(x, y) {
-						tb += '<div class="smallboxContainer" >' 
-						tb += '<div class="channelContainer"><div data-category="' + y.category + '" class="smallChannel" style="background-image: url(' + y.logo + ')" ></div></div>';
-						tb += '<p>' + y.category + '</p>'
-						tb += '</div>';
-					})
-
-					$("#covers").width( (( categories.length ) * boxCoverWidth) + 50 );
-				}
 
 				var children = $("<div>" + tb + "</div>");
+				$(children).find("div.pendingImg").each(function (counter) {
+
+					if (counter > 100) {
+						return false;
+					}
+					var boxImg = $(this).find("img");
+					var guid = $(boxImg).attr("data-guid");
+					var prefix = $(boxImg).attr("data-prefix");
+					var imgID = "MB_Small_" + guid;
+					$(boxImg).onerror = function () {
+						$(this).attr("src", "img/nobox.png");
+					};
+
+					//load data with cached imagery already populated
+					getImageFromCache({
+						id: imgID,
+						url: prefix + guid + "&maxwidth=120&maxheight=120"
+					}, function (r) {
+						var img = new Image();
+						img.onerror = function () {
+							$(boxImg).attr("src", "img/nobox.png");
+						};
+						if (r.cached) {
+							$(boxImg).attr("src", r.url);
+							$(this).removeClass("pendingImg");
+						}
+					});
+				})
 
 				$('#covers').css("margin-top", "-130px").css("opacity", "0.25");
 
-				$("#covers").empty().append( $(children).children() ) ;
-				$("#covers div.smallChannel").bind(clickEventType, function () {
-					if ( $(this).hasAttr("data-category") ) {
-						$("#boxCoverBack").data("scrollPosition", $("#boxCoverContainer").scrollLeft() );
-						showBottomItems( $(this) )
-					} else {
-						//change to the channel
-						changeChannel( $(this).attr("data-minor") );
-					}
+				$("#covers").empty().append($(children).children());
 
+				$("#covers img").each(function () {
+					var itemType = $(this).attr("data-type");
+					if (itemType == "Movie" || itemType == "Episode") {
+						$(this).longclick(function (evt) {
+							showBottomItems(evt.currentTarget, "taphold")
+						}, 750);
+						$(this).bind("click", function () {
+							showBottomItems($(this))
+						});
+					} else {
+						$(this).bind("click", function () {
+							$("#boxCoverBack").data("scrollPosition", $("#boxCoverContainer").scrollLeft());
+							showBottomItems($(this))
+						});
+					}
 				});
 
 				$('#covers').animate({
 					"opacity": animationProps.endCoverOpacity,
 					"margin-top": animationProps.endCoverTop
-					}, 250, function() {
-						if ( $("#boxCoverBack").data("scrollPosition") && backwards ) {
-							$("#boxCoverContainer").animate({scrollLeft:  parseInt( $("#boxCoverBack").data("scrollPosition") )  }, 500);
-						}
-						var folderName = "Categories";
-						if (tr) {
-							$("#covers").data("back", "ChannelHome");
-							folderName = $(tr).attr("data-category")
-						} else {
-							$("#covers").data("back", "");
-						}
-						$("#covers").data("loaded", true);
+				}, 250, function () {
+					if ($("#boxCoverBack").data("scrollPosition") && backwards) {
+						$("#boxCoverContainer").animate({
+							scrollLeft: parseInt($("#boxCoverBack").data("scrollPosition"))
+						}, 500);
+					}
+					$("#boxCoverContainer").trigger("scroll");
 
-						$('#bottomText > span:first').animate({
-							"opacity": 0,
-							"margin-left": '-100px'
-							}, 250, function() {
-								$("#bottomText > span:first").text(folderName);
-								$("#bottomText > span:first").animate({
-									"opacity": 1,
-									"margin-left": '0px'
-								}, 250);
-						});
+					var folderName = x.Data.Name;
+					if (folderName == "StartupFolder") {
+						folderName = "Startup Folder";
+						$("#covers").data("back", "");
+					} else {
+						$("#covers").data("back", x.Data.parentId);
+					}
+					$("#covers").data("loaded", true);
+
+					$('#bottomText > span:first').animate({
+						"opacity": 0,
+						"margin-left": '-100px'
+					}, 250, function () {
+						$("#bottomText > span:first").text(folderName);
+						$("#bottomText > span:first").animate({
+							"opacity": 1,
+							"margin-left": '0px'
+						}, 250);
+					});
 				});
+			}
+
+			var getJsonFromServer = function (url, parse) {
+
+				if (isWifi() == false && parse) {
+					doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.")
+					$("#covers").html("<div class='boxLoader'><p class='boxLoading'>No data found.</p></div>")
+					return;
+				}
+
+				$.ajax({
+					url: url,
+					dataType: 'json',
+					timeout: settings.MBServiceTimeout,
+					success: function (d) {
+						saveJsonToCache(url, d);
+						if (parse) {
+							parseJsonResults(d);
+						}
+					},
+					error: function () {
+						if (parse) {
+							doAlert("The server is not responding in time, and no cached version exists. Try again later")
+							$("#covers").html("<div class='boxLoader'><p class='boxLoading'>No data found.</p></div>")
+						}
+					}
+				});
+			}
+
+			if (tr) {
+				MBUrl += "library/?lightData=1&Id=" + $(tr).attr("data-guid");
+			} else {
+				MBUrl += "library/";
+			}
+
+			getJsonFromCache(MBUrl, function (d) {
+				if (d == null) {
+					//get from server
+					getJsonFromServer(MBUrl, true);
+				} else {
+					//display cached
+					parseJsonResults(d);
+					//get from server, to replace cache but dont parse
+					getJsonFromServer(MBUrl, false);
+				}
+			});
+
+
+
+		});
+	}
+
+	if (device.shortname == "DTV") {
+
+		var boxCoverWidth = 70;
+		var backwards = false;
+		if (tr) {
+			if ($(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") == "Episode") {
+				playTitle($(tr), $(tr).parent().find("p").text());
+				return;
+			}
+			if ($(tr).hasAttr("data-backwards")) {
+				backwards = true;
+			}
+		}
+
+		var animationProps = {
+			"startCoverOpacity": 0.25,
+			"startCoverTop": "140px",
+			"endCoverOpacity": 1,
+			"endCoverTop": "24px"
+		};
+
+		if (backwards) {
+			animationProps = {
+				"startCoverOpacity": 0.25,
+				"startCoverTop": "-164px",
+				"endCoverOpacity": 1,
+				"endCoverTop": "24px"
+			};
+		}
+
+		$('#covers').animate({
+			"opacity": animationProps.startCoverOpacity,
+			"margin-top": animationProps.startCoverTop
+		}, 250, function () {
+			$("#covers").css("margin-top", "24px").width($(window).width());
+			$("#covers").html("<div class='boxLoader'><p class='boxLoading'>Loading Data...</p></div>").css("opacity", "1").hide().fadeIn();
+
+			var tb = '<div style="width: 40px; height: 100%; float:left"> </div>';
+			if (tr) {
+				//load a group
+				var category = $(tr).attr("data-category");
+				var i = 0;
+				$.each(guide.channels, function (channelKey, c) {
+					if (c.category == category) {
+						tb += '<div class="smallboxContainer" >'
+						tb += '<div class="channelContainer"><div data-minor="' + c.number + '" class="smallChannel" style="background-image: url(' + c.logo + ')" ></div></div>';
+						tb += '<p>' + c.fullname + '</p>'
+						tb += '</div>';
+						i++
+					}
+				});
+				$("#covers").width(((i) * boxCoverWidth) + 50);
+
+			} else {
+				//get channel categories
+				var categories = [];
+
+				$.each(guide.channels, function (channelKey, c) {
+
+					var chanObject = {
+						category: c.category,
+						logo: c.logo,
+						name: c.fullname
+					};
+					var blnFound = false;
+					$.each(categories, function (x, y) {
+						if (y.category == c.category) {
+							blnFound = true;
+							return false;
+						}
+					});
+
+					if (blnFound == false) {
+						categories.push(chanObject);
+					}
+				});
+
+				$.each(categories, function (x, y) {
+					tb += '<div class="smallboxContainer" >'
+					tb += '<div class="channelContainer"><div data-category="' + y.category + '" class="smallChannel" style="background-image: url(' + y.logo + ')" ></div></div>';
+					tb += '<p>' + y.category + '</p>'
+					tb += '</div>';
+				})
+
+				$("#covers").width(((categories.length) * boxCoverWidth) + 50);
+			}
+
+			var children = $("<div>" + tb + "</div>");
+
+			$('#covers').css("margin-top", "-130px").css("opacity", "0.25");
+
+			$("#covers").empty().append($(children).children());
+
+			$("#covers div.smallChannel").fastClick(function () {
+				if ($(this).hasAttr("data-category")) {
+					$("#boxCoverBack").data("scrollPosition", $("#boxCoverContainer").scrollLeft());
+					showBottomItems($(this))
+				} else {
+					//change to the channel
+					changeChannel($(this).attr("data-minor"));
+				}
+			});
+
+			$('#covers').animate({
+				"opacity": animationProps.endCoverOpacity,
+				"margin-top": animationProps.endCoverTop
+			}, 250, function () {
+				if ($("#boxCoverBack").data("scrollPosition") && backwards) {
+					$("#boxCoverContainer").animate({
+						scrollLeft: parseInt($("#boxCoverBack").data("scrollPosition"))
+					}, 500);
+				}
+				var folderName = "Categories";
+				if (tr) {
+					$("#covers").data("back", "ChannelHome");
+					folderName = $(tr).attr("data-category")
+				} else {
+					$("#covers").data("back", "");
+				}
+				$("#covers").data("loaded", true);
+
+				$('#bottomText > span:first').animate({
+					"opacity": 0,
+					"margin-left": '-100px'
+				}, 250, function () {
+					$("#bottomText > span:first").text(folderName);
+					$("#bottomText > span:first").animate({
+						"opacity": 1,
+						"margin-left": '0px'
+					}, 250);
+				});
+			});
 
 
 
@@ -1643,7 +1689,7 @@ function ShowItems(item, sentEventType) {
 	clearSleepTimer();
 
 	var eventType = "click";
-	if ( sentEventType ) {
+	if (sentEventType) {
 		eventType = sentEventType;
 	}
 
@@ -1653,38 +1699,42 @@ function ShowItems(item, sentEventType) {
 
 	var parseJsonResults = function (x) {
 
-		var tableView = [];	
+		var tableView = [];
 
-		if (settings.moviesByDate && x.Data.Type == "Folder"  ) {
-			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
+		if (settings.moviesByDate && x.Data.Type == "Folder") {
+			x.Data.Children.sort(function (a, b) {
+				return Date.parse(b.DateCreated) - Date.parse(a.DateCreated)
+			});
 		}
 
-		if (settings.tvByDate && ( x.Data.Type == "Season" || x.Data.Type == "Series") ) {
-			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
+		if (settings.tvByDate && (x.Data.Type == "Season" || x.Data.Type == "Series")) {
+			x.Data.Children.sort(function (a, b) {
+				return Date.parse(b.DateCreated) - Date.parse(a.DateCreated)
+			});
 		}
-		
-		$.each(x.Data.Children, function(key, val) { 
-			console.log(x.Data.Children[key])
-			if ( x.Data.Children[key].Type == "Folder" || x.Data.Children[key].Type == "Season" || x.Data.Children[key].Type == "Series" ) {
-		 		tableView.push({
-	               'textLabel' : x.Data.Children[key].Name,
-	               'detailTextLabel' : "" + x.Data.Children[key].ChildCount + " total, " + (x.Data.Children[key].UnwatchedCount ?  x.Data.Children[key].UnwatchedCount + " not watched, " : "") + x.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
-	               'icon': "greyarrow",
-	               'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
-	               'guid': x.Data.Children[key].Id,
-	               'type': x.Data.Children[key].Type,
-	               'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0") 
-			    });
+
+		$.each(x.Data.Children, function (key, val) {
+			
+			if (x.Data.Children[key].Type == "Folder" || x.Data.Children[key].Type == "Season" || x.Data.Children[key].Type == "Series") {
+				tableView.push({
+					'textLabel': x.Data.Children[key].Name,
+					'detailTextLabel': "" + x.Data.Children[key].ChildCount + " total, " + (x.Data.Children[key].UnwatchedCount ? x.Data.Children[key].UnwatchedCount + " not watched, " : "") + x.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
+					'icon': "greyarrow",
+					'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
+					'guid': x.Data.Children[key].Id,
+					'type': x.Data.Children[key].Type,
+					'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")
+				});
 			} else {
-		 		tableView.push({
-	               'textLabel' : ( x.Data.Children[key].WatchedPercentage == 0 ? "🔹 " : "" ) + x.Data.Children[key].Name + ( (x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""  ),
-	               'detailTextLabel' : (x.Data.Children[key].ImdbRating ? x.Data.Children[key].ImdbRating + "/10 " : "") + (x.Data.Children[key].TagLine ? x.Data.Children[key].TagLine : ""),
-	               'icon': "none",
-	               'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
-	               'guid': x.Data.Children[key].Id,
-	               'type': x.Data.Children[key].Type,
-	               'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0") 
-			    });
+				tableView.push({
+					'textLabel': (x.Data.Children[key].WatchedPercentage == 0 ? "🔹 " : "") + x.Data.Children[key].Name + ((x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""),
+					'detailTextLabel': (x.Data.Children[key].ImdbRating ? x.Data.Children[key].ImdbRating + "/10 " : "") + (x.Data.Children[key].TagLine ? x.Data.Children[key].TagLine : ""),
+					'icon': "none",
+					'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
+					'guid': x.Data.Children[key].Id,
+					'type': x.Data.Children[key].Type,
+					'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")
+				});
 			}
 
 		});
@@ -1695,70 +1745,70 @@ function ShowItems(item, sentEventType) {
 
 		// create the UITableView instance (height parameter is required)
 		nt.createTable({
-			'height': $(window).height(), 
-			'showSearchBar': true, 
-			'showNavBar': true, 
-			'navTitle': x.Data.Name == "StartupFolder" ? 'Folders' :  x.Data.Name,
+			'height': $(window).height(),
+			'showSearchBar': true,
+			'showNavBar': true,
+			'navTitle': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Name,
 			'navBarColor': 'black',
-			'showRightButton': true, 
+			'showRightButton': true,
 			'RightButtonText': 'Close',
-			'showBackButton':  x.Data.Name != "StartupFolder" ? true : false
+			'showBackButton': x.Data.Name != "StartupFolder" ? true : false
 		});
 
-		nt.onRightButtonTap(function(){
-	       nt.hideTable(function() {});
+		nt.onRightButtonTap(function () {
+			nt.hideTable(function () {});
 		});
 
-		nt.setRowSelectCallBackFunction(function(rowId) {
+		nt.setRowSelectCallBackFunction(function (rowId) {
 			var item = tableView[rowId];
 			if (item.icon == "none") {
 				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>")
-				playTitle( $(tr), item.textLabel, false );
+				playTitle($(tr), item.textLabel, false);
 			} else {
-				nt.hideTable(function() {
-					ShowItems( item );
+				nt.hideTable(function () {
+					ShowItems(item);
 				});
 			}
 
 		});
-		if ( x.Data.Name == "StartupFolder" ) {
-			nt.onBackButtonTap(function(){});
+		if (x.Data.Name == "StartupFolder") {
+			nt.onBackButtonTap(function () {});
 		} else {
-			nt.onBackButtonTap(function(){
-			   nt.hideTable(function() {
-			       ShowItems({
-			       	'type': 'Folder',
-			       	'guid': x.Data.parentId
-			       })
-			   });
+			nt.onBackButtonTap(function () {
+				nt.hideTable(function () {
+					ShowItems({
+						'type': 'Folder',
+						'guid': x.Data.parentId
+					})
+				});
 			});
 		}
 
 		nt.setTableData(tableView);
-		nt.showTable(function() {});
+		nt.showTable(function () {});
 
 	}
 
-	var getJsonFromServer = function(MBUrl, parse) {
-        if ( isWifi() == false && parse ) {
-            doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.");
-            return;
-        }
+	var getJsonFromServer = function (MBUrl, parse) {
+		if (isWifi() == false && parse) {
+			doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.");
+			return;
+		}
 
 		$.ajax({
 			url: MBUrl,
 			dataType: 'json',
 			timeout: settings.MBServiceTimeout,
-			success: function(d) {
+			success: function (d) {
 				if (d.Data !== null) {
 					saveJsonToCache(MBUrl, d);
 				}
-				
+
 				if (parse) {
-					parseJsonResults(d);	
+					parseJsonResults(d);
 				}
-			}, 
-			error: function() {
+			},
+			error: function () {
 				if (parse) {
 					doAlert("The server is not responding in time, and no cached version exists. Try again later")
 				}
@@ -1768,7 +1818,7 @@ function ShowItems(item, sentEventType) {
 
 	MBUrl += "library/?lightData=1&Id=" + item.guid;
 
-	getJsonFromCache(MBUrl, function(d) {
+	getJsonFromCache(MBUrl, function (d) {
 		if (d == null) {
 			//get from server
 			getJsonFromServer(MBUrl, true);
@@ -1787,12 +1837,12 @@ function doSeekEvent() {
 		return;
 	}
 	var seek = $("#seekbarContainer").attr("data-sendval");
-	var base = getMBUrl() + "ui?command=seek&value=" + seek + "&controllerName=" + $("#timespanright").attr("data-controller") ;
-	$.getJSON(base, function() {
-		setTimeout(function() {
+	var base = getMBUrl() + "ui?command=seek&value=" + seek + "&controllerName=" + $("#timespanright").attr("data-controller");
+	$.getJSON(base, function () {
+		setTimeout(function () {
 			nowPlaying();
 		}, 1500)
-	 })
+	})
 }
 
 function doSlideEvent() {
@@ -1803,43 +1853,43 @@ function doSlideEvent() {
 
 
 function checkScrollOverflow() {
-	if ( $("#backFace table").height() > $("#backFace").height() ) {
+	if ($("#backFace table").height() > $("#backFace").height()) {
 		$("#backFace").attr("style", "overflow-x: hidden; -webkit-overflow-scrolling : touch");
 		$("#backFace").unbind("touchmove");
 	} else {
-		$("#backFace").bind("touchmove", function(event) {
+		$("#backFace").bind("touchmove", function (event) {
 			event.preventDefault();
 		})
 	}
 }
 
 function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+	return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 function showFilter(to) {
-		$("#Filter div.emoji").hide()
-		if (to == "DTV") {
-			 $("#Filter div.dtv").show()
-		}
-		if (to == "MCE") {
-			 $("#Filter div.mce").show()
-		}
+	$("#Filter div.emoji").hide()
+	if (to == "DTV") {
+		$("#Filter div.dtv").show()
+	}
+	if (to == "MCE") {
+		$("#Filter div.mce").show()
+	}
 
-		$("#Filter input").val("");
-		$("#Filter").fadeIn();
+	$("#Filter input").val("");
+	$("#Filter").fadeIn();
 }
 
 function hideFilter() {
 	//setTimeout(function () {
-		$("#Filter").fadeOut();
+	$("#Filter").fadeOut();
 	//}, 1000)
 }
 
 
 function checkSettingsForUpdate() {
-	
-	window.plugins.applicationPreferences.get('All', function(result) {
+
+	window.plugins.applicationPreferences.get('All', function (result) {
 		if (result != appSettings) {
 			doAlert("Your settings have changed. Quit the app from the app switcher to reload.");
 			reloadPage();
@@ -1847,16 +1897,17 @@ function checkSettingsForUpdate() {
 	})
 
 }
+
 function onResume() {
-	
+
 	checkSettingsForUpdate();
 	clearAllBadges();
 	getRoomStatus();
 	SleepDevice(false);
 	nowPlaying();
-	
- 	npTimer = setInterval(function() {
-      nowPlaying()
+
+	npTimer = setInterval(function () {
+		nowPlaying()
 	}, 30000);
 }
 
@@ -1865,15 +1916,15 @@ function onBackground() {
 	clearInterval(npTimer);
 }
 
-function detectOrientation(){
-    if(typeof window.onorientationchange != 'undefined'){
-        doResize();
-    }
+function detectOrientation() {
+	if (typeof window.onorientationchange != 'undefined') {
+		doResize();
+	}
 }
 
 function doResize() {
- 	$("#card").height( $("body").height() - ($("#top").outerHeight() + ( $("#bottom").outerHeight() / 3.5) ) )
-	var h = $("#container").height() - ($("#top").outerHeight() + $("#bottom").outerHeight() + $("div.toptrans").outerHeight() -1) ;
+	$("#card").height($("body").height() - ($("#top").outerHeight() + ($("#bottom").outerHeight() / 3.5)))
+	var h = $("#container").height() - ($("#top").outerHeight() + $("#bottom").outerHeight() + $("div.toptrans").outerHeight() - 1);
 	var w = $("body").width();
 	$("#gestures_canvas").attr("height", h)
 	$("#gestures_canvas").attr("width", w)
@@ -1883,51 +1934,51 @@ function doResize() {
 	resetVolumeSlider();
 	resetNPSeek();
 
-	setTimeout(function() {
+	setTimeout(function () {
 		setSwipeThresholds();
 	}, 1500)
 }
 
 function resetNPSeek() {
-	$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
+	$("#timeseek").attr("style", "left: " + ($("#timebar").width() - 10) + "px");
 }
 
 function resetVolumeSlider() {
 	//set volume slider at center
-    var max = $("#VolumeSlider").width();
-    var x = max*0.5;
-    $("#hud").fadeOut();
-    $("#VolumeSliderSeek").attr("style", "left: " + (x-10) + "px");
-    $("#VolumeSliderh").attr("style", "width: " + ((x/max)*100) + "%");
+	var max = $("#VolumeSlider").width();
+	var x = max * 0.5;
+	$("#hud").fadeOut();
+	$("#VolumeSliderSeek").attr("style", "left: " + (x - 10) + "px");
+	$("#VolumeSliderh").attr("style", "width: " + ((x / max) * 100) + "%");
 }
 
 function setSwipeThresholds() {
-	if ( deviceType == "tablet") {
+	if (deviceType == "tablet") {
 		HorzLongSwipeThreshold = $("#gestures_canvas").width() * 0.5;
 		VertLongSwipeThreshold = $("#gestures_canvas").height() * 0.5;
 	}
 
-	if ( deviceType == "phone") {
+	if (deviceType == "phone") {
 		HorzLongSwipeThreshold = $("#gestures_canvas").width() * 0.8;
 		VertLongSwipeThreshold = $("#gestures_canvas").height() * 0.7;
-	}	
+	}
 }
 
 function onBodyLoad() {
-    setTimeout( function () {
-       if (typeof navigator.device !== "undefined"){
-            document.addEventListener("deviceready", PhoneGapReady, false);
-       } else {
-            PhoneGapReady();
-       }
-    }, 10)
+	setTimeout(function () {
+		if (typeof navigator.device !== "undefined") {
+			document.addEventListener("deviceready", PhoneGapReady, false);
+		} else {
+			PhoneGapReady();
+		}
+	}, 10)
 }
 
 function getEGBaseUrl() {
 	var room = getCurrentRoom();
 	var devices = room.devices;
-	for (var i=0;i<devices.length;i++) {
-		if ( devices[i].shortname == "MCE" ) {
+	for (var i = 0; i < devices.length; i++) {
+		if (devices[i].shortname == "MCE") {
 			return "http://" + devices[i].IPAddress + ":" + devices[i].Port + "/";
 			break;
 		}
@@ -1938,8 +1989,8 @@ function getEGBaseUrl() {
 function getMBUrl() {
 	var room = getCurrentRoom();
 	var devices = room.devices;
-	for (var i=0;i<devices.length;i++) {
-		if ( devices[i].shortname == "MCE" ) {
+	for (var i = 0; i < devices.length; i++) {
+		if (devices[i].shortname == "MCE") {
 			return "http://" + devices[i].IPAddress + ":" + devices[i].ServicePort + "/mbwebapi/service/";
 			break;
 		}
@@ -1952,28 +2003,28 @@ function getCurrentDevice() {
 
 	if (settings.rooms) {
 		if (settings.rooms.length > 0) {
-			if (settings.rooms[ settings.roomIndex ].devices.length > 0) {
-				return settings.rooms[ settings.roomIndex ].devices[ settings.deviceIndex ];
+			if (settings.rooms[settings.roomIndex].devices.length > 0) {
+				return settings.rooms[settings.roomIndex].devices[settings.deviceIndex];
 			} else {
 				return null;
 			}
-			
+
 		} else {
 			return null;
 		}
 	}
 
-	
+
 }
 
 function getCurrentRoom() {
-	return settings.rooms[ settings.roomIndex ];
+	return settings.rooms[settings.roomIndex];
 }
 
 function getDeviceByShortName(shortname) {
 	var room = getCurrentRoom();
-	for (var i=0;i<room.devices.length;i++) {
-		if ( room.devices[i].shortname == shortname ) {
+	for (var i = 0; i < room.devices.length; i++) {
+		if (room.devices[i].shortname == shortname) {
 			return room.devices[i];
 			break;
 		}
@@ -1983,8 +2034,8 @@ function getDeviceByShortName(shortname) {
 
 function setDeviceByShortName(shortname) {
 	var room = getCurrentRoom();
-	for (var i=0;i<room.devices.length;i++) {
-		if ( room.devices[i].shortname == shortname ) {
+	for (var i = 0; i < room.devices.length; i++) {
+		if (room.devices[i].shortname == shortname) {
 			settings.deviceIndex = i;
 			return true;
 			break;
@@ -1997,19 +2048,19 @@ function getRoomStatus() {
 
 	var url = getEGBaseUrl();
 	$.ajax({
-	    type: "GET",
+		type: "GET",
 		dataType: "text",
 		url: url,
-		success: function(resp) {
+		success: function (resp) {
 			settings.deviceIndex = 0;
-			
+
 			try {
 				var obj = jQuery.parseJSON(resp);
-				if ( obj.device != "" ) {
+				if (obj.device != "") {
 					var newDevice = getDeviceByShortName(obj.device);
 					settings.deviceIndex = newDevice.index;
 				}
-			} catch(e) {
+			} catch (e) {
 
 			}
 
@@ -2018,29 +2069,29 @@ function getRoomStatus() {
 	});
 }
 
-function updateStatus() { 
+function updateStatus() {
 
 	var device = getCurrentDevice();
 	var room = getCurrentRoom();
 
-	$("#txtDevice").text( device.name );
-	$("#txtRoom").text( room.name );
-	
+	$("#txtDevice").text(device.name);
+	$("#txtRoom").text(room.name);
+
 	if (room.IR == true) {
 		$("#overallVolumeContainer").show();
 	} else {
 		$("#overallVolumeContainer").hide();
 	}
 
-	if ( (getItem("deviceIndex") != settings.deviceIndex) || (getItem("roomIndex") != settings.roomIndex) ) {
+	if ((getItem("deviceIndex") != settings.deviceIndex) || (getItem("roomIndex") != settings.roomIndex)) {
 
 		if (getItem("deviceIndex") != settings.deviceIndex) {
 			updateBottomContents();
 		}
-		clearNowPlaying();	
+		clearNowPlaying();
 	}
 	setTimeout(function () {
-    	nowPlaying()
+		nowPlaying()
 	}, 1500);
 
 	setItem("deviceIndex", settings.deviceIndex);
@@ -2050,241 +2101,255 @@ function updateStatus() {
 }
 
 function hms2(totalSec) {
-	if (totalSec <= 0 ) {
+	if (totalSec <= 0) {
 		return "0:00";
 	}
 	try {
-		hours = parseInt( totalSec / 3600 ) % 24;
-	    minutes = parseInt( totalSec / 60 ) % 60;
-	    seconds = totalSec % 60;
-	    return (hours)  + ":" + (minutes < 10 ? "0" + minutes : minutes) ;
-	} catch(e) {
+		hours = parseInt(totalSec / 3600) % 24;
+		minutes = parseInt(totalSec / 60) % 60;
+		seconds = totalSec % 60;
+		return (hours) + ":" + (minutes < 10 ? "0" + minutes : minutes);
+	} catch (e) {
 		return "0:00";
-	}	    
+	}
 }
 
 function clearNowPlaying() {
 	$("#bgPic").attr("class", "noart");
 	$("#bgPic").attr("style", "");
-	$("#bgPic").attr("data-id", ""); 
-	$("#timespanleft").text( "0:00" )
-	$("#timespanright").text( "- 0:00" );
+	$("#bgPic").attr("data-id", "");
+	$("#timespanleft").text("0:00")
+	$("#timespanright").text("- 0:00");
 	$("#NowPlayingTitle").text("");
 	$("#NowPlayingTitle").removeClass("doMarquee");
-    $("#timeseek").attr("style", "left: 0px");
-    $("#timebar").attr("style", "width: 0%");
+	$("#timeseek").attr("style", "left: 0px");
+	$("#timebar").attr("style", "width: 0%");
 }
 
 function nowPlaying() {
 
-	if ( $("#gestures_canvas:visible").size() == 0 ) {
+	if ($("#gestures_canvas:visible").size() == 0) {
 		return;
 	}
 
 	var device = getCurrentDevice();
 
-    if ( device.shortname == "MCE") {
+	if (device.shortname == "MCE") {
 
-       var base = getMBUrl();
-       
-        $.ajax({
-               url: base + "ui",
-               dataType: "json",
-               timeout:10000,
-               success: function(j) {
-               		try {
-               			var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
-               		} catch (e) {
-               			return;
-               		}
-               		
-					if ( j.Data.PlayingControllers.length >= 1 ) {
+		var base = getMBUrl();
 
-						
+		$.ajax({
+			url: base + "ui",
+			dataType: "json",
+			timeout: 10000,
+			success: function (j) {
+				try {
+					var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
+				} catch (e) {
+					return;
+				}
 
-						var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
-						var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
-                   		var perc = offset / duration;
+				if (j.Data.PlayingControllers.length >= 1) {
 
-	    				$("#timebar").attr("style", "width: " + Math.floor(perc*100) + "%");
-	    				$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
-	    				$("#timespanleft").text( hms2(offset) );
-	    				$("#timespanright").text( "- " + hms2(duration - offset) );
-	    				$("#timespanright").attr("data-duration", j.Data.PlayingControllers[0].CurrentFileDuration.Ticks );
-	    				$("#timespanright").attr("data-controller", j.Data.PlayingControllers[0].ControllerName );
-  						$("#NowPlayingTitle").text( j.Data.PlayingControllers[0].PlayableItems[0].DisplayName );
 
-						if ( parseInt($('#NowPlayingTitle')[0].scrollWidth) > parseInt($('#NowPlayingTitle').width())) {
-						    $("#NowPlayingTitle").attr("class", "doMarquee");
-						} else {
-							$("#NowPlayingTitle").removeClass("doMarquee");
-						}
 
-	 					var currentID = j.Data.PlayingControllers[0].PlayableItems[0].CurrentMediaIndex;
-	 					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[currentID];
+					var duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
+					var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
+					var perc = offset / duration;
 
-	 					
-	 					if ( $("#bgPic").attr("data-id") != guid ) {
-	 						var imgID = "MB_Big_" + guid;
-							getImageFromCache({id: imgID, url: base + "image/?Id=" + guid}, function(r) {
+					$("#timebar").attr("style", "width: " + Math.floor(perc * 100) + "%");
+					$("#timeseek").attr("style", "left: " + ($("#timebar").width() - 10) + "px");
+					$("#timespanleft").text(hms2(offset));
+					$("#timespanright").text("- " + hms2(duration - offset));
+					$("#timespanright").attr("data-duration", j.Data.PlayingControllers[0].CurrentFileDuration.Ticks);
+					$("#timespanright").attr("data-controller", j.Data.PlayingControllers[0].ControllerName);
+					$("#NowPlayingTitle").text(j.Data.PlayingControllers[0].PlayableItems[0].DisplayName);
 
-								var img = new Image();
+					if (parseInt($('#NowPlayingTitle')[0].scrollWidth) > parseInt($('#NowPlayingTitle').width())) {
+						$("#NowPlayingTitle").attr("class", "doMarquee");
+					} else {
+						$("#NowPlayingTitle").removeClass("doMarquee");
+					}
 
-								img.onerror = function() {
-									$("#bgPic").attr("class", "noart");
-									$("#bgPic").attr("style", "");
+					var currentID = j.Data.PlayingControllers[0].PlayableItems[0].CurrentMediaIndex;
+					var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[currentID];
+
+
+					if ($("#bgPic").attr("data-id") != guid) {
+						var imgID = "MB_Big_" + guid;
+						getImageFromCache({
+							id: imgID,
+							url: base + "image/?Id=" + guid
+						}, function (r) {
+
+							var img = new Image();
+
+							img.onerror = function () {
+								$("#bgPic").attr("class", "noart");
+								$("#bgPic").attr("style", "");
+								$("#bgPic").attr("data-id", guid);
+							};
+
+							if (r.cached == false) {
+								img.onload = function () {
+									saveImageToCache({
+										id: imgID,
+										img: img
+									});
+									$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
+									$("#bgPic").attr("class", "");
 									$("#bgPic").attr("data-id", guid);
 								};
-								
-								if (r.cached == false) { 
-									img.onload = function() {
-										saveImageToCache( {id: imgID, img: img } );
-										$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
-										$("#bgPic").attr("class", "");
-										$("#bgPic").attr("data-id", guid);
-									};
-									img.src = r.url;
+								img.src = r.url;
+							} else {
+								$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
+								$("#bgPic").attr("class", "");
+								$("#bgPic").attr("data-id", guid);
+							}
+						});
+
+
+
+					}
+
+					if (j.Data.PlayingControllers[0].IsPaused == true) {
+						$("#btnPlay").removeClass("playing");
+					} else {
+						$("#btnPlay").addClass("playing");
+					}
+
+				} else {
+					clearNowPlaying();
+				}
+
+			},
+			error: function () {
+				clearNowPlaying();
+			}
+
+		});
+
+	}
+
+	if (device.shortname == "DTV") {
+
+		$.ajax({
+			type: "GET",
+			url: "http://" + device.IPAddress + ":" + device.Port + "/tv/getTuned",
+			dataType: "json",
+			timeout: 10000,
+			success: function (json) {
+
+				if (json.startTime) {
+					if (json.startTime == "0") {
+						return;
+					}
+
+					var perc = json.offset / json.duration;
+
+					$("#timebar").attr("style", "width: " + Math.floor(perc * 100) + "%");
+					$("#timeseek").attr("style", "left: " + ($("#timebar").width() - 10) + "px");
+					$("#timespanleft").text(hms2(json.offset))
+					$("#timespanright").text("- " + hms2(json.duration - json.offset))
+
+				}
+				var output = json.major + " " + json.callsign + " " + json.title;
+				$("#NowPlayingTitle").text(output);
+				$("#NowPlayingTitle").attr("data-item", json.callsign + json.major);
+				$("#NowPlayingTitle").attr("class", "");
+
+				$.ajax({
+					type: "GET",
+					url: "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + json.title,
+					dataType: "xml",
+					error: function (x, y, z) {
+						$("#bgPic").attr("class", "noart");
+						$("#bgPic").attr("style", "");
+					},
+					success: function (tvxml) {
+						var url = "";
+						var guid = ""
+						$(tvxml).find("Data > Series > SeriesName").each(function () {
+							if ($(this).text().toLowerCase().replace(/\W/g, '').replace('the', '') == json.title.toLowerCase().replace(/\W/g, '').replace('the', '')) {
+								guid = $(this).parent().find("seriesid").text();
+								return false;
+							}
+						});
+
+
+						if (guid == "") {
+							$("#bgPic").attr("class", "noart");
+							$("#bgPic").attr("style", "");
+						} else {
+
+							var imgID = "TVDB_" + guid;
+							getImageFromCache({
+								id: imgID,
+								url: ""
+							}, function (r) {
+								if (r.cached == false) {
+
+									//query tvdb for the image
+									$.ajax({
+										type: "GET",
+										url: "http://thetvdb.com/api/77658293DB487350/series/" + guid + "/",
+										dataType: "xml",
+										error: function (x, y, z) {
+											$("#bgPic").attr("class", "noart");
+											$("#bgPic").attr("style", "");
+										},
+										success: function (seriesxml) {
+											var poster = $(seriesxml).find("poster:first")
+
+											if ($(poster).size() > 0) {
+
+												if ($("#bgPic").attr("data-id") != guid && $(poster).text() != "") {
+
+													$("#bgPic").attr("style", "background-image: url('http://thetvdb.com/banners/_cache/" + $(poster).text() + "');")
+													$("#bgPic").attr("class", "");
+													$("#bgPic").attr("data-id", guid);
+
+													//cache this result
+													var img = new Image();
+													img.onload = function () {
+														saveImageToCache({
+															id: imgID,
+															img: img
+														});
+														console.log("cached")
+													};
+													img.src = "http://thetvdb.com/banners/_cache/" + $(poster).text();
+
+												}
+											} else {
+												$("#bgPic").attr("class", "noart");
+												$("#bgPic").attr("style", "");
+											}
+
+										}
+									})
 								} else {
 									$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
 									$("#bgPic").attr("class", "");
 									$("#bgPic").attr("data-id", guid);
 								}
 							});
-							
 
 
-	 					}
-					
-						if (j.Data.PlayingControllers[0].IsPaused == true ) {
-							$("#btnPlay").removeClass("playing");
-						} else {
-							$("#btnPlay").addClass("playing");
 						}
-
-					} else {
-						clearNowPlaying();
-					}	                   		
-						
-	         }, 
-	         error: function() {
-	         	clearNowPlaying();
-	         }
-             
-        });
-        
-    }	
-
-    if ( device.shortname == "DTV") {
- 			
-        $.ajax({
-               type: "GET",
-               url: "http://" + device.IPAddress + ":" + device.Port + "/tv/getTuned",
-               dataType: "json",
-               timeout: 10000,
-               success: function(json) {
-					
-                   if (json.startTime) {
-						if (json.startTime == "0" ) { return; }
-
-                   		var perc = json.offset/json.duration;
-
-	    				$("#timebar").attr("style", "width: " + Math.floor(perc*100) + "%");
-	    				$("#timeseek").attr("style", "left: " + ( $("#timebar").width() -10) + "px");
-	    				$("#timespanleft").text( hms2(json.offset) )
-	    				$("#timespanright").text( "- " + hms2(json.duration - json.offset) )
-  
-                   }
-                   var output = json.major + " " + json.callsign + " " + json.title;
-                   $("#NowPlayingTitle").text( output );
-					   $("#NowPlayingTitle").attr("data-item", json.callsign + json.major);
-					   $("#NowPlayingTitle").attr("class", "");
-
-                    $.ajax({
-	                   type: "GET",
-	                   url: "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + json.title,
-	                   dataType: "xml",
-	                   error: function (x,y,z) {
-	                   		$("#bgPic").attr("class", "noart");
-	                   		$("#bgPic").attr("style", "");
-	                   },
-	                   success: function(tvxml) {
-	                   		var url = "";
-	                   		var guid = ""
-	                   		$(tvxml).find("Data > Series > SeriesName").each(function () {
-	                   			if ( $(this).text().toLowerCase().replace(/\W/g, '').replace('the', '') == json.title.toLowerCase().replace(/\W/g, '').replace('the', '') ) {
-	                   				guid = $(this).parent().find("seriesid").text();
-	                   				return false;	
-	                   			}
-	                   		});
-
-
-	                   		if (guid == "" ) {
-	                   			$("#bgPic").attr("class", "noart");
-								$("#bgPic").attr("style", "");
-	                   		} else {
-
-		 						var imgID = "TVDB_" + guid;
-								getImageFromCache({id: imgID, url: ""}, function(r) {
-									if (r.cached == false) { 
-										
-										//query tvdb for the image
-			                    		$.ajax({
-						                   type: "GET",
-						                   url: "http://thetvdb.com/api/77658293DB487350/series/" + guid + "/",
-						                   dataType: "xml",
-						                   error: function (x,y,z) {
-						                   		$("#bgPic").attr("class", "noart");
-						                   		$("#bgPic").attr("style", "");
-						                   },
-						                   success: function(seriesxml) {
-						                   		var poster = $(seriesxml).find("poster:first")
-
-						                   		if ( $(poster).size() > 0) {
-
-													if ( $("#bgPic").attr("data-id") != guid  && $(poster).text() != "" ) {
-
-														$("#bgPic").attr("style", "background-image: url('http://thetvdb.com/banners/_cache/" + $(poster).text() + "');")
-														$("#bgPic").attr("class", "");
-														$("#bgPic").attr("data-id", guid);
-
-														//cache this result
-														var img = new Image();
-														img.onload = function() {
-															saveImageToCache( {id: imgID, img: img } );
-															console.log("cached")
-														};
-														img.src = "http://thetvdb.com/banners/_cache/" + $(poster).text() ;
-
-								 					}
-						                   		} else {
-							                   		$("#bgPic").attr("class", "noart");
-							                   		$("#bgPic").attr("style", "");
-						                   		}
-								 		
-						                   }
-						                 })
-									} else {
-										$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
-										$("#bgPic").attr("class", "");
-										$("#bgPic").attr("data-id", guid);
-									}
-								});
-
-	
-	                   		}
-	                   	}
-	                });
-					
-					if ( parseInt($('#NowPlayingTitle')[0].scrollWidth) > parseInt($('#NowPlayingTitle').width())) {
-					    $("#NowPlayingTitle").attr("class", "doMarquee");
-					} else {
-						$("#NowPlayingTitle").removeClass("doMarquee");
 					}
-                   
-                }
-        });
-        
-    }
+				});
+
+				if (parseInt($('#NowPlayingTitle')[0].scrollWidth) > parseInt($('#NowPlayingTitle').width())) {
+					$("#NowPlayingTitle").attr("class", "doMarquee");
+				} else {
+					$("#NowPlayingTitle").removeClass("doMarquee");
+				}
+
+			}
+		});
+
+	}
 }
 
 function clearCallers(force) {
@@ -2298,52 +2363,52 @@ function clearCallers(force) {
 
 function executeGestureByCommandName(command) {
 	var room = getCurrentRoom();
-	var device = getCurrentDevice();	
+	var device = getCurrentDevice();
 
 	//check if there's a global gesture for it
 	var globals = $(xml).find("gesturePad > rooms > room[index='" + room.index + "'] ~ roomgestures > gesture > device > command > name:contains('" + command + "'):first");
-	if ( $(globals).size() > 0 ) {
+	if ($(globals).size() > 0) {
 
 		var globalDevicetoTrigger = $(globals).parent().parent().attr("shortname");
-		$(xml).find("gesturePad > devices > device[shortname='" + globalDevicetoTrigger + "'] > commands > category > command > name:contains('" + command + "'):first").each(function(){
-			actionNodes = $(this).parent().find("action");	
+		$(xml).find("gesturePad > devices > device[shortname='" + globalDevicetoTrigger + "'] > commands > category > command > name:contains('" + command + "'):first").each(function () {
+			actionNodes = $(this).parent().find("action");
 			device = getDeviceByShortName(globalDevicetoTrigger); //replace the device with the global gesture device
-			doEvent("manual", actionNodes, device) 
+			doEvent("manual", actionNodes, device)
 		});
 	} else {
-	//check for a regular command
+		//check for a regular command
 		var commandNode = $(xml).find("gesturePad > devices > device[shortname='" + device.shortname + "'] > commands > category > command > name:contains('" + command + "'):first")
-		if ( $(commandNode).size() == 1 ) {
-			actionNodes = $(commandNode).next();	
+		if ($(commandNode).size() == 1) {
+			actionNodes = $(commandNode).next();
 			doEvent("manual", actionNodes, device);
 		}
 	}
 }
 
 
-function doEvent(gesture, actions, overRideDevice)  {
-	window.scrollTo(0,0);
-    
-    if ( isWifi() == false ) {
-        doAlert("You are not on Wifi. Connect to Wifi and try again")
-        return;
-    }
+function doEvent(gesture, actions, overRideDevice) {
+	window.scrollTo(0, 0);
+
+	if (isWifi() == false) {
+		doAlert("You are not on Wifi. Connect to Wifi and try again")
+		return;
+	}
 
 	clearCallers(false);
 
 	var showCallback = true;
-	if ($("#gestures_canvas:visible").size() == 0 ) {
+	if ($("#gestures_canvas:visible").size() == 0) {
 		showCallback = false;
 	}
 
 	var message = $("<div class='message' style='display:none' data-gest='" + gesture + "'><span class='i'></span> <span class='t'>" + gesture + "</span></div>");
 
 	if (showCallback) {
-		$("#gestureCallback").append( message ); 
+		$("#gestureCallback").append(message);
 	}
 
 	var room = getCurrentRoom();
-	var device = getCurrentDevice();	
+	var device = getCurrentDevice();
 
 	if (typeof overRideDevice !== 'undefined') {
 		device = overRideDevice;
@@ -2356,104 +2421,103 @@ function doEvent(gesture, actions, overRideDevice)  {
 	if (gesture != 'manual') { //search for it in the XML
 
 		//find a global command that matches the gesture
-		$(xml).find("gesturePad > rooms > room[index='" + room.index + "'] ~ roomgestures > gesture[definition='" + gesture + "'] > device:first").each(function(){
+		$(xml).find("gesturePad > rooms > room[index='" + room.index + "'] ~ roomgestures > gesture[definition='" + gesture + "'] > device:first").each(function () {
 			var globalDevicetoTrigger = $(this).attr("shortname");
 			var globalCommandtoTrigger = $(this).find("command > name").text();
-			
-			$(xml).find("gesturePad > devices > device[shortname='" + globalDevicetoTrigger + "'] > commands > category > command > name:contains('" + globalCommandtoTrigger + "'):first").each(function(){
-					blnisGlobalGesture = true;
-					blnGoodGesture = true;
-					actionNodes = $(this).parent().find("action");	
-					device = getDeviceByShortName(globalDevicetoTrigger); //replace the device with the global gesture device
+
+			$(xml).find("gesturePad > devices > device[shortname='" + globalDevicetoTrigger + "'] > commands > category > command > name:contains('" + globalCommandtoTrigger + "'):first").each(function () {
+				blnisGlobalGesture = true;
+				blnGoodGesture = true;
+				actionNodes = $(this).parent().find("action");
+				device = getDeviceByShortName(globalDevicetoTrigger); //replace the device with the global gesture device
 			});
 		});
 
 		//if not a global, find a device specific non-global command
 		if (blnisGlobalGesture == false) {
-			$(xml).find("gesturePad > devices > device[shortname='" + device.shortname + "'] > commands > category > command > gesture[definition='" + gesture + "']:first").each(function(){
+			$(xml).find("gesturePad > devices > device[shortname='" + device.shortname + "'] > commands > category > command > gesture[definition='" + gesture + "']:first").each(function () {
 				blnGoodGesture = true;
 				actionNodes = $(this).parent().find("action");
-			});	
+			});
 		}
 
 	} else { //adtion node is already supplied, so run em
 		actionNodes = $(actions);
 	}
-	if ( actionNodes == null ) {
+	if (actionNodes == null) {
 		blnGoodGesture = false;
 	}
 	if (blnGoodGesture) {
 		//Run commands for gesture
 		playBeep();
-		
+
 		//show pending notification
 
 		var gestureName = $(actionNodes).parent().find("name:first").text();
-		console.log(gestureName);
-		$(message).find("span.t").text( gestureName + ' - ' + $(message).attr("data-gest") );
+		$(message).find("span.t").text(gestureName + ' - ' + $(message).attr("data-gest"));
 		$(message).find("span.i").text('🔄');
 		$(message).show()
 
 		$(message).animate({
 			opacity: 1,
 			width: '100%',
-		}, 250, function() {
-			var totalActions = ($(actionNodes).size()-1)
+		}, 250, function () {
+			var totalActions = ($(actionNodes).size() - 1)
 
 			//Trigger ajax events
-			$(actionNodes).each(function(i) {
+			$(actionNodes).each(function (i) {
 				var thisnode = $(actionNodes);
 
 				//Look up url overrides
 				var server = "http://" + device.IPAddress + ":" + device.Port + "/";
-				$(this).find("addtobaseurl:first").each(function(){
+				$(this).find("addtobaseurl:first").each(function () {
 					server = server + $(this).text();
 				});
 
-				$(this).find("replacebaseurl:first").each(function(){
+				$(this).find("replacebaseurl:first").each(function () {
 					server = $(this).text();
 				});
 
 				$.ajax({
-				    type: $(this).find("method:first").text(),
+					type: $(this).find("method:first").text(),
 					url: server,
 					data: $(this).find("data:first").text() + appendOncetoQueryString,
 					timeout: 60000,
 					dataType: $(this).find("dataType:first").text(),
-					success: function(resp) {
+					success: function (resp) {
 						appendOncetoQueryString = "";
 						if (i == totalActions) { //only run animation callback on final ajax call
 							$(message).find("span.i").text('✅');
 							$(message).animate({
 								opacity: 0,
 								width: '0%'
-							}, 250, function() {
-								if ( $(thisnode).find("onCompleteSetDevice").size() > 0) {
-									setDeviceByShortName( $(thisnode).find("onCompleteSetDevice").attr("shortname") ); 
+							}, 250, function () {
+								if ($(thisnode).find("onCompleteSetDevice").size() > 0) {
+									setDeviceByShortName($(thisnode).find("onCompleteSetDevice").attr("shortname"));
 									updateStatus();
 								}
 								$(message).hide().remove();
 							})
 						}
 
-						if (gestureName == "Stop" || gestureName.indexOf("channel") > -1 ) {
-							clearNowPlaying();	
+						if (gestureName == "Stop" || gestureName.indexOf("channel") > -1) {
+							clearNowPlaying();
 						}
 
-						setTimeout(function() {
-							nowPlaying();	
+						setTimeout(function () {
+							nowPlaying();
 						}, 1500)
 					},
-					error: function() {
+					error: function () {
 						appendOncetoQueryString = "";
 						if (i == totalActions) { //only run animation callback on final ajax call
 							$(message).find("span.i").text('❌');
 							$(message).animate({
 								opacity: 0,
 								width: '0%'
-							}, 250, function() {
-								if ( $(thisnode).find("onCompleteSetDevice").size() > 0) {
-									setDeviceByShortName( $(thisnode).find("onCompleteSetDevice").attr("shortname") ); 
+							}, 250, function () {
+								if ($(thisnode).find("onCompleteSetDevice").size() > 0) {
+									setDeviceByShortName($(thisnode).find("onCompleteSetDevice").attr("shortname"));
 									updateStatus();
 								}
 								$(message).hide().remove();
@@ -2465,23 +2529,23 @@ function doEvent(gesture, actions, overRideDevice)  {
 				});
 			});
 
-		});		
+		});
 
 
-			
+
 	} else {
 		//Unassigned gesture, just show and hide it
 		$(message).find("span.i").text('❌');
-		$(message).find("span.t").text( "Unassigned" + ' - ' + $(message).attr("data-gest")  );
+		$(message).find("span.t").text("Unassigned" + ' - ' + $(message).attr("data-gest"));
 		$(message).show();
 		$(message).animate({
 			opacity: 1,
 			width: '100%'
-		}, 250, function() {
+		}, 250, function () {
 			$(message).delay(500).animate({
 				opacity: 0,
 				width: '0%'
-			}, 500, function() {
+			}, 500, function () {
 				$(message).remove();
 			})
 
@@ -2492,117 +2556,139 @@ function doEvent(gesture, actions, overRideDevice)  {
 function playBeep() {
 	if (settings.sounds) {
 		try {
-			navigator.notification.beep();	
-		} catch (e) {;}	
+			navigator.notification.beep();
+		} catch (e) {;
+		}
 	}
 	if (settings.vibrate) {
 		try {
 			navigator.notification.vibrate(1000);
-		} catch (e) {;}	
+		} catch (e) {;
+		}
 	}
 }
 
 
 function deleteCache() {
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
-		function gotFS(fileSystem) {
-			var directoryReader = fileSystem.root.createReader();
-			directoryReader.readEntries(function(entries) {
-				for (i=0; i<entries.length; i++) {
-					entries[i].remove(function() { }, function(x) {  } );
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function gotFS(fileSystem) {
+		var directoryReader = fileSystem.root.createReader();
+		directoryReader.readEntries(function (entries) {
+			for (i = 0; i < entries.length; i++) {
+				entries[i].remove(function () {}, function (x) {});
 
-				}
-			}, function() { } );
-    	},
-		function fail(evt) { console.log("Pull cache Error, no access to file system"); callback({cached: false, url: request.url }); }
-	);
+			}
+		}, function () {});
+	}, function fail(evt) {
+		console.log("Pull cache Error, no access to file system");
+		callback({
+			cached: false,
+			url: request.url
+		});
+	});
 }
 
 function getImageFromCache(request, callback) {
 
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
-		function gotFS(fileSystem) {
-        	fileSystem.root.getFile(request.id + '.cache', {create: false, exclusive: false}, 
-        		function gotFileEntry(fileEntry) {
-        			fileEntry.file(
-					    function readDataUrl(file) {
-					        var reader = new FileReader();
-					        reader.onloadend = function(evt) {
-					            callback({cached: true, url: evt.target.result.toString() });
-					        };
-					        reader.readAsText(file); 
-					    },
-        				function fail(evt) { console.log("Error reading Cached File"); callback({cached: false, url: request.url }); }
-        			);
-    			},
-				function fail(evt) { /* console.log("Cached file doesnt exist"); */ callback({cached: false, url: request.url }); }
-			);
-    	},
-		function fail(evt) { console.log("Pull cache Error, no access to file system"); callback({cached: false, url: request.url }); }
-	);
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function gotFS(fileSystem) {
+		fileSystem.root.getFile(request.id + '.cache', {
+			create: false,
+			exclusive: false
+		}, function gotFileEntry(fileEntry) {
+			fileEntry.file(function readDataUrl(file) {
+				var reader = new FileReader();
+				reader.onloadend = function (evt) {
+					callback({
+						cached: true,
+						url: evt.target.result.toString()
+					});
+				};
+				reader.readAsText(file);
+			}, function fail(evt) {
+				console.log("Error reading Cached File");
+				callback({
+					cached: false,
+					url: request.url
+				});
+			});
+		}, function fail(evt) { /* console.log("Cached file doesnt exist"); */
+			callback({
+				cached: false,
+				url: request.url
+			});
+		});
+	}, function fail(evt) {
+		console.log("Pull cache Error, no access to file system");
+		callback({
+			cached: false,
+			url: request.url
+		});
+	});
 
 }
 
 function saveImageToCache(request) {
 
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
-		function gotFS(fileSystem) {
-        	fileSystem.root.getFile(request.id + '.cache', {create: true, exclusive: false}, 
-        		function gotFileEntry(fileEntry) {
-        			fileEntry.createWriter( function gotFileWriter(writer) {
-				            writer.onwriteend = function(evt) {
-				                //console.log("Saved to cache: " + request.id)
-				            };
-				            writer.write( getBase64Image(request.img) );
-	        			}, 
-	        			function fail(evt) { console.log("Write to Cache Error");  }
-        			);
-    			},
-				function fail(evt) { console.log("Error initiating cached file");  }
-			);
-    	},
-		function fail(evt) { console.log("Save cache Error, no access to file system"); }
-	);
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function gotFS(fileSystem) {
+		fileSystem.root.getFile(request.id + '.cache', {
+			create: true,
+			exclusive: false
+		}, function gotFileEntry(fileEntry) {
+			fileEntry.createWriter(function gotFileWriter(writer) {
+				writer.onwriteend = function (evt) {
+					//console.log("Saved to cache: " + request.id)
+				};
+				writer.write(getBase64Image(request.img));
+			}, function fail(evt) {
+				console.log("Write to Cache Error");
+			});
+		}, function fail(evt) {
+			console.log("Error initiating cached file");
+		});
+	}, function fail(evt) {
+		console.log("Save cache Error, no access to file system");
+	});
 
 }
 
-function getBase64Image(img) {  
-	var canvas = document.createElement("canvas");  
-	canvas.width = img.width;  
-	canvas.height = img.height;  
-	var ctx = canvas.getContext("2d");  
-	ctx.drawImage(img, 0, 0);  
-	var dataURL = canvas.toDataURL("image/png"); 
+function getBase64Image(img) {
+	var canvas = document.createElement("canvas");
+	canvas.width = img.width;
+	canvas.height = img.height;
+	var ctx = canvas.getContext("2d");
+	ctx.drawImage(img, 0, 0);
+	var dataURL = canvas.toDataURL("image/png");
 	return dataURL;
-}  
+}
 
 
 function getJsonFromCache(MBUrl, callback) {
-	var id = MBUrl.replace("http://","");
-	id = id.substring( id.indexOf("/")+1 );
-	id = id.replace(/\//g,"-");
+	var id = MBUrl.replace("http://", "");
+	id = id.substring(id.indexOf("/") + 1);
+	id = id.replace(/\//g, "-");
 
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
-		function gotFS(fileSystem) {
-        	fileSystem.root.getFile(id + '.json', {create: false, exclusive: false}, 
-        		function gotFileEntry(fileEntry) {
-        			fileEntry.file(
-					    function readDataUrl(file) {
-					        var reader = new FileReader();
-					        reader.onloadend = function(evt) {
-					            callback( jQuery.parseJSON( evt.target.result.toString() ) );
-					        };
-					        reader.readAsText(file); 
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function gotFS(fileSystem) {
+		fileSystem.root.getFile(id + '.json', {
+			create: false,
+			exclusive: false
+		}, function gotFileEntry(fileEntry) {
+			fileEntry.file(function readDataUrl(file) {
+				var reader = new FileReader();
+				reader.onloadend = function (evt) {
+					callback(jQuery.parseJSON(evt.target.result.toString()));
+				};
+				reader.readAsText(file);
 
-					    },
-        				function fail(evt) { console.log("Error reading Cached File"); callback(null); }
-        			);
-    			},
-				function fail(evt) { /* console.log("Cached file doesnt exist");  */ callback(null); }
-			);
-    	},
-		function fail(evt) { console.log("Pull cache Error, no access to file system"); callback(null); }
-	);
+			}, function fail(evt) {
+				console.log("Error reading Cached File");
+				callback(null);
+			});
+		}, function fail(evt) { /* console.log("Cached file doesnt exist");  */
+			callback(null);
+		});
+	}, function fail(evt) {
+		console.log("Pull cache Error, no access to file system");
+		callback(null);
+	});
 
 }
 
@@ -2611,60 +2697,76 @@ function saveJsonToCache(MBUrl, d) {
 	if (d == null) {
 		return;
 	}
-	var id = MBUrl.replace("http://","");
-	id = id.substring( id.indexOf("/")+1 );
-	id = id.replace(/\//g,"-");
+	var id = MBUrl.replace("http://", "");
+	id = id.substring(id.indexOf("/") + 1);
+	id = id.replace(/\//g, "-");
 
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
-		function gotFS(fileSystem) {
-        	fileSystem.root.getFile(id + '.json', {create: true, exclusive: false, append: false}, 
-        		function gotFileEntry(fileEntry) {
-        			fileEntry.createWriter( function gotFileWriter(writer) {
-				            writer.onwriteend = function(evt) {
-				                console.log("Saved to cache: " + id)
-				            };
-				            writer.write( JSON.stringify(d) );
-	        			}, 
-	        			function fail(evt) { console.log("Write to Cache Error");  }
-        			);
-    			},
-				function fail(evt) { console.log("Error initiating cached json file");  }
-			);
-    	},
-		function fail(evt) { console.log("Save cache Error, no access to file system"); }
-	);
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function gotFS(fileSystem) {
+		fileSystem.root.getFile(id + '.json', {
+			create: true,
+			exclusive: false,
+			append: false
+		}, function gotFileEntry(fileEntry) {
+			fileEntry.createWriter(function gotFileWriter(writer) {
+				writer.onwriteend = function (evt) {
+					console.log("Saved to cache: " + id)
+				};
+				writer.write(JSON.stringify(d));
+			}, function fail(evt) {
+				console.log("Write to Cache Error");
+			});
+		}, function fail(evt) {
+			console.log("Error initiating cached json file");
+		});
+	}, function fail(evt) {
+		console.log("Save cache Error, no access to file system");
+	});
 
 }
 
 function refreshBottomDrawer() {
 	var maxHeight = 140;
 	var position = parseInt($("#bottom").css("bottom"));
-	if (position > (maxHeight/3) ) { //more than 1/3 up push to top
-	    $("#bottom").animate({
-	       bottom: "140px"
-	    }, { duration: 200, queue: false });
-	    $("#browser").animate({
-	       bottom: "-1px"
-	    }, { duration: 200, queue: false, complete: function() {
-		    if ( ($("#covers").data("back") == "" || $("#covers").data("back") == undefined )  && ( $("#covers").data("loaded") == false || $("#covers").data("loaded") == undefined)  ) {
-		    	showBottomItems();
+	if (position > (maxHeight / 3)) { //more than 1/3 up push to top
+		$("#bottom").animate({
+			bottom: "140px"
+		}, {
+			duration: 200,
+			queue: false
+		});
+		$("#browser").animate({
+			bottom: "-1px"
+		}, {
+			duration: 200,
+			queue: false,
+			complete: function () {
+				if (($("#covers").data("back") == "" || $("#covers").data("back") == undefined) && ($("#covers").data("loaded") == false || $("#covers").data("loaded") == undefined)) {
+					showBottomItems();
+				}
 			}
-	    }});
+		});
 
 	} else {
-	    $("#bottom").animate({
-	       bottom: "0px"
-	    }, { duration: 200, queue: false });
-	    $("#browser").animate({
-	       bottom: "-140px"
-	    }, { duration: 200, queue: false, complete: function() {
-	    	if ( ($("#covers").data("back") == "" || $("#covers").data("back") == undefined )   ) {
-    			$("#covers").data("loaded", false);
-    			$("#bottomText span").html("&nbsp;");
-    			$("#covers").html("&nbsp;");
+		$("#bottom").animate({
+			bottom: "0px"
+		}, {
+			duration: 200,
+			queue: false
+		});
+		$("#browser").animate({
+			bottom: "-140px"
+		}, {
+			duration: 200,
+			queue: false,
+			complete: function () {
+				if (($("#covers").data("back") == "" || $("#covers").data("back") == undefined)) {
+					$("#covers").data("loaded", false);
+					$("#bottomText span").html("&nbsp;");
+					$("#covers").html("&nbsp;");
 
-	    	}
-	    }});
+				}
+			}
+		});
 	}
 }
 
@@ -2674,17 +2776,17 @@ function doAlert(msg) {
 	} catch (e) {
 		alert(msg);
 	}
-	
+
 }
 
 function isWifi() {
 
-	if ( settings.wifi == false ) {
+	if (settings.wifi == false) {
 		return true;
 	}
 
 	try {
-		if ( netState() == 'WiFi connection' ) {
+		if (netState() == 'WiFi connection') {
 			return true;
 		} else {
 			return false;
@@ -2696,16 +2798,16 @@ function isWifi() {
 
 function netState() {
 	try {
-	    var networkState = navigator.connection.type;
-	    var states = {};
-	    states[Connection.UNKNOWN]  = 'Unknown connection';
-	    states[Connection.ETHERNET] = 'Ethernet connection';
-	    states[Connection.WIFI]     = 'WiFi connection';
-	    states[Connection.CELL_2G]  = 'Cell 2G connection';
-	    states[Connection.CELL_3G]  = 'Cell 3G connection';
-	    states[Connection.CELL_4G]  = 'Cell 4G connection';
-	    states[Connection.NONE]     = 'No network connection';
-	    return( states[networkState] );
+		var networkState = navigator.connection.type;
+		var states = {};
+		states[Connection.UNKNOWN] = 'Unknown connection';
+		states[Connection.ETHERNET] = 'Ethernet connection';
+		states[Connection.WIFI] = 'WiFi connection';
+		states[Connection.CELL_2G] = 'Cell 2G connection';
+		states[Connection.CELL_3G] = 'Cell 3G connection';
+		states[Connection.CELL_4G] = 'Cell 4G connection';
+		states[Connection.NONE] = 'No network connection';
+		return (states[networkState]);
 	} catch (e) {
 		return 'WiFi connection';
 	}
@@ -2714,14 +2816,15 @@ function netState() {
 function changeChannel(major) {
 	var device = getCurrentDevice();
 	// change channel
-    $.getJSON("http://" + device.IPAddress + ":" + device.Port + '/tv/tune?major=' + major, function() {
-    	clearNowPlaying();
+	$.getJSON("http://" + device.IPAddress + ":" + device.Port + '/tv/tune?major=' + major, function () {
+		clearNowPlaying();
 		// update whats on
-		setTimeout(function() {
+		setTimeout(function () {
 			nowPlaying();
 		}, 3000);
-    })
+	})
 }
+
 function setItem(key, val) {
 	localStorage.setItem(key, val);
 }
@@ -2729,8 +2832,8 @@ function setItem(key, val) {
 function getItem(key, defaultVal) {
 	try {
 		return localStorage.getItem(key);
-	} catch(e) {
-		if (arguments.length == 1)  {
+	} catch (e) {
+		if (arguments.length == 1) {
 			return defaultVal;
 		} else {
 			return "";
@@ -2745,9 +2848,7 @@ function reloadPage() {
 }
 
 function isPhoneGap() {
-    return (cordova || PhoneGap || phonegap) 
-    && /^file:\/{3}[^\/]/i.test(window.location.href) 
-    && /ios|iphone|ipod|ipad|android/i.test(navigator.userAgent);
+	return (cordova || PhoneGap || phonegap) && /^file:\/{3}[^\/]/i.test(window.location.href) && /ios|iphone|ipod|ipad|android/i.test(navigator.userAgent);
 }
 
 function updateBottomContents() {
@@ -2757,12 +2858,12 @@ function updateBottomContents() {
 	$("#covers").html("&nbsp;");
 
 	refreshBottomDrawer();
-	
+
 }
 
 function hasDirecTV() {
 	var retVal = false;
-	for (var i=0;i<settings.rooms.length;i++) {
+	for (var i = 0; i < settings.rooms.length; i++) {
 		if (settings.rooms[i].DTV != null) {
 			retVal = true
 			break;
@@ -2786,14 +2887,16 @@ function hasDirecTV() {
  * http://code.google.com/p/jquery-ajaxq/
  */
 
-jQuery.ajaxq = function (queue, options)
-{
+jQuery.ajaxq = function (queue, options) {
 	// Initialize storage for request queues if it's not initialized yet
-	if (typeof document.ajaxq == "undefined") document.ajaxq = {q:{}, r:null};
+	if (typeof document.ajaxq == "undefined") document.ajaxq = {
+			q: {},
+			r: null
+	};
 
 	// Initialize current queue if it's not initialized yet
 	if (typeof document.ajaxq.q[queue] == "undefined") document.ajaxq.q[queue] = [];
-	
+
 	if (typeof options != "undefined") // Request settings are given, enqueue the new request
 	{
 		// Copy the original options, because options.complete is going to be overridden
@@ -2801,37 +2904,34 @@ jQuery.ajaxq = function (queue, options)
 		var optionsCopy = {};
 		for (var o in options) optionsCopy[o] = options[o];
 		options = optionsCopy;
-		
+
 		// Override the original callback
 
 		var originalCompleteCallback = options.complete;
 
-		options.complete = function (request, status)
-		{
+		options.complete = function (request, status) {
 			// Dequeue the current request
-			document.ajaxq.q[queue].shift ();
+			document.ajaxq.q[queue].shift();
 			document.ajaxq.r = null;
-			
+
 			// Run the original callback
-			if (originalCompleteCallback) originalCompleteCallback (request, status);
+			if (originalCompleteCallback) originalCompleteCallback(request, status);
 
 			// Run the next request from the queue
-			if (document.ajaxq.q[queue].length > 0) document.ajaxq.r = jQuery.ajax (document.ajaxq.q[queue][0]);
+			if (document.ajaxq.q[queue].length > 0) document.ajaxq.r = jQuery.ajax(document.ajaxq.q[queue][0]);
 
 			//console.log(document.ajaxq)
 		};
 
 		// Enqueue the request
-		document.ajaxq.q[queue].push (options);
+		document.ajaxq.q[queue].push(options);
 
 		// Also, if no request is currently running, start it
-		if (document.ajaxq.q[queue].length == 1) document.ajaxq.r = jQuery.ajax (options);
-	}
-	else // No request settings are given, stop current request and clear the queue
+		if (document.ajaxq.q[queue].length == 1) document.ajaxq.r = jQuery.ajax(options);
+	} else // No request settings are given, stop current request and clear the queue
 	{
-		if (document.ajaxq.r)
-		{
-			document.ajaxq.r.abort ();
+		if (document.ajaxq.r) {
+			document.ajaxq.r.abort();
 			document.ajaxq.r = null;
 		}
 
@@ -2839,37 +2939,39 @@ jQuery.ajaxq = function (queue, options)
 	}
 }
 
-$.fn.hasAttr = function(name) {  
-   return this.attr(name) !== undefined;
+$.fn.hasAttr = function (name) {
+	return this.attr(name) !== undefined;
 };
 
 
 (function ($) {
- $.fn.longclick = function (callback, timeout) {
-   var isIPad = true;
- 
-   var startEvents = isIPad ? "touchstart" :  "mousedown";
-   var endEvents   = isIPad ? "touchend touchcancel" : "mouseup";
- 
-   $(this).bind(startEvents, function (event) {
-    // save the initial event object
-    var initialEvent = event;
-    //var initialElement = $(this);
-    // set delay after which the callback will be called
-    var timer = window.setTimeout(function () { callback( initialEvent ); }, timeout);
-    // bind to global event(s) for clearance
-    $(document).bind(endEvents, function () {
-        // clear timer
-        window.clearTimeout(timer);
-        // reset global event handlers
-        $(document).unbind(endEvents);
-        return true;
-        // use 'return false;' if you need to prevent default handler and
-        // stop event bubbling
-    });
-    return true;
-    // use 'return false;' if you need to prevent default handler and
-    // stop event bubbling
-   });
- };
+	$.fn.longclick = function (callback, timeout) {
+		var isIPad = true;
+
+		var startEvents = isIPad ? "touchstart" : "mousedown";
+		var endEvents = isIPad ? "touchend touchcancel" : "mouseup";
+
+		$(this).bind(startEvents, function (event) {
+			// save the initial event object
+			var initialEvent = event;
+			//var initialElement = $(this);
+			// set delay after which the callback will be called
+			var timer = window.setTimeout(function () {
+				callback(initialEvent);
+			}, timeout);
+			// bind to global event(s) for clearance
+			$(document).bind(endEvents, function () {
+				// clear timer
+				window.clearTimeout(timer);
+				// reset global event handlers
+				$(document).unbind(endEvents);
+				return true;
+				// use 'return false;' if you need to prevent default handler and
+				// stop event bubbling
+			});
+			return true;
+			// use 'return false;' if you need to prevent default handler and
+			// stop event bubbling
+		});
+	};
 })(jQuery);
