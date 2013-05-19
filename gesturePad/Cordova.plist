@@ -38,6 +38,8 @@
 		<string>ChildBrowserCommand</string>
 		<key>TapToScroll</key>
 		<string>TapToScroll</string>
+		<key>NativeTable</key>
+		<string>NativeTable</string>
 		<key>Globalization</key>
 		<string>CDVGlobalization</string>
 		<key>Device</key>

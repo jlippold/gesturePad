@@ -36,6 +36,8 @@
 		30A0434914DC770100060A13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30A0434614DC770100060A13 /* Localizable.strings */; };
 		30E1352710E2C1420031B30D /* Cordova.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30E1352610E2C1420031B30D /* Cordova.plist */; };
 		30E5649213A7FCAF007403D8 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E5649113A7FCAF007403D8 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		85974F161747D68400C15EFE /* NativeTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 85974F151747D68400C15EFE /* NativeTable.m */; };
+		85974F181747E76800C15EFE /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85974F171747E76800C15EFE /* CoreData.framework */; };
 		859C77D016FF5BC800C9ABD4 /* ActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77C316FF5BC800C9ABD4 /* ActionSheet.m */; };
 		859C77D116FF5BC800C9ABD4 /* applicationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77C516FF5BC800C9ABD4 /* applicationPreferences.m */; };
 		859C77D216FF5BC800C9ABD4 /* ChildBrowser.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 859C77C616FF5BC800C9ABD4 /* ChildBrowser.bundle */; };
@@ -106,6 +108,9 @@
 		30E1352610E2C1420031B30D /* Cordova.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Cordova.plist; path = ../Cordova.plist; sourceTree = "<group>"; };
 		30E5649113A7FCAF007403D8 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* gesturePad-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gesturePad-Prefix.pch"; sourceTree = "<group>"; };
+		85974F141747D68400C15EFE /* NativeTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeTable.h; sourceTree = "<group>"; };
+		85974F151747D68400C15EFE /* NativeTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeTable.m; sourceTree = "<group>"; };
+		85974F171747E76800C15EFE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		859C77C216FF5BC800C9ABD4 /* ActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionSheet.h; sourceTree = "<group>"; };
 		859C77C316FF5BC800C9ABD4 /* ActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheet.m; sourceTree = "<group>"; };
 		859C77C416FF5BC800C9ABD4 /* applicationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = applicationPreferences.h; sourceTree = "<group>"; };
@@ -138,6 +143,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85974F181747E76800C15EFE /* CoreData.framework in Frameworks */,
 				301BF552109A68D80062928A /* libCordova.a in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -199,6 +205,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				85974F171747E76800C15EFE /* CoreData.framework */,
 				859C77EB16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png */,
 				859C77E916FF60CC00C9ABD4 /* Default-Landscape~ipad.png */,
 				859C77E716FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png */,
@@ -280,6 +287,8 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				85974F141747D68400C15EFE /* NativeTable.h */,
+				85974F151747D68400C15EFE /* NativeTable.m */,
 				859C77C216FF5BC800C9ABD4 /* ActionSheet.h */,
 				859C77C316FF5BC800C9ABD4 /* ActionSheet.m */,
 				859C77C416FF5BC800C9ABD4 /* applicationPreferences.h */,
@@ -464,6 +473,7 @@
 				859C77D416FF5BC800C9ABD4 /* ChildBrowserViewController.m in Sources */,
 				859C77D616FF5BC800C9ABD4 /* PushNotification.m in Sources */,
 				859C77D716FF5BC800C9ABD4 /* TapToScroll.m in Sources */,
+				85974F161747D68400C15EFE /* NativeTable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

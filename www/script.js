@@ -6,6 +6,8 @@ var workerTimer = null;
 var sleepTimer = null;
 var scrollstop = null;
 
+
+
 function getSettingsObject() {
 
 	var settingsObj = {
@@ -167,7 +169,7 @@ function PhoneGapReady() {
     onDeviceReady();
 
 	window.onerror = function(msg, url, line) {
-		//doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line)
+		doAlert("Error: " + msg + "\nurl: " + url + "\nline #: " + line)
 	};
 }
 
@@ -431,97 +433,89 @@ function onDeviceReady() {
 
 	$("#btnTitles").bind(clickEventType, function() {
 		window.scrollTo(0,0);
-		/* generic flip shit */
-
-		if ( $("#card").attr("class") == "doFlip" ) {
-			hideFilter();
-			$("#card").toggleClass("doFlip");
-			return;
-		} 
-
-		$("#seekbarContainer").hide();
-		$("#backFace").html( $("#tmpSpinner").html() );
-		$("#card").toggleClass("doFlip");	
 
 		var curChannel = $("#NowPlayingTitle").attr("data-item");
 		var room  = getCurrentRoom();
 		var device = getCurrentDevice();
 
 		if (device.shortname  == "DTV") {
-			$("#card").data("flipTo", "DTV");
-			//build table for channel list 
-			var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >"
 			
-			var cat = ""
+			var tableView = [];	
 		 	$.each(guide.channels, function(channelKey, c) { 
-		 		if ( cat != c.category ) {
-		 			cat = c.category;
-		 			tb += "<tr class='head'><td colspan='3'>" + cat + "</td></tr>";
-		 		}
-				tb += getTableRowHTML(c, channelKey, curChannel);
+		 		var timeleft = hms2( (c.startTime+c.duration) - Math.floor(new Date().getTime() / 1000)  );
+		 		tableView.push({
+	               'textLabel' : c.number + " " + c.fullname + " " + c.callsign,
+	               'detailTextLabel' : c.nowplaying + (timeleft == "0:00" ? "" : " Time Left: " + timeleft ),
+	               'icon': "none",
+	               'sectionHeader': c.category,
+	               'major': c.number
+			    });
 			});
 
-			tb += "</table></div>"
-
-			
-				   
-			$("#backFace").html( tb );
-		     
-		    checkScrollOverflow()
-			
-			//scroll to current channel
-			var scrollToDiv = 0;
-			if ( $("#ScrollToMe").size() > 0 ) {
-				scrollToDiv = $("#ScrollToMe").position().top - ($("#card").height()/2) + 50 ;
-			}
-			$("#backFace").scrollTop( scrollToDiv );
-			//start scraping data
-			$("#backFace").trigger("scroll");
-			// trigger channel change on click
-			$("#backFace table tr").bind(clickEventType, function () {
-		    	if ($(this).is("[data-loaded]")) {
-		    	} else {
-		    		return;
-		    	}
-		    	changeChannel( $(this).attr("data-major") );
-		   		//$("#btnTitles").trigger(clickEventType);
+			var nt = window.plugins.NativeTable;
+			nt.createTable({
+				'height': $(window).height(), 
+				'showSearchBar': true, 
+				'showNavBar': true, 
+				'navTitle': "Channels",
+				'navBarColor': 'black',
+				'showRightButton': true, 
+				'RightButtonText': 'Close',
+				'showBackButton': false
 			});
 
+			nt.onRightButtonTap(function(){
+		       nt.hideTable(function() {});
+			});
+			nt.setRowSelectCallBackFunction(function(rowId) {
+				var item = tableView[rowId];
+				changeChannel( item.major );
+			});
+			nt.setTableData(tableView);
+			nt.showTable(function() {});
 		}
 
 		if (device.shortname  == "MCE") {
-			/* populate it */
-			$("#card").data("flipTo", "MCE");
+
 			var MBUrl = getMBUrl();
 
-
 			var parseJsonResults = function (d) {
-				var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >"
+				var tableView = [];	
 				$.each(d.Data.Children, function(key, val) { 
-					tb += '<tr data-guid="' + d.Data.Children[key].Id + '" data-type="' + d.Data.Children[key].Type + '"  data-imdb="' + ((d.Data.Children[key].ImdbRating > 0) ? "1" : "0")  + '" >';
-					tb += '<td><div class="movieTitle">' + d.Data.Children[key].Name  + '</div></td>';
-					tb += '<td width="30px" style="text-align: right">' + d.Data.Children[key].ChildCount  + '</td></tr>';	
+			 		tableView.push({
+		               'textLabel' : d.Data.Children[key].Name,
+		               'detailTextLabel' : "" + d.Data.Children[key].ChildCount + " total, " + d.Data.Children[key].UnwatchedCount + " not watched, " + d.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
+		               'icon': "greyarrow",
+		               'sectionHeader': "Folders",
+		               'guid': d.Data.Children[key].Id,
+		               'type': d.Data.Children[key].Type,
+		               'imdb': d.Data.Children[key].ImdbRating
+				    });
 				});
-				 tb += "</table></div>";
-			     $("#backFace").html( tb );
-			     checkScrollOverflow();
-				
 
-				$("#backFace table tr").each(function() {
-					var itemType = $(this).attr("data-type");
-					if ( itemType == "Movie" || itemType == "Episode" ) {
-						$(this).longclick( function(evt) {
-			            	ShowItems( evt.currentTarget, "taphold" )
-			            }, 750);
-						$(this).bind("click", function() {
-							ShowItems( $(this) )
-						});
-					} else {
-						$(this).bind("click", function() {
-							ShowItems( $(this) )
-						});
-					}
+				var nt = window.plugins.NativeTable;
+				nt.createTable({
+					'height': $(window).height(), 
+					'showSearchBar': true, 
+					'showNavBar': true, 
+					'navTitle': "Folders",
+					'navBarColor': 'black',
+					'showRightButton': true, 
+					'RightButtonText': 'Close',
+					'showBackButton': false
 				});
+
+				nt.onRightButtonTap(function(){
+			       nt.hideTable(function() {});
+				});
+				nt.setRowSelectCallBackFunction(function(rowId) {
+					var item = tableView[rowId];
+					nt.hideTable(function() {
+						ShowItems( item );
+					});
+				});
+				nt.setTableData(tableView);
+				nt.showTable(function() {});
 
 			}
 
@@ -582,28 +576,17 @@ function onDeviceReady() {
 	})
 
 	$("#btnCommands").bind(clickEventType, function() {
-		/* generic flip shit */
-		if ( $("#card").attr("class") == "doFlip" ) {
-			hideFilter();
-			$("#card").toggleClass("doFlip");
-			return;
-		} 
-		$("#seekbarContainer").hide();
-		$("#card").data("flipTo", "gesturelist");
-		$("#backFace").html( $("#tmpSpinner").html() );
-		$("#card").toggleClass("doFlip");		
+		var tableView = [];	
 
 		/* populate it */
-		var category = "";
-		var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >"
-
 		var room  = getCurrentRoom();
 		var device = getCurrentDevice();
-
+		var category = ""
 		//write globals
 		var globals = $(xml).find('gesturePad > rooms > room[index="' + room.index + '"] ~ roomgestures > gesture > device')
 		if ( $(globals).size() > 0 ) {
-			tb += "<tr class='head'><td colspan='2'>Global Commands</td></tr>" ;
+			category = "Global Commands"
+
 			var currentItems = new Array();
 			$(globals).each( function(i) {
 				var devicenode = $(this);
@@ -619,13 +602,14 @@ function onDeviceReady() {
 				 		gestureDefinition = "";
 				 	}
 				 	if ( jQuery.inArray(commandname, currentItems) == -1 ) {
-						tb += '<tr> '
-									+ '<td>' + ((gestureDefinition == "")?"":"👆 ") + "<span class='sSpan'>" + commandname + "</span>"
-									+ '</td><td style="width: 50px !important"><div style="width: 50px !important; overflow:hidden">' + gestureDefinition + '</div></td></tr>';
 						currentItems.push(commandname);
+						tableView.push({
+			               'textLabel' :  commandname,
+			               'detailTextLabel' : gestureDefinition == "" ? "No Gesture Defined" : "👆 " + gestureDefinition,
+			               'icon': 'greyarrow',
+			               'sectionHeader': category
+					    });
 				 	}
-
-
 				});
 			})
 		}
@@ -650,22 +634,58 @@ function onDeviceReady() {
 				
 			 	if (category != ( $(this).parent().children("name:first").text() ) ) {
 			 		category = $(this).parent().children("name:first").text();
-			 		tb += "<tr class='head'><td colspan='2'>" + category + '</td></tr>' ;
 			 	}
-			 	
-				tb += '<tr> '
-							+ '<td>' + ((gestureDefinition == "")?"":"👆 ") + "<span class='sSpan'>" + commandname + "</span>"
-							+ '</td><td style="width: 50px !important"><div style="width: 50px !important; overflow:hidden">' + gestureDefinition + '</div></td></tr>';
+				tableView.push({
+	               'textLabel' :  commandname,
+	               'detailTextLabel' : gestureDefinition == "" ? "No Gesture Defined" : "👆 " + gestureDefinition,
+	               'icon': 'greyarrow',
+	               'sectionHeader': category
+			    });
 			});
 		});
-		tb += "</table></div>"
-	
-		$("#backFace").html( tb );
-		checkScrollOverflow()
 
-		$("#backFace table tr").bind(clickEventType, function () {
-			executeGestureByCommandName( $(this).find("span").text() )
-		})
+		// create a reference to the NativeTable Object
+		var nt = window.plugins.NativeTable;
+
+		// create the UITableView instance (height parameter is required)
+		nt.createTable({
+			'height': $(window).height(), 
+			'showSearchBar': true, 
+			'showNavBar': true, 
+			'navTitle': 'Commands',
+			'navBarColor': 'black',
+			'showRightButton': true, 
+			'RightButtonText': 'Close',
+			'showBackButton': false
+		});
+
+		nt.onRightButtonTap(function(){
+	        //console.log("foo");
+	       nt.hideTable(function() {
+			console.log("hidden");
+		   });
+		});
+
+		nt.onBackButtonTap(function(){
+	       nt.hideTable(function() {
+			console.log("hidden");
+		   });
+		});
+
+
+		// set the callback function for the row selections
+		nt.setRowSelectCallBackFunction(function(rowId) {
+	        // callback code goes here
+	        executeGestureByCommandName( tableView[rowId].textLabel )
+		});
+
+		// set the table data
+		nt.setTableData(tableView);
+
+		// to display the UITableView
+		nt.showTable(function() {
+			console.log("shown");
+		});
 	});
 
 	$("#VolumeSliderSeek").bind("touchmove", function(event) {  
@@ -1031,7 +1051,7 @@ function startWorker() {
 
 		});
 
-	 	workerTimer = setTimeout( "startWorker()", 300000 );
+	 	workerTimer = setTimeout( "startWorker()", 10000 );
 	} else {
 		return;
 	}
@@ -1619,7 +1639,7 @@ function showBottomItems(tr, sentEventType) {
 }
 
 
-function ShowItems(tr, sentEventType) {
+function ShowItems(item, sentEventType) {
 	clearSleepTimer();
 
 	var eventType = "click";
@@ -1629,55 +1649,11 @@ function ShowItems(tr, sentEventType) {
 
 	var MBUrl = getMBUrl();
 
-	if ( $(tr).attr("data-type") == "Movie" || $(tr).attr("data-type") ==  "Episode"  ) {
-		//play title
-
-		if (eventType == "taphold") {
-			playTitle( $(tr), $(tr).find("td:first").text(), false );
-		} else {
-			playTitle( $(tr), $(tr).find("td:first").text(), true );
-		}
-				
-		return;
-	}
-
-	if ( $(tr).attr("data-type") == "Shuffle" ) {
-		//play title
-        if ( isWifi() == false ) {
-            doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
-            return;
-        }
-
-		navigator.notification.confirm(
-		   "Shuffle these Titles?", 
-			function(buttonIndex) {
-    			if ( buttonIndex == 1 ) {
-					MBUrl += "ui?command=shuffle&id=" + $(tr).attr("data-guid")
-					$.getJSON(MBUrl, function() {
-						setTimeout(function() {
-							nowPlaying();
-						}, 1500)
-			         })
-    			}
-			},
-		   '', 
-		   'Yes, Cancel'
-		);
-		return;
-	}
 
 
 	var parseJsonResults = function (x) {
-		$("#backFace table").remove();
-		var tb =  "<div class='tableContainer'><table class='listing' style='width: 100%' >";
 
-		if ( x.Data.Name != "StartupFolder" ) {
-			tb += '<tr data-guid="' + x.Data.parentId + '" data-type="Folder">'
-				+ '<td colspan="2"><div>.. </div></td>';
-
-			tb += '<tr data-guid="' + x.Data.Id + '" data-type="Shuffle">'
-				+ '<td colspan="2" class="shuffle"><div> Shuffle </div></td>';
-		}
+		var tableView = [];	
 
 		if (settings.moviesByDate && x.Data.Type == "Folder"  ) {
 			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
@@ -1687,31 +1663,80 @@ function ShowItems(tr, sentEventType) {
 			x.Data.Children.sort(function(a,b) { return Date.parse(b.DateCreated) - Date.parse(a.DateCreated) } );
 		}
 		
-
 		$.each(x.Data.Children, function(key, val) { 
-			tb += '<tr data-guid="' + x.Data.Children[key].Id + '" data-type="'+ x.Data.Children[key].Type +'" data-imdb="' + ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")  + '" >'
-				+ '<td><div class="movieTitle">' + ( (x.Data.Children[key].WatchedPercentage < 5) ? "&#10022; " : ""  ) 
-				+ x.Data.Children[key].Name 
-				+ ( (x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""  ) 
-				+ '</div></td>';
-
-			if ( x.Data.Children[key].Type == "Folder") {
-				tb += '<td width="30px" style="text-align: right">' + x.Data.Children[key].ChildCount  + '</td></tr>';
+			console.log(x.Data.Children[key])
+			if ( x.Data.Children[key].Type == "Folder" || x.Data.Children[key].Type == "Season" || x.Data.Children[key].Type == "Series" ) {
+		 		tableView.push({
+	               'textLabel' : x.Data.Children[key].Name,
+	               'detailTextLabel' : "" + x.Data.Children[key].ChildCount + " total, " + (x.Data.Children[key].UnwatchedCount ?  x.Data.Children[key].UnwatchedCount + " not watched, " : "") + x.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
+	               'icon': "greyarrow",
+	               'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
+	               'guid': x.Data.Children[key].Id,
+	               'type': x.Data.Children[key].Type,
+	               'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0") 
+			    });
 			} else {
-				tb += '<td width="30px" style="text-align: right">'
-				if ( x.Data.Children[key].ImdbRating  ) {
-					tb += x.Data.Children[key].ImdbRating 
-				}	
-				tb += '&nbsp;</td></tr>'
+		 		tableView.push({
+	               'textLabel' : ( x.Data.Children[key].WatchedPercentage == 0 ? "🔹 " : "" ) + x.Data.Children[key].Name + ( (x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""  ),
+	               'detailTextLabel' : (x.Data.Children[key].ImdbRating ? x.Data.Children[key].ImdbRating + "/10 " : "") + (x.Data.Children[key].TagLine ? x.Data.Children[key].TagLine : ""),
+	               'icon': "none",
+	               'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
+	               'guid': x.Data.Children[key].Id,
+	               'type': x.Data.Children[key].Type,
+	               'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0") 
+			    });
 			}
 
 		});
-		tb += "</table></div>"
-		$("#backFace").append( tb );
-		checkScrollOverflow();
-		$("#backFace table tr").bind(clickEventType, function () {
-			ShowItems( $(this) )
-		})
+
+
+		// create a reference to the NativeTable Object
+		var nt = window.plugins.NativeTable;
+
+		// create the UITableView instance (height parameter is required)
+		nt.createTable({
+			'height': $(window).height(), 
+			'showSearchBar': true, 
+			'showNavBar': true, 
+			'navTitle': x.Data.Name == "StartupFolder" ? 'Folders' :  x.Data.Name,
+			'navBarColor': 'black',
+			'showRightButton': true, 
+			'RightButtonText': 'Close',
+			'showBackButton':  x.Data.Name != "StartupFolder" ? true : false
+		});
+
+		nt.onRightButtonTap(function(){
+	       nt.hideTable(function() {});
+		});
+
+		nt.setRowSelectCallBackFunction(function(rowId) {
+			var item = tableView[rowId];
+			if (item.icon == "none") {
+				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>")
+				playTitle( $(tr), item.textLabel, false );
+			} else {
+				nt.hideTable(function() {
+					ShowItems( item );
+				});
+			}
+
+		});
+		if ( x.Data.Name == "StartupFolder" ) {
+			nt.onBackButtonTap(function(){});
+		} else {
+			nt.onBackButtonTap(function(){
+			   nt.hideTable(function() {
+			       ShowItems({
+			       	'type': 'Folder',
+			       	'guid': x.Data.parentId
+			       })
+			   });
+			});
+		}
+
+		nt.setTableData(tableView);
+		nt.showTable(function() {});
+
 	}
 
 	var getJsonFromServer = function(MBUrl, parse) {
@@ -1741,7 +1766,7 @@ function ShowItems(tr, sentEventType) {
 		});
 	}
 
-	MBUrl += "library/?lightData=1&Id=" + $(tr).attr("data-guid");
+	MBUrl += "library/?lightData=1&Id=" + item.guid;
 
 	getJsonFromCache(MBUrl, function(d) {
 		if (d == null) {
@@ -1776,40 +1801,6 @@ function doSlideEvent() {
 	resetVolumeSlider();
 }
 
-function getTableRowHTML(c, channelKey, curChannel) {
-	var row = "";
-	var timeleft = hms2( (c.startTime+c.duration) - Math.floor(new Date().getTime() / 1000)  );
-	
-	if (c.nowplaying == "" || timeleft == "0:00" || timeleft == "00:00" ) { //needs refresh
-		row += '<tr id="tr' + channelKey + '" data-loaded="false" data-major="' + c.number + '" data-key="' + channelKey + '" data-fullname="' + escape(c.fullname) + '"><td width="50px" ' 
-		if ( c.logo != "" ) {
-			row += "style = 'background: url(" + c.logo + ") center no-repeat' > "  
-		} else {
-			row += 'style="text-align: center" >' + c.number
-		}
-		row += '</td>' +
-		'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
-		'</div></td>'+
-		'<td width="30px" style="text-align: right">0:00';
-
-	} else { //pull cached
-		//$("#txtRoom").text(c.number + " " + c.startTime+ " " + c.duration + " " + Math.floor(new Date().getTime() / 1000) );
-
-		row += '<tr id="tr' + channelKey + '" data-loaded="true" data-major="' + c.number + '" data-key="' + channelKey + '" data-fullname="' + escape(c.fullname) + '"><td width="50px" ' 
-		if ( c.logo != "" ) {
-			row += "style = 'background: url(" + c.logo + ") center no-repeat' > " 
-		} else {
-			row += 'style="text-align: center" >' + c.number
-		}
-		row += '</td>' +
-		'<td><div ' + ((curChannel == c.callsign + c.number ) ? " id='ScrollToMe' " : "" ) + '>' +
-		c.nowplaying +
-		'</div></td>'+
-		'<td width="30px" style="text-align: right">' + timeleft +''; 
-	}
-	row += "</td></tr>";
-	return row;
-}
 
 function checkScrollOverflow() {
 	if ( $("#backFace table").height() > $("#backFace").height() ) {
@@ -1863,7 +1854,6 @@ function onResume() {
 	getRoomStatus();
 	SleepDevice(false);
 	nowPlaying();
-
 	
  	npTimer = setInterval(function() {
       nowPlaying()
