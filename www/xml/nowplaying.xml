@@ -1,0 +1,13 @@
+<nowplaying>
+	<channel maxresults="5">
+		<genre>Action</genre>
+	</channel>
+	<channel maxresults="5">
+		<genre>Horror</genre>
+	</channel>
+</nowplaying>
+
+
+
+
+

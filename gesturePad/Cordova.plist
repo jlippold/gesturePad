@@ -36,8 +36,6 @@
 		<string>PushNotification</string>
 		<key>ChildBrowserCommand</key>
 		<string>ChildBrowserCommand</string>
-		<key>TapToScroll</key>
-		<string>TapToScroll</string>
 		<key>NativeTable</key>
 		<string>NativeTable</string>
 		<key>Globalization</key>

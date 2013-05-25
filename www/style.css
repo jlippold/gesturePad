@@ -1003,7 +1003,9 @@ span.sSpan {
 		background-size: auto 27px !important;
 	}
 
-
+	#btnTitles, #btnCommands {
+		background-size: 26px 19px;	
+	}
 
 	#frmRoom {
 		position: absolute;

@@ -29,6 +29,7 @@
 #import "MainViewController.h"
 
 #import <Cordova/CDVPlugin.h>
+#import <TargetConditionals.h>
 
 
 @implementation AppDelegate
@@ -71,12 +72,24 @@
     self.viewController.useSplashScreen = YES;
     self.viewController.wwwFolderName = @"www";
     
+#if TARGET_IPHONE_SIMULATOR
+    
     if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {
-       self.viewController.startPage = @"tablet.html";
+        self.viewController.startPage = @"tablet.debug.html";
     } else {
-       self.viewController.startPage = @"index.html";
+        self.viewController.startPage = @"index.debug.html";
     }
-
+    
+#else 
+    
+    if ([[[UIDevice currentDevice] model] hasPrefix:@"iPad"]) {
+        self.viewController.startPage = @"tablet.html";
+    } else {
+        self.viewController.startPage = @"index.html";
+    }
+    
+#endif 
+    
     self.viewController.invokeString = invokeString;
     
     // NOTE: To control the view's frame size, override [self.viewController viewWillAppear:] in your view controller.

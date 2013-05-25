@@ -45,7 +45,6 @@
 		859C77D416FF5BC800C9ABD4 /* ChildBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77CA16FF5BC800C9ABD4 /* ChildBrowserViewController.m */; };
 		859C77D516FF5BC800C9ABD4 /* ChildBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 859C77CB16FF5BC800C9ABD4 /* ChildBrowserViewController.xib */; };
 		859C77D616FF5BC800C9ABD4 /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77CD16FF5BC800C9ABD4 /* PushNotification.m */; };
-		859C77D716FF5BC800C9ABD4 /* TapToScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77CF16FF5BC800C9ABD4 /* TapToScroll.m */; };
 		859C77DA16FF5F1D00C9ABD4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 859C77D916FF5F1D00C9ABD4 /* Settings.bundle */; };
 		859C77DE16FF606600C9ABD4 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77DD16FF606600C9ABD4 /* Icon-72@2x.png */; };
 		859C77E016FF608100C9ABD4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77DF16FF608100C9ABD4 /* Default-568h@2x.png */; };
@@ -123,8 +122,6 @@
 		859C77CB16FF5BC800C9ABD4 /* ChildBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChildBrowserViewController.xib; sourceTree = "<group>"; };
 		859C77CC16FF5BC800C9ABD4 /* PushNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotification.h; sourceTree = "<group>"; };
 		859C77CD16FF5BC800C9ABD4 /* PushNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotification.m; sourceTree = "<group>"; };
-		859C77CE16FF5BC800C9ABD4 /* TapToScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapToScroll.h; sourceTree = "<group>"; };
-		859C77CF16FF5BC800C9ABD4 /* TapToScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapToScroll.m; sourceTree = "<group>"; };
 		859C77D916FF5F1D00C9ABD4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = gesturePad/Settings.bundle; sourceTree = "<group>"; };
 		859C77DC16FF5FC300C9ABD4 /* gesturePad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = gesturePad.entitlements; path = gesturePad/gesturePad.entitlements; sourceTree = "<group>"; };
 		859C77DD16FF606600C9ABD4 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
@@ -301,8 +298,6 @@
 				859C77CB16FF5BC800C9ABD4 /* ChildBrowserViewController.xib */,
 				859C77CC16FF5BC800C9ABD4 /* PushNotification.h */,
 				859C77CD16FF5BC800C9ABD4 /* PushNotification.m */,
-				859C77CE16FF5BC800C9ABD4 /* TapToScroll.h */,
-				859C77CF16FF5BC800C9ABD4 /* TapToScroll.m */,
 			);
 			name = Plugins;
 			path = gesturePad/Plugins;
@@ -352,6 +347,7 @@
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+				85C189AE175118B9006F0C96 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -457,6 +453,22 @@
 			shellPath = /bin/sh;
 			shellScript = "touch -cm ${PROJECT_DIR}/www";
 		};
+		85C189AE175118B9006F0C96 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/www/scripts/gesturePad.min.js",
+				"$(DERIVED_FILE_DIR)/www/scripts/lib.min.js",
+				"$(DERIVED_FILE_DIR)/www/scripts/phonegap.plugins.min.js",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"${PROJECT_DIR}\"\nPATH=${PATH}:/usr/local/bin\ngrunt";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -472,7 +484,6 @@
 				859C77D316FF5BC800C9ABD4 /* ChildBrowserCommand.m in Sources */,
 				859C77D416FF5BC800C9ABD4 /* ChildBrowserViewController.m in Sources */,
 				859C77D616FF5BC800C9ABD4 /* PushNotification.m in Sources */,
-				859C77D716FF5BC800C9ABD4 /* TapToScroll.m in Sources */,
 				85974F161747D68400C15EFE /* NativeTable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

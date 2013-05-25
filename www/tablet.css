@@ -3,7 +3,7 @@
 }
 
 #btnTitles, #btnCommands {
-	background-size: contain;	
+	background-size: contain !important;	
 	height: 40px;
 }
 
