@@ -81,6 +81,46 @@ var ui = {
 						'type': 'CustomFolder',
 						'folderType': 'Years'
 					});
+					tableView.push({
+						'textLabel': 'Actors',
+						'detailTextLabel': "Movie Actors",
+						'icon': "greyarrow",
+						'sectionHeader': "Categories",
+						'type': 'CustomFolder',
+						'folderType': 'Actors'
+					});
+					tableView.push({
+						'textLabel': 'Directors',
+						'detailTextLabel': "Movie Directors",
+						'icon': "greyarrow",
+						'sectionHeader': "Categories",
+						'type': 'CustomFolder',
+						'folderType': 'Director'
+					});
+					tableView.push({
+						'textLabel': 'Rating',
+						'detailTextLabel': "Official rating by the MPAA",
+						'icon': "greyarrow",
+						'sectionHeader': "Categories",
+						'type': 'CustomFolder',
+						'folderType': 'OfficialRating'
+					});
+					tableView.push({
+						'textLabel': 'Rank',
+						'detailTextLabel': "Movies sorted by IMDB Ranking",
+						'icon': "greyarrow",
+						'sectionHeader': "Categories",
+						'type': 'CustomFolder',
+						'folderType': 'IMDBRating'
+					});
+					tableView.push({
+						'textLabel': 'Unwatched',
+						'detailTextLabel': "Movies that have not been watched",
+						'icon': "greyarrow",
+						'sectionHeader': "Categories",
+						'type': 'CustomFolder',
+						'folderType': 'IMDBRating'
+					});
 					var nt = window.plugins.NativeTable;
 					nt.createTable({
 						'height': $(window).height(),
@@ -132,7 +172,6 @@ var ui = {
 				var MBUrl = util.getMBUrl();
 				MBUrl += "library/";
 				cache.getJson(MBUrl, function(d) {
-
 					if (d === null) {
 						getJsonFromServer(MBUrl, true);
 					} else {

@@ -62,7 +62,6 @@ var DirecTV = {
 		}
 	},
 	setupWorker: function(channellist) {
-		//MediaBrowser.startWorker();
 		if (DirecTV.hasDirecTV() === false) {
 			return;
 		}

@@ -33,7 +33,7 @@ var init = {
 		notify.clearAllBadges();
 		ui.initiateBindings();
 		settings.loadSettings();
-
+		MediaBrowser.startWorker();
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();
 			util.getRoomStatus();
@@ -47,7 +47,6 @@ var init = {
 		util.getRoomStatus();
 		SleepDevice(false);
 		DirecTV.startWorker();
-		MediaBrowser.startWorker();
 		ui.queryNowPlaying();
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();

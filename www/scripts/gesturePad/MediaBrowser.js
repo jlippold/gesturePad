@@ -136,9 +136,7 @@ var MediaBrowser = {
 					});
 				}
 			});
-			// create a reference to the NativeTable Object
 			var nt = window.plugins.NativeTable;
-			// create the UITableView instance (height parameter is required)
 			nt.createTable({
 				'height': $(window).height(),
 				'showSearchBar': true,
@@ -204,31 +202,10 @@ var MediaBrowser = {
 		};
 		if (item.type == "CustomFolder") {
 			if (item.folderType == "Genres") {
-				var Genres = MediaBrowser.getAllGenres();
-				var tableView = [];
-				for (var i = 0; i < Genres.length; i++) {
-					tableView.push({
-						'textLabel': Genres[i],
-						'detailTextLabel': "",
-						'icon': "greyarrow",
-						'sectionHeader': "Categories",
-						'type': 'CustomFolder',
-						'folderType': 'Genres'
-					});
-				}
-				// create a reference to the NativeTable Object
-				var nt = window.plugins.NativeTable;
-				// create the UITableView instance (height parameter is required)
-				nt.createTable({
-					'height': $(window).height(),
-					'showSearchBar': true,
-					'showNavBar': true,
-					'navTitle': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Name,
-					'navBarColor': 'black',
-					'showRightButton': true,
-					'RightButtonText': 'Close',
-					'showBackButton': x.Data.Name != "StartupFolder" ? true : false
-				});
+				MediaBrowser.showListOfGenres();
+			}
+			if (item.folderType == "Years") {
+				MediaBrowser.showListOfYears();
 			}
 		} else {
 			MBUrl += "library/?lightData=1&Id=" + item.guid;
@@ -245,16 +222,244 @@ var MediaBrowser = {
 			});
 		}
 	},
+
+	showListOfYears: function() {
+		var tableView = [];
+		var ProductionYears = [];
+		$.each(geniusResults.allItems, function(key, val) {
+			var item = geniusResults.allItems[key];
+			if (item.ProductionYear !== "" && item.ProductionYear !== null) {
+				if (jQuery.inArray(item.ProductionYear, ProductionYears) == -1) {
+					ProductionYears.push(item.ProductionYear);
+					tableView.push({
+						'textLabel': item.ProductionYear.toString(),
+						'detailTextLabel': "Movies Released in " + item.ProductionYear,
+						'icon': "greyarrow",
+						'sectionHeader': "Movies By Year",
+						'type': 'CustomFolder',
+						'folderType': 'Years'
+					});
+				}
+			}
+		});
+
+		ProductionYears = null;
+		if (tableView.length === 0) {
+			util.doAlert("No Years found, this can happen if the app does not know enough about your library. You can try to leave the app open for a bit, while indexing occurs.");
+			return;
+		}
+
+		tableView.sort(util.dynamicSort("textLabel"));
+		var nt = window.plugins.NativeTable;
+		nt.createTable({
+			'height': $(window).height(),
+			'showSearchBar': true,
+			'showNavBar': true,
+			'navTitle': 'Genres',
+			'navBarColor': 'black',
+			'showRightButton': true,
+			'RightButtonText': 'Close',
+			'showBackButton': true
+		});
+		nt.onRightButtonTap(function() {
+			nt.hideTable(function() {});
+		});
+		nt.setRowSelectCallBackFunction(function(rowId) {
+			var item = tableView[rowId];
+			nt.hideTable(function() {
+				MediaBrowser.showListOfMoviesByYear(item.textLabel);
+			});
+		});
+
+		nt.onBackButtonTap(function() {
+			nt.hideTable(function() {
+				$("#btnTitles").trigger("click");
+			});
+		});
+
+		nt.setTableData(tableView);
+		nt.showTable(function() {});
+	},
+	showListOfMoviesByYear: function(year) {
+		var tableView = [];
+		$.each(geniusResults.allItems, function(key, val) {
+			var item = geniusResults.allItems[key];
+			if (item.ProductionYear == year) {
+				tableView.push({
+					'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+					'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+					'icon': "none",
+					'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
+					'guid': item.Id,
+					'type': item.Type,
+					'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+					'sortName': item.SortName
+				});
+			}
+		});
+		if (tableView.length === 0) {
+			util.doAlert("No movies found for this year.");
+			return;
+		}
+
+		tableView.sort(util.dynamicSort("sortName"));
+		var nt = window.plugins.NativeTable;
+		nt.createTable({
+			'height': $(window).height(),
+			'showSearchBar': true,
+			'showNavBar': true,
+			'navTitle': year + ' Movies',
+			'navBarColor': 'black',
+			'showRightButton': true,
+			'RightButtonText': 'Close',
+			'showBackButton': true
+		});
+		nt.onRightButtonTap(function() {
+			nt.hideTable(function() {});
+		});
+		nt.setRowSelectCallBackFunction(function(rowId) {
+			var item = tableView[rowId];
+			nt.hideTable(function() {
+				MediaBrowser.ShowItems(item);
+			});
+		});
+
+		nt.onBackButtonTap(function() {
+			nt.hideTable(function() {
+				MediaBrowser.showListOfYears();
+			});
+		});
+
+		nt.setTableData(tableView);
+		nt.showTable(function() {});
+	},
+	showListOfGenres: function() {
+		var tableView = [];
+		var Genres = [];
+		$.each(geniusResults.allItems, function(key, val) {
+			var item = geniusResults.allItems[key];
+			if (item.Genres) {
+				for (var i = 0; i < item.Genres.length; i++) {
+					if (item.Genres[i] !== "" && item.Genres[i] !== null) {
+						if (jQuery.inArray(item.Genres[i], Genres) == -1) {
+							Genres.push(item.Genres[i]);
+							tableView.push({
+								'textLabel': item.Genres[i],
+								'detailTextLabel': "" + item.Genres[i] + " movies",
+								'icon': "greyarrow",
+								'sectionHeader': "Movies By Genre",
+								'type': 'CustomFolder',
+								'folderType': 'Genres'
+							});
+						}
+					}
+				}
+			}
+		});
+		Genres = null;
+		if (tableView.length === 0) {
+			util.doAlert("No Genres found, this can happen if the app does not know enough about your library. You can try to leave the app open for a bit, while indexing occurs.");
+			return;
+		}
+
+		tableView.sort(util.dynamicSort("textLabel"));
+		var nt = window.plugins.NativeTable;
+		nt.createTable({
+			'height': $(window).height(),
+			'showSearchBar': true,
+			'showNavBar': true,
+			'navTitle': 'Genres',
+			'navBarColor': 'black',
+			'showRightButton': true,
+			'RightButtonText': 'Close',
+			'showBackButton': true
+		});
+		nt.onRightButtonTap(function() {
+			nt.hideTable(function() {});
+		});
+		nt.setRowSelectCallBackFunction(function(rowId) {
+			var item = tableView[rowId];
+			nt.hideTable(function() {
+				MediaBrowser.showListOfMoviesByGenre(item.textLabel);
+			});
+		});
+
+		nt.onBackButtonTap(function() {
+			nt.hideTable(function() {
+				$("#btnTitles").trigger("click");
+			});
+		});
+
+		nt.setTableData(tableView);
+		nt.showTable(function() {});
+	},
+	showListOfMoviesByGenre: function(genre) {
+		var tableView = [];
+		$.each(geniusResults.allItems, function(key, val) {
+			var item = geniusResults.allItems[key];
+			if (item.Genres) {
+				for (var i = 0; i < item.Genres.length; i++) {
+					if (item.Genres[i] == genre) {
+						tableView.push({
+							'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+							'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+							'icon': "none",
+							'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
+							'guid': item.Id,
+							'type': item.Type,
+							'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+							'sortName': item.SortName
+						});
+					}
+				}
+			}
+		});
+		if (tableView.length === 0) {
+			util.doAlert("No movies found for this genre.");
+			return;
+		}
+
+		tableView.sort(util.dynamicSort("sortName"));
+		var nt = window.plugins.NativeTable;
+		nt.createTable({
+			'height': $(window).height(),
+			'showSearchBar': true,
+			'showNavBar': true,
+			'navTitle': genre + ' Movies',
+			'navBarColor': 'black',
+			'showRightButton': true,
+			'RightButtonText': 'Close',
+			'showBackButton': true
+		});
+		nt.onRightButtonTap(function() {
+			nt.hideTable(function() {});
+		});
+		nt.setRowSelectCallBackFunction(function(rowId) {
+			var item = tableView[rowId];
+			nt.hideTable(function() {
+				MediaBrowser.ShowItems(item);
+			});
+		});
+
+		nt.onBackButtonTap(function() {
+			nt.hideTable(function() {
+				MediaBrowser.showListOfGenres();
+			});
+		});
+
+		nt.setTableData(tableView);
+		nt.showTable(function() {});
+	},
 	startWorker: function() {
 
-		cache.getJSON("geniusWorker", function(d) {
-
+		cache.getJson("genius", function(d) {
 			if (d !== null) {
 				geniusResults = d;
 			}
 			var MBUrl = util.getFirstMBServer();
 			MBUrl += "library?lightData=0";
 			console.log("making first genius request: " + MBUrl);
+			/*
 			$.ajax({
 				url: MBUrl,
 				dataType: 'json',
@@ -264,6 +469,7 @@ var MediaBrowser = {
 					MediaBrowser.loopGeniusWorker(d);
 				}
 			});
+			*/
 		});
 	},
 	loopGeniusWorker: function(d) {
@@ -280,7 +486,7 @@ var MediaBrowser = {
 		};
 		$.each(d.Data.Children, function(key, val) {
 			var item = d.Data.Children[key];
-			if (item.Type == "Movie" || item.Type == "Episode") {
+			if (item.Type == "Movie") {
 				console.log("Saving: " + item.Id);
 				//save new items to geniusResults	
 				if (doesIdExist(geniusResults.allItems) === false) {
@@ -292,9 +498,11 @@ var MediaBrowser = {
 			}
 		});
 		cache.saveJson("genius", geniusResults);
+		console.log("Saved genius");
+
 		$.each(d.Data.Children, function(key, val) {
 			var item = d.Data.Children[key];
-			if (item.Type != "Movie" && item.Type != "Episode") {
+			if (item.Type == "Folder") {
 				console.log("Getting new folder: " + item.Id);
 				//queue up the next ones
 				$.ajaxq("geniusWorker", {
@@ -308,33 +516,5 @@ var MediaBrowser = {
 				});
 			}
 		});
-	},
-	getAllGenres: function() {
-		var Genres = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
-			if (item.Genres) {
-				for (var i = 0; i < item.Genres.length; i++) {
-					if (jQuery.inArray(item.Genre[i], Genres) === false) {
-						Genres.push(item.Genre[i]);
-					}
-				}
-			}
-		});
-		Genres.sort();
-		return Genres;
-	},
-	getAllYears: function() {
-		var Years = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
-			if (item.ProductionYear) {
-				if (jQuery.inArray(item.ProductionYear, Years) === false) {
-					Years.push(item.ProductionYear);
-				}
-			}
-		});
-		Years.sort();
-		return Years;
 	}
 };
