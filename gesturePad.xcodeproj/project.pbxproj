@@ -54,6 +54,10 @@
 		859C77E816FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77E716FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png */; };
 		859C77EA16FF60CC00C9ABD4 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77E916FF60CC00C9ABD4 /* Default-Landscape~ipad.png */; };
 		859C77EC16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 859C77EB16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png */; };
+		85A2FD521752B53000883A90 /* MTStatusBarOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A2FD511752B53000883A90 /* MTStatusBarOverlay.m */; };
+		85A2FD551752B90E00883A90 /* CDVStatusBarOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A2FD541752B90E00883A90 /* CDVStatusBarOverlay.m */; };
+		85A2FD581752F42500883A90 /* ProgressHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A2FD571752F42500883A90 /* ProgressHud.m */; };
+		85A2FD5B1752F47E00883A90 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A2FD5A1752F47E00883A90 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +136,14 @@
 		859C77E716FF60C800C9ABD4 /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		859C77E916FF60CC00C9ABD4 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		859C77EB16FF60CE00C9ABD4 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		85A2FD501752B53000883A90 /* MTStatusBarOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStatusBarOverlay.h; sourceTree = "<group>"; };
+		85A2FD511752B53000883A90 /* MTStatusBarOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStatusBarOverlay.m; sourceTree = "<group>"; };
+		85A2FD531752B90E00883A90 /* CDVStatusBarOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVStatusBarOverlay.h; sourceTree = "<group>"; };
+		85A2FD541752B90E00883A90 /* CDVStatusBarOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVStatusBarOverlay.m; sourceTree = "<group>"; };
+		85A2FD561752F42500883A90 /* ProgressHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressHud.h; sourceTree = "<group>"; };
+		85A2FD571752F42500883A90 /* ProgressHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressHud.m; sourceTree = "<group>"; };
+		85A2FD591752F47E00883A90 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		85A2FD5A1752F47E00883A90 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* gesturePad-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "gesturePad-Info.plist"; path = "../gesturePad-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -284,8 +296,16 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				85A2FD531752B90E00883A90 /* CDVStatusBarOverlay.h */,
+				85A2FD541752B90E00883A90 /* CDVStatusBarOverlay.m */,
+				85A2FD501752B53000883A90 /* MTStatusBarOverlay.h */,
+				85A2FD511752B53000883A90 /* MTStatusBarOverlay.m */,
 				85974F141747D68400C15EFE /* NativeTable.h */,
 				85974F151747D68400C15EFE /* NativeTable.m */,
+				85A2FD561752F42500883A90 /* ProgressHud.h */,
+				85A2FD571752F42500883A90 /* ProgressHud.m */,
+				85A2FD591752F47E00883A90 /* MBProgressHUD.h */,
+				85A2FD5A1752F47E00883A90 /* MBProgressHUD.m */,
 				859C77C216FF5BC800C9ABD4 /* ActionSheet.h */,
 				859C77C316FF5BC800C9ABD4 /* ActionSheet.m */,
 				859C77C416FF5BC800C9ABD4 /* applicationPreferences.h */,
@@ -485,6 +505,10 @@
 				859C77D416FF5BC800C9ABD4 /* ChildBrowserViewController.m in Sources */,
 				859C77D616FF5BC800C9ABD4 /* PushNotification.m in Sources */,
 				85974F161747D68400C15EFE /* NativeTable.m in Sources */,
+				85A2FD521752B53000883A90 /* MTStatusBarOverlay.m in Sources */,
+				85A2FD551752B90E00883A90 /* CDVStatusBarOverlay.m in Sources */,
+				85A2FD581752F42500883A90 /* ProgressHud.m in Sources */,
+				85A2FD5B1752F47E00883A90 /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

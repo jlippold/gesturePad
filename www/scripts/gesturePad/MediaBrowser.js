@@ -101,6 +101,11 @@ var MediaBrowser = {
 			eventType = sentEventType;
 		}
 		var MBUrl = util.getMBUrl();
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var parseJsonResults = function(x) {
 
 			if (x.Data.Name == "StartupFolder") {
@@ -179,6 +184,9 @@ var MediaBrowser = {
 				});
 			}
 			nt.setTableData(tableView);
+			util.doHud({
+				show: false
+			});
 			nt.showTable(function() {});
 		};
 		var getJsonFromServer = function(MBUrl, parse) {
@@ -246,6 +254,11 @@ var MediaBrowser = {
 		}
 	},
 	createInitialListView: function() {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var parseJsonResults = function(d) {
 			//parse the StartUp Folder
 			var tableView = [];
@@ -341,6 +354,9 @@ var MediaBrowser = {
 				});
 			});
 			nt.setTableData(tableView);
+			util.doHud({
+				show: false
+			});
 			nt.showTable(function() {});
 		};
 		var getJsonFromServer = function(MBUrl, parse) {
@@ -405,9 +421,17 @@ var MediaBrowser = {
 		});
 
 		nt.setTableData(tableView);
+		util.doHud({
+			show: false
+		});
 		nt.showTable(function() {});
 	},
 	showListOfYears: function() {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		var ProductionYears = [];
 		$.each(geniusResults.allItems, function(key, val) {
@@ -443,6 +467,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfMoviesByYear: function(year) {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		$.each(geniusResults.allItems, function(key, val) {
 			var item = geniusResults.allItems[key];
@@ -474,6 +503,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfGenres: function() {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		var Genres = [];
 		$.each(geniusResults.allItems, function(key, val) {
@@ -512,6 +546,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfMoviesByGenre: function(genre) {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		$.each(geniusResults.allItems, function(key, val) {
 			var item = geniusResults.allItems[key];
@@ -547,13 +586,18 @@ var MediaBrowser = {
 		});
 	},
 	showListOfActors: function() {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		var Actors = [];
 		$.each(geniusResults.allItems, function(key, val) {
 			var item = geniusResults.allItems[key];
 			if (item.Actors) {
 				for (var i = 0; i < item.Actors.length; i++) {
-					if (item.Actors[i].Name !== "" && item.Actors[i].Name !== null) {
+					if ($.trim(item.Actors[i].Name) !== "" && item.Actors[i].Name !== null) {
 						if (jQuery.inArray(item.Actors[i].Name, Actors) == -1) {
 							Actors.push(item.Actors[i].Name);
 							var LastThenFirstName = item.Actors[i].Name.split(" ").pop().replace(/[^a-zA-Z 0-9]+/g, '');
@@ -589,6 +633,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfMoviesByActor: function(actor) {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		$.each(geniusResults.allItems, function(key, val) {
 			var item = geniusResults.allItems[key];
@@ -624,13 +673,18 @@ var MediaBrowser = {
 		});
 	},
 	showListOfDirectors: function() {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		var Directors = [];
 		$.each(geniusResults.allItems, function(key, val) {
 			var item = geniusResults.allItems[key];
 			if (item.Directors) {
 				for (var i = 0; i < item.Directors.length; i++) {
-					if (item.Directors[i] !== "" && item.Directors[i] !== null) {
+					if ($.trim(item.Directors[i].Name) !== "" && item.Directors[i] !== null) {
 						if (jQuery.inArray(item.Directors[i], Directors) == -1) {
 							Directors.push(item.Directors[i]);
 							var LastThenFirstName = item.Directors[i].split(" ").pop().replace(/[^a-zA-Z 0-9]+/g, '');
@@ -666,6 +720,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfMoviesByDirector: function(Director) {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		$.each(geniusResults.allItems, function(key, val) {
 			var item = geniusResults.allItems[key];
@@ -701,6 +760,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfRating: function() {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		var OfficialRatings = [];
 		$.each(geniusResults.allItems, function(key, val) {
@@ -736,6 +800,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfMoviesByRating: function(OfficialRating) {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		$.each(geniusResults.allItems, function(key, val) {
 			var item = geniusResults.allItems[key];
@@ -767,6 +836,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfIMDBRating: function() {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		var ImdbRatings = [];
 		$.each(geniusResults.allItems, function(key, val) {
@@ -805,6 +879,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfMoviesByIMDBRating: function(rating) {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		rating = parseInt(rating, 10);
 		$.each(geniusResults.allItems, function(key, val) {
@@ -841,6 +920,11 @@ var MediaBrowser = {
 		});
 	},
 	showListOfUnwatched: function() {
+		util.doHud({
+			show: true,
+			labelText: "Loading Data...",
+			detailsLabelText: "Please Wait..."
+		});
 		var tableView = [];
 		$.each(geniusResults.allItems, function(key, val) {
 			var item = geniusResults.allItems[key];
@@ -872,70 +956,109 @@ var MediaBrowser = {
 		});
 	},
 	startWorker: function() {
+		var refreshIn = 2880; //48 hours
+		var current = new Date();
+		var lastSeen = util.getItem("lastRefresh");
+		if (lastSeen === null) {
+			lastSeen = new Date("2010-01-01T23:44:52.790Z");
+		} else {
+			lastSeen = new Date(lastSeen);
+		}
+		var minutesSinceLastRefresh = (current.getTime() - lastSeen.getTime()) / 60000;
+		var needsRefresh = false;
+
+		if (minutesSinceLastRefresh > 2880) {
+			needsRefresh = true;
+		}
 
 		cache.getJson("genius", function(d) {
 			if (d !== null) {
+				//uncomment this later!
 				geniusResults = d;
 			}
-			var MBUrl = util.getFirstMBServer();
-			MBUrl += "library?lightData=0";
-			console.log("making first genius request: " + MBUrl);
+
+			if (geniusResults.refreshQueue.length > 0) {
+				MediaBrowser.processGeniusQueue();
+				return;
+			}
+
+			if (needsRefresh === false) {
+				return;
+			}
+
+			util.setItem("lastRefresh", new Date().toISOString());
+
+			var MBUrl = util.getRandomMBServer();
+			MBUrl += "library";
+
+			util.setStatusBarMessage("Requesing All Metadata");
 
 			$.ajax({
 				url: MBUrl,
 				dataType: 'json',
 				timeout: 3000000,
 				success: function(d) {
-					console.log("first req successful");
-					MediaBrowser.loopGeniusWorker(d);
+
+					$.each(d.Data.Children, function(key, val) {
+						var item = d.Data.Children[key];
+						if (item.Type == "Folder") {
+							geniusResults.refreshQueue.push({
+								Id: item.Id,
+								title: item.Name
+							});
+						}
+					});
+					cache.saveJson("genius", geniusResults);
+					MediaBrowser.processGeniusQueue();
 				}
 			});
-			/*
-			 */
+		});
+
+	},
+	processGeniusQueue: function() {
+		util.setStatusBarMessage(geniusResults.refreshQueue.length + " items in queue");
+		//queue them up
+		MBUrl = util.getRandomMBServer();
+		$.each(geniusResults.refreshQueue, function(key) {
+			console.log(MBUrl + "library?lightData=0&Id=" + geniusResults.refreshQueue[key].Id);
+			$.ajaxq("geniusWorker", {
+				url: MBUrl + "library?lightData=0&Id=" + geniusResults.refreshQueue[key].Id,
+				dataType: 'json',
+				timeout: 3000000,
+				success: function(d) {
+					util.setStatusBarMessage(geniusResults.refreshQueue[key].title + " complete");
+					geniusResults.refreshQueue.splice(key, 1);
+					MediaBrowser.saveGeniusResults(d);
+					if (geniusResults.refreshQueue.length === 0) {
+						util.setStatusBarMessage("All Metadata refreshed");
+					}
+				}
+			});
 		});
 	},
-	loopGeniusWorker: function(d) {
-		var MBUrl = util.getFirstMBServer();
-		var doesIdExist = function(source, searchID) {
+	saveGeniusResults: function(d) {
+		var doesIdExist = function(searchID) {
 			var exists = false;
-			$.each(source, function(thisItem) {
-				if (source[thisItem].Id == searchID) {
+			$.each(geniusResults.allItems, function(x) {
+				if (geniusResults.allItems[x].Id == searchID) {
 					exists = true;
 					return false;
 				}
 			});
 			return exists;
 		};
+
 		$.each(d.Data.Children, function(key, val) {
 			var item = d.Data.Children[key];
 			if (item.Type == "Movie") {
 				//save new items to geniusResults	
-				if (doesIdExist(geniusResults.allItems, item.Id) === false) {
+				if (doesIdExist(item.Id) === false) {
+					//console.log("saved");
 					geniusResults.allItems.push(item);
 				}
 			}
 		});
 		cache.saveJson("genius", geniusResults);
-		console.log("Saved genius");
-
-		$.each(d.Data.Children, function(key, val) {
-			var item = d.Data.Children[key];
-			var counter = 0;
-			if (item.Type == "Folder") {
-				counter++;
-				//queue up the next ones
-				$.ajaxq("geniusWorker", {
-					url: MBUrl + "library?lightData=0&Id=" + item.Id,
-					dataType: 'json',
-					timeout: 3000000,
-					success: function(d) {
-						console.log("Processing: " + item.Id);
-						MediaBrowser.loopGeniusWorker(d);
-					}
-				});
-			}
-		});
-		console.log("" + counter + " added to queue");
 	}
 
 };

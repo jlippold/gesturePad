@@ -138,7 +138,7 @@ var DirecTV = {
 				DirecTV.checkIfWorkerIsComplete();
 			},
 			error: function(x, y, z) {
-				console.log("Refresh Channel " + c.number + " Error " + server);
+				//console.log("Refresh Channel " + c.number + " Error " + server);
 				//remove it from the queue
 				document.ajaxq.q[queueName].shift();
 				DirecTV.checkIfWorkerIsComplete();

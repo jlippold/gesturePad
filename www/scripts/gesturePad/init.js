@@ -7,6 +7,7 @@ var workerTimer = null;
 var sleepTimer = null;
 var scrollstop = null;
 var geniusResults = {
+	refreshQueue: [],
 	allItems: []
 };
 var init = {
@@ -33,6 +34,9 @@ var init = {
 		notify.clearAllBadges();
 		ui.initiateBindings();
 		settings.loadSettings();
+		if (settings.userSettings.isSetup === false) {
+			return;
+		}
 		MediaBrowser.startWorker();
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();
@@ -47,6 +51,7 @@ var init = {
 		util.getRoomStatus();
 		SleepDevice(false);
 		DirecTV.startWorker();
+		MediaBrowser.startWorker();
 		ui.queryNowPlaying();
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();

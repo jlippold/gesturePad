@@ -28,6 +28,10 @@
 	</array>
 	<key>Plugins</key>
 	<dict>
+		<key>CDVStatusBarOverlay</key>
+		<string>CDVStatusBarOverlay</string>
+		<key>ProgressHud</key>
+		<string>ProgressHud</string>
 		<key>ActionSheet</key>
 		<string>ActionSheet</string>
 		<key>applicationPreferences</key>

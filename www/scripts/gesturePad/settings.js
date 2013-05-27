@@ -37,6 +37,7 @@ var settings = {
 			configURL: "mbeg.xml",
 			roomIndex: 0,
 			deviceIndex: 0,
+			isSetup: true,
 			rooms: []
 		};
 		//load from IOS prefs
@@ -113,6 +114,7 @@ var settings = {
 				}
 			}
 			if (hasRoom === false) {
+				settingsObj.isSetup = false;
 				util.doAlert("No Servers are defined. Go to settings to add a server.");
 				util.splash("hide");
 			}

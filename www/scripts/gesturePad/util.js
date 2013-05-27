@@ -1,4 +1,22 @@
 var util = {
+	showingHud: false,
+	doHud: function(o) {
+		if (util.showingHud && o.show) {
+			return; //hud is already displayed, break the fuck out
+		}
+		var hud = window.plugins.progressHud;
+		if (o.show) {
+			util.showingHud = true;
+			hud.show({
+				mode: "indeterminate",
+				labelText: o.labelText,
+				detailsLabelText: o.detailsLabelText
+			}, function() {});
+		} else {
+			util.showingHud = false;
+			hud.hide();
+		}
+	},
 	compare: function(a, b) {
 		if (a.catIndex < b.catIndex)
 			return -1;
@@ -62,6 +80,20 @@ var util = {
 			}
 		} catch (e) {}
 	},
+	setStatusBarMessage: function(text) {
+		console.log(text);
+		var statusBar = window.plugins.CDVStatusBarOverlay;
+		// Send a message to the statusbar
+		statusBar.setStatusBar({
+			"message": text,
+			"animation": "Shrink",
+			"showSpinner": false
+		});
+		//wait 10 seconds then clear them and return status bar to normal
+		setTimeout(function() {
+			statusBar.clearStatusBar();
+		}, 3000);
+	},
 	getEGBaseUrl: function() {
 		var room = util.getCurrentRoom();
 		var devices = room.devices;
@@ -71,6 +103,19 @@ var util = {
 			}
 		}
 		return "";
+	},
+	getRandomMBServer: function() {
+		var MBArray = [];
+		var MBUrl = "";
+		for (var x = 0; x < settings.userSettings.rooms.length; x++) {
+			devices = settings.userSettings.rooms[x].devices;
+			for (var i = 0; i < devices.length; i++) {
+				if (devices[i].shortname == "MCE") {
+					MBArray.push("http://" + devices[i].IPAddress + ":" + devices[i].ServicePort + "/mbwebapi/service/");
+				}
+			}
+		}
+		return MBArray[Math.floor(Math.random() * MBArray.length)];
 	},
 	getFirstMBServer: function() {
 		var MBUrl = "";
@@ -132,6 +177,13 @@ var util = {
 			}
 		}
 		return false;
+	},
+	getEpochTime: function() {
+		var d = new Date();
+		return Math.round(d.getTime());
+	},
+	epochToDateObject: function(n) {
+		return new Date(n * 1000);
 	},
 	getRoomStatus: function() {
 		var url = util.getEGBaseUrl();
@@ -239,7 +291,7 @@ var util = {
 		try {
 			return localStorage.getItem(key);
 		} catch (e) {
-			if (arguments.length == 1) {
+			if (arguments.length == 2) {
 				return defaultVal;
 			} else {
 				return "";
