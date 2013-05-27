@@ -32,7 +32,7 @@
 {
     
     MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-    
+        [overlay hide];
     NSString *message = @"";
     message = [options objectForKey:@"message"];
     
@@ -52,12 +52,12 @@
     overlay.detailViewMode = MTDetailViewModeHistory;
     
     BOOL showSpinner = NO;
-    showSpinner = [[options objectForKey:@"showSpinner"] boolValue];
+    showSpinner = ![[options objectForKey:@"showSpinner"] boolValue];
     overlay.hidesActivity = showSpinner;
     
-    
     overlay.delegate = nil;
-    overlay.progress = 0.2;
+    overlay.progress = 0.1;
+    [overlay show];
     [overlay postMessage:message];
     
 }

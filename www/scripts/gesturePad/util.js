@@ -82,17 +82,19 @@ var util = {
 	},
 	setStatusBarMessage: function(text) {
 		console.log(text);
+		util.setStatusBarForceClear();
 		var statusBar = window.plugins.CDVStatusBarOverlay;
 		// Send a message to the statusbar
 		statusBar.setStatusBar({
 			"message": text,
 			"animation": "Shrink",
-			"showSpinner": false
+			"showSpinner": true
 		});
-		//wait 10 seconds then clear them and return status bar to normal
-		setTimeout(function() {
-			statusBar.clearStatusBar();
-		}, 3000);
+
+	},
+	setStatusBarForceClear: function() {
+		var statusBar = window.plugins.CDVStatusBarOverlay;
+		statusBar.clearStatusBar();
 	},
 	getEGBaseUrl: function() {
 		var room = util.getCurrentRoom();

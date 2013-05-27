@@ -4,10 +4,11 @@ var appendOncetoQueryString = "";
 var npTimer, inputTimer, clickEventType, slideTimer;
 var guide = {};
 var workerTimer = null;
-var sleepTimer = null;
 var scrollstop = null;
 var geniusResults = {
 	refreshQueue: [],
+	Titles: {},
+	TitlesQueue: {},
 	allItems: []
 };
 var init = {
@@ -47,9 +48,8 @@ var init = {
 	},
 	onResume: function() {
 		settings.checkSettingsForUpdate();
-		clearAllBadges();
+		notify.clearAllBadges();
 		util.getRoomStatus();
-		SleepDevice(false);
 		DirecTV.startWorker();
 		MediaBrowser.startWorker();
 		ui.queryNowPlaying();

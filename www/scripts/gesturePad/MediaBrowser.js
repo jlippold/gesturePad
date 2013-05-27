@@ -273,7 +273,7 @@ var MediaBrowser = {
 				});
 			});
 
-			if (geniusResults.allItems.length > 0) {
+			if (Object.keys(geniusResults.Titles).length > 0) {
 				tableView.push({
 					'textLabel': 'Genres',
 					'detailTextLabel': "Movies Separated By Genre",
@@ -440,8 +440,7 @@ var MediaBrowser = {
 		});
 		var tableView = [];
 		var ProductionYears = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.ProductionYear !== "" && item.ProductionYear !== null) {
 				if (jQuery.inArray(item.ProductionYear, ProductionYears) == -1) {
 					ProductionYears.push(item.ProductionYear);
@@ -479,8 +478,7 @@ var MediaBrowser = {
 			detailsLabelText: "Please Wait..."
 		});
 		var tableView = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.ProductionYear == year) {
 				tableView.push({
 					'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
@@ -516,8 +514,7 @@ var MediaBrowser = {
 		});
 		var tableView = [];
 		var Genres = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.Genres) {
 				for (var i = 0; i < item.Genres.length; i++) {
 					if (item.Genres[i] !== "" && item.Genres[i] !== null) {
@@ -558,8 +555,7 @@ var MediaBrowser = {
 			detailsLabelText: "Please Wait..."
 		});
 		var tableView = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.Genres) {
 				for (var i = 0; i < item.Genres.length; i++) {
 					if (item.Genres[i] == genre) {
@@ -599,8 +595,7 @@ var MediaBrowser = {
 		});
 		var tableView = [];
 		var Actors = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.Actors) {
 				for (var i = 0; i < item.Actors.length; i++) {
 					if ($.trim(item.Actors[i].Name) !== "" && item.Actors[i].Name !== null) {
@@ -608,16 +603,18 @@ var MediaBrowser = {
 							Actors.push(item.Actors[i].Name);
 							var LastThenFirstName = item.Actors[i].Name.split(" ").pop().replace(/[^a-zA-Z 0-9]+/g, '');
 							LastThenFirstName += ", " + item.Actors[i].Name.split(" ")[0].replace(/[^a-zA-Z 0-9]+/g, '');
-							tableView.push({
-								'textLabel': LastThenFirstName,
-								'detailTextLabel': "",
-								'icon': "greyarrow",
-								'sectionHeader': LastThenFirstName.substring(0, 1).toUpperCase(),
-								'type': 'CustomFolder',
-								'folderType': 'Actors',
-								'customSort': LastThenFirstName,
-								'ActualName': item.Actors[i].Name
-							});
+							if (LastThenFirstName.length > 4) {
+								tableView.push({
+									'textLabel': LastThenFirstName,
+									'detailTextLabel': "",
+									'icon': "greyarrow",
+									'sectionHeader': LastThenFirstName.substring(0, 1).toUpperCase(),
+									'type': 'CustomFolder',
+									'folderType': 'Actors',
+									'customSort': LastThenFirstName,
+									'ActualName': item.Actors[i].Name
+								});
+							}
 						}
 					}
 				}
@@ -645,8 +642,7 @@ var MediaBrowser = {
 			detailsLabelText: "Please Wait..."
 		});
 		var tableView = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.Actors) {
 				for (var i = 0; i < item.Actors.length; i++) {
 					if (item.Actors[i].Name == actor) {
@@ -686,25 +682,26 @@ var MediaBrowser = {
 		});
 		var tableView = [];
 		var Directors = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.Directors) {
 				for (var i = 0; i < item.Directors.length; i++) {
-					if ($.trim(item.Directors[i].Name) !== "" && item.Directors[i] !== null) {
+					if ($.trim(item.Directors[i]) !== "" && item.Directors[i] !== null) {
 						if (jQuery.inArray(item.Directors[i], Directors) == -1) {
 							Directors.push(item.Directors[i]);
 							var LastThenFirstName = item.Directors[i].split(" ").pop().replace(/[^a-zA-Z 0-9]+/g, '');
 							LastThenFirstName += ", " + item.Directors[i].split(" ")[0].replace(/[^a-zA-Z 0-9]+/g, '');
-							tableView.push({
-								'textLabel': LastThenFirstName,
-								'detailTextLabel': "",
-								'icon': "greyarrow",
-								'sectionHeader': LastThenFirstName.substring(0, 1).toUpperCase(),
-								'type': 'CustomFolder',
-								'folderType': 'Directors',
-								'customSort': LastThenFirstName,
-								'ActualName': item.Directors[i]
-							});
+							if (LastThenFirstName.length > 4) {
+								tableView.push({
+									'textLabel': LastThenFirstName,
+									'detailTextLabel': "",
+									'icon': "greyarrow",
+									'sectionHeader': LastThenFirstName.substring(0, 1).toUpperCase(),
+									'type': 'CustomFolder',
+									'folderType': 'Directors',
+									'customSort': LastThenFirstName,
+									'ActualName': item.Directors[i]
+								});
+							}
 						}
 					}
 				}
@@ -732,8 +729,7 @@ var MediaBrowser = {
 			detailsLabelText: "Please Wait..."
 		});
 		var tableView = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.Directors) {
 				for (var i = 0; i < item.Directors.length; i++) {
 					if (item.Directors[i] == Director) {
@@ -773,8 +769,7 @@ var MediaBrowser = {
 		});
 		var tableView = [];
 		var OfficialRatings = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.OfficialRating !== "" && item.OfficialRating !== null) {
 				if (jQuery.inArray(item.OfficialRating, OfficialRatings) == -1) {
 					OfficialRatings.push(item.OfficialRating);
@@ -812,8 +807,7 @@ var MediaBrowser = {
 			detailsLabelText: "Please Wait..."
 		});
 		var tableView = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.OfficialRating == OfficialRating) {
 				tableView.push({
 					'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
@@ -849,8 +843,7 @@ var MediaBrowser = {
 		});
 		var tableView = [];
 		var ImdbRatings = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (util.isNumeric(item.ImdbRating) && item.ImdbRating > 0) {
 				var imdbRating = Math.floor(item.ImdbRating);
 				if (jQuery.inArray(imdbRating, ImdbRatings) == -1) {
@@ -892,8 +885,7 @@ var MediaBrowser = {
 		});
 		var tableView = [];
 		rating = parseInt(rating, 10);
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (util.isNumeric(item.ImdbRating) && item.ImdbRating > 0) {
 				var imdbRating = Math.floor(item.ImdbRating);
 				if (imdbRating == rating) {
@@ -932,8 +924,7 @@ var MediaBrowser = {
 			detailsLabelText: "Please Wait..."
 		});
 		var tableView = [];
-		$.each(geniusResults.allItems, function(key, val) {
-			var item = geniusResults.allItems[key];
+		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.WatchedPercentage === 0) {
 				tableView.push({
 					'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
@@ -962,49 +953,29 @@ var MediaBrowser = {
 		});
 	},
 	startWorker: function() {
-		var refreshIn = 10080; //1 week
-		var current = new Date();
-		var lastSeen = util.getItem("lastRefresh");
-		if (lastSeen === null) {
-			lastSeen = new Date("2010-01-01T23:44:52.790Z");
-		} else {
-			lastSeen = new Date(lastSeen);
-		}
-		var minutesSinceLastRefresh = (current.getTime() - lastSeen.getTime()) / 60000;
-		var needsRefresh = false;
 
-		if (minutesSinceLastRefresh > refreshIn) {
-			needsRefresh = true;
-		}
-
+		//start out by pulling the root folders, ans adding them to the queue
 		cache.getJson("genius", function(d) {
+
 			if (d !== null) {
-				//uncomment this later!
 				geniusResults = d;
 			}
+			geniusResults.refreshQueue = []; //clear the queue
+			geniusResults.TitlesQueue = []; //clear the queue
 
 			if (geniusResults.refreshQueue.length > 0) {
 				MediaBrowser.processGeniusQueue();
 				return;
 			}
 
-			if (needsRefresh === false) {
-				return;
-			}
+			$.ajaxq("genuisWorker"); //clear the queue
 
-			util.setItem("lastRefresh", new Date().toISOString());
-
-			var MBUrl = util.getRandomMBServer();
-			MBUrl += "library";
-
-			util.setStatusBarMessage("Requesing All Metadata");
-
+			util.setStatusBarMessage("Requesing Root Items");
 			$.ajax({
-				url: MBUrl,
+				url: util.getRandomMBServer() + "library?lightData=1",
 				dataType: 'json',
-				timeout: 3000000,
+				timeout: settings.userSettings.MBServiceTimeout,
 				success: function(d) {
-
 					$.each(d.Data.Children, function(key, val) {
 						var item = d.Data.Children[key];
 						if (item.Type == "Folder") {
@@ -1014,6 +985,7 @@ var MediaBrowser = {
 							});
 						}
 					});
+					//console.log(geniusResults.refreshQueue);
 					cache.saveJson("genius", geniusResults);
 					MediaBrowser.processGeniusQueue();
 				}
@@ -1021,49 +993,94 @@ var MediaBrowser = {
 		});
 	},
 	processGeniusQueue: function() {
-		util.setStatusBarMessage(geniusResults.refreshQueue.length + " items in queue");
-		//queue them up
-		MBUrl = util.getRandomMBServer();
-		$.each(geniusResults.refreshQueue, function(key) {
-			console.log(MBUrl + "library?lightData=0&Id=" + geniusResults.refreshQueue[key].Id);
-			$.ajaxq("geniusWorker", {
-				url: MBUrl + "library?lightData=0&Id=" + geniusResults.refreshQueue[key].Id,
+		if (geniusResults.refreshQueue.length > 0) {
+			//Pull the last folder and queue up all children
+			var toProcess = geniusResults.refreshQueue[geniusResults.refreshQueue.length - 1];
+			util.setStatusBarMessage("Indexing: " + toProcess.title);
+			var thisURL = util.getRandomMBServer() + "library?lightData=1&Id=" + toProcess.Id;
+			console.log(thisURL);
+			$.ajax({
+				url: thisURL,
 				dataType: 'json',
-				timeout: 3000000,
+				timeout: settings.userSettings.MBServiceTimeout,
 				success: function(d) {
-					util.setStatusBarMessage(geniusResults.refreshQueue[key].title + " complete");
-					geniusResults.refreshQueue.splice(key, 1);
-					MediaBrowser.saveGeniusResults(d);
-					if (geniusResults.refreshQueue.length === 0) {
-						util.setStatusBarMessage("All Metadata refreshed");
+					var foundOne = false;
+					if (d.Data) {
+						$.each(d.Data.Children, function(x) {
+							var thisObj = d.Data.Children[x];
+							var thisId = thisObj.Id;
+							if (thisObj.Type == "Movie") {
+								if (!geniusResults.Titles[thisId]) { //doesnt have prev saved metadata
+									if (!geniusResults.TitlesQueue[thisId]) { //is not in current queue
+										foundOne = true;
+										geniusResults.TitlesQueue[thisId] = {};
+										$.ajaxq("genuisWorker", {
+											url: util.getRandomMBServer() + "library/?Id=" + thisId + "&lightData=0",
+											dataType: 'json',
+											timeout: settings.userSettings.MBServiceTimeout,
+											success: function(x) {
+												MediaBrowser.saveGeniusResult(x);
+											},
+											error: function() {
+												console.log("error");
+												delete geniusResults.TitlesQueue[thisId];
+											}
+										});
+									}
+								}
+							}
+						});
+					} else {
+						console.log("no data in response.");
 					}
-				}
-			});
-		});
-	},
-	saveGeniusResults: function(d) {
-		var doesIdExist = function(searchID) {
-			var exists = false;
-			$.each(geniusResults.allItems, function(x) {
-				if (geniusResults.allItems[x].Id == searchID) {
-					exists = true;
-					return false;
-				}
-			});
-			return exists;
-		};
 
-		$.each(d.Data.Children, function(key, val) {
-			var item = d.Data.Children[key];
-			if (item.Type == "Movie") {
-				//save new items to geniusResults	
-				if (doesIdExist(item.Id) === false) {
-					//console.log("saved");
-					geniusResults.allItems.push(item);
+					if (foundOne === false) {
+						//console.log("nothing new");
+						util.setStatusBarMessage(toProcess.title + " Completed");
+						geniusResults.refreshQueue.pop();
+						MediaBrowser.processGeniusQueue();
+					}
+				},
+				error: function() {
+					console.log("process error");
 				}
-			}
-		});
-		cache.saveJson("genius", geniusResults);
+			});
+		} else {
+			util.setStatusBarMessage("All Titles Indexed.");
+			setTimeout(function() {
+				util.setStatusBarForceClear();
+			}, 1500);
+		}
+	},
+	saveGeniusResult: function(d) {
+		var movieObject = d.Data;
+		var id = movieObject.Id;
+
+		//save it
+		geniusResults.Titles[id] = movieObject;
+		//remove it from queue
+		delete geniusResults.TitlesQueue[id];
+
+		var remaining = Object.keys(geniusResults.TitlesQueue).length;
+		if (remaining % 50 === 0) { //alert the user every 50 items
+			//save to disk
+			cache.saveJson("genius", geniusResults);
+			var parentFolder = "";
+			//try to get the name of the parent folder
+			$.each(geniusResults.refreshQueue, function(x) {
+				if (geniusResults.refreshQueue[x].Id == movieObject.parentId) {
+					parentFolder = geniusResults.refreshQueue[x].title;
+				}
+			});
+			util.setStatusBarMessage("Indexing " + remaining + " " + parentFolder + " Titles");
+		}
+
+		if (remaining === 0) {
+			//folder was totally indexed, do next
+			geniusResults.refreshQueue.pop();
+			cache.saveJson("genius", geniusResults);
+			MediaBrowser.processGeniusQueue();
+		}
 	}
 
 };

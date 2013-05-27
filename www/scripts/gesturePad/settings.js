@@ -3,6 +3,11 @@ var settings = {
 	loadSettings: function() {
 		//defaults
 		settings.userSettings = settings.getSettingsObject();
+
+		if (settings.userSettings.isSetup === false) {
+			return false;
+		}
+
 		settings.userSettings.deviceIndex = util.getItem("deviceIndex", 0);
 		settings.userSettings.roomIndex = util.getItem("roomIndex", 0);
 		if (util.isNumeric(settings.userSettings.roomIndex) === false || util.isNumeric(settings.userSettings.deviceIndex) === false) {

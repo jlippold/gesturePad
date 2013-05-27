@@ -1,34 +1,16 @@
-<!DOCTYPE html> 
-<html> 
-<head> 
-	<title>gesturePad</title> 
+<!DOCTYPE html>
+<html>
+<head>
+	<title>gesturePad</title>
 	<meta content="yes" name="apple-mobile-web-app-capable" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0" />
 	<meta charset="utf-8">
 	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-	<script>
-		var deviceType = "tablet";
-		var HorzLongSwipeThreshold = 400;
-		var VertLongSwipeThreshold = 600;
-	</script>
-	<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" charset="utf-8" src="cordova-2.2.0.js"></script>
-	<script type="text/javascript" charset="utf-8" src="ChildBrowser.js"></script>
-	<script type="text/javascript" charset="utf-8" src="ActionSheet.js"></script>
-	<script type="text/javascript" charset="utf-8" src="taptoscroll.js"></script>
-	<script type="text/javascript" charset="utf-8" src="applicationPreferences.js"></script>
-	<script type="text/javascript" charset="utf-8" src="PushNotification.js"></script>
-	<script type="text/javascript" charset="utf-8" src="NativeTable.js"></script>
-	<script type="text/javascript" charset="utf-8" src="jQuery.fastClick.js"></script>
-	<script type="text/javascript" charset="utf-8" src="gestures.js?r=1"></script>
-	<script type="text/javascript" charset="utf-8" src="script.js?r=6"></script>
-
 	<link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" href="tablet.css" />
+</head>
 
-</head> 
-	
-<body onload="onBodyLoad()">
+<body>
 
 	<div id="top">
 		<div class="gradientBorder top"></div>
@@ -43,15 +25,15 @@
 
 	<div id="container">
 		<div id="card">
-		  <div id="frontFace" class="front face">
+			<div id="frontFace" class="front face">
 				<div class="toptrans" id="toptrans">
 					<div class="seekbarContainer" id="seekbarContainer">
 						<p id='NowPlayingTitle'>&nbsp;</p>
 						<div class="timespanleft" id="timespanleft">0:00</div>
-							<div class="slider" id="slider" style="width: 69%" >
-								<div class="sliderh" id='timebar'></div>        
-								<div class="seekto" id='timeseek'></div>
-							</div>
+						<div class="slider" id="slider" style="width: 69%" >
+							<div class="sliderh" id='timebar'></div>
+							<div class="seekto" id='timeseek'></div>
+						</div>
 						<div class="timespanright" id="timespanright">-1:00</div>
 
 						<div class="left" id="btnConfig" ></div>
@@ -59,20 +41,13 @@
 					</div>
 				</div>
 				<div class="gradientBorder bottom" style="top: 79px"></div>
-				<div id="bgPic" class="noart">
-				</div>
-				<div id="gestureCallback">
-
-				</div>
-		  		<canvas id="gestures_canvas"></canvas>
-		  </div>
-		  <div id="backFace" class="back face center">
-
-		  </div>
+				<div id="bgPic" class="noart"></div>
+				<div id="gestureCallback"></div>
+				<canvas id="gestures_canvas"></canvas>
+			</div>
+			<div id="backFace" class="back face center"></div>
 		</div>
 	</div>
-	
-	
 
 	<div id="bottom">
 		<div id="bottomGrabber">
@@ -90,7 +65,7 @@
 			<div class="volume control" id="btnMute" ></div>
 			<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
 				<div class="slider" id="VolumeSlider" >
-					<div class="sliderh" id="VolumeSliderh" ></div>        
+					<div class="sliderh" id="VolumeSliderh" ></div>
 					<div class="seekto" id="VolumeSliderSeek" ></div>
 				</div>
 			</div>
@@ -98,28 +73,28 @@
 	</div>
 
 	<div id="browser">
-		<p id="bottomText"><span>&nbsp;</span></p>
+		<p id="bottomText">
+			<span>&nbsp;</span>
+		</p>
 		<div id="boxCoverBack">&crarr;</div>
-		
+
 		<div id="boxCoverContainer">
+
 			<div id="covers"></div>
 		</div>
 	</div>
-		
 
 	<div style="display:none" id="tmpSpinner">
-	  <div class="spincontainer">
-	    <div class="spinner">
-	      Loading Data...
-	    </div>
-	  </div>
+		<div class="spincontainer">
+			<div class="spinner">Loading Data...</div>
+		</div>
 	</div>
 	<div style="display:none" id='Filter'>
 		<div class="gradientBorder top"></div>
 		<div class="searchContainer">
 			<form id="searchform" class="searchform">
 				<span class="icon-search"></span>
-					<input id="searchbox" type="text" class="searcher" placeholder="Filter List">
+				<input id="searchbox" type="text" class="searcher" placeholder="Filter List">
 				<span class="icon-clear" id="searchClear" style="display: none;"></span>
 			</form>
 		</div>
@@ -127,7 +102,16 @@
 
 	<p id="hud"></p>
 
-  
+	<script type="text/javascript" src="scripts/jQuery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="scripts/lib.min.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins.min.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad.min.js"></script>
+	<script type="text/javascript">
+		var deviceType = "tablet";
+		var HorzLongSwipeThreshold = 400;
+		var VertLongSwipeThreshold = 600;
+		init.PhoneGapReady();
+	</script>
 </body>
 
 </html>
