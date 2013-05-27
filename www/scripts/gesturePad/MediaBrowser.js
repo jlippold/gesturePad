@@ -237,7 +237,6 @@ var MediaBrowser = {
 					MediaBrowser.showListOfUnwatched();
 					break;
 			}
-
 		} else {
 			MBUrl += "library/?lightData=1&Id=" + item.guid;
 			cache.getJson(MBUrl, function(d) {
@@ -350,7 +349,14 @@ var MediaBrowser = {
 			nt.setRowSelectCallBackFunction(function(rowId) {
 				var item = tableView[rowId];
 				nt.hideTable(function() {
-					MediaBrowser.ShowItems(item);
+					util.doHud({
+						show: true,
+						labelText: "Loading Data...",
+						detailsLabelText: "Please Wait..."
+					});
+					setTimeout(function() {
+						MediaBrowser.ShowItems(item);
+					}, 250);
 				});
 			});
 			nt.setTableData(tableView);
@@ -956,7 +962,7 @@ var MediaBrowser = {
 		});
 	},
 	startWorker: function() {
-		var refreshIn = 2880; //48 hours
+		var refreshIn = 10080; //1 week
 		var current = new Date();
 		var lastSeen = util.getItem("lastRefresh");
 		if (lastSeen === null) {
@@ -967,7 +973,7 @@ var MediaBrowser = {
 		var minutesSinceLastRefresh = (current.getTime() - lastSeen.getTime()) / 60000;
 		var needsRefresh = false;
 
-		if (minutesSinceLastRefresh > 2880) {
+		if (minutesSinceLastRefresh > refreshIn) {
 			needsRefresh = true;
 		}
 
@@ -1013,7 +1019,6 @@ var MediaBrowser = {
 				}
 			});
 		});
-
 	},
 	processGeniusQueue: function() {
 		util.setStatusBarMessage(geniusResults.refreshQueue.length + " items in queue");

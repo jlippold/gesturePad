@@ -248,6 +248,9 @@ var util = {
 		}
 	},
 	doAlert: function(msg) {
+		util.doHud({
+			show: false
+		});
 		try {
 			navigator.notification.alert(msg, null, "gesturePad");
 		} catch (e) {
