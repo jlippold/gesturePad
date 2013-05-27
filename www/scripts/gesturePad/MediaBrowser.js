@@ -952,7 +952,38 @@ var MediaBrowser = {
 			MediaBrowser.playTitle($(tr), item.textLabel, false);
 		});
 	},
-	startWorker: function() {
+	startWorker: function(firstRun) {
+
+		var refreshIn = 2880; //2 days
+		var current = new Date();
+		var lastSeen = util.getItem("lastRefresh");
+		if (lastSeen === null) {
+			lastSeen = new Date("2010-01-01T23:44:52.790Z");
+		} else {
+			lastSeen = new Date(lastSeen);
+		}
+		var minutesSinceLastRefresh = (current.getTime() - lastSeen.getTime()) / 60000;
+		var needsRefresh = false;
+
+		if (minutesSinceLastRefresh > refreshIn) {
+			needsRefresh = true;
+		}
+
+		if (firstRun === true && needsRefresh === false) {
+			//just load the pull the results from cache
+			console.log("First run, no refresh");
+			cache.getJson("genius", function(d) {
+				if (d !== null) {
+					geniusResults = d;
+				}
+			});
+			return;
+		}
+
+		if (firstRun === false && needsRefresh === false) {
+			console.log("no refresh needed");
+			return;
+		}
 
 		//start out by pulling the root folders, ans adding them to the queue
 		cache.getJson("genius", function(d) {
@@ -960,17 +991,15 @@ var MediaBrowser = {
 			if (d !== null) {
 				geniusResults = d;
 			}
-			geniusResults.refreshQueue = []; //clear the queue
-			geniusResults.TitlesQueue = []; //clear the queue
 
-			if (geniusResults.refreshQueue.length > 0) {
-				MediaBrowser.processGeniusQueue();
-				return;
-			}
+			//clear the queue
+			geniusResults.refreshQueue = [];
+			geniusResults.TitlesQueue = [];
+			$.ajaxq("genuisWorker");
 
-			$.ajaxq("genuisWorker"); //clear the queue
+			util.setItem("lastRefresh", new Date().toISOString());
 
-			util.setStatusBarMessage("Requesing Root Items");
+			util.setStatusBarMessage("Searching for new titles");
 			$.ajax({
 				url: util.getRandomMBServer() + "library?lightData=1",
 				dataType: 'json',
@@ -986,6 +1015,7 @@ var MediaBrowser = {
 						}
 					});
 					//console.log(geniusResults.refreshQueue);
+					util.setStatusBarMessage("Searching " + geniusResults.refreshQueue.length + " folders for new titles");
 					cache.saveJson("genius", geniusResults);
 					MediaBrowser.processGeniusQueue();
 				}
@@ -996,7 +1026,7 @@ var MediaBrowser = {
 		if (geniusResults.refreshQueue.length > 0) {
 			//Pull the last folder and queue up all children
 			var toProcess = geniusResults.refreshQueue[geniusResults.refreshQueue.length - 1];
-			util.setStatusBarMessage("Indexing: " + toProcess.title);
+			util.setStatusBarMessage("Processing " + toProcess.title);
 			var thisURL = util.getRandomMBServer() + "library?lightData=1&Id=" + toProcess.Id;
 			console.log(thisURL);
 			$.ajax({
@@ -1062,7 +1092,7 @@ var MediaBrowser = {
 		delete geniusResults.TitlesQueue[id];
 
 		var remaining = Object.keys(geniusResults.TitlesQueue).length;
-		if (remaining % 50 === 0) { //alert the user every 50 items
+		if (remaining % 50 === 0) { //alert the user, and save results every 50 items
 			//save to disk
 			cache.saveJson("genius", geniusResults);
 			var parentFolder = "";
@@ -1073,6 +1103,10 @@ var MediaBrowser = {
 				}
 			});
 			util.setStatusBarMessage("Indexing " + remaining + " " + parentFolder + " Titles");
+		}
+
+		if (remaining % 25 === 0) { //clear the status every 25 items
+			util.setStatusBarForceClear();
 		}
 
 		if (remaining === 0) {

@@ -38,7 +38,7 @@ var init = {
 		if (settings.userSettings.isSetup === false) {
 			return;
 		}
-		MediaBrowser.startWorker();
+		MediaBrowser.startWorker(true);
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();
 			util.getRoomStatus();
@@ -51,7 +51,7 @@ var init = {
 		notify.clearAllBadges();
 		util.getRoomStatus();
 		DirecTV.startWorker();
-		MediaBrowser.startWorker();
+		MediaBrowser.startWorker(false);
 		ui.queryNowPlaying();
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();
