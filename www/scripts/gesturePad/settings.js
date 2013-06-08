@@ -7,7 +7,6 @@ var settings = {
 		if (settings.userSettings.isSetup === false) {
 			return false;
 		}
-
 		settings.userSettings.deviceIndex = util.getItem("deviceIndex", 0);
 		settings.userSettings.roomIndex = util.getItem("roomIndex", 0);
 		if (util.isNumeric(settings.userSettings.roomIndex) === false || util.isNumeric(settings.userSettings.deviceIndex) === false) {
@@ -16,19 +15,13 @@ var settings = {
 			settings.userSettings.roomIndex = 0;
 			settings.userSettings.deviceIndex = 0;
 		}
-		//load channels for DTV, if defined in settings
-		if (DirecTV.hasDirecTV()) {
-			DirecTV.loadChannelList();
-		}
 		util.setItem("configURL", "");
 		if (util.getItem("configURL", "") != settings.userSettings.configURL) {
 			init.loadXML();
 		}
 		util.updateStatus();
 		util.getRoomStatus();
-		setTimeout(function() {
-			util.splash("hide");
-		}, 500);
+
 	},
 	getSettingsObject: function() {
 		var settingsObj = {

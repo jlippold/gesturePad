@@ -7,6 +7,7 @@
 	<meta charset="utf-8">
 	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="tablet.css" />
 </head>
 
 <body>
@@ -87,13 +88,38 @@
 	<p id="hud"></p>
 
 	<script type="text/javascript" src="scripts/jQuery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="scripts/lib.min.js"></script>
-	<script type="text/javascript" src="scripts/phonegap.plugins.min.js"></script>
-	<script type="text/javascript" src="scripts/gesturePad.min.js"></script>
+	<script type="text/javascript" src="scripts/lib/cordova-2.2.0.js"></script>
+	<script type="text/javascript" src="scripts/lib/jQuery.ajaxQueue.js"></script>
+	<script type="text/javascript" src="scripts/lib/jQuery.fastClick.js"></script>
+	<script type="text/javascript" src="scripts/lib/jQuery.gestures.js"></script>
+	
+	<script type="text/javascript" src="scripts/phonegap.plugins/ActionSheet.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/applicationPreferences.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/ChildBrowser.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/NativeTable.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/PushNotification.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/CDVStatusBarOverlay.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/ProgressHud.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/powermanagement.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/VolumeSlider.js"></script>
+
+	
+	<script type="text/javascript" src="scripts/gesturePad/bottomDraw.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/cache.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/DirecTV.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/gesture.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/init.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/MediaBrowser.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/notify.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/settings.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/sliders.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/ui.js"></script>
+	<script type="text/javascript" src="scripts/gesturePad/util.js"></script>
+
 	<script type="text/javascript">
-		var deviceType = "phone";
-		var HorzLongSwipeThreshold = 200;
-		var VertLongSwipeThreshold = 400;
+		var deviceType = "tablet";
+		var HorzLongSwipeThreshold = 400;
+		var VertLongSwipeThreshold = 600;
 		init.PhoneGapReady();
 	</script>
 </body>

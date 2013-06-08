@@ -11,7 +11,7 @@
 	<key>EnableViewportScale</key>
 	<false/>
 	<key>AutoHideSplashScreen</key>
-	<true/>
+	<false/>
 	<key>ShowSplashScreenSpinner</key>
 	<true/>
 	<key>MediaPlaybackRequiresUserAction</key>
@@ -30,6 +30,10 @@
 	<dict>
 		<key>CDVStatusBarOverlay</key>
 		<string>CDVStatusBarOverlay</string>
+		<key>VolumeSlider</key>
+		<string>VolumeSlider</string>
+		<key>PowerManagement</key>
+		<string>PowerManagement</string>
 		<key>ProgressHud</key>
 		<string>ProgressHud</string>
 		<key>ActionSheet</key>

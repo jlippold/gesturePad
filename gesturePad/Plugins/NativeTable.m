@@ -7,6 +7,7 @@
 //
 
 #import "NativeTable.h"
+#import "Base64.h"
 
 @implementation NativeTable;
 @synthesize mainTableView = _mainTableView;
@@ -15,22 +16,23 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize navBar = _navbar;
 
+static dispatch_queue_t concurrentQueue = NULL;
+
+
 -(CDVPlugin*) initWithWebView:(UIWebView*)theWebView
 {
     self = (NativeTable*)[super initWithWebView:theWebView];
-    if (self)
-	{
-		//NSLog(@"NativeTable Initialized!");
-        
-    }
-    
     return self;
 }
 
 - (void)dealloc
 {
+
 	[_mainTableView release];
 	[_mainTableData release];
+    [_searchBar release];
+    [_searchController release];
+    [_navbar release];
     [_searchResults release];
     [super dealloc];
 }
@@ -41,6 +43,15 @@
 
 - (void)createTable:(NSArray*)arguments withDict:(NSDictionary*)options
 {
+    //status bar tap, scroll top
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"_UIApplicationSystemGestureStateChangedNotification"
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification *note) {
+                                                      [_mainTableView setContentOffset:CGPointMake(0, 0) animated:YES];
+                                                  }];
+    
+
     CGRect navBarFrame = CGRectMake(0, 0, self.webView.superview.bounds.size.width, 44.0);
     _navbar = [[UINavigationBar alloc] initWithFrame:navBarFrame];
     
@@ -240,6 +251,10 @@
 		return;
 	}
     
+    if (concurrentQueue) {
+       dispatch_release(concurrentQueue);
+    }
+    
     [_searchBar resignFirstResponder];
     
     
@@ -315,6 +330,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     // NSLog(@"Requesting: %d", section);
+    
     NSMutableArray *tmp = [[NSMutableArray alloc] init];
     if (isFiltered) {
         tmp = _searchResults.copy;
@@ -413,12 +429,75 @@
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
     
-    return cell;
+    
+    if ([item valueForKey:@"image"]) {
+        
+        NSString *url = [item valueForKey:@"image"];
+        
+        if (![url hasPrefix:@"http"]) {
+            cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+            cell.imageView.image = [self resizeImageToSize:[UIImage imageNamed:url]];
+            cell.imageView.backgroundColor = [UIColor blackColor];
+            [cell setNeedsLayout];
+        } else {
+            
+            //check if the cached version exists
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,  NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            NSString *cachedFile = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"MB_Small_%@.cache", [item valueForKey:@"guid"] ]];
+            
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:cachedFile];
+            if (fileExists) {
+                NSString *content = [NSString stringWithContentsOfFile:cachedFile encoding:NSUTF8StringEncoding error:nil];
+                NSURL *url = [NSURL URLWithString:content];
+                NSData *imageData = [NSData dataWithContentsOfURL:url];
+                cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+                cell.imageView.image = [self resizeImageToSize:[UIImage imageWithData:imageData]];
+                [cell setNeedsLayout];
+            } else {
+                dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,  0ul);
+                dispatch_async(concurrentQueue, ^{
+                    NSData *image = [[NSData alloc] initWithContentsOfURL:[[NSURL alloc] initWithString:url]];
+                    NSData* data = UIImagePNGRepresentation([UIImage imageWithData:image]);
+                    [Base64 initialize];
+                    NSString *strEncoded = [Base64 encode:data];
+                    if (![strEncoded isEqualToString:@""]) {
+                        strEncoded = [@"data:image/png;base64," stringByAppendingString:strEncoded];
+                        [strEncoded writeToFile:cachedFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                    }
+                    [Base64 release];
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        UITableViewCell *nCell = [tableView cellForRowAtIndexPath:indexPath];
+                        if ([[NSFileManager defaultManager] fileExistsAtPath:cachedFile]){
+                            NSString *content = [NSString stringWithContentsOfFile:cachedFile encoding:NSUTF8StringEncoding error:nil];
+                            NSURL *url = [NSURL URLWithString:content];
+                            NSData *imageData = [NSData dataWithContentsOfURL:url];
+                            nCell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+                            nCell.imageView.image = [self resizeImageToSize:[UIImage imageWithData:imageData]];
+                            [nCell setNeedsLayout];
+                        } else {
+                            nCell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+                            nCell.imageView.image = [self resizeImageToSize:[UIImage imageNamed:@"www/img/mb.png"]];
+                            [nCell setNeedsLayout];
+                        }
+                    });
+                });
+                cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+                cell.imageView.image = [self resizeImageToSize:[UIImage imageNamed:@"www/img/mb.png"]];
+                [cell setNeedsLayout];
+            }
+        }
+    }
+    
+
+   
+     return cell;
 }
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
+                
 	int section = indexPath.section;
     int row = indexPath.row;
     
@@ -465,6 +544,15 @@
     [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
 }
 
+- (UIImage *)resizeImageToSize:(UIImage*)image
+{
+    UIGraphicsBeginImageContext(CGSizeMake(100, 100));
+    [image drawInRect:CGRectMake(0, 0, 100, 100)];
+    UIImage *imageAfterResize = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return imageAfterResize ;
+}
+
 -(void)fadeIn
 {
     CGRect r = [_mainTableView frame];
@@ -507,6 +595,7 @@
 -(void)fadeOut
 {
     
+    
     CGRect r = [_mainTableView frame];
     r.origin.y = _offsetTop;
     [_mainTableView setFrame:r];
@@ -537,6 +626,7 @@
     
     
 }
+
 
 
 @end

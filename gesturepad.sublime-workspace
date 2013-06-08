@@ -4,6 +4,58 @@
 		"selected_items":
 		[
 			[
+				"tap",
+				"tappedEvent"
+			],
+			[
+				"lo",
+				"loaded"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"Ti",
+				"TitlesQueue"
+			],
+			[
+				"las",
+				"LastThenFirstName"
+			],
+			[
+				"fou",
+				"foundOne"
+			],
+			[
+				"pare",
+				"parentFolder"
+			],
+			[
+				"mov",
+				"movieObject"
+			],
+			[
+				"this",
+				"thisId"
+			],
+			[
+				"se",
+				"userSettings"
+			],
+			[
+				"srt",
+				"startWorker"
+			],
+			[
+				"ne",
+				"needsRefresh"
+			],
+			[
+				"showListOfR",
+				"showListOfIMDBRating"
+			],
+			[
 				"sho",
 				"showListOfActors"
 			],
@@ -240,10 +292,6 @@
 				"originalEvent"
 			],
 			[
-				"las",
-				"lastX"
-			],
-			[
 				"last",
 				"lastX"
 			],
@@ -278,10 +326,6 @@
 			[
 				"ori",
 				"orig"
-			],
-			[
-				"ne",
-				"newVal"
 			],
 			[
 				"remo",
@@ -470,50 +514,6 @@
 			[
 				"toA",
 				"toAppendNoSwitch"
-			],
-			[
-				"room",
-				"roomname"
-			],
-			[
-				"ge",
-				"gestures_canvas"
-			],
-			[
-				"gue",
-				"gestures_canvas"
-			],
-			[
-				"mo",
-				"moveTo"
-			],
-			[
-				"mar",
-				"margin-left"
-			],
-			[
-				"font-",
-				"font-weight"
-			],
-			[
-				"series",
-				"seriesname"
-			],
-			[
-				"tv",
-				"tvxml"
-			],
-			[
-				"top",
-				"topToolbar"
-			],
-			[
-				"pro",
-				"profile-links"
-			],
-			[
-				"Hon",
-				"HonorsDef"
 			]
 		]
 	},
@@ -629,28 +629,49 @@
 	},
 	"file_history":
 	[
+		"/Volumes/D$/www/DataExtractor.Web/API/doDataToolsPart1.aspx",
+		"/Volumes/D$/www/DataExtractor.Web/API/doDataToolsPart2.aspx",
+		"/Volumes/D$/www/DataExtractor.Web/web.config",
+		"/Volumes/D$/www/DataExtractor.Web/API/doGrad.aspx",
+		"/Volumes/D$/www/DataExtractor.Web/API/doDataToolsPart1New.aspx",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/ui.js",
+		"/Users/Jed/Documents/gesturePad/www/index.debug.html",
+		"/Users/Jed/Documents/gesturePad/www/index.html",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/util.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/MediaBrowser.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/phonegap.plugins/ProgressHud.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/phonegap.plugins/VolumeSlider.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/bottomDraw.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/sliders.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/init.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/phonegap.plugins/powermanagement.js",
 		"/Users/Jed/Library/Application Support/iPhone Simulator/6.1/Applications/7B6E86F4-7E7B-4896-97DF-6E1D53AC967A/Documents/genius.json",
+		"/Users/Jed/Documents/gesturePad/www/tablet.html",
+		"/Users/Jed/Documents/gesturePad/www/tablet.debug.html",
+		"/Users/Jed/Documents/gesturePad/www/style.css",
+		"/Users/Jed/Documents/gesturePad/www/scripts/phonegap.plugins/CDVStatusBarOverlay.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/phonegap.plugins/NativeTable.js",
+		"/Users/Jed/Documents/PupilPath.Mobile/src/auth.js",
+		"/Users/Jed/Documents/gesturePad/Gruntfile.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/cache.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/DirecTV.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/settings.js",
+		"/Users/Jed/Documents/PupilPath.Mobile/src/viewController.js",
 		"/Users/Jed/Documents/PupilPath.Mobile/src/course.js",
 		"/Users/Jed/Documents/PupilPath.Mobile/src/util.js",
+		"/Users/Jed/Documents/CDVStatusBarOverlay/README.md",
+		"/Users/Jed/Documents/gesturePad/www/scripts/phonegap.plugins/ChildBrowser.js",
+		"/Users/Jed/Documents/gesturePad/www/scripts/phonegap.plugins/MTStatusOverlay.js",
 		"/Users/Jed/Documents/gesturePad b4 Refactor/www/script.js",
 		"/Users/Jed/Documents/gesturePad b4 Refactor/www/style.css",
 		"/Users/Jed/Documents/gesturePad/www/css/style.css",
-		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/init.js",
 		"/Users/Jed/Documents/gesturePad/gesturepad.sublime-project",
 		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/gesture.js",
 		"/Users/Jed/Documents/gesturePad/www/scripts/lib/cordova-2.2.0.js",
 		"/Users/Jed/Library/Application Support/Sublime Text 2/Packages/User/JsFormat.sublime-settings",
-		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/util.js",
-		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/ui.js",
-		"/Users/Jed/Documents/gesturePad/www/scripts/gesturePad/sliders.js",
-		"/Users/Jed/Documents/gesturePad/www/index.debug.html",
 		"/Users/Jed/Library/Application Support/iPhone Simulator/6.1/Applications/7B6E86F4-7E7B-4896-97DF-6E1D53AC967A/gesturePad.app/www/scripts/gesturePad/util.js",
-		"/Users/Jed/Documents/gesturePad/www/index.html",
-		"/Users/Jed/Documents/PupilPath.Mobile/src/viewController.js",
 		"/Users/Jed/Documents/PupilPath.Mobile/PupilPath.iOS/www/index.html",
-		"/Users/Jed/Documents/PupilPath.Mobile/src/auth.js",
 		"/Users/Jed/Documents/gesturePad/www/scripts/cache.js",
-		"/Users/Jed/Documents/gesturePad/Gruntfile.js",
 		"/Users/Jed/Documents/gesturePad/package.json",
 		"/Users/Jed/Documents/gesturePad/www/scripts/gesture.js",
 		"/Users/Jed/Library/Application Support/Sublime Text 2/Packages/HTMLBeautify/HTMLBeautify.sublime-settings",
@@ -696,7 +717,6 @@
 		"/Volumes/C$/inetpub/wwwroot/MBPlaylist/web.config",
 		"/Users/Jed/Documents/gesturePad/gesturePad/Plugins/README",
 		"/Users/Jed/Documents/phonegap-plugins/iOS/ChildBrowser/index.html",
-		"/Users/Jed/Documents/gesturePad/www/tablet.html",
 		"/Volumes/C$/Scripts/doRecent.vbs",
 		"/Volumes/C$/Scripts/prowl.vbs",
 		"/Volumes/C$/Scripts/tv.vbs",
@@ -736,27 +756,7 @@
 		"/Volumes/D$/www/DEV1/Skedula/home/index.aspx",
 		"/Volumes/D$/www/DEV1/Skedula/mobile/ajax/assignments/common.js",
 		"/Volumes/D$/www/DEV1/Skedula/mobile/tablet/index.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/ajax/auth/authenticate.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/ajax/auth/callback.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/home/DashboardAjax/possiblecuts.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/ajax/Dashboard/DashboardAjax/possiblecuts.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/js/tablet-min.js",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/ajax/assignments/index.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/ajax/attendance/index.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/css/tablet.css",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/ajax/attendance/style.css",
-		"/Volumes/D$/www/DEV1/Skedula/mobile/js/redactor/redactor.min.js",
-		"/Volumes/D$/www/DEV1/Skedula/Administration/Data/index.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/Administration/Anecdotal/index.aspx",
-		"/Volumes/D$-1/www/DataExtractor.Web/API/doSkedula.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/Administration/Downloads/generic.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/Settings/Course/Create/submit.aspx",
-		"/Users/Jed/Downloads/skdCourses_00X001_112(1).csv",
-		"/Users/Jed/Downloads/skdCourses_00X001_112.csv",
-		"/Volumes/D$/www/DEV1/Skedula/Transfer/Groups/index.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/Transfer/index.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/Account/groups/submit.aspx",
-		"/Volumes/D$/www/DEV1/Skedula/Reports/Generator/index.aspx"
+		"/Volumes/D$/www/DEV1/Skedula/mobile/ajax/auth/authenticate.aspx"
 	],
 	"find":
 	{
@@ -776,6 +776,59 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Populated Populating Metric Outcomes",
+			"doHud",
+			"indexe",
+			"savege",
+			"length",
+			"Titles",
+			"createIni",
+			"createIn",
+			"mod",
+			"startWorker",
+			"volum",
+			"btn",
+			"info",
+			"resize",
+			"log",
+			"seek",
+			"nowplay",
+			"resetVolumeSlider",
+			"callBackFunction",
+			"loadxml",
+			"error load",
+			"loadXML",
+			"sleep",
+			"timeout:",
+			"timeout",
+			"direc",
+			"actor",
+			"actore",
+			"direct",
+			"allIt",
+			"thisIte",
+			"MediaBroswer",
+			"geniusResults",
+			"saveGeniusResults",
+			"json",
+			"showTable",
+			"dohud",
+			"hud",
+			"getSettingsObject",
+			"actors",
+			"getFirstMBServer",
+			"getRandomMBServer",
+			"getFirstMBServer",
+			"backgrou",
+			"loopGeniusWorker",
+			"console",
+			"allItems =",
+			"allIT",
+			"epoch",
+			"getIt",
+			"window",
+			"loopGeniusWorker",
+			"year",
 			"Genres",
 			"ShowItems",
 			"});\n",
@@ -850,60 +903,7 @@
 			"hasDirecTV",
 			"setupWorker",
 			"refreshChannel",
-			"hasDirecTV",
-			"startWorker",
-			"changeChannel",
-			"saveJsonToCache",
-			"getJsonFromCache",
-			"saveImageToCache",
-			"getImageFromCache",
-			"deleteCache",
-			"executeGestureByCommandName",
-			"doEvent",
-			"playBeep",
-			"isPhoneGap",
-			"reloadPage",
-			"getItem",
-			"setItem",
-			"netState",
-			"isWifi",
-			"doAlert",
-			"clearCallers",
-			"clearNowPlaying",
-			"hms2",
-			"updateStatus",
-			"getRoomStatus",
-			"getDeviceByShortName",
-			"getCurrentRoom",
-			"getCurrentDevice",
-			"nowPlaying",
-			"getMBUrl",
-			"getFirstMBServer",
-			"getEGBaseUrl",
-			"splash",
-			"htmlEscape",
-			"executeObjC",
-			"setSwipeThresholds",
-			"detectOrientation",
-			"isNumeric",
-			"compare",
-			"getCurrentDevice()",
-			"getCurrentRoom()",
-			"getCurrentRoom",
-			"resetVolumeSlider",
-			"setSwipeThresholds",
-			"resetVolumeSlider",
-			"devicerea",
-			"init",
-			"getRoomStatus",
-			"clearNowPlaying",
-			"nowPlaying()",
-			"nowPlaying",
-			"clearSleepTimer",
-			"npTimer",
-			"setSwipeThresholds",
-			"resetVolumeSlider",
-			"doResize"
+			"hasDirecTV"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -911,6 +911,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"changeFuction",
 			"img/",
 			"..img/",
 			"../img",

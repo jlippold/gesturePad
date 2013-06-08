@@ -74,6 +74,8 @@ var bottomDraw = {
 			}
 		});
 		$("#bottomGrabber").bind("touchstart", function(e) {
+			var s = window.plugins.volumeSlider;
+			s.hideVolumeSlider(1);
 			var lastY = e.originalEvent.touches[0].screenY;
 			$(this).data('lastY', e.originalEvent.touches[0].screenY);
 		});
@@ -100,11 +102,17 @@ var bottomDraw = {
 					$("#browser").css("bottom", (bOffset + n) + "px");
 				}
 			}
+
 		});
 		$("#bottomGrabber").bind("touchend", function(e) {
+			sliders.resize();
 			setTimeout(function() {
 				bottomDraw.refreshBottomDrawer();
 			}, 100);
+			setTimeout(function() {
+				var s = window.plugins.volumeSlider;
+				s.showVolumeSlider(1);
+			}, 250);
 		});
 	},
 	showBottomItems: function(tr, sentEventType) {

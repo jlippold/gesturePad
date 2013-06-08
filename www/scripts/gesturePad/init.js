@@ -1,7 +1,7 @@
 //globals
 var xml, appSettings;
 var appendOncetoQueryString = "";
-var npTimer, inputTimer, clickEventType, slideTimer;
+var npTimer, inputTimer, clickEventType;
 var guide = {};
 var workerTimer = null;
 var scrollstop = null;
@@ -9,11 +9,12 @@ var geniusResults = {
 	refreshQueue: [],
 	Titles: {},
 	TitlesQueue: {},
-	allItems: []
+	allItems: [],
+	loaded: false
 };
 var init = {
 	PhoneGapReady: function() {
-		document.addEventListener('deviceready', init.onDeviceReady, false);
+		document.addEventListener("deviceready", init.onDeviceReady, false);
 		document.addEventListener("resume", init.onResume, false);
 		document.addEventListener("pause", init.onBackground, false);
 		window.onorientationchange = util.detectOrientation;
@@ -23,7 +24,6 @@ var init = {
 		};
 	},
 	onDeviceReady: function() {
-
 		util.splash("show");
 		$.gestures.init();
 		$.gestures.retGesture(function(gesture) {
@@ -38,7 +38,16 @@ var init = {
 		if (settings.userSettings.isSetup === false) {
 			return;
 		}
-		MediaBrowser.startWorker(true);
+		window.setTimeout(function() {
+			MediaBrowser.startWorker(true);
+		}, 2000);
+
+		//load channels for DTV, if defined in settings
+		if (DirecTV.hasDirecTV()) {
+			DirecTV.loadChannelList();
+		}
+		util.splash("hide");
+
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();
 			util.getRoomStatus();
@@ -48,6 +57,9 @@ var init = {
 	},
 	onResume: function() {
 		settings.checkSettingsForUpdate();
+		if (settings.userSettings.isSetup === false) {
+			return;
+		}
 		notify.clearAllBadges();
 		util.getRoomStatus();
 		DirecTV.startWorker();
@@ -71,8 +83,7 @@ var init = {
 				util.setItem("configURL", settings.userSettings.configURL);
 			},
 			error: function() {
-				util.splash("hide");
-				util.doAlert("Error loading xml settings: " + xmlLoc);
+				util.doAlert("Fatal error loading xml settings: " + xmlLoc);
 			}
 		});
 	}

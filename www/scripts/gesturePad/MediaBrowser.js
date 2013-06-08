@@ -130,6 +130,7 @@ var MediaBrowser = {
 						'detailTextLabel': "" + x.Data.Children[key].ChildCount + " total, " + (x.Data.Children[key].UnwatchedCount ? x.Data.Children[key].UnwatchedCount + " not watched, " : "") + x.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
 						'icon': "greyarrow",
 						'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
+						'image': util.getRandomMBServer() + "image/?Id=" + x.Data.Children[key].Id + "&maxwidth=120&maxheight=120",
 						'guid': x.Data.Children[key].Id,
 						'type': x.Data.Children[key].Type,
 						'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")
@@ -140,6 +141,7 @@ var MediaBrowser = {
 						'detailTextLabel': (x.Data.Children[key].ImdbRating ? x.Data.Children[key].ImdbRating + "/10 " : "") + (x.Data.Children[key].TagLine ? x.Data.Children[key].TagLine : ""),
 						'icon': "none",
 						'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
+						'image': util.getRandomMBServer() + "image/?Id=" + x.Data.Children[key].Id + "&maxwidth=120&maxheight=120",
 						'guid': x.Data.Children[key].Id,
 						'type': x.Data.Children[key].Type,
 						'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")
@@ -253,12 +255,9 @@ var MediaBrowser = {
 		}
 	},
 	createInitialListView: function() {
-		util.doHud({
-			show: true,
-			labelText: "Loading Data...",
-			detailsLabelText: "Please Wait..."
-		});
+
 		var parseJsonResults = function(d) {
+
 			//parse the StartUp Folder
 			var tableView = [];
 			$.each(d.Data.Children, function(key, val) {
@@ -267,6 +266,7 @@ var MediaBrowser = {
 					'detailTextLabel': "" + d.Data.Children[key].ChildCount + " total, " + d.Data.Children[key].UnwatchedCount + " not watched, " + d.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
 					'icon': "greyarrow",
 					'sectionHeader': "Folders",
+					'image': util.getMBUrl() + "image/?Id=" + d.Data.Children[key].Id + "&maxwidth=120&maxheight=120",
 					'guid': d.Data.Children[key].Id,
 					'type': d.Data.Children[key].Type,
 					'imdb': d.Data.Children[key].ImdbRating
@@ -396,8 +396,21 @@ var MediaBrowser = {
 			if (d === null) {
 				getJsonFromServer(MBUrl, true);
 			} else {
-				parseJsonResults(d); //display cached
-				getJsonFromServer(MBUrl, false); //get from server, to replace cache but dont parse
+				//query the cached genuis items
+				if (geniusResults.loaded === false) {
+					geniusResults.loaded = true;
+					cache.getJson("genius", function(j) {
+						if (j !== null) {
+							geniusResults = j;
+						}
+						parseJsonResults(d); //display cached
+						getJsonFromServer(MBUrl, false); //get from server, to replace cache but dont parse
+					});
+				} else {
+					parseJsonResults(d); //display cached
+					getJsonFromServer(MBUrl, false); //get from server, to replace cache but dont parse
+				}
+
 			}
 		});
 	},
@@ -477,6 +490,7 @@ var MediaBrowser = {
 			labelText: "Loading Data...",
 			detailsLabelText: "Please Wait..."
 		});
+
 		var tableView = [];
 		$.each(geniusResults.Titles, function(idx, item) {
 			if (item.ProductionYear == year) {
@@ -484,6 +498,7 @@ var MediaBrowser = {
 					'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 					'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 					'icon': "none",
+					'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
 					'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
 					'guid': item.Id,
 					'type': item.Type,
@@ -562,6 +577,7 @@ var MediaBrowser = {
 						tableView.push({
 							'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 							'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+							'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
 							'icon': "none",
 							'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
 							'guid': item.Id,
@@ -604,16 +620,24 @@ var MediaBrowser = {
 							var LastThenFirstName = item.Actors[i].Name.split(" ").pop().replace(/[^a-zA-Z 0-9]+/g, '');
 							LastThenFirstName += ", " + item.Actors[i].Name.split(" ")[0].replace(/[^a-zA-Z 0-9]+/g, '');
 							if (LastThenFirstName.length > 4) {
-								tableView.push({
+								var a = {
 									'textLabel': LastThenFirstName,
 									'detailTextLabel': "",
 									'icon': "greyarrow",
+									'image': util.getRandomMBServer() + "image/?Id=" + item.Actors[i].Person.Id + "&maxwidth=120&maxheight=120",
 									'sectionHeader': LastThenFirstName.substring(0, 1).toUpperCase(),
 									'type': 'CustomFolder',
 									'folderType': 'Actors',
 									'customSort': LastThenFirstName,
 									'ActualName': item.Actors[i].Name
-								});
+								};
+								if (item.Actors[i].Person) {
+									if (item.Actors[i].Person.PrimaryImagePath !== "" && item.Actors[i].Person.PrimaryImagePath !== null) {
+										a.image = util.getRandomMBServer() + "image/?Path=" + encodeURIComponent(item.Actors[i].Person.PrimaryImagePath) + "&maxwidth=120&maxheight=120";
+										a.guid = item.Actors[i].Person.Id;
+									}
+								}
+								tableView.push(a);
 							}
 						}
 					}
@@ -651,6 +675,7 @@ var MediaBrowser = {
 							'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 							'icon': "none",
 							'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
+							'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
 							'guid': item.Id,
 							'type': item.Type,
 							'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
@@ -738,6 +763,7 @@ var MediaBrowser = {
 							'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 							'icon': "none",
 							'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
+							'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
 							'guid': item.Id,
 							'type': item.Type,
 							'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
@@ -814,6 +840,7 @@ var MediaBrowser = {
 					'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 					'icon': "none",
 					'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
+					'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
 					'guid': item.Id,
 					'type': item.Type,
 					'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
@@ -894,6 +921,7 @@ var MediaBrowser = {
 						'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 						'icon': "none",
 						'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
+						'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
 						'guid': item.Id,
 						'type': item.Type,
 						'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
@@ -931,6 +959,7 @@ var MediaBrowser = {
 					'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 					'icon': "none",
 					'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
+					'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
 					'guid': item.Id,
 					'type': item.Type,
 					'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
@@ -972,11 +1001,6 @@ var MediaBrowser = {
 		if (firstRun === true && needsRefresh === false) {
 			//just load the pull the results from cache
 			console.log("First run, no refresh");
-			cache.getJson("genius", function(d) {
-				if (d !== null) {
-					geniusResults = d;
-				}
-			});
 			return;
 		}
 
@@ -985,50 +1009,66 @@ var MediaBrowser = {
 			return;
 		}
 
-		//start out by pulling the root folders, ans adding them to the queue
-		cache.getJson("genius", function(d) {
-
-			if (d !== null) {
-				geniusResults = d;
+		util.doHud({
+			show: true,
+			labelText: "Checking for new media...",
+			detailsLabelText: "Tap to cancel",
+			tappedEvent: function() {
+				util.setStatusBarForceClear();
+				geniusResults.refreshQueue = [];
+				geniusResults.TitlesQueue = [];
+				$.ajaxq("genuisWorker");
+				util.doHud({
+					show: false
+				});
 			}
-
-			//clear the queue
-			geniusResults.refreshQueue = [];
-			geniusResults.TitlesQueue = [];
-			$.ajaxq("genuisWorker");
-
-			util.setItem("lastRefresh", new Date().toISOString());
-
-			util.setStatusBarMessage("Searching for new titles");
-			$.ajax({
-				url: util.getRandomMBServer() + "library?lightData=1",
-				dataType: 'json',
-				timeout: settings.userSettings.MBServiceTimeout,
-				success: function(d) {
-					$.each(d.Data.Children, function(key, val) {
-						var item = d.Data.Children[key];
-						if (item.Type == "Folder") {
-							geniusResults.refreshQueue.push({
-								Id: item.Id,
-								title: item.Name
-							});
-						}
-					});
-					//console.log(geniusResults.refreshQueue);
-					util.setStatusBarMessage("Searching " + geniusResults.refreshQueue.length + " folders for new titles");
-					cache.saveJson("genius", geniusResults);
-					MediaBrowser.processGeniusQueue();
-				}
-			});
 		});
+
+		//Disable the sleep timer
+		cordova.require('cordova/plugin/powermanagement').acquire(function() {
+			//start out by pulling the root folders, and adding them to the queue
+			cache.getJson("genius", function(d) {
+
+				if (d !== null) {
+					geniusResults = d;
+				}
+
+				//clear the queue
+				geniusResults.refreshQueue = [];
+				geniusResults.TitlesQueue = [];
+				$.ajaxq("genuisWorker");
+
+				util.setStatusBarMessage("Searching for new titles");
+				$.ajax({
+					url: util.getRandomMBServer() + "library?lightData=1",
+					dataType: 'json',
+					timeout: settings.userSettings.MBServiceTimeout,
+					success: function(d) {
+						$.each(d.Data.Children, function(key, val) {
+							var item = d.Data.Children[key];
+							if (item.Type == "Folder") {
+								geniusResults.refreshQueue.push({
+									Id: item.Id,
+									title: item.Name
+								});
+							}
+						});
+						//console.log(geniusResults.refreshQueue);
+						util.setStatusBarMessage("Searching " + geniusResults.refreshQueue.length + " folders for new titles");
+						cache.saveJson("genius", geniusResults);
+						MediaBrowser.processGeniusQueue();
+					}
+				});
+			});
+		}, function() {});
 	},
 	processGeniusQueue: function() {
+		geniusResults.loaded = true;
 		if (geniusResults.refreshQueue.length > 0) {
 			//Pull the last folder and queue up all children
 			var toProcess = geniusResults.refreshQueue[geniusResults.refreshQueue.length - 1];
 			util.setStatusBarMessage("Processing " + toProcess.title);
 			var thisURL = util.getRandomMBServer() + "library?lightData=1&Id=" + toProcess.Id;
-			console.log(thisURL);
 			$.ajax({
 				url: thisURL,
 				dataType: 'json',
@@ -1076,8 +1116,18 @@ var MediaBrowser = {
 				}
 			});
 		} else {
+			//release the power lock
+			cordova.require('cordova/plugin/powermanagement').release(function() {
+				//unlocked
+			}, function() {});
+
+			util.doHud({
+				show: false
+			});
+
 			util.setStatusBarMessage("All Titles Indexed.");
 			setTimeout(function() {
+				util.setItem("lastRefresh", new Date().toISOString());
 				util.setStatusBarForceClear();
 			}, 1500);
 		}
@@ -1092,7 +1142,7 @@ var MediaBrowser = {
 		delete geniusResults.TitlesQueue[id];
 
 		var remaining = Object.keys(geniusResults.TitlesQueue).length;
-		if (remaining % 50 === 0) { //alert the user, and save results every 50 items
+		if (remaining % 10 === 0) { //alert the user, and save results every 10 items
 			//save to disk
 			cache.saveJson("genius", geniusResults);
 			var parentFolder = "";
@@ -1105,7 +1155,7 @@ var MediaBrowser = {
 			util.setStatusBarMessage("Indexing " + remaining + " " + parentFolder + " Titles");
 		}
 
-		if (remaining % 25 === 0) { //clear the status every 25 items
+		if (remaining % 50 === 0) { //clear the status every 25 items
 			util.setStatusBarForceClear();
 		}
 

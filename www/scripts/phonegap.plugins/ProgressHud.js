@@ -9,9 +9,10 @@
 (function(cordova) {
 
 	function ProgressHud() {}
+	var tappedEvent = {};
 
-	ProgressHud.prototype.show = function(options, callback) {
-		if(!options) options = {};
+	ProgressHud.prototype.show = function(options, callback, tapped) {
+		if (!options) options = {};
 		var scope = options.scope || null;
 		delete options.scope;
 
@@ -27,15 +28,20 @@
 		};
 
 		var _callback = function(result) {
-			if(typeof callback == 'function') callback.apply(scope, arguments);
+			if (typeof callback == 'function') callback.apply(scope, arguments);
 		};
+		tappedEvent = tapped;
 
 		return cordova.exec(_callback, _callback, service, action, [config]);
 
 	};
 
+	ProgressHud.prototype._wastapped = function() {
+		tappedEvent();
+	};
+
 	ProgressHud.prototype.set = function(options, callback) {
-		if(!options) options = {};
+		if (!options) options = {};
 		var scope = options.scope || null;
 		delete options.scope;
 
@@ -44,7 +50,7 @@
 			callbackId = service + (cordova.callbackId + 1);
 
 		var _callback = function(result) {
-			if(typeof callback == 'function') callback.apply(scope, arguments);
+			if (typeof callback == 'function') callback.apply(scope, arguments);
 		};
 
 		return cordova.exec(_callback, _callback, service, action, [options]);
@@ -52,7 +58,7 @@
 	};
 
 	ProgressHud.prototype.hide = function(options, callback) {
-		if(!options) options = {};
+		if (!options) options = {};
 		var scope = options.scope || null;
 		delete options.scope;
 
@@ -63,7 +69,7 @@
 		var config = {};
 
 		var _callback = function(result) {
-			if(typeof callback == 'function') callback.apply(scope, arguments);
+			if (typeof callback == 'function') callback.apply(scope, arguments);
 		};
 
 		return cordova.exec(_callback, _callback, service, action, [config]);
@@ -71,7 +77,7 @@
 	};
 
 	cordova.addConstructor(function() {
-		if(!window.plugins) window.plugins = {};
+		if (!window.plugins) window.plugins = {};
 		window.plugins.progressHud = new ProgressHud();
 	});
 

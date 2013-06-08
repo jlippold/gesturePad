@@ -19,8 +19,8 @@
     CGFloat _offsetTop;
     NSMutableArray* _searchResults;
 	BOOL *isFiltered;
-}
 
+}
 
 @property (nonatomic, assign) UITableView *mainTableView;
 @property (nonatomic, assign) UISearchBar *searchBar;
@@ -35,3 +35,6 @@
 - (void)hideTable:(NSArray*)arguments withDict:(NSDictionary*)options;
 
 @end
+
+
+

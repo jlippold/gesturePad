@@ -11,7 +11,7 @@ var util = {
 				mode: "indeterminate",
 				labelText: o.labelText,
 				detailsLabelText: o.detailsLabelText
-			}, function() {});
+			}, function() {}, (o.tappedEvent) ? o.tappedEvent : function() {});
 		} else {
 			util.showingHud = false;
 			hud.hide();
@@ -50,6 +50,7 @@ var util = {
 		$("#gestures_canvas").attr("width", w);
 		$("#gestures_canvas").height(h);
 		$("#gestures_canvas").width(w);
+		sliders.resize();
 		sliders.resetVolumeSlider();
 		sliders.resetNPSeek();
 		setTimeout(function() {

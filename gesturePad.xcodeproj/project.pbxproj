@@ -36,6 +36,9 @@
 		30A0434914DC770100060A13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30A0434614DC770100060A13 /* Localizable.strings */; };
 		30E1352710E2C1420031B30D /* Cordova.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30E1352610E2C1420031B30D /* Cordova.plist */; };
 		30E5649213A7FCAF007403D8 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E5649113A7FCAF007403D8 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		852FFA4D1762A5DB00759458 /* Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 852FFA4C1762A5DB00759458 /* Base64.m */; };
+		853E27691758C6B000E39F4D /* PowerManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = 853E27681758C6B000E39F4D /* PowerManagement.m */; };
+		853E276C175B03E900E39F4D /* VolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 853E276B175B03E900E39F4D /* VolumeSlider.m */; };
 		85974F161747D68400C15EFE /* NativeTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 85974F151747D68400C15EFE /* NativeTable.m */; };
 		85974F181747E76800C15EFE /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85974F171747E76800C15EFE /* CoreData.framework */; };
 		859C77D016FF5BC800C9ABD4 /* ActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 859C77C316FF5BC800C9ABD4 /* ActionSheet.m */; };
@@ -111,6 +114,12 @@
 		30E1352610E2C1420031B30D /* Cordova.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Cordova.plist; path = ../Cordova.plist; sourceTree = "<group>"; };
 		30E5649113A7FCAF007403D8 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* gesturePad-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gesturePad-Prefix.pch"; sourceTree = "<group>"; };
+		852FFA4B1762A5DB00759458 /* Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64.h; sourceTree = "<group>"; };
+		852FFA4C1762A5DB00759458 /* Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64.m; sourceTree = "<group>"; };
+		853E27671758C6B000E39F4D /* PowerManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerManagement.h; sourceTree = "<group>"; };
+		853E27681758C6B000E39F4D /* PowerManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PowerManagement.m; sourceTree = "<group>"; };
+		853E276A175B03E800E39F4D /* VolumeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VolumeSlider.h; path = "../../../../Downloads/VolumeSlider-master/VolumeSlider.h"; sourceTree = "<group>"; };
+		853E276B175B03E900E39F4D /* VolumeSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VolumeSlider.m; path = "../../../../Downloads/VolumeSlider-master/VolumeSlider.m"; sourceTree = "<group>"; };
 		85974F141747D68400C15EFE /* NativeTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeTable.h; sourceTree = "<group>"; };
 		85974F151747D68400C15EFE /* NativeTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeTable.m; sourceTree = "<group>"; };
 		85974F171747E76800C15EFE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -178,6 +187,8 @@
 			isa = PBXGroup;
 			children = (
 				302D95EE14D2391D003F00A1 /* MainViewController.h */,
+				852FFA4B1762A5DB00759458 /* Base64.h */,
+				852FFA4C1762A5DB00759458 /* Base64.m */,
 				302D95EF14D2391D003F00A1 /* MainViewController.m */,
 				302D95F014D2391D003F00A1 /* MainViewController.xib */,
 				1D3623240D0F684500981E51 /* AppDelegate.h */,
@@ -296,7 +307,11 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				853E276A175B03E800E39F4D /* VolumeSlider.h */,
+				853E276B175B03E900E39F4D /* VolumeSlider.m */,
 				85A2FD531752B90E00883A90 /* CDVStatusBarOverlay.h */,
+				853E27671758C6B000E39F4D /* PowerManagement.h */,
+				853E27681758C6B000E39F4D /* PowerManagement.m */,
 				85A2FD541752B90E00883A90 /* CDVStatusBarOverlay.m */,
 				85A2FD501752B53000883A90 /* MTStatusBarOverlay.h */,
 				85A2FD511752B53000883A90 /* MTStatusBarOverlay.m */,
@@ -509,6 +524,9 @@
 				85A2FD551752B90E00883A90 /* CDVStatusBarOverlay.m in Sources */,
 				85A2FD581752F42500883A90 /* ProgressHud.m in Sources */,
 				85A2FD5B1752F47E00883A90 /* MBProgressHUD.m in Sources */,
+				853E27691758C6B000E39F4D /* PowerManagement.m in Sources */,
+				853E276C175B03E900E39F4D /* VolumeSlider.m in Sources */,
+				852FFA4D1762A5DB00759458 /* Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

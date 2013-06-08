@@ -20,8 +20,15 @@
 	self.progressHUD = [MBProgressHUD showHUDAddedTo:self.webView.superview animated:YES];
 	self.progressHUD.mode = MBProgressHUDModeIndeterminate;
 
+    [self.progressHUD addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasTapped)]];
+    
 	[self set:arguments withDict:options];
 
+}
+
+- (void)hudWasTapped {
+    NSString * jsCallBack = @"window.plugins.progressHud._wastapped();";
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
 }
 
 -(void)set:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {

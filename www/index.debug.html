@@ -29,12 +29,9 @@
 					<div class="seekbarContainer" id="seekbarContainer">
 						<p id='NowPlayingTitle'>&nbsp;</p>
 						<div class="timespanleft" id="timespanleft">0:00</div>
-						<div class="slider" id="slider" style="width: 69%" >
-							<div class="sliderh" id='timebar'></div>
-							<div class="seekto" id='timeseek'></div>
+						<div class="slider" id="slider" style="width: 69%; visibility: hidden" >
 						</div>
 						<div class="timespanright" id="timespanright">-1:00</div>
-
 						<div class="left" id="btnConfig" ></div>
 						<div class="right" id="btnTransfer"></div>
 					</div>
@@ -63,9 +60,7 @@
 		<div id="overallVolumeContainer">
 			<div class="volume control" id="btnMute" ></div>
 			<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
-				<div class="slider" id="VolumeSlider" >
-					<div class="sliderh" id="VolumeSliderh" ></div>
-					<div class="seekto" id="VolumeSliderSeek" ></div>
+				<div id="VolumeSlider"class="slider" >
 				</div>
 			</div>
 		</div>
@@ -88,16 +83,6 @@
 			<div class="spinner">Loading Data...</div>
 		</div>
 	</div>
-	<div style="display:none" id='Filter'>
-		<div class="gradientBorder top"></div>
-		<div class="searchContainer">
-			<form id="searchform" class="searchform">
-				<span class="icon-search"></span>
-				<input id="searchbox" type="text" class="searcher" placeholder="Filter List">
-				<span class="icon-clear" id="searchClear" style="display: none;"></span>
-			</form>
-		</div>
-	</div>
 
 	<p id="hud"></p>
 
@@ -114,6 +99,8 @@
 	<script type="text/javascript" src="scripts/phonegap.plugins/PushNotification.js"></script>
 	<script type="text/javascript" src="scripts/phonegap.plugins/CDVStatusBarOverlay.js"></script>
 	<script type="text/javascript" src="scripts/phonegap.plugins/ProgressHud.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/powermanagement.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/VolumeSlider.js"></script>
 
 	
 	<script type="text/javascript" src="scripts/gesturePad/bottomDraw.js"></script>
@@ -127,7 +114,6 @@
 	<script type="text/javascript" src="scripts/gesturePad/sliders.js"></script>
 	<script type="text/javascript" src="scripts/gesturePad/ui.js"></script>
 	<script type="text/javascript" src="scripts/gesturePad/util.js"></script>
-	
 
 	<script type="text/javascript">
 		var deviceType = "phone";

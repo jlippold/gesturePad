@@ -8,7 +8,7 @@ var ui = {
 		bottomDraw.bind();
 	},
 	bindButtons: function() {
-		$("#btnTitles").fastClick(function() {
+		$("#btnTitles").bind("click", function() {
 
 			window.scrollTo(0, 0);
 			var curChannel = $("#NowPlayingTitle").attr("data-item");
@@ -21,13 +21,20 @@ var ui = {
 					if (c.ending > 0) {
 						ending = new Date(c.ending * 1000).timeNow();
 					}
-					tableView.push({
+
+					var a = {
 						'textLabel': c.nowplaying === "" ? c.fullname : c.nowplaying,
 						'detailTextLabel': c.number + " " + c.fullname + (ending === "" ? "" : ", ends at " + ending),
 						'icon': "none",
 						'sectionHeader': c.category,
 						'major': c.number
-					});
+					};
+
+					if (c.logo !== "") {
+						a.image = "www/" + c.logo;
+					}
+
+					tableView.push(a);
 				});
 				var nt = window.plugins.NativeTable;
 				nt.createTable({
@@ -51,19 +58,47 @@ var ui = {
 				nt.showTable(function() {});
 			}
 			if (device.shortname == "MCE") {
-				MediaBrowser.createInitialListView();
+
+				util.doHud({
+					show: true,
+					labelText: "Loading Data...",
+					detailsLabelText: "Please Wait..."
+				});
+				setTimeout(function() {
+					MediaBrowser.createInitialListView();
+				}, 200);
+
 			}
 
 		});
 		$("#btnConfig").fastClick(function() {
-			navigator.notification.confirm(
-				'Delete cached data?', function(buttonIndex) {
-				if (buttonIndex == 1) {
-					cache.clear();
+
+			var actionSheet = window.plugins.actionSheet;
+			var actions = [];
+			actions.push("Clear Caches");
+			actions.push("Fetch All Items");
+			actions.push("Cancel");
+			actionSheet.create({
+				title: 'Actions',
+				items: actions,
+				destructiveButtonIndex: (actions.length - 1)
+			}, function(buttonValue, buttonIndex) {
+				if (buttonIndex == -1 || buttonIndex == (actions.length - 1)) {
+					return;
+				} else {
+					switch (buttonIndex) {
+						case 0:
+							cache.clear();
+							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
+							break;
+						case 1:
+							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
+							MediaBrowser.startWorker();
+							break;
+					}
 				}
-			},
-				'Warning',
-				'Yes, No');
+			});
+
 		});
 		$("#btnCommands").fastClick(function() {
 			var tableView = [];
@@ -213,7 +248,7 @@ var ui = {
 		$("#btnPower").fastClick(function() {
 			gestures.executeGestureByCommandName("Power");
 		});
-		$("#btnPlay").fastClick(function() {
+		$("#btnPlay").bind("click", function() {
 			if ($(this).hasClass("playing")) {
 				gestures.executeGestureByCommandName("Pause");
 				$(this).removeClass("playing");
@@ -229,12 +264,9 @@ var ui = {
 		$("#bgPic").attr("class", "noart");
 		$("#bgPic").attr("style", "");
 		$("#bgPic").attr("data-id", "");
-		$("#timespanleft").text("0:00");
-		$("#timespanright").text("- 0:00");
 		$("#NowPlayingTitle").text("");
 		$("#NowPlayingTitle").removeClass("doMarquee");
-		$("#timeseek").attr("style", "left: 0px");
-		$("#timebar").attr("style", "width: 0%");
+		sliders.resetNPSeek();
 	},
 	queryNowPlaying: function() {
 		var device = util.getCurrentDevice();
@@ -255,8 +287,7 @@ var ui = {
 						duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
 						var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
 						var perc = offset / duration;
-						$("#timebar").attr("style", "width: " + Math.floor(perc * 100) + "%");
-						$("#timeseek").attr("style", "left: " + ($("#timebar").width() - 10) + "px");
+						sliders.setNPSeek(Math.floor(perc * 100));
 						$("#timespanleft").text(util.hms2(offset));
 						$("#timespanright").text("- " + util.hms2(duration - offset));
 						$("#timespanright").attr("data-duration", j.Data.PlayingControllers[0].CurrentFileDuration.Ticks);
@@ -325,8 +356,7 @@ var ui = {
 							return;
 						}
 						var perc = json.offset / json.duration;
-						$("#timebar").attr("style", "width: " + Math.floor(perc * 100) + "%");
-						$("#timeseek").attr("style", "left: " + ($("#timebar").width() - 10) + "px");
+						sliders.setNPSeek(Math.floor(perc * 100));
 						$("#timespanleft").text(util.hms2(json.offset));
 						$("#timespanright").text("- " + util.hms2(json.duration - json.offset));
 					}
