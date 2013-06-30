@@ -8,6 +8,7 @@
 
 #import "NativeTable.h"
 #import "Base64.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation NativeTable;
 @synthesize mainTableView = _mainTableView;
@@ -55,6 +56,9 @@ static dispatch_queue_t concurrentQueue = NULL;
     CGRect navBarFrame = CGRectMake(0, 0, self.webView.superview.bounds.size.width, 44.0);
     _navbar = [[UINavigationBar alloc] initWithFrame:navBarFrame];
     
+    UIImage *backgroundImage = [UIImage imageNamed:@"www/img/navBar.png"];
+    [_navbar setBackgroundImage:backgroundImage forBarMetrics:0];
+    
     if ( [[options objectForKey:@"navBarColor"] isEqualToString:@"black"] ) {
         _navbar.barStyle = UIBarStyleBlack;
     }
@@ -85,6 +89,7 @@ static dispatch_queue_t concurrentQueue = NULL;
         
     }
     
+    _mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     [_navbar pushNavigationItem:navItem animated:false];
     [self.webView.superview addSubview:_navbar];
@@ -111,6 +116,11 @@ static dispatch_queue_t concurrentQueue = NULL;
 	self.webView.superview.autoresizesSubviews = YES;
 	[self.webView.superview addSubview:_mainTableView];
     
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
 }
 
 - (IBAction)onRightButtonPress:(id)sender
@@ -357,6 +367,26 @@ static dispatch_queue_t concurrentQueue = NULL;
     
 }
 
+-(void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath;
+{
+    static UIImage* bgImage = nil;
+    if (bgImage == nil) {
+        bgImage = [[UIImage imageNamed:@"www/img/TableViewBG1.png"] retain];
+    }
+    static UIImage* bgImage2 = nil;
+    if (bgImage2 == nil) {
+        bgImage2 = [[UIImage imageNamed:@"www/img/TableViewBG2.png"] retain];
+    }
+    
+    if( [indexPath row] % 2)
+        cell.backgroundView = [[[UIImageView alloc] initWithImage:bgImage] autorelease];
+    else
+        cell.backgroundView = [[[UIImageView alloc] initWithImage:bgImage2] autorelease];
+    
+    
+}
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -410,12 +440,21 @@ static dispatch_queue_t concurrentQueue = NULL;
     
     cell.textLabel.text = [item valueForKey:@"textLabel"];
     
-	cell.textLabel.textColor = [UIColor blackColor];
-	cell.textLabel.font = [UIFont systemFontOfSize:15];
-    cell.detailTextLabel.text = [item valueForKey:@"detailTextLabel"];
+	cell.textLabel.textColor = [UIColor colorWithRed:0.302 green:0.302 blue:0.302 alpha:1];
+	cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0f];
+    cell.textLabel.shadowColor = [UIColor whiteColor];
+    cell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);
+    cell.textLabel.backgroundColor = [UIColor clearColor];
     
-	cell.detailTextLabel.textColor = [UIColor grayColor];
+    cell.detailTextLabel.text = [item valueForKey:@"detailTextLabel"];
+
+	cell.detailTextLabel.textColor = [UIColor colorWithRed:0.592 green:0.592 blue:0.592 alpha:1];
 	cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+    cell.detailTextLabel.shadowColor = [UIColor whiteColor];
+    cell.detailTextLabel.shadowOffset = CGSizeMake(0.0, 1.0);
+    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
+    
+    cell.detailTextLabel.numberOfLines = 2;
     
     NSString *icon = [item valueForKey:@"icon"];
     
@@ -433,11 +472,17 @@ static dispatch_queue_t concurrentQueue = NULL;
     if ([item valueForKey:@"image"]) {
         
         NSString *url = [item valueForKey:@"image"];
+        cell.indentationLevel = 1;
+        cell.indentationWidth = 2;
         
         if (![url hasPrefix:@"http"]) {
             cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
             cell.imageView.image = [self resizeImageToSize:[UIImage imageNamed:url]];
-            cell.imageView.backgroundColor = [UIColor blackColor];
+            if (![item valueForKey:@"nomask"]) {
+                cell.imageView.backgroundColor = [UIColor blackColor];
+                cell.imageView.layer.masksToBounds = YES;
+                cell.imageView.layer.cornerRadius = 5.0;
+            }
             [cell setNeedsLayout];
         } else {
             
@@ -453,6 +498,12 @@ static dispatch_queue_t concurrentQueue = NULL;
                 NSData *imageData = [NSData dataWithContentsOfURL:url];
                 cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
                 cell.imageView.image = [self resizeImageToSize:[UIImage imageWithData:imageData]];
+                if (![item valueForKey:@"nomask"]) {
+                    cell.imageView.layer.masksToBounds = YES;
+                    cell.imageView.layer.cornerRadius = 5.0;
+                    cell.imageView.layer.borderColor = [UIColor blackColor].CGColor;
+                    cell.imageView.layer.borderWidth = 1.0;
+                }
                 [cell setNeedsLayout];
             } else {
                 dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,  0ul);
@@ -474,6 +525,13 @@ static dispatch_queue_t concurrentQueue = NULL;
                             NSData *imageData = [NSData dataWithContentsOfURL:url];
                             nCell.imageView.contentMode = UIViewContentModeScaleAspectFit;
                             nCell.imageView.image = [self resizeImageToSize:[UIImage imageWithData:imageData]];
+                            if (![item valueForKey:@"nomask"]) {
+                                nCell.imageView.layer.masksToBounds = YES;
+                                nCell.imageView.layer.cornerRadius = 5.0;
+                                nCell.imageView.layer.borderColor = [UIColor blackColor].CGColor;
+                                nCell.imageView.layer.borderWidth = 1.0;
+                            }
+
                             [nCell setNeedsLayout];
                         } else {
                             nCell.imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -488,9 +546,8 @@ static dispatch_queue_t concurrentQueue = NULL;
             }
         }
     }
-    
 
-   
+    
      return cell;
 }
 
@@ -544,14 +601,6 @@ static dispatch_queue_t concurrentQueue = NULL;
     [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
 }
 
-- (UIImage *)resizeImageToSize:(UIImage*)image
-{
-    UIGraphicsBeginImageContext(CGSizeMake(100, 100));
-    [image drawInRect:CGRectMake(0, 0, 100, 100)];
-    UIImage *imageAfterResize = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return imageAfterResize ;
-}
 
 -(void)fadeIn
 {
@@ -625,6 +674,16 @@ static dispatch_queue_t concurrentQueue = NULL;
                      }];
     
     
+}
+
+- (UIImage *)resizeImageToSize:(UIImage*)image
+{
+    int boxSize = 50;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(boxSize, boxSize), NO, [[UIScreen mainScreen] scale]);
+    [image drawInRect:CGRectMake(0, 0, boxSize, boxSize)];
+    UIImage *imageAfterResize = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return imageAfterResize ;
 }
 
 

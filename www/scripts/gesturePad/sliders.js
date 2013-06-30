@@ -75,6 +75,7 @@ var sliders = {
 		gestures.executeGestureByCommandName(command);
 	},
 	sendSeekEvent: function(seek) {
+		console.log(seek);
 		var device = util.getCurrentDevice();
 		if (device.shortname != "MCE") {
 			return;

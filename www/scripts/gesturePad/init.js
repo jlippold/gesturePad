@@ -5,13 +5,7 @@ var npTimer, inputTimer, clickEventType;
 var guide = {};
 var workerTimer = null;
 var scrollstop = null;
-var geniusResults = {
-	refreshQueue: [],
-	Titles: {},
-	TitlesQueue: {},
-	allItems: [],
-	loaded: false
-};
+
 var init = {
 	PhoneGapReady: function() {
 		document.addEventListener("deviceready", init.onDeviceReady, false);

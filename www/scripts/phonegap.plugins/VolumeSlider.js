@@ -32,7 +32,9 @@
 	 * Set the volume slider
 	 */
 	VolumeSlider.prototype.setVolumeSlider = function(val, tag) {
-		cordovaRef.exec(null, null, "VolumeSlider", "setVolumeSlider", [val, tag]);
+		if (isNaN(val) === false) {
+			cordovaRef.exec(null, null, "VolumeSlider", "setVolumeSlider", [val, tag]);
+		}
 	};
 	/**
 	 * resize

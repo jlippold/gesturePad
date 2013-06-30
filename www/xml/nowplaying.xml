@@ -1,13 +1,206 @@
 <nowplaying>
-	<channel maxresults="5">
-		<genre>Action</genre>
+	<channel items="3" title="New Releases">
+		<ruleSet>
+			<rule field="FileDateAge">
+				<compare>lessthan</compare>
+				<value>90</value>
+			</rule>
+			<rule field="ProductionYearAge">
+				<compare>lessthan</compare>
+				<value>1</value>
+			</rule>
+			<rule field="Folder">
+				<compare>contains</compare>
+				<value>recent</value>
+			</rule>
+		</ruleSet>
 	</channel>
-	<channel maxresults="5">
-		<genre>Horror</genre>
+	<channel items="3" title="Comedy Central">
+		<ruleSet>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Comedy</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="3" title="Action Max">
+		<ruleSet>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Action</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="3" title="Horror Hotel">
+		<ruleSet>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Horror</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="5" title="Kids">
+		<ruleSet>
+			<rule field="Studios">
+				<compare>contains</compare>
+				<value>Pixar</value>
+			</rule>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Animation</value>
+			</rule>
+			<rule field="Genre">
+				<compare>equals</compare>
+				<value>Family</value>
+			</rule>
+		</ruleSet>
+		<ruleSet>
+			<rule field="Studios">
+				<compare>contains</compare>
+				<value>Disney</value>
+			</rule>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Animation</value>
+			</rule>
+			<rule field="Genre">
+				<compare>equals</compare>
+				<value>Family</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="3" title="Top Rated">
+		<ruleSet>
+			<rule field="Rating">
+				<compare>greaterthan</compare>
+				<value>8</value>
+			</rule>
+			<rule field="Rating">
+				<compare>lessthan</compare>
+				<value>9.9</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+			<rule field="Genre">
+				<compare>not</compare>
+				<value>Family</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="1" title="Super Heroes">
+		<ruleSet>
+			<rule field="Studios">
+				<compare>contains</compare>
+				<value>Marvel</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="1" title="Tarantino">
+		<ruleSet>
+			<rule field="Director">
+				<compare>equals</compare>
+				<value>Quentin Tarantino</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="1" title="Will Ferrell">
+		<ruleSet>
+			<rule field="Actor">
+				<compare>equals</compare>
+				<value>Will Ferrell</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="3" title="Comedians">
+		<ruleSet>
+			<rule field="Actor">
+				<compare>equals</compare>
+				<value>Will Ferrell</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Comedy</value>
+			</rule>
+		</ruleSet>
+		<ruleSet>
+			<rule field="Actor">
+				<compare>equals</compare>
+				<value>Mike Meyers</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Comedy</value>
+			</rule>
+		</ruleSet>
+		<ruleSet>
+			<rule field="Actor">
+				<compare>equals</compare>
+				<value>Jim Carrey</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Comedy</value>
+			</rule>
+		</ruleSet>
+		<ruleSet>
+			<rule field="Actor">
+				<compare>equals</compare>
+				<value>Adam Sandler</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+			<rule field="Genre">
+				<compare>first</compare>
+				<value>Comedy</value>
+			</rule>
+		</ruleSet>
+	</channel>
+	<channel items="3" title="Oldies">
+		<ruleSet>
+			<rule field="ProductionYear">
+				<compare>lessthan</compare>
+				<value>2003</value>
+			</rule>
+			<rule field="ProductionYear">
+				<compare>greaterthan</compare>
+				<value>1975</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+		</ruleSet>
 	</channel>
 </nowplaying>
-
-
-
-
-

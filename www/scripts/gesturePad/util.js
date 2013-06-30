@@ -27,6 +27,25 @@ var util = {
 	isNumeric: function(n) {
 		return !isNaN(parseFloat(n)) && isFinite(n);
 	},
+	ticksToMilliseconds: function(ticks) {
+		return (ticks * 1 / 10000);
+	},
+	millisecondsToTicks: function(milliseconds) {
+		return (milliseconds * 10000);
+	},
+	addMinutes: function(date, minutes) {
+		return new Date(date.getTime() + minutes * 60000);
+	},
+	parseDate: function(str) {
+		var mdy = str.split('/');
+		return new Date(mdy[2], mdy[0] - 1, mdy[1]);
+	},
+	daydiff: function(first, second) {
+		return (second - first) / (1000 * 60 * 60 * 24);
+	},
+	randomFromInterval: function(from, to) {
+		return Math.floor(Math.random() * (to - from + 1) + from);
+	},
 	detectOrientation: function() {
 		if (typeof window.onorientationchange != 'undefined') {
 			util.doResize();
@@ -331,6 +350,23 @@ var util = {
 			var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
 			return result * sortOrder;
 		};
+	},
+	shuffle: function(array) {
+		var counter = array.length,
+			temp, index;
+
+		// While there are elements in the array
+		while (counter > 0) {
+			// Pick a random index
+			index = (Math.random() * counter--) | 0;
+
+			// And swap the last element with it
+			temp = array[counter];
+			array[counter] = array[index];
+			array[index] = temp;
+		}
+
+		return array;
 	}
 };
 $.fn.hasAttr = function(name) {

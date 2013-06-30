@@ -1,11 +1,13 @@
 var cache = {
-	clear: function() {
+	clear: function(filetype) {
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function gotFS(fileSystem) {
 			var directoryReader = fileSystem.root.createReader();
 			directoryReader.readEntries(function(entries) {
 				for (i = 0; i < entries.length; i++) {
-					//entries[i].remove(function() {}, function(x) {});
-					entries[i].remove(null, null);
+					var ext = entries[i].name.split(".").pop();
+					if (ext === filetype && entries[i].name !== "NowPlayingMatchingItemsForChannel.json") {
+						entries[i].remove(null, null);
+					}
 				}
 			}, function() {});
 		}, function fail(evt) {

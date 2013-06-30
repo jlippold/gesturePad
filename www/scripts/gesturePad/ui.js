@@ -65,7 +65,7 @@ var ui = {
 					detailsLabelText: "Please Wait..."
 				});
 				setTimeout(function() {
-					MediaBrowser.createInitialListView();
+					MediaBrowser.lastOpenedCallBack();
 				}, 200);
 
 			}
@@ -75,8 +75,11 @@ var ui = {
 
 			var actionSheet = window.plugins.actionSheet;
 			var actions = [];
-			actions.push("Clear Caches");
-			actions.push("Fetch All Items");
+			actions.push("Clear Item Cache");
+			actions.push("Clear Image Cache");
+			actions.push("Refresh All Items");
+			actions.push("Refresh Custom TV");
+
 			actions.push("Cancel");
 			actionSheet.create({
 				title: 'Actions',
@@ -88,13 +91,24 @@ var ui = {
 				} else {
 					switch (buttonIndex) {
 						case 0:
-							cache.clear();
+							cache.clear("json");
 							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
+							util.alert("All Items Cleared");
 							break;
 						case 1:
-							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
-							MediaBrowser.startWorker();
+							cache.clear("cache");
+							util.alert("All Images Cleared");
 							break;
+						case 2:
+							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
+							MediaBrowser.startWorker(true, true);
+							break;
+						case 3:
+							//cache.clear("cache");
+							MediaBrowserNowPlaying.allItemsPopulated = false;
+							util.alert("Custom TV Cleared");
+							break;
+
 					}
 				}
 			});
@@ -186,6 +200,7 @@ var ui = {
 		});
 		$("#btnRoom").fastClick(function() {
 			var oncomplete = function(buttonIndex) {
+				MediaBrowser.resetCallback();
 				settings.userSettings.roomIndex = buttonIndex;
 				settings.userSettings.deviceIndex = 0;
 				util.updateStatus();

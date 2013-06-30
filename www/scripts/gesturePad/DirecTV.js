@@ -130,11 +130,16 @@ var DirecTV = {
 			timeout: 10000,
 			data: 'major=' + c.number,
 			success: function(response) {
-				c.nowplaying = response.title;
-				c.startTime = response.startTime;
-				c.duration = response.duration;
-				c.timeleft = util.hms2((response.startTime + response.duration) - Math.floor(new Date().getTime() / 1000));
-				c.ending = (response.startTime + response.duration);
+				try {
+
+					c.nowplaying = response.title;
+					c.startTime = response.startTime;
+					c.duration = response.duration;
+					c.timeleft = util.hms2((response.startTime + response.duration) - Math.floor(new Date().getTime() / 1000));
+					c.ending = (response.startTime + response.duration);
+				} catch (e) {
+					document.ajaxq.q[queueName].shift();
+				}
 				DirecTV.checkIfWorkerIsComplete();
 			},
 			error: function(x, y, z) {
