@@ -1,6 +1,6 @@
 var ui = {
 	initiateBindings: function() {
-		$("#top, #toptrans, #overallVolumeContainer").bind("touchmove", function(event) {
+		$("#top, #toptrans, #overallVolumeContainer, #bottomGrabber").bind("touchmove", function(event) {
 			event.preventDefault();
 		});
 		ui.bindButtons();

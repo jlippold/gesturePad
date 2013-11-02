@@ -73,13 +73,13 @@ var bottomDraw = {
 				}
 			}
 		});
-		$("#bottomGrabber").bind("touchstart", function(e) {
+		$("#bottomGrabberKILL").bind("touchstart", function(e) {
 			var s = window.plugins.volumeSlider;
 			s.hideVolumeSlider(1);
 			var lastY = e.originalEvent.touches[0].screenY;
 			$(this).data('lastY', e.originalEvent.touches[0].screenY);
 		});
-		$("#bottomGrabber").bind("touchmove", function(e) {
+		$("#bottomGrabberKILL").bind("touchmove", function(e) {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 			var orig = e.originalEvent.targetTouches[0];
@@ -104,7 +104,7 @@ var bottomDraw = {
 			}
 
 		});
-		$("#bottomGrabber").bind("touchend", function(e) {
+		$("#bottomGrabberKILL").bind("touchend", function(e) {
 			sliders.resize();
 			setTimeout(function() {
 				bottomDraw.refreshBottomDrawer();

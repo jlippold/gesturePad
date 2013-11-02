@@ -787,6 +787,7 @@ form.frmSettings a {
 
 div.grabber {
 	margin-top: -6px;
+	display: none;
 }
 
 div.grabber span.bars {
