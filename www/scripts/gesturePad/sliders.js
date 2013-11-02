@@ -6,7 +6,7 @@ var sliders = {
 		if (util.iOSVersion() == 7) {
 			seekbar.createVolumeSlider($("#slider").offset().left, $("#slider").offset().top + 2, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
 		} else {
-			seekbar.createVolumeSlider($("#slider").offset().left, $("#slider").offset().top, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+			seekbar.createVolumeSlider($("#slider").offset().left, $("#slider").offset().top - 7, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
 		}
 
 		seekbar.showVolumeSlider(2);
@@ -29,7 +29,7 @@ var sliders = {
 		if (util.iOSVersion() == 7) {
 			volumebar.createVolumeSlider($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top + 2, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
 		} else {
-			volumebar.createVolumeSlider($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+			volumebar.createVolumeSlider($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top - 7, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
 		}
 
 		volumebar.showVolumeSlider(1);
@@ -121,8 +121,8 @@ var sliders = {
 					s.resize($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top + 2, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
 					s.resize($("#slider").offset().left, $("#slider").offset().top + 2, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
 				} else {
-					s.resize($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
-					s.resize($("#slider").offset().left, $("#slider").offset().top, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+					s.resize($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top - 7, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+					s.resize($("#slider").offset().left, $("#slider").offset().top - 7, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
 				}
 
 			}
