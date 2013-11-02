@@ -165,8 +165,15 @@ var MediaBrowser = {
 				'navBarColor': 'black',
 				'showRightButton': true,
 				'RightButtonText': 'Close',
-				'showBackButton': x.Data.Name != "StartupFolder" ? true : false
+				'showBackButton': x.Data.Name != "StartupFolder" ? true : false,
+				'showToolBar': true,
+				'MediaBrowserToolBar': true
 			});
+
+			nt.onToolbarButtonClick(function(buttonIndex) {
+				MediaBrowser.toolbarButtonClickEvent(buttonIndex, nt);
+			});
+
 			nt.onRightButtonTap(function() {
 				nt.hideTable(function() {});
 			});
@@ -399,8 +406,15 @@ var MediaBrowser = {
 				'navBarColor': 'black',
 				'showRightButton': true,
 				'RightButtonText': 'Close',
-				'showBackButton': false
+				'showBackButton': false,
+				'showToolBar': true,
+				'MediaBrowserToolBar': true
 			});
+
+			nt.onToolbarButtonClick(function(buttonIndex) {
+				MediaBrowser.toolbarButtonClickEvent(buttonIndex, nt);
+			});
+
 			nt.onRightButtonTap(function() {
 				nt.hideTable(function() {});
 			});
@@ -477,6 +491,33 @@ var MediaBrowser = {
 			callback(geniusResults);
 		});
 	},
+	toolbarButtonClickEvent: function(buttonIndex, nt) {
+
+		if (buttonIndex == 1) { //Recent Channels
+			MediaBrowserNowPlaying.allItemsPopulated = false;
+			nt.hideTable(function() {
+				$("#btnTitles").trigger("click");
+			});
+		}
+		if (buttonIndex == 2) { //Volume Down
+			gestures.executeGestureByCommandName("VolumeDown");
+		}
+		if (buttonIndex == 3) { //Volume Up
+			gestures.executeGestureByCommandName("VolumeUp");
+		}
+		if (buttonIndex == 4) { //Peek rooms
+			nt.hideTable(function() {
+				util.setDeviceByShortName("DTV");
+				$("#btnTitles").trigger("click");
+			});
+		}
+		if (buttonIndex == 5) { //Refresh
+			nt.hideTable(function() {
+				$("#btnTitles").trigger("click");
+			});
+		}
+
+	},
 	createCustomTable: function(tableView, tableTitle, backButtonCallback, itemSelectCallback) {
 		var nt = window.plugins.NativeTable;
 		nt.createTable({
@@ -487,8 +528,15 @@ var MediaBrowser = {
 			'navBarColor': 'black',
 			'showRightButton': true,
 			'RightButtonText': 'Close',
-			'showBackButton': true
+			'showBackButton': true,
+			'showToolBar': true,
+			'MediaBrowserToolBar': true
 		});
+
+		nt.onToolbarButtonClick(function(buttonIndex) {
+			MediaBrowser.toolbarButtonClickEvent(buttonIndex, nt);
+		});
+
 		nt.onRightButtonTap(function() {
 			nt.hideTable(function() {});
 		});
@@ -1258,6 +1306,7 @@ var MediaBrowser = {
 			setTimeout(function() {
 				util.setItem("lastRefresh", new Date().toISOString());
 				util.setStatusBarForceClear();
+				MediaBrowserNowPlaying.allItemsPopulated = false;
 			}, 1500);
 		}
 		//});

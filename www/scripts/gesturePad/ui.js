@@ -15,7 +15,10 @@ var ui = {
 			var room = util.getCurrentRoom();
 			var device = util.getCurrentDevice();
 			if (device.shortname == "DTV") {
+
 				var tableView = [];
+				var currentChannelIndex = 0;
+
 				$.each(guide.channels, function(channelKey, c) {
 					var ending = "";
 					if (c.ending > 0) {
@@ -34,6 +37,12 @@ var ui = {
 						a.image = "www/" + c.logo;
 					}
 
+					if (DirecTV.recentChannels.length > 0) {
+						if (c.number == DirecTV.recentChannels[0]) {
+							currentChannelIndex = channelKey;
+						}
+					}
+
 					tableView.push(a);
 				});
 				var nt = window.plugins.NativeTable;
@@ -45,8 +54,54 @@ var ui = {
 					'navBarColor': 'black',
 					'showRightButton': true,
 					'RightButtonText': 'Close',
-					'showBackButton': false
+					'showBackButton': false,
+					'showToolBar': true
 				});
+
+				nt.onToolbarButtonClick(function(buttonIndex) {
+					if (buttonIndex == 1) { //Recent Channels
+						var recentChannels = DirecTV.recentChannels.slice(1, 5);
+						var recent = [];
+
+						$.each(recentChannels, function(i, c) {
+							recent.push(DirecTV.getTitleForChannel(c));
+						});
+
+						if (recent.length >= 1) {
+							var actionSheet = window.plugins.actionSheet;
+							recent.push("Cancel");
+							actionSheet.create({
+								title: 'Recent Channels',
+								items: recent,
+								destructiveButtonIndex: (recent.length - 1)
+							}, function(buttonValue, buttonIndex) {
+								if (buttonIndex == -1 || buttonIndex == (recent.length - 1)) {
+									return;
+								} else {
+									DirecTV.changeChannel(recentChannels[buttonIndex]);
+								}
+							});
+						}
+					}
+					if (buttonIndex == 2) { //Volume Down
+						gestures.executeGestureByCommandName("VolumeDown");
+					}
+					if (buttonIndex == 3) { //Volume Up
+						gestures.executeGestureByCommandName("VolumeUp");
+					}
+					if (buttonIndex == 4) { //Peek rooms
+						nt.hideTable(function() {
+							util.setDeviceByShortName("MCE");
+							$("#btnTitles").trigger("click");
+						});
+					}
+					if (buttonIndex == 5) { //Refresh
+						nt.hideTable(function() {
+							$("#btnTitles").trigger("click");
+						});
+					}
+				});
+
 				nt.onRightButtonTap(function() {
 					nt.hideTable(function() {});
 				});
@@ -55,7 +110,12 @@ var ui = {
 					DirecTV.changeChannel(item.major);
 				});
 				nt.setTableData(tableView);
-				nt.showTable(function() {});
+
+				nt.showTable(function() {
+					nt.scrollTo({
+						'index': currentChannelIndex
+					});
+				});
 			}
 			if (device.shortname == "MCE") {
 
@@ -231,15 +291,16 @@ var ui = {
 				settings.userSettings.deviceIndex = buttonIndex;
 				var device = util.getCurrentDevice();
 				var deviceShortName = device.shortname;
+
 				if (room.IR) {
 					util.setDeviceByShortName("MCE"); //force device back to MCE, because EG swithces the inputs
 					var switchInputNode = $(xml).find('gesturePad > devices > device[shortname="MCE"] > commands > category > command > action > onCompleteSetDevice[shortname="' + deviceShortName + '"]:first');
 					if ($(switchInputNode).size() > 0) {
 						gestures.doEvent("manual", $(switchInputNode).parent());
-						util.getRoomStatus();
+						//util.getRoomStatus();
 					}
 				}
-				util.updateStatus();
+
 			};
 			var actionSheet = window.plugins.actionSheet;
 			var RoomDevices = [];
@@ -256,6 +317,15 @@ var ui = {
 				if (buttonIndex == -1 || buttonIndex == (RoomDevices.length - 1)) {
 					return;
 				} else {
+					var devices = util.getCurrentRoom().devices;
+					for (var i = 0; i < devices.length; i++) {
+						if (devices[i].name === buttonValue) {
+							util.setDeviceByShortName(devices[i].shortname);
+							ui.clearNowPlaying();
+							util.updateStatus();
+						}
+					}
+
 					oncomplete(buttonIndex);
 				}
 			});
@@ -375,7 +445,9 @@ var ui = {
 						$("#timespanleft").text(util.hms2(json.offset));
 						$("#timespanright").text("- " + util.hms2(json.duration - json.offset));
 					}
+
 					var output = json.major + " " + json.callsign + " " + json.title;
+					DirecTV.addToRecentChannels(json.major);
 					$("#NowPlayingTitle").text(output);
 					$("#NowPlayingTitle").attr("data-item", json.callsign + json.major);
 					$("#NowPlayingTitle").attr("class", "");
@@ -429,7 +501,6 @@ var ui = {
 																id: imgID,
 																img: img
 															});
-															console.log("cached");
 														};
 														img.src = "http://thetvdb.com/banners/_cache/" + $(poster).text();
 													}

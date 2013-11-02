@@ -33,7 +33,7 @@ var init = {
 			return;
 		}
 		window.setTimeout(function() {
-			MediaBrowser.startWorker(true);
+			//MediaBrowser.startWorker(true);
 		}, 2000);
 
 		//load channels for DTV, if defined in settings
@@ -54,6 +54,7 @@ var init = {
 		if (settings.userSettings.isSetup === false) {
 			return;
 		}
+		$("#hud").hide();
 		notify.clearAllBadges();
 		util.getRoomStatus();
 		DirecTV.startWorker();

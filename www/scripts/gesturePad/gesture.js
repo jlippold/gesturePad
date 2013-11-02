@@ -21,6 +21,7 @@ var gestures = {
 		}
 	},
 	doEvent: function(gesture, actions, overRideDevice) {
+		$("#hud").hide();
 		window.scrollTo(0, 0);
 		if (util.isWifi() === false) {
 			util.doAlert("You are not on Wifi. Connect to Wifi and try again");

@@ -90,7 +90,27 @@ var MediaBrowserNowPlaying = {
 
 					//finally add the item if thw whole ruleset is true
 					if (ruleSet[idx].match === true) {
-						NowPlayingMatchingItemsForChannel[channel.idx].AllItems.push(item.Id);
+
+						var HD = "";
+						if (item.MediaInfo) {
+							if (item.MediaInfo.Height) {
+								if (item.MediaInfo.Height >= 550) {
+									HD = " [HD]";
+								}
+							}
+						}
+
+						if (item.MediaType) {
+							if (item.MediaType == "Mkv") {
+								HD = " [HD]";
+							}
+						}
+
+						NowPlayingMatchingItemsForChannel[channel.idx].AllItems.push({
+							Id: item.Id,
+							title: item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : "") + HD,
+							runtime: MediaBrowserNowPlaying.getRuntime(item)
+						});
 					}
 
 				});
@@ -110,23 +130,58 @@ var MediaBrowserNowPlaying = {
 	generateChannels: function() {
 
 		cache.getJson("NowPlayingMatchingItemsForChannel", function(NowPlayingMatchingItemsForChannel) {
-			MediaBrowser.loadGeniusResults(function(geniusResults) {
-				$.each(NowPlayingChannels, function(idx) {
-					var channel = NowPlayingChannels[idx];
+			//MediaBrowser.loadGeniusResults(function(geniusResults) {
+			$.each(NowPlayingChannels, function(idx) {
+				var channel = NowPlayingChannels[idx];
 
-					//remove items that have ended
-					channel.UpNext = $.grep(channel.UpNext, function(el, i) {
-						var timeslot = channel.UpNext[i];
-						if ((new Date()) > timeslot.ends) { //over
-							return false;
-						} else {
-							return true;
-						}
-					});
+				//remove items that have ended
+				channel.UpNext = $.grep(channel.UpNext, function(el, i) {
+					var timeslot = channel.UpNext[i];
+					if ((new Date()) > timeslot.ends) { //over
+						return false;
+					} else {
+						return true;
+					}
+				});
 
-					//add in now playing items to minimize duplicates
-					if (channel.UpNext.length === 0) {
+				//add in now playing items to minimize duplicates
+				if (channel.UpNext.length === 0) {
 
+					var chanIndex = channel.idx;
+					var arrPosition = NowPlayingMatchingItemsForChannel[chanIndex].position;
+					arrPosition += 1;
+					if ((arrPosition + 1) > NowPlayingMatchingItemsForChannel[chanIndex].AllItems.length) {
+						NowPlayingMatchingItemsForChannel[chanIndex].AllItems = util.shuffle(NowPlayingMatchingItemsForChannel[chanIndex].AllItems);
+						arrPosition = 0;
+					}
+					NowPlayingMatchingItemsForChannel[chanIndex].position = arrPosition;
+
+					var runtime = NowPlayingMatchingItemsForChannel[chanIndex].AllItems[arrPosition].runtime;
+					var startPosition = 0;
+					if (channel.UpNext.length === 0) { //generate random starting position for the nowplaying item
+						startPosition = util.randomFromInterval(0, runtime - 10);
+					}
+
+					var timeslot = {};
+					timeslot.starts = util.addMinutes(new Date(), (startPosition * -1.0));
+					timeslot.ends = util.addMinutes(timeslot.starts, runtime);
+					timeslot.title = NowPlayingMatchingItemsForChannel[chanIndex].AllItems[arrPosition].title;
+					timeslot.Id = NowPlayingMatchingItemsForChannel[chanIndex].AllItems[arrPosition].Id;
+
+					channel.UpNext.push(timeslot);
+
+				}
+
+			});
+
+			$.each(NowPlayingChannels, function(idx) {
+				var maxFutureItems = 3;
+				var channel = NowPlayingChannels[idx];
+
+				//add in up next items
+				if (channel.UpNext.length < maxFutureItems) {
+
+					for (var k = channel.UpNext.length; k <= maxFutureItems; k++) {
 						var chanIndex = channel.idx;
 						var arrPosition = NowPlayingMatchingItemsForChannel[chanIndex].position;
 						arrPosition += 1;
@@ -136,9 +191,7 @@ var MediaBrowserNowPlaying = {
 						}
 						NowPlayingMatchingItemsForChannel[chanIndex].position = arrPosition;
 
-						var itemID = NowPlayingMatchingItemsForChannel[chanIndex].AllItems[arrPosition];
-						var item = geniusResults.Titles[itemID];
-						var runtime = MediaBrowserNowPlaying.getRuntime(item);
+						var runtime = NowPlayingMatchingItemsForChannel[chanIndex].AllItems[arrPosition].runtime;
 						var startPosition = 0;
 						if (channel.UpNext.length === 0) { //generate random starting position for the nowplaying item
 							startPosition = util.randomFromInterval(0, runtime - 10);
@@ -147,53 +200,16 @@ var MediaBrowserNowPlaying = {
 						var timeslot = {};
 						timeslot.starts = util.addMinutes(new Date(), (startPosition * -1.0));
 						timeslot.ends = util.addMinutes(timeslot.starts, runtime);
-						timeslot.title = item.Name;
-						timeslot.Id = item.Id;
+						timeslot.title = NowPlayingMatchingItemsForChannel[chanIndex].AllItems[arrPosition].title;
+						timeslot.Id = NowPlayingMatchingItemsForChannel[chanIndex].AllItems[arrPosition].Id;
 
 						channel.UpNext.push(timeslot);
 
 					}
 
-				});
-
-				$.each(NowPlayingChannels, function(idx) {
-					var maxFutureItems = 3;
-					var channel = NowPlayingChannels[idx];
-
-					//add in up next items
-					if (channel.UpNext.length < maxFutureItems) {
-
-						for (var k = channel.UpNext.length; k <= maxFutureItems; k++) {
-							var chanIndex = channel.idx;
-							var arrPosition = NowPlayingMatchingItemsForChannel[chanIndex].position;
-							arrPosition += 1;
-							if ((arrPosition + 1) > NowPlayingMatchingItemsForChannel[chanIndex].AllItems.length) {
-								NowPlayingMatchingItemsForChannel[chanIndex].AllItems = util.shuffle(NowPlayingMatchingItemsForChannel[chanIndex].AllItems);
-								arrPosition = 0;
-							}
-							NowPlayingMatchingItemsForChannel[chanIndex].position = arrPosition;
-
-							var itemID = NowPlayingMatchingItemsForChannel[chanIndex].AllItems[arrPosition];
-							var item = geniusResults.Titles[itemID];
-							var runtime = MediaBrowserNowPlaying.getRuntime(item);
-							var startPosition = 0;
-							if (channel.UpNext.length === 0) { //generate random starting position for the nowplaying item
-								startPosition = util.randomFromInterval(0, runtime - 10);
-							}
-
-							var timeslot = {};
-							timeslot.starts = util.addMinutes(new Date(), (startPosition * -1.0));
-							timeslot.ends = util.addMinutes(timeslot.starts, runtime);
-							timeslot.title = item.Name;
-							timeslot.Id = item.Id;
-
-							channel.UpNext.push(timeslot);
-
-						}
-
-					}
-				});
+				}
 			});
+			//});
 
 			cache.saveJson("NowPlayingMatchingItemsForChannel", NowPlayingMatchingItemsForChannel);
 		});
@@ -211,95 +227,89 @@ var MediaBrowserNowPlaying = {
 		MediaBrowserNowPlaying.generateChannels();
 
 		var tableView = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
-			cache.getJson("NowPlayingMatchingItemsForChannel", function(NowPlayingMatchingItemsForChannel) {
+		//MediaBrowser.loadGeniusResults(function(geniusResults) {
+		cache.getJson("NowPlayingMatchingItemsForChannel", function(NowPlayingMatchingItemsForChannel) {
 
-				$.each(NowPlayingChannels, function(idx) {
-					var channel = NowPlayingChannels[idx];
-					if (NowPlayingMatchingItemsForChannel[channel.idx].AllItems.length <= 1 || channel.UpNext.length <= 1) {
-						return true;
-					}
-					var timeslot = channel.UpNext[0];
-					var nextTimeSlot = channel.UpNext[1];
+			$.each(NowPlayingChannels, function(idx) {
+				var channel = NowPlayingChannels[idx];
+				if (NowPlayingMatchingItemsForChannel[channel.idx].AllItems.length <= 1 || channel.UpNext.length <= 1) {
+					return true;
+				}
+				var timeslot = channel.UpNext[0];
+				var nextTimeSlot = channel.UpNext[1];
+				var timeLeft = Math.floor((Math.abs(timeslot.ends - (new Date())) / 1000) / 60).toString();
 
-					var item = geniusResults.Titles[timeslot.Id];
-					var timeLeft = Math.floor((Math.abs(timeslot.ends - (new Date())) / 1000) / 60).toString();
-
-					var HD = "";
-					if (item.MediaInfo) {
-						if (item.MediaInfo.Height) {
-							if (item.MediaInfo.Height >= 550) {
-								HD = " [HD]";
-							}
-						}
-					}
-
-					if (item.MediaType) {
-						if (item.MediaType == "Mkv") {
-							HD = " [HD]";
-						}
-					}
-
-					tableView.push({
-						'textLabel': item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : "") + HD,
-						'detailTextLabel': "Time Left: " + timeLeft + " minutes \nUp Next: " + geniusResults.Titles[nextTimeSlot.Id].Name,
-						'icon': "none",
-						'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
-						'sectionHeader': channel.Title + " - " + NowPlayingMatchingItemsForChannel[channel.idx].AllItems.length + "",
-						'guid': item.Id,
-						'type': item.Type,
-						'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
-						'sortName': item.SortName,
-						'ends': timeslot.ends
-					});
-
+				tableView.push({
+					'textLabel': timeslot.title,
+					'detailTextLabel': "Time Left: " + timeLeft + " minutes \nUp Next: " + nextTimeSlot.title,
+					'icon': "none",
+					'image': util.getRandomMBServer() + "image/?Id=" + timeslot.Id + "&maxwidth=120&maxheight=120",
+					'sectionHeader': channel.Title,
+					'guid': timeslot.Id,
+					'imdb': '',
+					'sortName': '',
+					'ends': timeslot.ends
 				});
 
-				var nt = window.plugins.NativeTable;
-				nt.createTable({
-					'height': $(window).height(),
-					'showSearchBar': true,
-					'showNavBar': true,
-					'navTitle': "Now Playing",
-					'navBarColor': 'black',
-					'showRightButton': true,
-					'RightButtonText': 'Close',
-					'showBackButton': true
-				});
-				nt.onRightButtonTap(function() {
-					nt.hideTable(function() {});
-				});
-				nt.onBackButtonTap(function() {
-					nt.hideTable(function() {
-						MediaBrowser.createInitialListView();
-					});
-				});
-
-				nt.setRowSelectCallBackFunction(function(rowId) {
-					var ending = Date.parse(tableView[rowId].ends);
-					util.doHud({
-						show: true,
-						labelText: "Playing Title...",
-						detailsLabelText: "Please Wait..."
-					});
-					var MBUrl = util.getMBUrl();
-					MBUrl += "ui?command=play&id=" + tableView[rowId].guid;
-					$.getJSON(MBUrl, function(x) {
-						setTimeout(function() {
-							MediaBrowserNowPlaying.seekAttempts = 0;
-							MediaBrowserNowPlaying.doSeek(ending);
-						}, 1500);
-
-					});
-				});
-
-				nt.setTableData(tableView);
-				util.doHud({
-					show: false
-				});
-				nt.showTable(function() {});
 			});
+
+			var nt = window.plugins.NativeTable;
+			nt.createTable({
+				'height': $(window).height(),
+				'showSearchBar': true,
+				'showNavBar': true,
+				'navTitle': "Now Playing",
+				'navBarColor': 'black',
+				'showRightButton': true,
+				'RightButtonText': 'Close',
+				'showBackButton': true,
+				'showToolBar': true,
+				'MediaBrowserToolBar': true
+			});
+
+			nt.onToolbarButtonClick(function(buttonIndex) {
+				MediaBrowser.toolbarButtonClickEvent(buttonIndex, nt);
+			});
+
+			nt.onRightButtonTap(function() {
+				nt.hideTable(function() {});
+			});
+			nt.onBackButtonTap(function() {
+				nt.hideTable(function() {
+					MediaBrowser.createInitialListView();
+				});
+			});
+
+			nt.setRowSelectCallBackFunction(function(rowId) {
+				var ending = Date.parse(tableView[rowId].ends);
+				util.doHud({
+					show: true,
+					labelText: "Playing Title...",
+					detailsLabelText: "Tap to cancel",
+					tappedEvent: function() {
+						MediaBrowserNowPlaying.seekAttempts = 99;
+						util.doHud({
+							show: false
+						});
+					}
+				});
+				var MBUrl = util.getMBUrl();
+				MBUrl += "ui?command=play&id=" + tableView[rowId].guid;
+				$.getJSON(MBUrl, function(x) {
+					setTimeout(function() {
+						MediaBrowserNowPlaying.seekAttempts = 0;
+						MediaBrowserNowPlaying.doSeek(ending);
+					}, 1500);
+				});
+			});
+
+			nt.setTableData(tableView);
+			util.doHud({
+				show: false
+			});
+			nt.showTable(function() {});
 		});
+		//});
 
 	},
 	getRuntime: function(item) {

@@ -1,7 +1,9 @@
 var DirecTV = {
+	recentChannels: [],
 	changeChannel: function(major) {
 		var device = util.getCurrentDevice();
 		// change channel
+		DirecTV.addToRecentChannels(major);
 		$.getJSON("http://" + device.IPAddress + ":" + device.Port + '/tv/tune?major=' + major, function() {
 			ui.clearNowPlaying();
 			// update whats on
@@ -9,6 +11,27 @@ var DirecTV = {
 				ui.queryNowPlaying();
 			}, 3000);
 		});
+	},
+	getTitleForChannel: function(major) {
+		var title = major;
+		$.each(guide.channels, function(channelKey) {
+			var c = guide.channels[channelKey];
+			//first determine if the channel needs a refresh
+			if (c.number == major) {
+				title = c.nowplaying === "" ? c.fullname : c.nowplaying;
+				return false;
+			}
+		});
+		return title;
+	},
+	addToRecentChannels: function(channelID) {
+		var recent = DirecTV.recentChannels;
+		recent = jQuery.grep(recent, function(value) { //remove current channel if it's in the list
+			return value != channelID;
+		});
+		recent.unshift(channelID); //push this to top
+		recent = recent.slice(0, 4); //save the top 5
+		DirecTV.recentChannels = recent;
 	},
 	startWorker: function() {
 		try {

@@ -16,13 +16,16 @@
 @synthesize searchController = _searchController;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize navBar = _navbar;
+@synthesize toolBar = _toolbar;
 
 static dispatch_queue_t concurrentQueue = NULL;
 
 
 -(CDVPlugin*) initWithWebView:(UIWebView*)theWebView
 {
+    
     self = (NativeTable*)[super initWithWebView:theWebView];
+
     return self;
 }
 
@@ -34,6 +37,7 @@ static dispatch_queue_t concurrentQueue = NULL;
     [_searchBar release];
     [_searchController release];
     [_navbar release];
+    [_toolbar release];
     [_searchResults release];
     [super dealloc];
 }
@@ -42,18 +46,21 @@ static dispatch_queue_t concurrentQueue = NULL;
 
 #pragma mark - JS interface methods
 
+-(BOOL)isIOS7 {
+    BOOL iOS7 = YES;
+    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+        iOS7 = NO;
+    }
+    return iOS7;
+}
+
 - (void)createTable:(NSArray*)arguments withDict:(NSDictionary*)options
 {
-    //status bar tap, scroll top
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"_UIApplicationSystemGestureStateChangedNotification"
-                                                      object:nil
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      [_mainTableView setContentOffset:CGPointMake(0, 0) animated:YES];
-                                                  }];
-    
-
     CGRect navBarFrame = CGRectMake(0, 0, self.webView.superview.bounds.size.width, 44.0);
+    if ([self isIOS7]) {
+        navBarFrame = CGRectMake(0, 10, self.webView.superview.bounds.size.width, 44.0);
+    }
+
     _navbar = [[UINavigationBar alloc] initWithFrame:navBarFrame];
     
     UIImage *backgroundImage = [UIImage imageNamed:@"www/img/navBar.png"];
@@ -62,6 +69,9 @@ static dispatch_queue_t concurrentQueue = NULL;
     if ( [[options objectForKey:@"navBarColor"] isEqualToString:@"black"] ) {
         _navbar.barStyle = UIBarStyleBlack;
     }
+    
+
+    _navbar.tintColor = [UIColor whiteColor];
     
     UINavigationItem *navItem = [UINavigationItem alloc];
     NSString *navTitle = @"";
@@ -95,6 +105,57 @@ static dispatch_queue_t concurrentQueue = NULL;
     [self.webView.superview addSubview:_navbar];
     [_navbar setHidden:YES];
     _offsetTop = 0.0f;
+    _offsetBottom = 0.0f;
+
+
+    _toolbar = [[UIToolbar alloc] init];
+    [_toolbar setHidden:YES];
+    //[[_toolbar appearance] setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
+    [_toolbar setBackgroundImage:backgroundImage forToolbarPosition:0 barMetrics:0];
+    
+    if ( [[options objectForKey:@"showToolBar"] boolValue] == true) {
+        [_toolbar setHidden:NO];
+        _toolbar.barStyle = UIBarStyleBlack;
+        _toolbar.tintColor = [UIColor whiteColor];
+        
+        CGRect toolBarFrame = CGRectMake(0, self.webView.superview.bounds.size.height - 44.0, self.webView.superview.bounds.size.width, 44.0);
+        if ([self isIOS7]) {
+            toolBarFrame = CGRectMake(0, self.webView.superview.bounds.size.height - 54.0, self.webView.superview.bounds.size.width, 44.0);
+        }
+        _toolbar.frame = toolBarFrame;
+        [_toolbar sizeToFit];
+        UIBarButtonItem *flexItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                  target:nil
+                                                                                  action:nil];
+
+        UIBarButtonItem *buttonOne = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"www/img/toolbarButtons/Reply.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onButtonOnePress:)];
+        
+        if ( [[options objectForKey:@"MediaBrowserToolBar"] boolValue] == true) {
+            buttonOne = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"www/img/toolbarButtons/Shuffle.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onButtonOnePress:)];
+        }
+
+        UIBarButtonItem *buttonTwo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"www/img/toolbarButtons/SpeakerDown.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onButtonTwoPress:)];
+        
+        UIBarButtonItem *buttonThree = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"www/img/toolbarButtons/SpeakerUp.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onButtonThreePress:)];
+        
+        UIBarButtonItem *buttonFour = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"www/img/toolbarButtons/Action.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onButtonFourPress:)];
+        
+        UIBarButtonItem *buttonFive = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"www/img/toolbarButtons/Refresh.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onButtonFivePress:)];
+        
+        NSArray *items = [NSArray arrayWithObjects: buttonOne, flexItem, buttonTwo, flexItem, buttonThree, flexItem, buttonFour, flexItem, buttonFive, nil];
+        [_toolbar setItems: items animated:NO];
+        [self.webView.superview addSubview:_toolbar];
+        [buttonOne release];
+        [buttonTwo release];
+        [buttonThree release];
+        [buttonFour release];
+        [buttonFive release];
+        [flexItem release];
+        
+        
+        
+    }
+
     
 	[_mainTableView release];
 	_mainTableView = [UITableView new];
@@ -102,14 +163,41 @@ static dispatch_queue_t concurrentQueue = NULL;
 	[_mainTableView setDataSource:self];
 	[_mainTableView setDelegate:self];
     
-    _mainTableHeight = [[options objectForKey:@"height"] floatValue];
+    if ([self isIOS7]) {
+        _mainTableHeight =  [[UIScreen mainScreen] bounds].size.height-10;
+    } else {
+        _mainTableHeight =  [[options objectForKey:@"height"] floatValue];
+    }
+
+    
+    UIView *backgroundView = [[UIView alloc] initWithFrame:_mainTableView.bounds];
+    backgroundView.backgroundColor = [UIColor clearColor];
+    _mainTableView.backgroundView = backgroundView;
+    
+    if ([_mainTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [_mainTableView setSeparatorInset:UIEdgeInsetsZero];
+        //[_mainTableView setSeparatorInset:UIEdgeInsetsMake(10, 10, 0, 0)];
+    }
     
     if ( [[options objectForKey:@"showSearchBar"] boolValue] == true) {
         [self setupSearchBar];
     }
     if ( [[options objectForKey:@"showNavBar"] boolValue] == true) {
         [_navbar setHidden:NO];
-        _offsetTop = 44.0f;
+        if ([self isIOS7]) {
+            _offsetTop = 54.0f;
+        } else {
+            _offsetTop = _navbar.frame.size.height;
+        }
+    }
+    
+    if ( [[options objectForKey:@"showToolBar"] boolValue] == true) {
+        [_toolbar setHidden:NO];
+        if ([self isIOS7]) {
+            _offsetBottom = 44.0f;
+        } else {
+            _offsetBottom = _toolbar.frame.size.height;
+        }
     }
     
     _searchResults = [NSMutableArray array];
@@ -132,6 +220,32 @@ static dispatch_queue_t concurrentQueue = NULL;
 - (IBAction)onBackButtonPress:(id)sender
 {
     NSString * jsCallBack = @"window.plugins.NativeTable._onBackButtonTap();";
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+}
+
+- (IBAction)onButtonOnePress:(id)sender
+{
+    NSString * jsCallBack = @"window.plugins.NativeTable._onToolbarButtonClick(1);";
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+}
+- (IBAction)onButtonTwoPress:(id)sender
+{
+    NSString * jsCallBack = @"window.plugins.NativeTable._onToolbarButtonClick(2);";
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+}
+- (IBAction)onButtonThreePress:(id)sender
+{
+    NSString * jsCallBack = @"window.plugins.NativeTable._onToolbarButtonClick(3);";
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+}
+- (IBAction)onButtonFourPress:(id)sender
+{
+    NSString * jsCallBack = @"window.plugins.NativeTable._onToolbarButtonClick(4);";
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+}
+- (IBAction)onButtonFivePress:(id)sender
+{
+    NSString * jsCallBack = @"window.plugins.NativeTable._onToolbarButtonClick(5);";
     [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
 }
 
@@ -219,7 +333,10 @@ static dispatch_queue_t concurrentQueue = NULL;
 		return;
 	}
     
-	
+    [self disableScrollsToTopPropertyOnAllSubviewsOf:self.webView ];
+    
+	_mainTableView.scrollsToTop = YES;
+    
 	_originalWebViewFrame = self.webView.frame;
 	
 	CGRect mainTableFrame, CDWebViewFrame;
@@ -233,14 +350,16 @@ static dispatch_queue_t concurrentQueue = NULL;
 	
 	mainTableFrame = CGRectMake(
                                 CDWebViewFrame.origin.x,
-                                CDWebViewFrame.origin.y + (CDWebViewFrame.size.height + _offsetTop),
+                                CDWebViewFrame.origin.y + (CDWebViewFrame.size.height + _offsetTop + _offsetBottom),
                                 CDWebViewFrame.size.width,
-                                _mainTableHeight-_offsetTop
+                                _mainTableHeight-_offsetTop-_offsetBottom
                                 );
 	
     [self.webView setFrame:CDWebViewFrame];
 	[_mainTableView setFrame:mainTableFrame];
 	[_mainTableView setHidden:NO];
+
+    
     [self fadeIn];
     
 	//NSLog(@"ShowTable Called!");
@@ -248,10 +367,62 @@ static dispatch_queue_t concurrentQueue = NULL;
 }
 
 
+- (void)scrollTo:(NSArray*)arguments withDict:(NSDictionary*)options
+{
+    //requested position
+    if ( [[options objectForKey:@"index"] floatValue] ) {
+        int actualRow = [[options objectForKey:@"index"] floatValue];
+        if (actualRow < 1) {
+            return;
+        }
+        
+        //lookup Row and Section
+        int section = -1;
+        int row = 0;
+        int counter = 0;
+        
+        NSMutableArray *tmp = [[NSMutableArray alloc] init];
+        if (isFiltered) {
+            tmp = _searchResults.copy;
+        } else {
+            tmp = _mainTableData.copy;
+        }
+        
+        NSString *loopedHeader = @"";
+        
+        for(int i = 0; i < [tmp count]; i++ ) {
+            
+            NSString *thisHeader = [[tmp objectAtIndex:i] valueForKey:@"sectionHeader"];
+            if ( ![thisHeader isEqualToString:loopedHeader]) {
+                loopedHeader = thisHeader;
+                section++;
+                row = 0;
+            }
+            
+            if (counter == actualRow) {
+                break;
+            }
+            
+            counter++;
+            row++;
+        }
+        [tmp release];
+        
+        
+        //scroll to item
+        //NSLog(@" Section %d Row %d", section, row   );
+        
+        [_mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]
+                              atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+        
+    }
+
+
+}
+
 - (void)hideTable:(NSArray*)arguments withDict:(NSDictionary*)options
 {
     //    [self searchBarCancelButtonClicked:_searchBar];
-    
     
 	if(nil == _mainTableView){
         return;
@@ -358,7 +529,7 @@ static dispatch_queue_t concurrentQueue = NULL;
             counter++;
         }
         if (section == counter) {
-            retVal = thisHeader;
+            retVal = [NSString stringWithFormat:@"   %@", thisHeader] ;
         }
     }
     
@@ -369,6 +540,7 @@ static dispatch_queue_t concurrentQueue = NULL;
 
 -(void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath;
 {
+
     static UIImage* bgImage = nil;
     if (bgImage == nil) {
         bgImage = [[UIImage imageNamed:@"www/img/TableViewBG1.png"] retain];
@@ -382,13 +554,14 @@ static dispatch_queue_t concurrentQueue = NULL;
         cell.backgroundView = [[[UIImageView alloc] initWithImage:bgImage] autorelease];
     else
         cell.backgroundView = [[[UIImageView alloc] initWithImage:bgImage2] autorelease];
-    
+
     
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -475,8 +648,9 @@ static dispatch_queue_t concurrentQueue = NULL;
         cell.indentationLevel = 1;
         cell.indentationWidth = 2;
         
+        
         if (![url hasPrefix:@"http"]) {
-            cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+            cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
             cell.imageView.image = [self resizeImageToSize:[UIImage imageNamed:url]];
             if (![item valueForKey:@"nomask"]) {
                 cell.imageView.backgroundColor = [UIColor blackColor];
@@ -609,7 +783,9 @@ static dispatch_queue_t concurrentQueue = NULL;
     [_mainTableView setFrame:r];
     _mainTableView.alpha = 0;
     _navbar.alpha = 0;
+    _toolbar.alpha = 0;
     [_navbar setHidden:NO];
+    [_toolbar setHidden:NO];
     [_mainTableView setHidden:NO];
     
     [UIView animateWithDuration:0.3
@@ -621,6 +797,7 @@ static dispatch_queue_t concurrentQueue = NULL;
                          [_mainTableView setFrame:r];
                          _mainTableView.alpha = 1;
                          _navbar.alpha =1 ;
+                         _toolbar.alpha =1 ;
                      }
                      completion:^(BOOL finished){
                          [self.webView stringByEvaluatingJavaScriptFromString:@"window.plugins.NativeTable._onTableShowComplete();"];
@@ -650,7 +827,9 @@ static dispatch_queue_t concurrentQueue = NULL;
     [_mainTableView setFrame:r];
     _mainTableView.alpha = 1;
     _navbar.alpha = 1;
+    _toolbar.alpha = 1;
     [_navbar setHidden:NO];
+    [_toolbar setHidden:NO];
     [_mainTableView setHidden:NO];
     
     [UIView animateWithDuration:0.3
@@ -662,11 +841,13 @@ static dispatch_queue_t concurrentQueue = NULL;
                          [_mainTableView setFrame:r];
                          _mainTableView.alpha = 0;
                          _navbar.alpha = 0;
+                         _toolbar.alpha = 0;
                      }
                      completion:^(BOOL finished){
                          [self searchBarCancelButtonClicked:_searchBar];
 
                          [_navbar setHidden:YES];
+                         [_toolbar setHidden:YES];
                          [_mainTableView setHidden:YES];
                         [self removeDim];
                          [self.webView stringByEvaluatingJavaScriptFromString:@"window.plugins.NativeTable._onTableHideComplete();"];
@@ -686,6 +867,13 @@ static dispatch_queue_t concurrentQueue = NULL;
     return imageAfterResize ;
 }
 
-
+- (void) disableScrollsToTopPropertyOnAllSubviewsOf:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UIScrollView class]]) {
+            ((UIScrollView *)subview).scrollsToTop = NO;
+        }
+        [self disableScrollsToTopPropertyOnAllSubviewsOf:subview];
+    }
+}
 
 @end

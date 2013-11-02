@@ -81,7 +81,7 @@
 		<ruleSet>
 			<rule field="Rating">
 				<compare>greaterthan</compare>
-				<value>8</value>
+				<value>8.2</value>
 			</rule>
 			<rule field="Rating">
 				<compare>lessthan</compare>
@@ -102,6 +102,16 @@
 			<rule field="Studios">
 				<compare>contains</compare>
 				<value>Marvel</value>
+			</rule>
+			<rule field="Folder">
+				<compare>notcontains</compare>
+				<value>kids</value>
+			</rule>
+		</ruleSet>
+		<ruleSet>
+			<rule field="Studios">
+				<compare>contains</compare>
+				<value>DC Comics</value>
 			</rule>
 			<rule field="Folder">
 				<compare>notcontains</compare>

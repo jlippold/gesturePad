@@ -55,24 +55,57 @@
     // Set the main view to utilize the entire application frame space of the device.
     // Change this to suit your view's UI footprint needs in your application.
 
-    UIView* rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
-    CGRect webViewFrame = [[[rootView subviews] objectAtIndex:0] frame];  // first subview is the UIWebView
 
-    if (CGRectEqualToRect(webViewFrame, CGRectZero)) { // UIWebView is sized according to its parent, here it hasn't been sized yet
-        self.view.frame = [[UIScreen mainScreen] applicationFrame]; // size UIWebView's parent according to application frame, which will in turn resize the UIWebView
+    
+    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+    if ([[vComp objectAtIndex:0] intValue] >= 7) { // iOS 7 or above
+        CGRect oldBounds = [self.view bounds];
+        CGRect newViewBounds = CGRectMake( 0, -10, oldBounds.size.width, oldBounds.size.height-20 );
+        CGRect newWebViewBounds = CGRectMake( 0, -20, oldBounds.size.width, oldBounds.size.height-40 );
+
+        [self.view setBounds:newViewBounds];
+        [self.webView setBounds:newWebViewBounds];
+        self.webView.scrollView.scrollsToTop = NO;
+        
+    } else {
+        
+        
+        UIView* rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+        CGRect webViewFrame = [[[rootView subviews] objectAtIndex:0] frame];  // first subview is the UIWebView
+        
+        
+        if (CGRectEqualToRect(webViewFrame, CGRectZero)) { // UIWebView is sized according to its parent, here it hasn't been sized yet
+            self.view.frame = [[UIScreen mainScreen] applicationFrame]; // size UIWebView's parent according to application frame, which will in turn resize the UIWebView
+        }
+
+
     }
 
     [super viewWillAppear:animated];
 }
 
 
+
 - (void) viewDidLoad
 {
-
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-        
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    }
     
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)])
+    {
+        [self setNeedsStatusBarAppearanceUpdate];
+    } else {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    }
+    
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
 }
 
 - (void) viewDidUnload

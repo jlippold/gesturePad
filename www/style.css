@@ -7,7 +7,7 @@ body {
 	padding: 0;
 	height: 100%;
 	background: black;
-	font-family: "Helvetica";
+	font-family: "HelveticaNeue-UltraLight", "Helvetica";
 }
 
 * {
@@ -294,16 +294,18 @@ p {
 div.seekbarContainer P {
 	line-height: 12px;
 	font-size: 12px;
-	font-weight: bold;
 	color: white;
 	text-align: center;
+	font-family: "Helvetica";
+	margin-top: -4px;
 }
 
 #top p {
 	line-height: 14px;
 	font-size: 12px;
-	font-weight: bold;
+	font-family: "Helvetica"
 }
+
 p.grey {
 	color: #828282;
 	text-align: center;

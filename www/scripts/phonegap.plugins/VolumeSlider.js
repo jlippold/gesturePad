@@ -32,7 +32,7 @@
 	 * Set the volume slider
 	 */
 	VolumeSlider.prototype.setVolumeSlider = function(val, tag) {
-		if (isNaN(val) === false) {
+		if (util.isNumeric(val)) {
 			cordovaRef.exec(null, null, "VolumeSlider", "setVolumeSlider", [val, tag]);
 		}
 	};

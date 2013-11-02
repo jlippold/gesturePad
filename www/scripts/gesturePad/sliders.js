@@ -3,7 +3,8 @@ var sliders = {
 
 		/* seek control */
 		var seekbar = window.plugins.volumeSlider;
-		seekbar.createVolumeSlider($("#slider").offset().left, $("#slider").offset().top - 8, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+
+		seekbar.createVolumeSlider($("#slider").offset().left, $("#slider").offset().top, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
 		seekbar.showVolumeSlider(2);
 
 		seekbar.onSliderChanged(function(percentageDragged) {
@@ -21,7 +22,7 @@ var sliders = {
 
 		/* volume control */
 		var volumebar = window.plugins.volumeSlider;
-		volumebar.createVolumeSlider($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top - 8, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+		volumebar.createVolumeSlider($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
 		volumebar.showVolumeSlider(1);
 
 		volumebar.onSliderDragged(function(percentageDragged) {
@@ -96,16 +97,20 @@ var sliders = {
 		s.setVolumeSlider(x, 2);
 	},
 	resetNPSeek: function() {
-		var s = window.plugins.volumeSlider;
+		//var s = window.plugins.volumeSlider;
 		//s.setVolumeSlider(0, 2);
+		sliders.setNPSeek(0);
+		sliders.resetVolumeSlider();
 		$("#timespanleft").text("0:00");
 		$("#timespanright").text("- 0:00");
 	},
 	resize: function() {
 		setTimeout(function() {
 			var s = window.plugins.volumeSlider;
-			s.resize($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top - 8, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
-			s.resize($("#slider").offset().left, $("#slider").offset().top - 8, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+			if ($(window).height() > 20) {
+				s.resize($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+				s.resize($("#slider").offset().left, $("#slider").offset().top, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+			}
 		}, 250);
 
 	}
