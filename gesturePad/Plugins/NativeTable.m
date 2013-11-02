@@ -61,16 +61,16 @@ static dispatch_queue_t concurrentQueue = NULL;
     }
 
     _navbar = [[UINavigationBar alloc] initWithFrame:navBarFrame];
-    
+
     UIImage *backgroundImage = [UIImage imageNamed:@"www/img/navBar.png"];
     [_navbar setBackgroundImage:backgroundImage forBarMetrics:0];
-    
-    if ( [[options objectForKey:@"navBarColor"] isEqualToString:@"black"] ) {
-        _navbar.barStyle = UIBarStyleBlack;
+    _navbar.barStyle = UIBarStyleBlack;
+    if ([self isIOS7]) {
+        _navbar.tintColor = [UIColor whiteColor];
     }
+
     
 
-    _navbar.tintColor = [UIColor whiteColor];
     
     UINavigationItem *navItem = [UINavigationItem alloc];
     NSString *navTitle = @"";
@@ -109,13 +109,14 @@ static dispatch_queue_t concurrentQueue = NULL;
 
     _toolbar = [[UIToolbar alloc] init];
     [_toolbar setHidden:YES];
-    //[[_toolbar appearance] setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
     [_toolbar setBackgroundImage:backgroundImage forToolbarPosition:0 barMetrics:0];
+    _toolbar.barStyle = UIBarStyleBlack;
+    if ([self isIOS7]) {
+        _toolbar.tintColor = [UIColor whiteColor];
+    }
     
     if ( [[options objectForKey:@"showToolBar"] boolValue] == true) {
         [_toolbar setHidden:NO];
-        _toolbar.barStyle = UIBarStyleBlack;
-        _toolbar.tintColor = [UIColor whiteColor];
         
         CGRect toolBarFrame = CGRectMake(0, self.webView.superview.bounds.size.height - 44.0, self.webView.superview.bounds.size.width, 44.0);
         if ([self isIOS7]) {
@@ -265,15 +266,16 @@ static dispatch_queue_t concurrentQueue = NULL;
     _searchBar.delegate = self;
     _searchBar.showsCancelButton = YES;
     self.mainTableView.tableHeaderView = _searchBar;
-    
+
     _searchController = [[UISearchDisplayController alloc] initWithSearchBar:_searchBar  contentsController:self.viewController ];
     _searchController.searchResultsDataSource = self;
     _searchController.searchResultsDelegate = self;
     _searchController.delegate = self;
     
-    // scroll just past the search bar initially
-    //CGPoint offset = CGPointMake(0, self.searchBar.frame.size.height);
-    //self.mainTableView.contentOffset = offset;
+    if ([self isIOS7]) {
+        _searchBar.searchBarStyle = UISearchBarStyleProminent;
+        _searchBar.tintColor = [UIColor blackColor];
+    }
     
 }
 

@@ -29,7 +29,7 @@
 int main(int argc, char* argv[])
 {
     @autoreleasepool {
-        [[UI7Kit kit] setTintColor:[UIColor blackColor]];
+        [[UI7Kit kit] setTintColor:[UIColor whiteColor]];
         [UI7Kit patchIfNeeded];
         int retVal = UIApplicationMain(argc, argv, nil, @"AppDelegate");
         return retVal;

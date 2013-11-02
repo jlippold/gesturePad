@@ -3,8 +3,12 @@ var sliders = {
 
 		/* seek control */
 		var seekbar = window.plugins.volumeSlider;
+		if (util.iOSVersion() == 7) {
+			seekbar.createVolumeSlider($("#slider").offset().left, $("#slider").offset().top + 2, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+		} else {
+			seekbar.createVolumeSlider($("#slider").offset().left, $("#slider").offset().top, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+		}
 
-		seekbar.createVolumeSlider($("#slider").offset().left, $("#slider").offset().top, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
 		seekbar.showVolumeSlider(2);
 
 		seekbar.onSliderChanged(function(percentageDragged) {
@@ -22,7 +26,12 @@ var sliders = {
 
 		/* volume control */
 		var volumebar = window.plugins.volumeSlider;
-		volumebar.createVolumeSlider($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+		if (util.iOSVersion() == 7) {
+			volumebar.createVolumeSlider($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top + 2, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+		} else {
+			volumebar.createVolumeSlider($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+		}
+
 		volumebar.showVolumeSlider(1);
 
 		volumebar.onSliderDragged(function(percentageDragged) {
@@ -108,8 +117,14 @@ var sliders = {
 		setTimeout(function() {
 			var s = window.plugins.volumeSlider;
 			if ($(window).height() > 20) {
-				s.resize($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
-				s.resize($("#slider").offset().left, $("#slider").offset().top, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+				if (util.iOSVersion() == 7) {
+					s.resize($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top + 2, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+					s.resize($("#slider").offset().left, $("#slider").offset().top + 2, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+				} else {
+					s.resize($("#VolumeSlider").offset().left, $("#VolumeSlider").offset().top, $("#VolumeSlider").width(), 30, 1); // origin x, origin y, width, height, index
+					s.resize($("#slider").offset().left, $("#slider").offset().top, $("#slider").width(), 30, 2); // origin x, origin y, width, height, index
+				}
+
 			}
 		}, 250);
 

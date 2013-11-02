@@ -24,6 +24,10 @@ var util = {
 			return 1;
 		return 0;
 	},
+	iOSVersion: function() {
+		var v = window.device.version;
+		return parseInt(v.split(".")[0], 10);
+	},
 	isNumeric: function(n) {
 		return !isNaN(parseFloat(n)) && isFinite(n);
 	},
