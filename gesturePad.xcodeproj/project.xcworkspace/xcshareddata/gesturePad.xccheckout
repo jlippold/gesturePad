@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>7D6D1374-57C7-483E-A326-3727899B1153</string>
+	<key>IDESourceControlProjectName</key>
+	<string>gesturePad</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E289D46F-9F08-4129-978E-6F9A5613AF5F</key>
+		<string>https://github.com/treason/gesturePad.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>gesturePad.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E289D46F-9F08-4129-978E-6F9A5613AF5F</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/treason/gesturePad.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E289D46F-9F08-4129-978E-6F9A5613AF5F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E289D46F-9F08-4129-978E-6F9A5613AF5F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>gesturePad</string>
+		</dict>
+	</array>
+</dict>
+</plist>

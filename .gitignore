@@ -10,7 +10,6 @@ cydia/gesturePad/var/*
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-*.xcworkspace
 xcuserdata
 profile
 *.moved-aside
