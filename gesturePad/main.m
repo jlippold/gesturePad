@@ -25,10 +25,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <UI7Kit/UI7Kit.h>
 int main(int argc, char* argv[])
 {
     @autoreleasepool {
+        [[UI7Kit kit] setTintColor:[UIColor blackColor]];
+        [UI7Kit patchIfNeeded];
         int retVal = UIApplicationMain(argc, argv, nil, @"AppDelegate");
         return retVal;
     }

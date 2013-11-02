@@ -25,7 +25,6 @@ static dispatch_queue_t concurrentQueue = NULL;
 {
     
     self = (NativeTable*)[super initWithWebView:theWebView];
-
     return self;
 }
 
@@ -265,7 +264,6 @@ static dispatch_queue_t concurrentQueue = NULL;
     _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, _mainTableView.frame.size.width, 44) ];
     _searchBar.delegate = self;
     _searchBar.showsCancelButton = YES;
-    
     self.mainTableView.tableHeaderView = _searchBar;
     
     _searchController = [[UISearchDisplayController alloc] initWithSearchBar:_searchBar  contentsController:self.viewController ];
@@ -280,17 +278,62 @@ static dispatch_queue_t concurrentQueue = NULL;
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
-    
+
+    if ([self isIOS7]) {
+        theSearchBar.backgroundColor = [UIColor blackColor];
+        //[[theSearchBar.subviews objectAtIndex:0] removeFromSuperview];
+        [theSearchBar setTranslucent:NO];
+        
+        //theSearchBar.searchBarStyle
+        CGRect mainTableFrame = CGRectMake(
+                                    _originalWebViewFrame.origin.x,
+                                    20,
+                                    _originalWebViewFrame.size.width,
+                                    _originalWebViewFrame.size.height
+                                    );
+        
+        [_mainTableView setFrame:mainTableFrame];
+    }
 }
 
+- (UIBarPosition)positionForBar:(id <UIBarPositioning>)bar
+{
+    return UIBarPositionTopAttached;
+}
+
+-(void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if ([self isIOS7]) {
+        CGRect mainTableFrame = CGRectMake(
+                                           _originalWebViewFrame.origin.x,
+                                           20,
+                                           _originalWebViewFrame.size.width,
+                                           _originalWebViewFrame.size.height
+                                           );
+        
+        [_mainTableView setFrame:mainTableFrame];
+    }
+    
+}
 - (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar {
+    if ([self isIOS7]) {
+        CGRect mainTableFrame = CGRectMake(
+                                           _originalWebViewFrame.origin.x,
+                                           54,
+                                           _originalWebViewFrame.size.width,
+                                           _mainTableHeight-_offsetTop-_offsetBottom
+                                           );
+        
+        [_mainTableView setFrame:mainTableFrame];
+    }
+    
+    isFiltered = YES;
     if (_searchBar.text.length == 0) {
         isFiltered = NO;
-        [_mainTableView reloadData];
     } else {
-        isFiltered = YES;
+        
         [self filterForTerm:_searchBar.text];
     }
+    [_mainTableView reloadData];
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     searchBar.text=@"";
@@ -304,6 +347,7 @@ static dispatch_queue_t concurrentQueue = NULL;
     else
         isFiltered = YES;
     [self filterForTerm:searchString];
+    [_mainTableView reloadData];
     return YES;
 }
 
@@ -327,6 +371,11 @@ static dispatch_queue_t concurrentQueue = NULL;
 {
 	if(nil == _mainTableView){
         [self createTable:nil withDict:nil];
+        
+        UIView *backgroundView = [[UIView alloc] initWithFrame:_mainTableView.bounds];
+        backgroundView.backgroundColor = [UIColor blackColor];
+        _mainTableView.backgroundView = backgroundView;
+        
 	}
 	
 	if(NO == [_mainTableView isHidden]){
@@ -339,7 +388,7 @@ static dispatch_queue_t concurrentQueue = NULL;
     
 	_originalWebViewFrame = self.webView.frame;
 	
-	CGRect mainTableFrame, CDWebViewFrame;
+	CGRect CDWebViewFrame;
 	
 	CDWebViewFrame = CGRectMake(
                                 _originalWebViewFrame.origin.x,
@@ -348,7 +397,7 @@ static dispatch_queue_t concurrentQueue = NULL;
                                 _originalWebViewFrame.size.height - _mainTableHeight
                                 );
 	
-	mainTableFrame = CGRectMake(
+	_mainTableFrame = CGRectMake(
                                 CDWebViewFrame.origin.x,
                                 CDWebViewFrame.origin.y + (CDWebViewFrame.size.height + _offsetTop + _offsetBottom),
                                 CDWebViewFrame.size.width,
@@ -356,10 +405,10 @@ static dispatch_queue_t concurrentQueue = NULL;
                                 );
 	
     [self.webView setFrame:CDWebViewFrame];
-	[_mainTableView setFrame:mainTableFrame];
+	[_mainTableView setFrame:_mainTableFrame];
 	[_mainTableView setHidden:NO];
 
-    
+
     [self fadeIn];
     
 	//NSLog(@"ShowTable Called!");
@@ -413,7 +462,7 @@ static dispatch_queue_t concurrentQueue = NULL;
         //NSLog(@" Section %d Row %d", section, row   );
         
         [_mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]
-                              atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                              atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
         
     }
 
@@ -806,16 +855,7 @@ static dispatch_queue_t concurrentQueue = NULL;
 }
 
 - (void) removeDim {
-    //shitty hack
-    for( UIView *subview in self.webView.superview.subviews ) {
-        if( [subview isKindOfClass:[UIControl class]] ) {
-            UIControl *v = (UIControl*)subview;
-            if (v.alpha < 1) {
-                v.hidden = YES;
-            }
-        }
-    }
-    
+    [[self.webView.superview.subviews lastObject] setHidden:YES];
 }
 
 -(void)fadeOut

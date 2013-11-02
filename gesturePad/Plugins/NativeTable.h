@@ -13,14 +13,14 @@
 @interface NativeTable : CDVPlugin <UITableViewDelegate,UITableViewDataSource>{
 
 	CGRect _originalWebViewFrame;
+    CGRect _mainTableFrame;
 	NSArray* _mainTableData;
 	NSString* _mainTableTitle;
 	CGFloat _mainTableHeight;
     CGFloat _offsetTop;
     CGFloat _offsetBottom;
     NSMutableArray* _searchResults;
-	BOOL *isFiltered;
-
+	BOOL isFiltered;
 }
 
 @property (nonatomic, assign) UITableView *mainTableView;
