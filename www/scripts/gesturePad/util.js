@@ -17,6 +17,38 @@ var util = {
 			hud.hide();
 		}
 	},
+	lastYouTubeURL: "",
+	checkForYouTubeLink: function() {
+		var device = util.getCurrentDevice();
+		if (device.shortname != "MCE") {
+			return;
+		}
+		window.plugins.clipboardPlugin.getText(function(text) {
+			if ((/^http/).test(text) || (/^smb/).test(text) || (/^\\/).test(text)  ) {
+				util.lastYouTubeURL = util.getItem("lastYouTubeURL");
+				if (util.lastYouTubeURL == text ) {
+					return;
+				}
+				navigator.notification.confirm(
+					text,
+					function(buttonIndex) {
+						util.lastYouTubeURL = text;
+						util.setItem("lastYouTubeURL", text);
+						if (buttonIndex === 1) {
+							var url = util.getEGBaseUrl() + "?YouTube&" + text;
+							$.ajax({
+								type: "GET",
+								url: url
+							});
+						}
+					},
+					'Play Video', 
+					'Yes,No'
+				);
+			}
+		});
+
+	},
 	compare: function(a, b) {
 		if (a.catIndex < b.catIndex)
 			return -1;
@@ -105,6 +137,9 @@ var util = {
 		} catch (e) {}
 	},
 	setStatusBarMessage: function(text) {
+		if (true === true) {
+			return;
+		}
 		console.log(text);
 		util.setStatusBarForceClear();
 		var statusBar = window.plugins.CDVStatusBarOverlay;
@@ -117,6 +152,11 @@ var util = {
 
 	},
 	setStatusBarForceClear: function() {
+		if (true === true) {
+			return;
+		}		if (true === true) {
+			return;
+		}
 		var statusBar = window.plugins.CDVStatusBarOverlay;
 		statusBar.clearStatusBar();
 	},
@@ -284,6 +324,7 @@ var util = {
 		}
 	},
 	isWifi: function() {
+		//console.log(settings.userSettings.wifi);
 		if (settings.userSettings.wifi === false) {
 			return true;
 		}

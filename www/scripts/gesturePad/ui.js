@@ -139,6 +139,7 @@ var ui = {
 			actions.push("Clear Image Cache");
 			actions.push("Refresh All Items");
 			actions.push("Refresh Custom TV");
+			actions.push("Play URL");
 
 			actions.push("Cancel");
 			actionSheet.create({
@@ -153,11 +154,11 @@ var ui = {
 						case 0:
 							cache.clear("json");
 							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
-							util.alert("All Items Cleared");
+							util.doAlert("All Items Cleared");
 							break;
 						case 1:
 							cache.clear("cache");
-							util.alert("All Images Cleared");
+							util.doAlert("All Images Cleared");
 							break;
 						case 2:
 							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
@@ -166,7 +167,12 @@ var ui = {
 						case 3:
 							//cache.clear("cache");
 							MediaBrowserNowPlaying.allItemsPopulated = false;
-							util.alert("Custom TV Cleared");
+							util.doAlert("Custom TV Cleared");
+							break;
+						case 4:
+							util.lastYouTubeURL = "";
+							util.setItem("lastYouTubeURL", "");
+							util.checkForYouTubeLink();
 							break;
 
 					}

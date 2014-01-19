@@ -50,7 +50,9 @@ var settings = {
 			if (d.vibrate == 1) {
 				settingsObj.vibrate = true;
 			}
-			if (d.wifi === 0) {
+			if (d.wifi == 1) {
+				settingsObj.wifi = true;
+			} else {
 				settingsObj.wifi = false;
 			}
 			if (d.dateMovies == 1) {

@@ -93,11 +93,16 @@ var gestures = {
 					$(this).find("replacebaseurl:first").each(function() {
 						server = $(this).text();
 					});
+
+					if (server.indexOf(":80") > 0) { //eventghost kitchen hack
+						appendOncetoQueryString += "&room=" + room.name;
+					}
+
 					$.ajax({
 						type: $(this).find("method:first").text(),
 						url: server,
 						data: $(this).find("data:first").text() + appendOncetoQueryString,
-						timeout: 60000,
+						timeout: 15000,
 						dataType: $(this).find("dataType:first").text(),
 						success: function(resp) {
 							appendOncetoQueryString = "";

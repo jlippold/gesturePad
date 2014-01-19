@@ -32,6 +32,8 @@
 		<string>CDVStatusBarOverlay</string>
 		<key>VolumeSlider</key>
 		<string>VolumeSlider</string>
+		<key>ClipboardPlugin</key>
+		<string>ClipboardPlugin</string>
 		<key>PowerManagement</key>
 		<string>PowerManagement</string>
 		<key>ProgressHud</key>

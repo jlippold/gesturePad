@@ -48,6 +48,7 @@ var init = {
 		}, 30000);
 
 		window.scrollTo(0, 0);
+		util.checkForYouTubeLink();
 	},
 	onResume: function() {
 		settings.checkSettingsForUpdate();
@@ -55,14 +56,17 @@ var init = {
 			return;
 		}
 		$("#hud").hide();
-		notify.clearAllBadges();
+		//notify.clearAllBadges();
 		util.getRoomStatus();
 		DirecTV.startWorker();
-		MediaBrowser.startWorker(false);
+		//MediaBrowser.startWorker(false);
 		ui.queryNowPlaying();
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();
 		}, 30000);
+
+		util.checkForYouTubeLink();
+
 	},
 	onBackground: function() {
 		clearInterval(npTimer);

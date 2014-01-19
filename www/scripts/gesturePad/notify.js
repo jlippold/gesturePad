@@ -7,7 +7,7 @@ var notify = {
 			sound: false
 		}, function(status) {
 			//navigator.notification.alert(JSON.stringify(['registerDevice', status]));
-			//console.log('registerDevice: ' + status.deviceToken);
+			console.log('registerDevice: ' + status.deviceToken);
 			//probably should sent this to the server here...
 		});
 	},
