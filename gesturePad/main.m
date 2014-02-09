@@ -24,8 +24,6 @@
 //  Copyright ___ORGANIZATIONNAME___ ___YEAR___. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <UI7Kit/UI7Kit.h>
 int main(int argc, char* argv[])
 {
     @autoreleasepool {

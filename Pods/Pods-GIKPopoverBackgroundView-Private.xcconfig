@@ -1,5 +1,0 @@
-#include "Pods-GIKPopoverBackgroundView.xcconfig"
-GCC_PREPROCESSOR_DEFINITIONS = COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/GIKPopoverBackgroundView" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/FoundationExtension" "${PODS_ROOT}/Headers/FoundationExtension/UIKitExtension" "${PODS_ROOT}/Headers/GIKPopoverBackgroundView" "${PODS_ROOT}/Headers/SevenSwitch" "${PODS_ROOT}/Headers/UI7Kit" "${PODS_ROOT}/Headers/UI7Kit/UI7Kit" "${PODS_ROOT}/Headers/UIKitResources" "${PODS_ROOT}/Headers/cdebug"
-OTHER_LDFLAGS = -ObjC ${PODS_GIKPOPOVERBACKGROUNDVIEW_OTHER_LDFLAGS}
-PODS_ROOT = ${SRCROOT}

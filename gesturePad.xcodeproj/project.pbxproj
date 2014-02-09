@@ -14,7 +14,6 @@
 		1F766FE113BBADB100FB74C0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F766FDC13BBADB100FB74C0 /* Localizable.strings */; };
 		1F766FE213BBADB100FB74C0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F766FDF13BBADB100FB74C0 /* Localizable.strings */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
-		29DEFEFC4F404196A29AA4D9 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 767DBB66B4704BA0975B61A8 /* libPods.a */; };
 		301BF552109A68D80062928A /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BF535109A57CC0062928A /* libCordova.a */; };
 		301BF570109A69640062928A /* www in Resources */ = {isa = PBXBuildFile; fileRef = 301BF56E109A69640062928A /* www */; };
 		301BF5B5109A6A2B0062928A /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BF5B4109A6A2B0062928A /* AddressBook.framework */; };
@@ -130,7 +129,6 @@
 		30E1352610E2C1420031B30D /* Cordova.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Cordova.plist; path = ../Cordova.plist; sourceTree = "<group>"; };
 		30E5649113A7FCAF007403D8 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* gesturePad-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gesturePad-Prefix.pch"; sourceTree = "<group>"; };
-		767DBB66B4704BA0975B61A8 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		852FFA4B1762A5DB00759458 /* Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64.h; sourceTree = "<group>"; };
 		852FFA4C1762A5DB00759458 /* Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64.m; sourceTree = "<group>"; };
 		853E27671758C6B000E39F4D /* PowerManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerManagement.h; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 		85D2632E18424B77002F86FA /* ClipboardPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipboardPlugin.h; sourceTree = "<group>"; };
 		85D2632F18424B77002F86FA /* ClipboardPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipboardPlugin.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* gesturePad-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "gesturePad-Info.plist"; path = "../gesturePad-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
-		A7A0D977E6224A0FA4A95191 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,7 +207,6 @@
 				301BF5C5109A6A2B0062928A /* SystemConfiguration.framework in Frameworks */,
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
 				30E5649213A7FCAF007403D8 /* CoreMedia.framework in Frameworks */,
-				29DEFEFC4F404196A29AA4D9 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +275,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				A7A0D977E6224A0FA4A95191 /* Pods.xcconfig */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -328,7 +323,6 @@
 				301BF5C4109A6A2B0062928A /* SystemConfiguration.framework */,
 				305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */,
 				30E5649113A7FCAF007403D8 /* CoreMedia.framework */,
-				767DBB66B4704BA0975B61A8 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -429,13 +423,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "gesturePad" */;
 			buildPhases = (
-				E52FCC471255428789B1E2CB /* Check Pods Manifest.lock */,
 				304B58A110DAC018002A0835 /* Touch www folder */,
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
 				85C189AE175118B9006F0C96 /* ShellScript */,
-				7DA4A5AF75EA4A8BB1BCD12D /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -561,21 +553,6 @@
 			shellPath = /bin/sh;
 			shellScript = "touch -cm ${PROJECT_DIR}/www";
 		};
-		7DA4A5AF75EA4A8BB1BCD12D /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		85C189AE175118B9006F0C96 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -591,21 +568,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd \"${PROJECT_DIR}\"\nPATH=${PATH}:/usr/local/bin\ngrunt";
-		};
-		E52FCC471255428789B1E2CB /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -681,7 +643,6 @@
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A7A0D977E6224A0FA4A95191 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -697,7 +658,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "gesturePad/gesturePad-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = gesturePad;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -706,7 +667,6 @@
 		};
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A7A0D977E6224A0FA4A95191 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -733,7 +693,7 @@
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
 				);
 				INFOPLIST_FILE = "gesturePad/gesturePad-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = gesturePad;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
