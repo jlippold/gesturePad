@@ -268,6 +268,16 @@ var util = {
 		});
 	},
 	updateStatus: function() {
+		if (ui.screenShotMode) {
+			ui.view.setStatusBar({
+				show: false
+			});
+			ui.view.setOptionsForView({
+				"navTitle": "",
+				"navSubTitle": ""
+			});
+			return;
+		}
 		var device = util.getCurrentDevice();
 		var room = util.getCurrentRoom();
 

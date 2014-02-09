@@ -242,7 +242,7 @@ UIColor *newGrey = nil;
     [_powerButton setTintColor:[UIColor whiteColor]];
     [_powerButton setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithName:@"Helvetica" size:14.0], NSFontAttributeName,  nil]forState:UIControlStateNormal];
     
-    _configButton = [[UIBarButtonItem alloc] initWithTitle:@"Config" style:UIBarButtonItemStylePlain target:self action:@selector(configButtonTap:)];
+    _configButton = [[UIBarButtonItem alloc] initWithTitle:@"Action" style:UIBarButtonItemStylePlain target:self action:@selector(configButtonTap:)];
     [_configButton setStyle:UIBarButtonItemStylePlain];
     [_configButton setTintColor:[UIColor whiteColor]];
     [_configButton setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithName:@"Helvetica" size:14.0], NSFontAttributeName,  nil]forState:UIControlStateNormal];
@@ -257,7 +257,7 @@ UIColor *newGrey = nil;
     [_inputButton setTintColor:[UIColor whiteColor]];
     [_inputButton setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithName:@"Helvetica" size:14.0], NSFontAttributeName,  nil]forState:UIControlStateNormal];
     
-    NSArray *btn = [NSArray arrayWithObjects: _powerButton, flex, _configButton, flex ,_roomButton, flex, _inputButton, nil];
+    NSArray *btn = [NSArray arrayWithObjects: _roomButton, flex, _configButton, flex , _powerButton, flex, _inputButton, nil];
     [_bottomBar setItems: btn animated:NO];
 
     [_bottomView addSubview:_bottomBar];
@@ -412,6 +412,17 @@ UIColor *newGrey = nil;
      [NSString stringWithFormat:@"drawColor = '#%@';", [self colorToWeb:tintColor]]];
     
 }
+
+- (void)setStatusBar:(NSArray*)arguments withDict:(NSDictionary*)options {
+    if ([options objectForKey:@"show"]) {
+        if ([[options objectForKey:@"show"] boolValue]) {
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+        } else {
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+        }
+    }
+}
+
 
 - (void) wipeBackground {
     NSLog(@"NP Clear");

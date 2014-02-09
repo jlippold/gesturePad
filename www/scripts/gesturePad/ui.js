@@ -1,4 +1,5 @@
 var ui = {
+	screenShotMode: false,
 	nowPlaying: {
 		url: "",
 		navTitle: "gesturePad",
@@ -420,6 +421,9 @@ var ui = {
 		//sliders.resetNPSeek();
 	},
 	queryNowPlaying: function() {
+		if (ui.screenShotMode) {
+			return;
+		}
 
 		var device = util.getCurrentDevice();
 		if (device.shortname == "MCE") {

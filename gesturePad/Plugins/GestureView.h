@@ -61,6 +61,7 @@ extern UIColor *newGrey;
 - (void)setOptionsForView:(NSArray*)arguments withDict:(NSDictionary*)options;
 - (void)showNotification:(NSArray*)arguments withDict:(NSDictionary*)options;
 - (void)setVolumeSlider:(NSArray*)arguments withDict:(NSDictionary*)options;
+- (void)setStatusBar:(NSArray*)arguments withDict:(NSDictionary*)options;
 
 @end
 

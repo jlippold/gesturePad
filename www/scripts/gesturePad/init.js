@@ -35,9 +35,6 @@ var init = {
 		if (settings.userSettings.isSetup === false) {
 			return;
 		}
-		window.setTimeout(function() {
-			//MediaBrowser.startWorker(true);
-		}, 2000);
 
 		//load channels for DTV, if defined in settings
 		if (DirecTV.hasDirecTV()) {
@@ -58,11 +55,10 @@ var init = {
 		if (settings.userSettings.isSetup === false) {
 			return;
 		}
-		$("#hud").hide();
+
 		//notify.clearAllBadges();
 		util.getRoomStatus();
 		DirecTV.startWorker();
-		//MediaBrowser.startWorker(false);
 		ui.queryNowPlaying();
 		npTimer = setInterval(function() {
 			ui.queryNowPlaying();

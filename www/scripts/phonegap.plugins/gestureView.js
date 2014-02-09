@@ -45,6 +45,10 @@
 		cordova.exec("GestureView.setOptionsForView", ui.nowPlaying);
 	};
 
+	GestureView.prototype.setStatusBar = function(params) {
+		cordova.exec("GestureView.setStatusBar", params);
+	};
+
 	GestureView.prototype._onLeftNavButtonTap = function() {
 		if (this.leftNavButtonTap)
 			this.leftNavButtonTap();
