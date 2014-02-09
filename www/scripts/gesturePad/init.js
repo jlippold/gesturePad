@@ -24,11 +24,14 @@ var init = {
 			gestures.doEvent(gesture);
 		});
 
+		ui.initiateBindings();
+
 		util.doResize();
 		notify.init();
 		notify.clearAllBadges();
-		ui.initiateBindings();
+		
 		settings.loadSettings();
+		
 		if (settings.userSettings.isSetup === false) {
 			return;
 		}

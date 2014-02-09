@@ -1,17 +1,25 @@
 var ui = {
+	nowPlaying: {
+		url: "",
+		navTitle: "gesturePad",
+		navSubTitle: "",
+		duration: 0
+	},
 	initiateBindings: function() {
-		$("#top, #toptrans, #overallVolumeContainer, #bottomGrabber").bind("touchmove", function(event) {
+		ui.view = window.plugins.GestureView;
+		ui.view.create();
+		$("body").bind("touchmove", function(event) {
 			event.preventDefault();
 		});
 		ui.bindButtons();
-		sliders.bindSliders();
-		bottomDraw.bind();
+		//sliders.bindSliders();
+		//bottomDraw.bind();
+
 	},
 	bindButtons: function() {
-		$("#btnTitles").bind("click", function() {
 
+		ui.view.bind("rightNavButtonTap", function() {
 			window.scrollTo(0, 0);
-			var curChannel = $("#NowPlayingTitle").attr("data-item");
 			var room = util.getCurrentRoom();
 			var device = util.getCurrentDevice();
 			if (device.shortname == "DTV") {
@@ -92,12 +100,12 @@ var ui = {
 					if (buttonIndex == 4) { //Peek rooms
 						nt.hideTable(function() {
 							util.setDeviceByShortName("MCE");
-							$("#btnTitles").trigger("click");
+							ui.view.trigger("rightNavButtonTap");
 						});
 					}
 					if (buttonIndex == 5) { //Refresh
 						nt.hideTable(function() {
-							$("#btnTitles").trigger("click");
+							ui.view.trigger("rightNavButtonTap");
 						});
 					}
 				});
@@ -129,58 +137,9 @@ var ui = {
 				}, 200);
 
 			}
-
 		});
-		$("#btnConfig").fastClick(function() {
 
-			var actionSheet = window.plugins.actionSheet;
-			var actions = [];
-			actions.push("Clear Item Cache");
-			actions.push("Clear Image Cache");
-			actions.push("Refresh All Items");
-			actions.push("Refresh Custom TV");
-			actions.push("Play URL");
-
-			actions.push("Cancel");
-			actionSheet.create({
-				title: 'Actions',
-				items: actions,
-				destructiveButtonIndex: (actions.length - 1)
-			}, function(buttonValue, buttonIndex) {
-				if (buttonIndex == -1 || buttonIndex == (actions.length - 1)) {
-					return;
-				} else {
-					switch (buttonIndex) {
-						case 0:
-							cache.clear("json");
-							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
-							util.doAlert("All Items Cleared");
-							break;
-						case 1:
-							cache.clear("cache");
-							util.doAlert("All Images Cleared");
-							break;
-						case 2:
-							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
-							MediaBrowser.startWorker(true, true);
-							break;
-						case 3:
-							//cache.clear("cache");
-							MediaBrowserNowPlaying.allItemsPopulated = false;
-							util.doAlert("Custom TV Cleared");
-							break;
-						case 4:
-							util.lastYouTubeURL = "";
-							util.setItem("lastYouTubeURL", "");
-							util.checkForYouTubeLink();
-							break;
-
-					}
-				}
-			});
-
-		});
-		$("#btnCommands").fastClick(function() {
+		ui.view.bind("leftNavButtonTap", function() {
 			var tableView = [];
 			/* populate it */
 			var room = util.getCurrentRoom();
@@ -264,7 +223,57 @@ var ui = {
 			nt.setTableData(tableView);
 			nt.showTable(function() {});
 		});
-		$("#btnRoom").fastClick(function() {
+
+		ui.view.bind("configButtonTap", function() {
+
+			var actionSheet = window.plugins.actionSheet;
+			var actions = [];
+			actions.push("Clear Item Cache");
+			actions.push("Clear Image Cache");
+			actions.push("Refresh All Items");
+			actions.push("Refresh Custom TV");
+			actions.push("Play URL");
+
+			actions.push("Cancel");
+			actionSheet.create({
+				title: 'Actions',
+				items: actions,
+				destructiveButtonIndex: (actions.length - 1)
+			}, function(buttonValue, buttonIndex) {
+				if (buttonIndex == -1 || buttonIndex == (actions.length - 1)) {
+					return;
+				} else {
+					switch (buttonIndex) {
+						case 0:
+							cache.clear("json");
+							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
+							util.doAlert("All Items Cleared");
+							break;
+						case 1:
+							cache.clear("cache");
+							util.doAlert("All Images Cleared");
+							break;
+						case 2:
+							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
+							MediaBrowser.startWorker(true, true);
+							break;
+						case 3:
+							//cache.clear("cache");
+							MediaBrowserNowPlaying.allItemsPopulated = false;
+							util.doAlert("Custom TV Cleared");
+							break;
+						case 4:
+							util.lastYouTubeURL = "";
+							util.setItem("lastYouTubeURL", "");
+							util.checkForYouTubeLink();
+							break;
+
+					}
+				}
+			});
+		});
+
+		ui.view.bind("roomButtonTap", function() {
 			var oncomplete = function(buttonIndex) {
 				MediaBrowser.resetCallback();
 				settings.userSettings.roomIndex = buttonIndex;
@@ -291,7 +300,8 @@ var ui = {
 				}
 			});
 		});
-		$("#btnTransfer").fastClick(function() {
+
+		ui.view.bind("inputButtonTap", function() {
 			var oncomplete = function(buttonIndex) {
 				var room = util.getCurrentRoom();
 				settings.userSettings.deviceIndex = buttonIndex;
@@ -336,30 +346,81 @@ var ui = {
 				}
 			});
 		});
-		$("#btnPower").fastClick(function() {
+
+		ui.view.bind("powerButtonTap", function() {
 			gestures.executeGestureByCommandName("Power");
 		});
-		$("#btnPlay").bind("click", function() {
-			if ($(this).hasClass("playing")) {
+		ui.view.bind("playButtonTap", function(isPlaying) {
+			if (isPlaying) {
 				gestures.executeGestureByCommandName("Pause");
-				$(this).removeClass("playing");
 			} else {
 				gestures.executeGestureByCommandName("Play");
 			}
 		});
-		$("#btnMute").fastClick(function() {
+		ui.view.bind("rewindButtonTap", function() {
+			gestures.executeGestureByCommandName("Skip Back");
+		});
+		ui.view.bind("forwardButtonTap", function() {
+			gestures.executeGestureByCommandName("Skip Forward");
+		});
+		ui.view.bind("muteButtonTap", function() {
 			gestures.executeGestureByCommandName("Mute");
 		});
+
+		ui.view.bind("volumeChange", function(percentageDragged) {
+			console.log(percentageDragged);
+			var MaxVolumeJump = 20;
+			var seekTo = Math.round(MaxVolumeJump - (MaxVolumeJump * (percentageDragged / 100)));
+			var sendval = 0;
+			if (seekTo >= (MaxVolumeJump / 2)) {
+				//down
+				sendval = (seekTo - (MaxVolumeJump / 2));
+				if (sendval > 0) {
+					sliders.sendVolumeChange(sendval, "VolumeDown");
+					ui.view.setVolumeSlider({
+						value: 50
+					});
+				}
+			} else {
+				// Up	
+				sendval = ((MaxVolumeJump / 2) - seekTo);
+				if (sendval > 0) {
+					sliders.sendVolumeChange(sendval, "VolumeUp");
+					ui.view.setVolumeSlider({
+						value: 50
+					});
+				}
+			}
+		});
+
+		ui.view.bind("seekChange", function(percentageDragged) {
+			if (util.getCurrentDevice().shortname == "MCE") {
+				if (ui.nowPlaying.duration > 0) {
+
+					percentageDragged = percentageDragged / 100;
+					var seekTo = Math.floor(ui.nowPlaying.duration * percentageDragged);
+					//$(this).attr("data-sendval", seekTo);
+					sliders.sendSeekEvent(seekTo);
+					//slideTimer = setTimeout(doSeekEvent, 500);
+				}
+			}
+		});
+
 	},
 	clearNowPlaying: function() {
-		$("#bgPic").attr("class", "noart");
-		$("#bgPic").attr("style", "");
-		$("#bgPic").attr("data-id", "");
-		$("#NowPlayingTitle").text("");
-		$("#NowPlayingTitle").removeClass("doMarquee");
-		sliders.resetNPSeek();
+		ui.view.setOptionsForView({
+			durationStartText: "",
+			durationEndText: "",
+			durationSliderValue: 0,
+			duration: 0,
+			title: "",
+			subTitle: "",
+			url: ""
+		});
+		//sliders.resetNPSeek();
 	},
 	queryNowPlaying: function() {
+
 		var device = util.getCurrentDevice();
 		if (device.shortname == "MCE") {
 			var base = util.getMBUrl();
@@ -378,54 +439,22 @@ var ui = {
 						duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
 						var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
 						var perc = offset / duration;
-						sliders.setNPSeek(Math.floor(perc * 100));
-						$("#timespanleft").text(util.hms2(offset));
-						$("#timespanright").text("- " + util.hms2(duration - offset));
-						$("#timespanright").attr("data-duration", j.Data.PlayingControllers[0].CurrentFileDuration.Ticks);
-						$("#timespanright").attr("data-controller", j.Data.PlayingControllers[0].ControllerName);
-						$("#NowPlayingTitle").text(j.Data.PlayingControllers[0].PlayableItems[0].DisplayName);
-						if (parseInt($('#NowPlayingTitle')[0].scrollWidth, 10) > parseInt($('#NowPlayingTitle').width(), 10)) {
-							$("#NowPlayingTitle").attr("class", "doMarquee");
-						} else {
-							$("#NowPlayingTitle").removeClass("doMarquee");
-						}
 						var currentID = j.Data.PlayingControllers[0].PlayableItems[0].CurrentMediaIndex;
-						var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[currentID];
-						if ($("#bgPic").attr("data-id") != guid) {
-							var imgID = "MB_Big_" + guid;
-							cache.getImage({
-								id: imgID,
-								url: base + "image/?Id=" + guid
-							}, function(r) {
-								var img = new Image();
-								img.onerror = function() {
-									$("#bgPic").attr("class", "noart");
-									$("#bgPic").attr("style", "");
-									$("#bgPic").attr("data-id", guid);
-								};
-								if (r.cached === false) {
-									img.onload = function() {
-										cache.saveImage({
-											id: imgID,
-											img: img
-										});
-										$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
-										$("#bgPic").attr("class", "");
-										$("#bgPic").attr("data-id", guid);
-									};
-									img.src = r.url;
-								} else {
-									$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
-									$("#bgPic").attr("class", "");
-									$("#bgPic").attr("data-id", guid);
-								}
-							});
-						}
-						if (j.Data.PlayingControllers[0].IsPaused === true) {
-							$("#btnPlay").removeClass("playing");
-						} else {
-							$("#btnPlay").addClass("playing");
-						}
+						var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[0];
+						ui.view.setOptionsForView({
+							durationStartText: util.hms2(offset),
+							durationEndText: "- " + util.hms2(duration - offset),
+							durationSliderValue: util.isNumeric(perc) ? Math.floor(perc * 100) : 0,
+							guid: guid,
+							currentID: currentID,
+							title: j.Data.PlayingControllers[0].PlayableItems[0].DisplayName,
+							subTitle: "★★★★★",
+							duration: j.Data.PlayingControllers[0].CurrentFileDuration.Ticks,
+							controller: j.Data.PlayingControllers[0].ControllerName,
+							url: base + "image/?Id=" + guid,
+							isPlaying: (j.Data.PlayingControllers[0].IsPaused === true ? false : true)
+						});
+
 					} else {
 						ui.clearNowPlaying();
 					}
@@ -442,29 +471,38 @@ var ui = {
 				dataType: "json",
 				timeout: 10000,
 				success: function(json) {
-					if (json.startTime) {
-						if (json.startTime == "0") {
-							return;
-						}
-						var perc = json.offset / json.duration;
-						sliders.setNPSeek(Math.floor(perc * 100));
-						$("#timespanleft").text(util.hms2(json.offset));
-						$("#timespanright").text("- " + util.hms2(json.duration - json.offset));
+					if (json.startTime && json.startTime != "0") {} else {
+						ui.view.setOptionsForView({
+							durationStartText: "",
+							durationEndText: "",
+							durationSliderValue: 0,
+							duration: 0,
+							url: ""
+						});
+						return;
 					}
 
-					var output = json.major + " " + json.callsign + " " + json.title;
+					var perc = json.offset / json.duration;
 					DirecTV.addToRecentChannels(json.major);
-					$("#NowPlayingTitle").text(output);
-					$("#NowPlayingTitle").attr("data-item", json.callsign + json.major);
-					$("#NowPlayingTitle").attr("class", "");
+
+					ui.view.setOptionsForView({
+						durationStartText: util.hms2(json.offset),
+						durationEndText: "- " + util.hms2(json.duration - json.offset),
+						durationSliderValue: Math.floor(perc * 100),
+						guid: null,
+						currentID: null,
+						title: json.title,
+						item: json.callsign + json.major,
+						subTitle: json.major + " " + json.callsign,
+						duration: 0,
+						isPlaying: false,
+						url: ""
+					});
+
 					$.ajax({
 						type: "GET",
 						url: "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + json.title,
 						dataType: "xml",
-						error: function(x, y, z) {
-							$("#bgPic").attr("class", "noart");
-							$("#bgPic").attr("style", "");
-						},
 						success: function(tvxml) {
 							var url = "";
 							var guid = "";
@@ -474,62 +512,25 @@ var ui = {
 									return false;
 								}
 							});
-							if (guid === "") {
-								$("#bgPic").attr("class", "noart");
-								$("#bgPic").attr("style", "");
-							} else {
+							if (guid !== "") {
 								var imgID = "TVDB_" + guid;
-								cache.getImage({
-									id: imgID,
-									url: ""
-								}, function(r) {
-									if (r.cached === false) {
-										//query tvdb for the image
-										$.ajax({
-											type: "GET",
-											url: "http://thetvdb.com/api/77658293DB487350/series/" + guid + "/",
-											dataType: "xml",
-											error: function(x, y, z) {
-												$("#bgPic").attr("class", "noart");
-												$("#bgPic").attr("style", "");
-											},
-											success: function(seriesxml) {
-												var poster = $(seriesxml).find("poster:first");
-												if ($(poster).size() > 0) {
-													if ($("#bgPic").attr("data-id") != guid && $(poster).text() !== "") {
-														$("#bgPic").attr("style", "background-image: url('http://thetvdb.com/banners/_cache/" + $(poster).text() + "');");
-														$("#bgPic").attr("class", "");
-														$("#bgPic").attr("data-id", guid);
-														//cache this result
-														var img = new Image();
-														img.onload = function() {
-															cache.saveImage({
-																id: imgID,
-																img: img
-															});
-														};
-														img.src = "http://thetvdb.com/banners/_cache/" + $(poster).text();
-													}
-												} else {
-													$("#bgPic").attr("class", "noart");
-													$("#bgPic").attr("style", "");
-												}
-											}
-										});
-									} else {
-										$("#bgPic").attr("style", "background-image: url(" + r.url + ");");
-										$("#bgPic").attr("class", "");
-										$("#bgPic").attr("data-id", guid);
+								$.ajax({
+									type: "GET",
+									url: "http://thetvdb.com/api/77658293DB487350/series/" + guid + "/",
+									dataType: "xml",
+									success: function(seriesxml) {
+										var poster = $(seriesxml).find("poster:first");
+										if ($(poster).size() > 0) {
+											ui.view.setOptionsForView({
+												"url": "http://thetvdb.com/banners/_cache/" + $(poster).text()
+											});
+										}
 									}
 								});
 							}
 						}
 					});
-					if (parseInt($('#NowPlayingTitle')[0].scrollWidth, 10) > parseInt($('#NowPlayingTitle').width(), 10)) {
-						$("#NowPlayingTitle").attr("class", "doMarquee");
-					} else {
-						$("#NowPlayingTitle").removeClass("doMarquee");
-					}
+
 				}
 			});
 		}

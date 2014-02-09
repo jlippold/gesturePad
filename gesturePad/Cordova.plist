@@ -28,10 +28,8 @@
 	</array>
 	<key>Plugins</key>
 	<dict>
-		<key>CDVStatusBarOverlay</key>
-		<string>CDVStatusBarOverlay</string>
-		<key>VolumeSlider</key>
-		<string>VolumeSlider</string>
+		<key>GestureView</key>
+		<string>GestureView</string>
 		<key>ClipboardPlugin</key>
 		<string>ClipboardPlugin</string>
 		<key>PowerManagement</key>

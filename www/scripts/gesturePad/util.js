@@ -24,9 +24,9 @@ var util = {
 			return;
 		}
 		window.plugins.clipboardPlugin.getText(function(text) {
-			if ((/^http/).test(text) || (/^smb/).test(text) || (/^\\/).test(text)  ) {
+			if ((/^http/).test(text) || (/^smb/).test(text) || (/^\\/).test(text)) {
 				util.lastYouTubeURL = util.getItem("lastYouTubeURL");
-				if (util.lastYouTubeURL == text ) {
+				if (util.lastYouTubeURL == text) {
 					return;
 				}
 				navigator.notification.confirm(
@@ -42,7 +42,7 @@ var util = {
 							});
 						}
 					},
-					'Play Video', 
+					'Play Video',
 					'Yes,No'
 				);
 			}
@@ -98,16 +98,12 @@ var util = {
 		}
 	},
 	doResize: function() {
-		$("#card").height($("body").height() - ($("#top").outerHeight() + ($("#bottom").outerHeight() / 3.5)));
-		var h = $("#container").height() - ($("#top").outerHeight() + $("#bottom").outerHeight() + $("div.toptrans").outerHeight() - 1);
-		var w = $("body").width();
+		var h = $(document).height();
+		var w = $(document).width();
 		$("#gestures_canvas").attr("height", h);
 		$("#gestures_canvas").attr("width", w);
 		$("#gestures_canvas").height(h);
 		$("#gestures_canvas").width(w);
-		sliders.resize();
-		sliders.resetVolumeSlider();
-		sliders.resetNPSeek();
 		setTimeout(function() {
 			util.setSwipeThresholds();
 		}, 1500);
@@ -137,10 +133,9 @@ var util = {
 		} catch (e) {}
 	},
 	setStatusBarMessage: function(text) {
-		if (true === true) {
-			return;
-		}
 		console.log(text);
+		util.showNotification(text, "");
+		/*
 		util.setStatusBarForceClear();
 		var statusBar = window.plugins.CDVStatusBarOverlay;
 		// Send a message to the statusbar
@@ -149,12 +144,14 @@ var util = {
 			"animation": "Shrink",
 			"showSpinner": true
 		});
+		*/
 
 	},
 	setStatusBarForceClear: function() {
 		if (true === true) {
 			return;
-		}		if (true === true) {
+		}
+		if (true === true) {
 			return;
 		}
 		var statusBar = window.plugins.CDVStatusBarOverlay;
@@ -273,19 +270,16 @@ var util = {
 	updateStatus: function() {
 		var device = util.getCurrentDevice();
 		var room = util.getCurrentRoom();
-		$("#txtDevice").text(device.name);
-		$("#txtRoom").text(room.name);
-		if (room.IR === true) {
-			$("#overallVolumeContainer").show();
-		} else {
-			$("#overallVolumeContainer").hide();
-		}
+
+		ui.view.setOptionsForView({
+			"navTitle": room.name,
+			"navSubTitle": device.name
+		});
+
 		if ((util.getItem("deviceIndex") != settings.userSettings.deviceIndex) || (util.getItem("roomIndex") != settings.userSettings.roomIndex)) {
-			if (util.getItem("deviceIndex") != settings.userSettings.deviceIndex) {
-				bottomDraw.updateBottomContents();
-			}
 			ui.clearNowPlaying();
 		}
+
 		setTimeout(function() {
 			ui.queryNowPlaying();
 		}, 1500);
@@ -312,6 +306,12 @@ var util = {
 		} else {
 			$("#gestureCallback div").remove();
 		}
+	},
+	showNotification: function(title, subtitle) {
+		ui.view.showNotification({
+			title: title,
+			subtitle: subtitle
+		});
 	},
 	doAlert: function(msg) {
 		util.doHud({
