@@ -1,4 +1,25 @@
 var drawColor = "#E5E5E5";
+function setDrawColors(hex)  {
+	var r = hexToRgb(hex);
+	drawColors.red = r.r;
+	drawColors.green = r.g;
+	drawColors.blue = r.b;
+}
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+var drawColors = {
+	red: 229,
+	green: 229,
+	blue: 229
+};
 jQuery.gestures = {};
 (function($) {
 	var canvas;
@@ -65,16 +86,14 @@ jQuery.gestures = {};
 		//console.log(previous);
 		isTap = false;
 		var context = document.getElementById('gestures_canvas').getContext('2d');
-		context.strokeStyle = drawColor;
+		context.strokeStyle = 'rgba(' + drawColors.red + ',' + drawColors.green  + ',' + drawColors.blue + ',1)';
 		context.lineCap = "round";
 		context.lineJoin = "round";
-		context.shadowColor = 'rgba(237,234,234,0.2)';
-		context.shadowOffsetX = 0;
-		context.shadowOffsetY = 2;
-		context.shadowBlur = 10;
-		context.lineWidth = 4;
+		context.shadowColor = 'rgba(' + (drawColors.red+10) + ',' + (drawColors.green+10)  + ',' + (drawColors.blue+10) + ',0.9)';
+		context.shadowBlur = 30;
+		context.lineWidth = 10;
 		context.beginPath();
-		var off = $("#gestures_canvas").offset().top;
+		var off = 0;
 		context.moveTo(previous.x, previous.y - off);
 		context.lineTo(cur.x, cur.y - off);
 		context.closePath();

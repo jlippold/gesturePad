@@ -387,7 +387,7 @@ UIColor *newGrey = nil;
         [UIView animateWithDuration:0.25 delay: 0.0 options: UIViewAnimationOptionCurveEaseIn  animations:^{
             _boxCover.alpha = 1.0;
             _bgView.alpha = 1.0;
-            _boxCover.transform = CGAffineTransformIdentity; //100%
+           _boxCover.transform = CGAffineTransformIdentity; //100%
         } completion:^(BOOL finished){
             isPlaying = YES;
             _playButton.image = [UIImage imageNamed:@"www/img/ui/SystemMediaControl-Pause@2x.png"];
@@ -423,7 +423,7 @@ UIColor *newGrey = nil;
     _volumeSlider.tintColor = tintColor;
     [_volumeSlider setMinimumTrackTintColor:tintColor];
     [self.webView stringByEvaluatingJavaScriptFromString:
-     [NSString stringWithFormat:@"drawColor = '#%@';", [self colorToWeb:tintColor]]];
+     [NSString stringWithFormat:@"setDrawColors('#%@');", [self colorToWeb:tintColor]]];
     
 }
 
