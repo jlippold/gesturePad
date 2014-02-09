@@ -58,7 +58,7 @@
 
     
     NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
-    if ([[vComp objectAtIndex:0] intValue] >= 7) { // iOS 7 or above
+    if (YES == NO) { // iOS 7 or above
         CGRect oldBounds = [self.view bounds];
         CGRect newViewBounds = CGRectMake( 0, -10, oldBounds.size.width, oldBounds.size.height-20 );
         CGRect newWebViewBounds = CGRectMake( 0, -20, oldBounds.size.width, oldBounds.size.height-40 );

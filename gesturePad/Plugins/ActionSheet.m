@@ -52,7 +52,8 @@
 	}
 
 	// Toggle ActionSheet
-    [actionSheet showInView:self.webView.superview];
+
+    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
 
 }
 

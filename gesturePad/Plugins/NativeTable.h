@@ -11,27 +11,26 @@
 #import <CoreData/CoreData.h>
 
 @interface NativeTable : CDVPlugin <UITableViewDelegate,UITableViewDataSource>{
-
-	CGRect _originalWebViewFrame;
-    CGRect _mainTableFrame;
 	NSArray* _mainTableData;
 	NSString* _mainTableTitle;
-	CGFloat _mainTableHeight;
-    CGFloat _offsetTop;
-    CGFloat _offsetBottom;
     NSMutableArray* _searchResults;
 	BOOL isFiltered;
 }
 
+extern UIColor *newGrey;
+
 @property (nonatomic, assign) UITableView *mainTableView;
+@property (nonatomic, assign) UIViewController *vc;
 @property (nonatomic, assign) UISearchBar *searchBar;
-@property (nonatomic, assign) UINavigationBar *navBar;
-@property (nonatomic, assign) UIToolbar *toolBar;
+@property (nonatomic, assign) UINavigationBar *navbar;
+@property (nonatomic, assign) UIToolbar *toolbar;
+@property (nonatomic, assign) UIBarButtonItem *leftNavButton;
+@property (nonatomic, assign) UIBarButtonItem *rightNavButton;
+
 @property (nonatomic, assign) UISearchDisplayController *searchController;
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 - (void)createTable:(NSArray*)arguments withDict:(NSDictionary*)options;
-- (void)setTableTitle:(NSArray*)arguments withDict:(NSDictionary*)options;
 - (void)setTableData:(NSArray*)arguments withDict:(NSDictionary*)options;
 - (void)showTable:(NSArray*)arguments withDict:(NSDictionary*)options;
 - (void)hideTable:(NSArray*)arguments withDict:(NSDictionary*)options;

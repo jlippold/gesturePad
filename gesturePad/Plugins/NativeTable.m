@@ -8,22 +8,13 @@
 
 #import "NativeTable.h"
 #import "Base64.h"
-#import <QuartzCore/QuartzCore.h>
+#import "UIImage+ImageEffects.h"
 
 @implementation NativeTable;
-@synthesize mainTableView = _mainTableView;
-@synthesize searchBar = _searchBar;
-@synthesize searchController = _searchController;
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize navBar = _navbar;
-@synthesize toolBar = _toolbar;
-
-static dispatch_queue_t concurrentQueue = NULL;
-
 
 -(CDVPlugin*) initWithWebView:(UIWebView*)theWebView
 {
-    
+
     self = (NativeTable*)[super initWithWebView:theWebView];
     return self;
 }
@@ -43,86 +34,67 @@ static dispatch_queue_t concurrentQueue = NULL;
 
 
 
-#pragma mark - JS interface methods
-
--(BOOL)isIOS7 {
-    BOOL iOS7 = YES;
-    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
-        iOS7 = NO;
-    }
-    return iOS7;
-}
-
 - (void)createTable:(NSArray*)arguments withDict:(NSDictionary*)options
 {
-    CGRect navBarFrame = CGRectMake(0, 0, self.webView.superview.bounds.size.width, 44.0);
-    if ([self isIOS7]) {
-        navBarFrame = CGRectMake(0, 10, self.webView.superview.bounds.size.width, 44.0);
-    }
 
+    CGRect navBarFrame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 64.0);
+    [[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
     _navbar = [[UINavigationBar alloc] initWithFrame:navBarFrame];
-
-    UIImage *backgroundImage = [UIImage imageNamed:@"www/img/navBar.png"];
-    [_navbar setBackgroundImage:backgroundImage forBarMetrics:0];
-    _navbar.barStyle = UIBarStyleBlack;
-    if ([self isIOS7]) {
-        _navbar.tintColor = [UIColor whiteColor];
-    }
-
-    
-
+    [_navbar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    _navbar.translucent = YES;
+    _navbar.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
+    //_navbar.barStyle = UIBarStyleBlackOpaque;
+    _navbar.tintColor = [UIColor whiteColor];
+    _navbar.titleTextAttributes = @{UITextAttributeTextColor : [UIColor whiteColor]};
     
     UINavigationItem *navItem = [UINavigationItem alloc];
     NSString *navTitle = @"";
     navTitle = [options objectForKey:@"navTitle"];
     navItem.title = navTitle;
     
+    int offsetTop = 64;
+    int offsetBottom = 0;
+
+    
+    _rightNavButton = [[UIBarButtonItem alloc] initWithTitle:@""
+                                                       style:UIBarButtonItemStyleDone
+                                                      target:self
+                                                      action:@selector(onRightButtonPress:)];
+    navItem.rightBarButtonItem = _rightNavButton;
+    
+    _leftNavButton = [[UIBarButtonItem alloc] initWithTitle:@""
+                                                      style:UIBarButtonItemStylePlain
+                                                     target:self
+                                                     action:@selector(onBackButtonPress:)];
+    navItem.leftBarButtonItem = _leftNavButton;
+
+    
     if ( [[options objectForKey:@"showRightButton"] boolValue] == true) {
-        NSString *RightButtonTitle = [options objectForKey:@"RightButtonText"];
-        
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RightButtonTitle
-                                                                        style:UIBarButtonItemStyleDone
-                                                                       target:self
-                                                                       action:@selector(onRightButtonPress:) ];
-        navItem.rightBarButtonItem = rightButton;
-        [rightButton release];
+        _rightNavButton.title = [options objectForKey:@"RightButtonText"];
+        _rightNavButton.enabled = true;
+    } else {
+        _rightNavButton.enabled = false;
     }
     
     if ( [[options objectForKey:@"showBackButton"] boolValue] == true) {
-        
-        NSString *backArrowString = @"\U000025C0\U0000FE0E"; //BLACK LEFT-POINTING TRIANGLE PLUS VARIATION SELECTOR
-        
-        UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:backArrowString style:UIBarButtonItemStylePlain target:self action:@selector(onBackButtonPress:)];
-        navItem.leftBarButtonItem = backBarButtonItem;
-        [backBarButtonItem release];
-        
+        _leftNavButton.title = @"\U000025C0\U0000FE0E";
+        _leftNavButton.enabled = true;
+    } else {
+        _leftNavButton.enabled = false;
     }
-    
-    _mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
+
     [_navbar pushNavigationItem:navItem animated:false];
-    [self.webView.superview addSubview:_navbar];
-    [_navbar setHidden:YES];
-    _offsetTop = 0.0f;
-    _offsetBottom = 0.0f;
-
-
     _toolbar = [[UIToolbar alloc] init];
-    [_toolbar setHidden:YES];
-    [_toolbar setBackgroundImage:backgroundImage forToolbarPosition:0 barMetrics:0];
-    _toolbar.barStyle = UIBarStyleBlack;
-    if ([self isIOS7]) {
-        _toolbar.tintColor = [UIColor whiteColor];
-    }
+    [_toolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    _toolbar.translucent = YES;
+    _toolbar.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
+    //_toolbar.barStyle = UIBarStyleBlackOpaque;
+    _toolbar.tintColor = [UIColor whiteColor];
+    
     
     if ( [[options objectForKey:@"showToolBar"] boolValue] == true) {
-        [_toolbar setHidden:NO];
-        
-        CGRect toolBarFrame = CGRectMake(0, self.webView.superview.bounds.size.height - 44.0, self.webView.superview.bounds.size.width, 44.0);
-        if ([self isIOS7]) {
-            toolBarFrame = CGRectMake(0, self.webView.superview.bounds.size.height - 54.0, self.webView.superview.bounds.size.width, 44.0);
-        }
-        _toolbar.frame = toolBarFrame;
+        offsetBottom += 44;
+        _toolbar.frame = CGRectMake(0, [[UIScreen mainScreen] bounds].size.height - 44.0, [[UIScreen mainScreen] bounds].size.width, 44.0);
         [_toolbar sizeToFit];
         UIBarButtonItem *flexItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                   target:nil
@@ -144,66 +116,100 @@ static dispatch_queue_t concurrentQueue = NULL;
         
         NSArray *items = [NSArray arrayWithObjects: buttonOne, flexItem, buttonTwo, flexItem, buttonThree, flexItem, buttonFour, flexItem, buttonFive, nil];
         [_toolbar setItems: items animated:NO];
-        [self.webView.superview addSubview:_toolbar];
+
         [buttonOne release];
         [buttonTwo release];
         [buttonThree release];
         [buttonFour release];
         [buttonFive release];
         [flexItem release];
-        
-        
-        
     }
+    
+    [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[UIColor whiteColor]];
 
-    
-	[_mainTableView release];
-	_mainTableView = [UITableView new];
-	[_mainTableView setHidden:YES];
-	[_mainTableView setDataSource:self];
-	[_mainTableView setDelegate:self];
-    
-    if ([self isIOS7]) {
-        _mainTableHeight =  [[UIScreen mainScreen] bounds].size.height-10;
-    } else {
-        _mainTableHeight =  [[options objectForKey:@"height"] floatValue];
-    }
-
-    
-    UIView *backgroundView = [[UIView alloc] initWithFrame:_mainTableView.bounds];
-    backgroundView.backgroundColor = [UIColor clearColor];
-    _mainTableView.backgroundView = backgroundView;
-    
-    if ([_mainTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-        [_mainTableView setSeparatorInset:UIEdgeInsetsZero];
-        //[_mainTableView setSeparatorInset:UIEdgeInsetsMake(10, 10, 0, 0)];
-    }
     
     if ( [[options objectForKey:@"showSearchBar"] boolValue] == true) {
-        [self setupSearchBar];
-    }
-    if ( [[options objectForKey:@"showNavBar"] boolValue] == true) {
-        [_navbar setHidden:NO];
-        if ([self isIOS7]) {
-            _offsetTop = 54.0f;
-        } else {
-            _offsetTop = _navbar.frame.size.height;
-        }
+        
+        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, offsetTop, [[UIScreen mainScreen] bounds].size.width, 44)];
+        offsetTop += 44;
+        _searchBar.searchBarStyle = UISearchBarStyleMinimal;
+        _searchBar.translucent = YES;
+        _searchBar.tintColor = [UIColor whiteColor];
+        _searchBar.backgroundColor = [UIColor clearColor];
+        
+        _searchBar.barStyle = UIBarStyleBlackOpaque;
+        _searchBar.delegate = self;
+        _searchController = [[UISearchDisplayController alloc] initWithSearchBar:_searchBar contentsController:self.viewController ];
+        _searchController.searchResultsDataSource = self;
+        
     }
     
+
+	_mainTableView = [[UITableView alloc] init];
+    _mainTableView.hidden = NO;
+    _mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+	[_mainTableView setDataSource:self];
+	[_mainTableView setDelegate:self];
+    [_mainTableView setFrame:CGRectMake(0, (offsetTop), [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height -  (offsetTop + offsetBottom))];
+    
+    [_mainTableView setBackgroundColor:[UIColor clearColor]];
+    
+
+    UIView *topview = [[[UIView alloc] initWithFrame:CGRectMake(0,-480,[UIScreen mainScreen].bounds.size.width,480)] autorelease];
+    topview.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.85];
+    [_mainTableView addSubview:topview];
+    
+    if ( [[options objectForKey:@"showNavBar"] boolValue] == true) {
+        [_navbar setHidden:NO];
+    }
     if ( [[options objectForKey:@"showToolBar"] boolValue] == true) {
         [_toolbar setHidden:NO];
-        if ([self isIOS7]) {
-            _offsetBottom = 44.0f;
-        } else {
-            _offsetBottom = _toolbar.frame.size.height;
-        }
     }
     
     _searchResults = [NSMutableArray array];
-	self.webView.superview.autoresizesSubviews = YES;
-	[self.webView.superview addSubview:_mainTableView];
     
+    NSString *bgURL = [self.webView stringByEvaluatingJavaScriptFromString:@"(function() {return ui.nowPlaying.url})();"];
+    UIImage* viewImage = [UIImage new];
+    
+    if (![bgURL isEqualToString:@""]) {
+        UIImageView *nowPlayingView = (UIImageView *)[self.webView.superview viewWithTag:99];
+        viewImage = nowPlayingView.image;
+        if (viewImage.size.width > 1) {
+            UIGraphicsBeginImageContext([UIScreen mainScreen].bounds.size);
+            CGContextRef c = UIGraphicsGetCurrentContext();
+            CGContextTranslateCTM(c, 0, 0);
+            //[self.webView.superview.layer renderInContext:c];
+            UIColor *avgColor = [self averageColor:viewImage];
+            viewImage = [viewImage applyDarkEffect];
+            UIGraphicsEndImageContext();
+            [_navbar setTintColor:avgColor];
+            [_toolbar setTintColor:avgColor];
+        }
+    }
+    
+    
+    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:viewImage];
+    [tempImageView setFrame:self.webView.superview.frame];
+    tempImageView.contentMode = UIViewContentModeScaleAspectFill;
+
+    UIViewController *vc = [[UIViewController alloc] init];
+    UIView *bg = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+    CAGradientLayer *bgLayer = [self getGradient];
+    bgLayer.frame = bg.frame;
+    [bg.layer insertSublayer:bgLayer atIndex:0];
+    
+    [bg addSubview:tempImageView];
+    [tempImageView release];
+    [bg addSubview:_mainTableView];
+    [bg addSubview:_navbar];
+    [bg addSubview:_searchBar];
+    [bg addSubview:_toolbar];
+    
+    [vc.view addSubview:bg];
+
+    [self.viewController presentViewController:vc animated:YES completion:nil];
+
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -260,87 +266,36 @@ static dispatch_queue_t concurrentQueue = NULL;
 }
 
 
-- (void)setupSearchBar {
-    
-    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, _mainTableView.frame.size.width, 44) ];
-    _searchBar.delegate = self;
-    _searchBar.showsCancelButton = YES;
-    self.mainTableView.tableHeaderView = _searchBar;
 
-    _searchController = [[UISearchDisplayController alloc] initWithSearchBar:_searchBar  contentsController:self.viewController ];
-    _searchController.searchResultsDataSource = self;
-    _searchController.searchResultsDelegate = self;
-    _searchController.delegate = self;
-    
-    if ([self isIOS7]) {
-        _searchBar.searchBarStyle = UISearchBarStyleProminent;
-        _searchBar.tintColor = [UIColor blackColor];
-    }
-    
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [self doFilter];
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
-
-    if ([self isIOS7]) {
-        theSearchBar.backgroundColor = [UIColor blackColor];
-        //[[theSearchBar.subviews objectAtIndex:0] removeFromSuperview];
-        [theSearchBar setTranslucent:NO];
-        
-        //theSearchBar.searchBarStyle
-        CGRect mainTableFrame = CGRectMake(
-                                    _originalWebViewFrame.origin.x,
-                                    20,
-                                    _originalWebViewFrame.size.width,
-                                    _originalWebViewFrame.size.height
-                                    );
-        
-        [_mainTableView setFrame:mainTableFrame];
-    }
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self doFilter];
 }
 
-- (UIBarPosition)positionForBar:(id <UIBarPositioning>)bar
-{
-    return UIBarPositionTopAttached;
-}
-
--(void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    if ([self isIOS7]) {
-        CGRect mainTableFrame = CGRectMake(
-                                           _originalWebViewFrame.origin.x,
-                                           20,
-                                           _originalWebViewFrame.size.width,
-                                           _originalWebViewFrame.size.height
-                                           );
-        
-        [_mainTableView setFrame:mainTableFrame];
-    }
-    
-}
-- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar {
-    if ([self isIOS7]) {
-        CGRect mainTableFrame = CGRectMake(
-                                           _originalWebViewFrame.origin.x,
-                                           54,
-                                           _originalWebViewFrame.size.width,
-                                           _mainTableHeight-_offsetTop-_offsetBottom
-                                           );
-        
-        [_mainTableView setFrame:mainTableFrame];
-    }
-    
+-(void) doFilter {
     isFiltered = YES;
     if (_searchBar.text.length == 0) {
+        _leftNavButton.enabled = true; //show
+        _rightNavButton.enabled = true; //show
         isFiltered = NO;
     } else {
-        
+        _leftNavButton.enabled = false; //hide
+        _rightNavButton.enabled = false; //hide
         [self filterForTerm:_searchBar.text];
     }
     [_mainTableView reloadData];
+}
+- (void)searchBarTextDidEndEditing:(UISearchBar *)theSearchBar {
+    [self doFilter];
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     searchBar.text=@"";
     [searchBar setShowsCancelButton:NO animated:YES];
     [searchBar resignFirstResponder];
+
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
@@ -369,54 +324,11 @@ static dispatch_queue_t concurrentQueue = NULL;
     [_mainTableView reloadData];
 }
 
+
 - (void)showTable:(NSArray*)arguments withDict:(NSDictionary*)options
 {
-	if(nil == _mainTableView){
-        [self createTable:nil withDict:nil];
-        
-        UIView *backgroundView = [[UIView alloc] initWithFrame:_mainTableView.bounds];
-        backgroundView.backgroundColor = [UIColor blackColor];
-        _mainTableView.backgroundView = backgroundView;
-        
-	}
-	
-	if(NO == [_mainTableView isHidden]){
-		return;
-	}
-    
-    [self disableScrollsToTopPropertyOnAllSubviewsOf:self.webView ];
-    
-	_mainTableView.scrollsToTop = YES;
-    
-	_originalWebViewFrame = self.webView.frame;
-	
-	CGRect CDWebViewFrame;
-	
-	CDWebViewFrame = CGRectMake(
-                                _originalWebViewFrame.origin.x,
-                                _originalWebViewFrame.origin.y,
-                                _originalWebViewFrame.size.width,
-                                _originalWebViewFrame.size.height - _mainTableHeight
-                                );
-	
-	_mainTableFrame = CGRectMake(
-                                CDWebViewFrame.origin.x,
-                                CDWebViewFrame.origin.y + (CDWebViewFrame.size.height + _offsetTop + _offsetBottom),
-                                CDWebViewFrame.size.width,
-                                _mainTableHeight-_offsetTop-_offsetBottom
-                                );
-	
-    [self.webView setFrame:CDWebViewFrame];
-	[_mainTableView setFrame:_mainTableFrame];
-	[_mainTableView setHidden:NO];
-
-
-    [self fadeIn];
-    
-	//NSLog(@"ShowTable Called!");
-    
+    return;
 }
-
 
 - (void)scrollTo:(NSArray*)arguments withDict:(NSDictionary*)options
 {
@@ -473,28 +385,16 @@ static dispatch_queue_t concurrentQueue = NULL;
 
 - (void)hideTable:(NSArray*)arguments withDict:(NSDictionary*)options
 {
-    //    [self searchBarCancelButtonClicked:_searchBar];
-    
-	if(nil == _mainTableView){
-        return;
-	}
-	
-	if(YES == [_mainTableView isHidden]){
-		return;
-	}
-    
-    if (concurrentQueue) {
-       dispatch_release(concurrentQueue);
+    if (![_searchBar.text isEqualToString:@""]) {
+        _mainTableView.hidden = YES;
     }
+    [self.viewController dismissViewControllerAnimated:YES completion:^(void){
+        [self removeDim];
+        [self.webView stringByEvaluatingJavaScriptFromString:@"window.plugins.NativeTable._onTableHideComplete();"];
+        [self.webView.superview bringSubviewToFront:self.webView];
+    }];
     
-    [_searchBar resignFirstResponder];
-    
-    
-    [self fadeOut];
-	
-	[self.webView setFrame:_originalWebViewFrame];
-    
-	
+
 }
 
 
@@ -589,24 +489,18 @@ static dispatch_queue_t concurrentQueue = NULL;
     
 }
 
--(void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath;
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
 {
-
-    static UIImage* bgImage = nil;
-    if (bgImage == nil) {
-        bgImage = [[UIImage imageNamed:@"www/img/TableViewBG1.png"] retain];
-    }
-    static UIImage* bgImage2 = nil;
-    if (bgImage2 == nil) {
-        bgImage2 = [[UIImage imageNamed:@"www/img/TableViewBG2.png"] retain];
-    }
+    // Background color
+    view.tintColor = [UIColor clearColor];
     
-    if( [indexPath row] % 2)
-        cell.backgroundView = [[[UIImageView alloc] initWithImage:bgImage] autorelease];
-    else
-        cell.backgroundView = [[[UIImageView alloc] initWithImage:bgImage2] autorelease];
-
+    // Text Color
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    [header.textLabel setTextColor:[UIColor whiteColor]];
     
+    // Another way to set the background color
+    // Note: does not preserve gradient effect of original header
+    header.contentView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
 }
 
 
@@ -618,6 +512,12 @@ static dispatch_queue_t concurrentQueue = NULL;
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
+    
+    cell.backgroundColor = [UIColor clearColor];
+    cell.backgroundView = [[UIView new] autorelease];
+    //cell.selectedBackgroundView = [[UIView new] autorelease];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+    
 	int section = indexPath.section;
     int row = indexPath.row;
     
@@ -664,18 +564,15 @@ static dispatch_queue_t concurrentQueue = NULL;
     
     cell.textLabel.text = [item valueForKey:@"textLabel"];
     
-	cell.textLabel.textColor = [UIColor colorWithRed:0.302 green:0.302 blue:0.302 alpha:1];
+	cell.textLabel.textColor = [UIColor whiteColor];
 	cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0f];
-    cell.textLabel.shadowColor = [UIColor whiteColor];
-    cell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);
+
     cell.textLabel.backgroundColor = [UIColor clearColor];
     
     cell.detailTextLabel.text = [item valueForKey:@"detailTextLabel"];
 
-	cell.detailTextLabel.textColor = [UIColor colorWithRed:0.592 green:0.592 blue:0.592 alpha:1];
+	cell.detailTextLabel.textColor = [UIColor whiteColor];
 	cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-    cell.detailTextLabel.shadowColor = [UIColor whiteColor];
-    cell.detailTextLabel.shadowOffset = CGSizeMake(0.0, 1.0);
     cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     
     cell.detailTextLabel.numberOfLines = 2;
@@ -704,7 +601,7 @@ static dispatch_queue_t concurrentQueue = NULL;
             cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
             cell.imageView.image = [self resizeImageToSize:[UIImage imageNamed:url]];
             if (![item valueForKey:@"nomask"]) {
-                cell.imageView.backgroundColor = [UIColor blackColor];
+                //cell.imageView.backgroundColor = [UIColor blackColor];
                 cell.imageView.layer.masksToBounds = YES;
                 cell.imageView.layer.cornerRadius = 5.0;
             }
@@ -777,6 +674,7 @@ static dispatch_queue_t concurrentQueue = NULL;
 }
 
 
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
                 
@@ -827,77 +725,14 @@ static dispatch_queue_t concurrentQueue = NULL;
 }
 
 
--(void)fadeIn
-{
-    CGRect r = [_mainTableView frame];
-    r.origin.y = [_mainTableView frame].size.height;
-    [_mainTableView setFrame:r];
-    _mainTableView.alpha = 0;
-    _navbar.alpha = 0;
-    _toolbar.alpha = 0;
-    [_navbar setHidden:NO];
-    [_toolbar setHidden:NO];
-    [_mainTableView setHidden:NO];
-    
-    [UIView animateWithDuration:0.3
-                          delay: 0.0
-                        options:UIViewAnimationCurveEaseInOut
-                     animations:^{
-                         CGRect r = [_mainTableView frame];
-                         r.origin.y = _offsetTop;
-                         [_mainTableView setFrame:r];
-                         _mainTableView.alpha = 1;
-                         _navbar.alpha =1 ;
-                         _toolbar.alpha =1 ;
-                     }
-                     completion:^(BOOL finished){
-                         [self.webView stringByEvaluatingJavaScriptFromString:@"window.plugins.NativeTable._onTableShowComplete();"];
-                     }];
-    
-}
-
 - (void) removeDim {
-    [[self.webView.superview.subviews lastObject] setHidden:YES];
+    if (![_searchBar.text isEqualToString:@""]) {
+        [[self.webView.superview.subviews lastObject] setHidden:YES];
+        //[[self.webView.superview.subviews lastObject] removeFromSuperview];
+    }
 }
 
--(void)fadeOut
-{
-    
-    
-    CGRect r = [_mainTableView frame];
-    r.origin.y = _offsetTop;
-    [_mainTableView setFrame:r];
-    _mainTableView.alpha = 1;
-    _navbar.alpha = 1;
-    _toolbar.alpha = 1;
-    [_navbar setHidden:NO];
-    [_toolbar setHidden:NO];
-    [_mainTableView setHidden:NO];
-    
-    [UIView animateWithDuration:0.3
-                          delay: 0.0
-                        options:UIViewAnimationCurveEaseInOut
-                     animations:^{
-                         CGRect r = [_mainTableView frame];
-                         r.origin.y = [_mainTableView frame].size.height;
-                         [_mainTableView setFrame:r];
-                         _mainTableView.alpha = 0;
-                         _navbar.alpha = 0;
-                         _toolbar.alpha = 0;
-                     }
-                     completion:^(BOOL finished){
-                         [self searchBarCancelButtonClicked:_searchBar];
 
-                         [_navbar setHidden:YES];
-                         [_toolbar setHidden:YES];
-                         [_mainTableView setHidden:YES];
-                        [self removeDim];
-                         [self.webView stringByEvaluatingJavaScriptFromString:@"window.plugins.NativeTable._onTableHideComplete();"];
-                         
-                     }];
-    
-    
-}
 
 - (UIImage *)resizeImageToSize:(UIImage*)image
 {
@@ -917,5 +752,51 @@ static dispatch_queue_t concurrentQueue = NULL;
         [self disableScrollsToTopPropertyOnAllSubviewsOf:subview];
     }
 }
+
+- (UIColor *)averageColor:(UIImage*) img {
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char rgba[4];
+    CGContextRef context = CGBitmapContextCreate(rgba, 1, 1, 8, 4, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, 1, 1), img.CGImage);
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    
+    if(rgba[3] > 0) {
+        CGFloat alpha = ((CGFloat)rgba[3])/255.0;
+        CGFloat multiplier = alpha/255.0;
+        return [UIColor colorWithRed:((CGFloat)rgba[0])*multiplier
+                               green:((CGFloat)rgba[1])*multiplier
+                                blue:((CGFloat)rgba[2])*multiplier
+                               alpha:alpha];
+    }
+    else {
+        return [UIColor colorWithRed:((CGFloat)rgba[0])/255.0
+                               green:((CGFloat)rgba[1])/255.0
+                                blue:((CGFloat)rgba[2])/255.0
+                               alpha:((CGFloat)rgba[3])/255.0];
+    }
+}
+
+- (CAGradientLayer*) getGradient {
+    
+    UIColor *colorOne = [UIColor colorWithRed:(120/255.0) green:(135/255.0) blue:(150/255.0) alpha:1.0];
+    UIColor *colorTwo = [UIColor colorWithRed:(57/255.0)  green:(79/255.0)  blue:(96/255.0)  alpha:1.0];
+    
+    NSArray *colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, colorTwo.CGColor, nil];
+    NSNumber *stopOne = [NSNumber numberWithFloat:0.0];
+    NSNumber *stopTwo = [NSNumber numberWithFloat:1.0];
+    
+    NSArray *locations = [NSArray arrayWithObjects:stopOne, stopTwo, nil];
+    
+    CAGradientLayer *headerLayer = [CAGradientLayer layer];
+    headerLayer.colors = colors;
+    headerLayer.locations = locations;
+    
+    return headerLayer;
+    
+}
+
 
 @end

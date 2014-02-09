@@ -32,9 +32,8 @@ var gestures = {
 		if ($("#gestures_canvas:visible").size() === 0) {
 			showCallback = false;
 		}
-		var message = $("<div class='message' style='display:none' data-gest='" + gesture + "'><span class='i'></span> <span class='t'>" + gesture + "</span></div>");
 		if (showCallback) {
-			$("#gestureCallback").append(message);
+			//$("#gestureCallback").append(message);
 		}
 		var room = util.getCurrentRoom();
 		var device = util.getCurrentDevice();
@@ -73,94 +72,67 @@ var gestures = {
 			//Run commands for gesture
 			util.playBeep();
 			//show pending notification
+
 			var gestureName = $(actionNodes).parent().find("name:first").text();
-			$(message).find("span.t").text(gestureName + ' - ' + $(message).attr("data-gest"));
-			$(message).find("span.i").text('🔄');
-			$(message).show();
-			$(message).animate({
-				opacity: 1,
-				width: '100%'
-			}, 250, function() {
-				var totalActions = ($(actionNodes).size() - 1);
-				//Trigger ajax events
-				$(actionNodes).each(function(i) {
-					var thisnode = $(actionNodes);
-					//Look up url overrides
-					var server = "http://" + device.IPAddress + ":" + device.Port + "/";
-					$(this).find("addtobaseurl:first").each(function() {
-						server = server + $(this).text();
-					});
-					$(this).find("replacebaseurl:first").each(function() {
-						server = $(this).text();
-					});
+			util.showNotification(gestureName, gesture);
+			var totalActions = ($(actionNodes).size() - 1);
+			//Trigger ajax events
+			$(actionNodes).each(function(i) {
+				var thisnode = $(actionNodes);
+				//Look up url overrides
+				var server = "http://" + device.IPAddress + ":" + device.Port + "/";
+				$(this).find("addtobaseurl:first").each(function() {
+					server = server + $(this).text();
+				});
+				$(this).find("replacebaseurl:first").each(function() {
+					server = $(this).text();
+				});
 
-					if (server.indexOf(":80") > 0) { //eventghost kitchen hack
-						appendOncetoQueryString += "&room=" + room.name;
-					}
+				if (server.indexOf(":80") > 0) { //eventghost kitchen hack
+					appendOncetoQueryString += "&room=" + room.name;
+				}
 
-					$.ajax({
-						type: $(this).find("method:first").text(),
-						url: server,
-						data: $(this).find("data:first").text() + appendOncetoQueryString,
-						timeout: 15000,
-						dataType: $(this).find("dataType:first").text(),
-						success: function(resp) {
-							appendOncetoQueryString = "";
-							if (i == totalActions) { //only run animation callback on final ajax call
-								$(message).find("span.i").text('✅');
-								$(message).animate({
-									opacity: 0,
-									width: '0%'
-								}, 250, function() {
-									if ($(thisnode).find("onCompleteSetDevice").size() > 0) {
-										util.setDeviceByShortName($(thisnode).find("onCompleteSetDevice").attr("shortname"));
-										util.updateStatus();
-									}
-									$(message).hide().remove();
-								});
-							}
-							if (gestureName == "Stop" || gestureName.indexOf("channel") > -1) {
-								ui.clearNowPlaying();
-							}
-							setTimeout(function() {
-								ui.queryNowPlaying();
-							}, 1500);
-						},
-						error: function() {
-							appendOncetoQueryString = "";
-							if (i == totalActions) { //only run animation callback on final ajax call
-								$(message).find("span.i").text('❌');
-								$(message).animate({
-									opacity: 0,
-									width: '0%'
-								}, 250, function() {
-									if ($(thisnode).find("onCompleteSetDevice").size() > 0) {
-										util.setDeviceByShortName($(thisnode).find("onCompleteSetDevice").attr("shortname"));
-										util.updateStatus();
-									}
-									$(message).hide().remove();
-								});
+				$.ajax({
+					type: $(this).find("method:first").text(),
+					url: server,
+					data: $(this).find("data:first").text() + appendOncetoQueryString,
+					timeout: 15000,
+					dataType: $(this).find("dataType:first").text(),
+					success: function(resp) {
+						appendOncetoQueryString = "";
+						if (i == totalActions) { //only run animation callback on final ajax call
+							//util.showNotification(gestureName, gesture);
+							if ($(thisnode).find("onCompleteSetDevice").size() > 0) {
+								util.setDeviceByShortName($(thisnode).find("onCompleteSetDevice").attr("shortname"));
+								util.updateStatus();
 							}
 						}
-					});
+
+						if (gestureName == "Stop" || gestureName.indexOf("channel") > -1) {
+							ui.clearNowPlaying();
+						}
+
+						setTimeout(function() {
+							ui.queryNowPlaying();
+						}, 1500);
+					},
+					error: function() {
+						appendOncetoQueryString = "";
+						if (i == totalActions) { //only run animation callback on final ajax call
+							util.showNotification(gestureName, '❌ No response from server');
+							if ($(thisnode).find("onCompleteSetDevice").size() > 0) {
+								util.setDeviceByShortName($(thisnode).find("onCompleteSetDevice").attr("shortname"));
+								util.updateStatus();
+							}
+						}
+					}
 				});
+				
 			});
 		} else {
 			//Unassigned gesture, just show and hide it
-			$(message).find("span.i").text('❌');
-			$(message).find("span.t").text("Unassigned" + ' - ' + $(message).attr("data-gest"));
-			$(message).show();
-			$(message).animate({
-				opacity: 1,
-				width: '100%'
-			}, 250, function() {
-				$(message).delay(500).animate({
-					opacity: 0,
-					width: '0%'
-				}, 500, function() {
-					$(message).remove();
-				});
-			});
+			util.showNotification('Unassigned', 'Gesture doesnt exist');
+
 		}
 	}
 };

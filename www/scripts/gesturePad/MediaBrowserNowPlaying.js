@@ -1,4 +1,5 @@
 var NowPlayingChannels = [];
+var geniusResults = {};
 var MediaBrowserNowPlaying = {
 	xmlChannels: null,
 	allItemsPopulated: false,

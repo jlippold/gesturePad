@@ -1,3 +1,4 @@
+var drawColor = "#E5E5E5";
 jQuery.gestures = {};
 (function($) {
 	var canvas;
@@ -64,7 +65,7 @@ jQuery.gestures = {};
 		//console.log(previous);
 		isTap = false;
 		var context = document.getElementById('gestures_canvas').getContext('2d');
-		context.strokeStyle = "#E5E5E5";
+		context.strokeStyle = drawColor;
 		context.lineCap = "round";
 		context.lineJoin = "round";
 		context.shadowColor = 'rgba(237,234,234,0.2)';

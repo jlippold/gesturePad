@@ -85,10 +85,18 @@ var MediaBrowser = {
 						timeout: settings.userSettings.MBServiceTimeout,
 						success: function(x) {
 							if (x.Data.ImdbID) {
-								cb = window.plugins.childBrowser;
-								if (cb !== null) {
-									cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
-								}
+								var nt = window.plugins.NativeTable;
+								nt.hideTable(function() {
+									cb = window.plugins.childBrowser;
+									if (cb !== null) {
+										cb.onClose = function() {
+											setTimeout(function() {
+												ui.view.trigger("rightNavButtonTap");
+											}, 1000);
+										};
+										cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
+									}
+								});
 							} else {
 								util.doAlert("Sorry, This title does not have an IMBD id");
 							}
@@ -496,7 +504,7 @@ var MediaBrowser = {
 		if (buttonIndex == 1) { //Recent Channels
 			MediaBrowserNowPlaying.allItemsPopulated = false;
 			nt.hideTable(function() {
-				$("#btnTitles").trigger("click");
+				ui.view.trigger("rightNavButtonTap");
 			});
 		}
 		if (buttonIndex == 2) { //Volume Down
@@ -508,12 +516,12 @@ var MediaBrowser = {
 		if (buttonIndex == 4) { //Peek rooms
 			nt.hideTable(function() {
 				util.setDeviceByShortName("DTV");
-				$("#btnTitles").trigger("click");
+				ui.view.trigger("rightNavButtonTap");
 			});
 		}
 		if (buttonIndex == 5) { //Refresh
 			nt.hideTable(function() {
-				$("#btnTitles").trigger("click");
+				ui.view.trigger("rightNavButtonTap");
 			});
 		}
 
@@ -1185,12 +1193,15 @@ var MediaBrowser = {
 					detailsLabelText: "Tap to cancel",
 					tappedEvent: function() {
 						util.setStatusBarForceClear();
-						geniusResults.refreshQueue = [];
-						geniusResults.TitlesQueue = [];
-						$.ajaxq("genuisWorker");
 						util.doHud({
 							show: false
 						});
+						if (geniusResults) {
+							geniusResults.refreshQueue = [];
+							geniusResults.TitlesQueue = [];
+						}
+
+						$.ajaxq("genuisWorker");
 					}
 				});
 
@@ -1210,6 +1221,9 @@ var MediaBrowser = {
 							dataType: 'json',
 							timeout: settings.userSettings.MBServiceTimeout,
 							success: function(d) {
+								if (!d.Data) {
+									return;
+								}
 								$.each(d.Data.Children, function(key, val) {
 									var item = d.Data.Children[key];
 									if (item.Type == "Folder") {

@@ -7,85 +7,11 @@
 	<meta charset="utf-8">
 	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	<link rel="stylesheet" href="style.css" />
-	<link rel="stylesheet" href="tablet.css" />
 </head>
 
 <body>
 
-	<div id="top">
-		<div class="gradientBorder top"></div>
-		<div class="left control" id="btnCommands"></div>
-		<div class="head" id="header">
-			<p class="bold" id="txtRoom">&nbsp;</p>
-			<p class="grey" id="txtDevice">&nbsp;</p>
-		</div>
-		<div class="right control" id="btnTitles"></div>
-		<div class="gradientBorder bottom"></div>
-	</div>
-
-	<div id="container">
-		<div id="card">
-			<div id="frontFace" class="front face">
-				<div class="toptrans" id="toptrans">
-					<div class="seekbarContainer" id="seekbarContainer">
-						<p id='NowPlayingTitle'>&nbsp;</p>
-						<div class="timespanleft" id="timespanleft">0:00</div>
-						<div class="slider" id="slider" style="width: 69%; visibility: hidden" >
-						</div>
-						<div class="timespanright" id="timespanright">-1:00</div>
-						<div class="left" id="btnConfig" ></div>
-						<div class="right" id="btnTransfer"></div>
-					</div>
-				</div>
-				<div class="gradientBorder bottom" style="top: 79px"></div>
-				<div id="bgPic" class="noart"></div>
-				<div id="gestureCallback"></div>
-				<canvas id="gestures_canvas"></canvas>
-			</div>
-			<div id="backFace" class="back face center"></div>
-		</div>
-	</div>
-
-	<div id="bottom">
-		<div id="bottomGrabber">
-			<div class="gradientBorder top" style="margin-bottom: 10px;"></div>
-			<div class="grabber">
-				<span class="bars"></span>
-			</div>
-			<div class="five control" id="btnPower" ></div>
-			<div class="five control" id="btnRewind" ></div>
-			<div class="five control" id="btnPlay" ></div>
-			<div class="five control" id="btnForward" ></div>
-			<div class="five control" id="btnRoom" ></div>
-		</div>
-		<div id="overallVolumeContainer">
-			<div class="volume control" id="btnMute" ></div>
-			<div id="VolumeContainer" class="seekbarContainer" style="padding-top: 14px;float: left;width: 83%;">
-				<div id="VolumeSlider"class="slider" >
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="browser">
-		<p id="bottomText">
-			<span>&nbsp;</span>
-		</p>
-		<div id="boxCoverBack">&crarr;</div>
-
-		<div id="boxCoverContainer">
-
-			<div id="covers"></div>
-		</div>
-	</div>
-
-	<div style="display:none" id="tmpSpinner">
-		<div class="spincontainer">
-			<div class="spinner">Loading Data...</div>
-		</div>
-	</div>
-
-	<p id="hud"></p>
+	<canvas id="gestures_canvas"></canvas>
 
 	<script type="text/javascript" src="scripts/jQuery-1.7.1.min.js"></script>
 	<script type="text/javascript" src="scripts/lib/cordova-2.2.0.js"></script>
@@ -102,7 +28,8 @@
 	<script type="text/javascript" src="scripts/phonegap.plugins/ProgressHud.js"></script>
 	<script type="text/javascript" src="scripts/phonegap.plugins/powermanagement.js"></script>
 	<script type="text/javascript" src="scripts/phonegap.plugins/VolumeSlider.js"></script>
-
+	<script type="text/javascript" src="scripts/phonegap.plugins/GestureView.js"></script>
+	<script type="text/javascript" src="scripts/phonegap.plugins/clipboardPlugin.js"></script>
 	
 	<script type="text/javascript" src="scripts/gesturePad/bottomDraw.js"></script>
 	<script type="text/javascript" src="scripts/gesturePad/cache.js"></script>
