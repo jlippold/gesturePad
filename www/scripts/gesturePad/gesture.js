@@ -21,7 +21,6 @@ var gestures = {
 		}
 	},
 	doEvent: function(gesture, actions, overRideDevice) {
-		$("#hud").hide();
 		window.scrollTo(0, 0);
 		if (util.isWifi() === false) {
 			util.doAlert("You are not on Wifi. Connect to Wifi and try again");
@@ -29,12 +28,7 @@ var gestures = {
 		}
 		util.clearCallers(false);
 		var showCallback = true;
-		if ($("#gestures_canvas:visible").size() === 0) {
-			showCallback = false;
-		}
-		if (showCallback) {
-			//$("#gestureCallback").append(message);
-		}
+
 		var room = util.getCurrentRoom();
 		var device = util.getCurrentDevice();
 		if (typeof overRideDevice !== 'undefined') {
@@ -76,6 +70,7 @@ var gestures = {
 			var gestureName = $(actionNodes).parent().find("name:first").text();
 			util.showNotification(gestureName, gesture);
 			var totalActions = ($(actionNodes).size() - 1);
+			
 			//Trigger ajax events
 			$(actionNodes).each(function(i) {
 				var thisnode = $(actionNodes);
@@ -88,9 +83,10 @@ var gestures = {
 					server = $(this).text();
 				});
 
-				if (server.indexOf(":80") > 0) { //eventghost kitchen hack
+				if (server.indexOf(":8080") === -1) { //eventghost kitchen hack
 					appendOncetoQueryString += "&room=" + room.name;
 				}
+				//console.log(server + ' ' + $(this).find("data:first").text() + appendOncetoQueryString);
 
 				$.ajax({
 					type: $(this).find("method:first").text(),

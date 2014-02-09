@@ -273,10 +273,10 @@ UIColor *newGrey = nil;
     _boxCover.frame = CGRectMake( 0, 114, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height - 275);
     
     _boxCover.tag = 99;
-    
-    
     _boxCover.contentMode = UIViewContentModeScaleAspectFit;
     
+    _boxCover.alpha = 0.0;
+    _bgView.alpha = 0.0;
 
     
     [_gView addSubview:_bgView ];
@@ -297,6 +297,7 @@ UIColor *newGrey = nil;
     [_gView.layer insertSublayer:bgLayer atIndex:0];
     
     [self positionViews];
+    [self setTint:newGrey];
 
 }
 
@@ -328,7 +329,6 @@ UIColor *newGrey = nil;
         _nowPlayingSlider.value = [[options objectForKey:@"durationSliderValue"] intValue];
     }
     
-    
     if ([[options objectForKey:@"durationEndText"] isEqualToString:@""]
         && [[options objectForKey:@"durationStartText"] isEqualToString:@""] ) {
         //Not playing title
@@ -352,10 +352,6 @@ UIColor *newGrey = nil;
     }
     
     
-    UIImage *img = [UIImage new];
-    UIColor *avgColor = newGrey;
-    
-    
     _bgURL = [[NSString alloc] initWithString:[options objectForKey:@"url"]];
     NSURL *imgUrl = [[NSURL alloc] initWithString:[options objectForKey:@"url"]];
     NSError* error = nil;
@@ -364,32 +360,50 @@ UIColor *newGrey = nil;
         [self wipeBackground];
     } else {
         
-        img = [UIImage imageWithData:imgData];
+        UIImage *img = [UIImage imageWithData:imgData];
         [imgUrl release];
+        if (img.size.width < 1 ) {
+            [self wipeBackground];
+            return;
+        }
         
         // Create the image context
         UIGraphicsBeginImageContext(_bgView.frame.size);
         UIImage *blurredSnapshotImage = [img applyDarkEffect];
         UIGraphicsEndImageContext();
         
+        _boxCover.alpha = 0.0;
+        _bgView.alpha = 0.0;
+        _boxCover.image = img;
+        _bgView.image = blurredSnapshotImage;
         _bgView.contentMode = UIViewContentModeScaleAspectFill;
         _bgView.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width/2*-1,
                                    [[UIScreen mainScreen] bounds].size.height/2*-1,
                                    [[UIScreen mainScreen] bounds].size.width*2,
                                    [[UIScreen mainScreen] bounds].size.height*2);
         
-        _bgView.image = blurredSnapshotImage;
-        _boxCover.image = img;
-        isPlaying = YES;
-        _playButton.image = [UIImage imageNamed:@"www/img/ui/SystemMediaControl-Pause@2x.png"];
+        _boxCover.transform = CGAffineTransformMakeScale(0.01, 0.01);
         
-        avgColor = [self averageColor:img];
-        CGFloat hue, saturation, brightness, alpha ;
-        BOOL ok = [ avgColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
-        if ( ok ) {
-            avgColor = [UIColor colorWithHue:hue saturation:saturation brightness:.85f alpha:alpha ] ;
-        }
-        [self setTint:avgColor];
+        [UIView animateWithDuration:0.25 delay: 0.0 options: UIViewAnimationOptionCurveEaseIn  animations:^{
+            _boxCover.alpha = 1.0;
+            _bgView.alpha = 1.0;
+            _boxCover.transform = CGAffineTransformIdentity; //100%
+        } completion:^(BOOL finished){
+            isPlaying = YES;
+            _playButton.image = [UIImage imageNamed:@"www/img/ui/SystemMediaControl-Pause@2x.png"];
+            
+            UIColor *avgColor = [self averageColor:img];
+            CGFloat hue, saturation, brightness, alpha ;
+            BOOL ok = [ avgColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
+            if ( ok ) {
+                avgColor = [UIColor colorWithHue:hue saturation:saturation brightness:.85f alpha:alpha ] ;
+                [self setTint:avgColor];
+            } else {
+                [self setTint:newGrey];
+            }
+           
+        }];
+        
         
     }
     
@@ -425,14 +439,33 @@ UIColor *newGrey = nil;
 
 
 - (void) wipeBackground {
-    NSLog(@"NP Clear");
-    _bgView.frame = CGRectMake(0, 0,
-                               [[UIScreen mainScreen] bounds].size.width,
-                               [[UIScreen mainScreen] bounds].size.height);
+    
+    if (_boxCover.alpha == 0.0) {
+        _bgView.alpha = 0.0;
+        _bgURL = [[NSString alloc] initWithString:@""];
+        [self setTint:newGrey];
+        return;
+    }
+    
+
+    _boxCover.alpha = 1.0;
+    _bgView.alpha = 1.0;
+    _bgView.frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height);
     _bgView.contentMode = UIViewContentModeScaleToFill;
-    _bgView.image = [UIImage new];
-    _boxCover.image = [UIImage new];
-    [self setTint:newGrey];
+    _boxCover.transform = CGAffineTransformIdentity; //100%
+
+    [UIView animateWithDuration:0.25 delay: 0.0 options: UIViewAnimationOptionCurveEaseIn  animations:^{
+        _boxCover.alpha = 0.0;
+        _bgView.alpha = 0.0;
+        _boxCover.transform = CGAffineTransformMakeScale(0.01, 0.01);
+    } completion:^(BOOL finished){
+        _bgView.image = [UIImage new];
+        _boxCover.image = [UIImage new];
+        _bgURL = [[NSString alloc] initWithString:@""];
+        [self setTint:newGrey];
+    }];
+    
+
 }
 
 - (UIColor *)averageColor:(UIImage*) img {

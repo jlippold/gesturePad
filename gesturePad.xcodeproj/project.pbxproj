@@ -68,6 +68,7 @@
 		85A99B9418820D0D0002FA2D /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85A99B8418820D0D0002FA2D /* Icon@2x.png */; };
 		85A99B9518820D0D0002FA2D /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 85A99B8518820D0D0002FA2D /* iTunesArtwork */; };
 		85A99B9618820D0D0002FA2D /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 85A99B8618820D0D0002FA2D /* iTunesArtwork@2x */; };
+		85C30EFB18A7D45800CCD573 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C30EFA18A7D45800CCD573 /* Default-568h@2x.png */; };
 		85D2633018424B77002F86FA /* ClipboardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D2632F18424B77002F86FA /* ClipboardPlugin.m */; };
 /* End PBXBuildFile section */
 
@@ -167,6 +168,7 @@
 		85A99B8418820D0D0002FA2D /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		85A99B8518820D0D0002FA2D /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		85A99B8618820D0D0002FA2D /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
+		85C30EFA18A7D45800CCD573 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85D2632E18424B77002F86FA /* ClipboardPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClipboardPlugin.h; sourceTree = "<group>"; };
 		85D2632F18424B77002F86FA /* ClipboardPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClipboardPlugin.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* gesturePad-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "gesturePad-Info.plist"; path = "../gesturePad-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				85C30EFA18A7D45800CCD573 /* Default-568h@2x.png */,
 				85974F171747E76800C15EFE /* CoreData.framework */,
 				859C77DC16FF5FC300C9ABD4 /* gesturePad.entitlements */,
 				859C77D916FF5F1D00C9ABD4 /* Settings.bundle */,
@@ -484,6 +487,7 @@
 				85A99B8E18820D0D0002FA2D /* Icon-Small-50@2x.png in Resources */,
 				85A99B8A18820D0D0002FA2D /* Icon-72@2x.png in Resources */,
 				85A99B9118820D0D0002FA2D /* Icon-Spotlight-40.png in Resources */,
+				85C30EFB18A7D45800CCD573 /* Default-568h@2x.png in Resources */,
 				3072F99713A8081B00425683 /* Capture.bundle in Resources */,
 				85A99B8C18820D0D0002FA2D /* Icon-76@2x.png in Resources */,
 				1F766FE113BBADB100FB74C0 /* Localizable.strings in Resources */,
@@ -690,7 +694,7 @@
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
 					"\"$(BUILT_PRODUCTS_DIR)\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -739,7 +743,7 @@
 					"\"$(BUILT_PRODUCTS_DIR)\"",
 					"\"$(CORDOVALIB)/Classes\"/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
