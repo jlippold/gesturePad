@@ -35,7 +35,7 @@
      NSArray* supportedOrientations = [strOrientations componentsSeparatedByString:@","];
      */
 
-    [self.viewController presentModalViewController:childBrowser animated:YES];
+    [self.viewController presentViewController:childBrowser animated:YES completion:nil];
 
     NSString* url = (NSString*)[arguments objectAtIndex:0];
 

@@ -57,7 +57,6 @@
     }
     
     [defs registerDefaults:defaultsToRegister];
-    [defaultsToRegister release];
     [defs synchronize];
     
     //loop and send them back to JS

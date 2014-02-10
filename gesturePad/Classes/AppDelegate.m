@@ -90,10 +90,7 @@
     
 #endif 
     
-    self.viewController.invokeString = invokeString;
-    
     // NOTE: To control the view's frame size, override [self.viewController viewWillAppear:] in your view controller.
-    
     // check whether the current orientation is supported: if it is, keep it, rather than forcing a rotation
     BOOL forceStartupRotation = YES;
     UIDeviceOrientation curDevOrientation = [[UIDevice currentDevice] orientation];
@@ -102,12 +99,13 @@
         // UIDevice isn't firing orientation notifications yet… go look at the status bar
         curDevOrientation = (UIDeviceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
     }
-    
+    /*
     if (UIDeviceOrientationIsValidInterfaceOrientation(curDevOrientation)) {
-        if ([self.viewController supportsOrientation:curDevOrientation]) {
+        if ([self.viewController supportsOrientation:curDevOrientation ]) {
             forceStartupRotation = NO;
         } 
     } 
+    */
     
     if (forceStartupRotation) {
         UIInterfaceOrientation newOrient;

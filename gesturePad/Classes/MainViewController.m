@@ -54,32 +54,14 @@
 {
     // Set the main view to utilize the entire application frame space of the device.
     // Change this to suit your view's UI footprint needs in your application.
-
-
+    UIView* rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+    CGRect webViewFrame = [[[rootView subviews] objectAtIndex:0] frame];  // first subview is the UIWebView
     
-    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
-    if (YES == NO) { // iOS 7 or above
-        CGRect oldBounds = [self.view bounds];
-        CGRect newViewBounds = CGRectMake( 0, -10, oldBounds.size.width, oldBounds.size.height-20 );
-        CGRect newWebViewBounds = CGRectMake( 0, -20, oldBounds.size.width, oldBounds.size.height-40 );
-
-        [self.view setBounds:newViewBounds];
-        [self.webView setBounds:newWebViewBounds];
-        self.webView.scrollView.scrollsToTop = NO;
-        
-    } else {
-        
-        
-        UIView* rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
-        CGRect webViewFrame = [[[rootView subviews] objectAtIndex:0] frame];  // first subview is the UIWebView
-        
-        
-        if (CGRectEqualToRect(webViewFrame, CGRectZero)) { // UIWebView is sized according to its parent, here it hasn't been sized yet
-            self.view.frame = [[UIScreen mainScreen] applicationFrame]; // size UIWebView's parent according to application frame, which will in turn resize the UIWebView
-        }
-
-
+    
+    if (CGRectEqualToRect(webViewFrame, CGRectZero)) { // UIWebView is sized according to its parent, here it hasn't been sized yet
+        self.view.frame = [[UIScreen mainScreen] applicationFrame]; // size UIWebView's parent according to application frame, which will in turn resize the UIWebView
     }
+
 
     [super viewWillAppear:animated];
 }
@@ -156,23 +138,6 @@
 
 #pragma UIWebDelegate implementation
 
-- (void) webViewDidFinishLoad:(UIWebView*) theWebView 
-{
-     // only valid if ___PROJECTNAME__-Info.plist specifies a protocol to handle
-     if (self.invokeString)
-     {
-        // this is passed before the deviceready event is fired, so you can access it in js when you receive deviceready
-		NSLog(@"DEPRECATED: window.invokeString - use the window.handleOpenURL(url) function instead, which is always called when the app is launched through a custom scheme url.");
-        NSString* jsString = [NSString stringWithFormat:@"var invokeString = \"%@\";", self.invokeString];
-        [theWebView stringByEvaluatingJavaScriptFromString:jsString];
-     }
-     
-     // Black base color for background matches the native apps
-     theWebView.backgroundColor = [UIColor blackColor];
-
-	return [super webViewDidFinishLoad:theWebView];
-}
-
 /* Comment out the block below to over-ride */
 
 
@@ -188,39 +153,5 @@
 
 
 
-
-- (BOOL) webView:(UIWebView*)theWebView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    NSString *url = [[request URL] absoluteString];
-
-    self.view.backgroundColor = [UIColor blackColor];
-    
-    if ([url hasPrefix:@"http://gesturepad/sleep"]) {
-                
-        [[UIScreen mainScreen] setWantsSoftwareDimming:YES];
-        [[UIScreen mainScreen] setBrightness:0.0];
-        self.webView.opaque = YES;
-        self.webView.alpha = 0.1f;
-        [[UIApplication sharedApplication] setStatusBarHidden:YES animated:NO];
-        return NO;
-    }
-    else if ([url hasPrefix:@"http://gesturepad/wake"]) {
-        
-        [[UIScreen mainScreen] setWantsSoftwareDimming:YES];
-        [[UIScreen mainScreen] setBrightness:0.8];
-        self.webView.opaque = YES;
-        self.webView.alpha = 1.0f;
-        [[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO];
-        return NO;
-    }
-    else {
-        [[UIScreen mainScreen] setBrightness:0.8];
-        return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
-    }
-    
-
-    
-	//return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
-}
 
 @end

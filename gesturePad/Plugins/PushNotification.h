@@ -19,8 +19,8 @@
 
 }
 
-@property (nonatomic, retain) NSMutableDictionary* callbackIds;
-@property (nonatomic, retain) NSMutableArray* pendingNotifications;
+@property (nonatomic, strong) NSMutableDictionary* callbackIds;
+@property (nonatomic, strong) NSMutableArray* pendingNotifications;
 
 - (void)registerDevice:(CDVInvokedUrlCommand *)command;
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken;

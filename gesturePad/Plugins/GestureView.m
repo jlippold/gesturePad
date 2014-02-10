@@ -44,10 +44,10 @@ UIColor *newGrey = nil;
 {
 
     newGrey = [UIColor colorWithRed:0.678 green:0.678 blue:0.678 alpha:1.0];
-    _bgURL = [[NSString alloc] initWithString:@""];
+    _bgURL = @"";
     isPlaying = NO;
-    _lastNavTitle = [[NSString alloc] initWithString:@""];
-    _lastNavSubTitle = [[NSString alloc] initWithString:@""];
+    _lastNavTitle = @"";
+    _lastNavSubTitle = @"";
 
     
     _gView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, [[UIScreen mainScreen] bounds].size.width,
@@ -65,12 +65,10 @@ UIColor *newGrey = nil;
     [_navbar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     _navbar.translucent = YES;
     _navbar.tintColor = [UIColor whiteColor];
-    _navbar.titleTextAttributes = @{UITextAttributeTextColor : [UIColor whiteColor]};
+    _navbar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
 
     
-    UINavigationItem *navItem = [UINavigationItem alloc];
-    //NSString *navTitle = [options objectForKey:@"title"];
-    
+
     _navTitle = [[UILabel alloc] init];
     _navTitle.translatesAutoresizingMaskIntoConstraints = YES;
     _navTitle.text = @"";
@@ -92,9 +90,8 @@ UIColor *newGrey = nil;
     [_navbar addSubview:_navTitle];
     [_navbar addSubview:_navSubTitle];
     
-
+    UINavigationItem *navItem = [UINavigationItem alloc];
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self  action:@selector(leftNavButtonTap:)];
-    
     navItem.leftBarButtonItem = leftButton;
     
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"www/img/ui/ListIcon@2x.png"] style:UIBarButtonItemStylePlain target:self  action:@selector(rightNavButtonTap:)];
@@ -361,7 +358,6 @@ UIColor *newGrey = nil;
     } else {
         
         UIImage *img = [UIImage imageWithData:imgData];
-        [imgUrl release];
         if (img.size.width < 1 ) {
             [self wipeBackground];
             return;
@@ -442,7 +438,7 @@ UIColor *newGrey = nil;
     
     if (_boxCover.alpha == 0.0) {
         _bgView.alpha = 0.0;
-        _bgURL = [[NSString alloc] initWithString:@""];
+        _bgURL = @"";
         [self setTint:newGrey];
         return;
     }
@@ -461,7 +457,7 @@ UIColor *newGrey = nil;
     } completion:^(BOOL finished){
         _bgView.image = [UIImage new];
         _boxCover.image = [UIImage new];
-        _bgURL = [[NSString alloc] initWithString:@""];
+        _bgURL = @"";
         [self setTint:newGrey];
     }];
     

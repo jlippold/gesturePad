@@ -104,7 +104,7 @@
         // Reference UIViewController.h Line:179 for update to iOS 5 difference - @RandyMcMillan
         [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
     } else {
-        [[self parentViewController] dismissModalViewControllerAnimated:YES];
+        [[self parentViewController] dismissViewControllerAnimated:YES completion:nil];
     }
 }
 

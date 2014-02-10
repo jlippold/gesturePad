@@ -18,7 +18,7 @@
 }
 
 @property (nonatomic, copy) NSString* callbackID;
-@property (nonatomic, assign) MBProgressHUD* progressHUD;
+@property (nonatomic, weak) MBProgressHUD* progressHUD;
 
 //Instance Method
 - (void) show:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;

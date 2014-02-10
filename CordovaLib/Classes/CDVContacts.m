@@ -91,11 +91,8 @@
 
             UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:npController];
 
-            if ([weakSelf.viewController respondsToSelector:@selector(presentViewController:::)]) {
-                [weakSelf.viewController presentViewController:navController animated:YES completion:nil];
-            } else {
-                [weakSelf.viewController presentModalViewController:navController animated:YES];
-            }
+           [weakSelf.viewController presentModalViewController:navController animated:YES];
+
         }];
 }
 
@@ -151,11 +148,9 @@
 
                 [navController pushViewController:personController animated:YES];
 
-                if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
-                    [self.viewController presentViewController:navController animated:YES completion:nil];
-                } else {
-                    [self.viewController presentModalViewController:navController animated:YES];
-                }
+
+                [self.viewController presentModalViewController:navController animated:YES];
+
 
                 if (bEdit) {
                     // create the editing controller and push it onto the stack
@@ -193,11 +188,8 @@
     pickerController.pickedContactDictionary = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kABRecordInvalidID], kW3ContactId, nil];
     pickerController.allowsEditing = (BOOL)[options existsValue : @"true" forKey : @"allowsEditing"];
 
-    if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
-        [self.viewController presentViewController:pickerController animated:YES completion:nil];
-    } else {
-        [self.viewController presentModalViewController:pickerController animated:YES];
-    }
+    [self.viewController presentModalViewController:pickerController animated:YES];
+
 }
 
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController*)peoplePicker

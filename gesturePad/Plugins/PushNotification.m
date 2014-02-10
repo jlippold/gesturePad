@@ -224,7 +224,7 @@
 	[self.callbackIds setValue:command.callbackId forKey:@"getDeviceUniqueIdentifier"];
 	//NSDictionary *options = [command.arguments objectAtIndex:0];
 
-	NSString* uuid = [[UIDevice currentDevice] uniqueIdentifier];
+	NSString* uuid = @""; //[[UIDevice currentDevice] uniqueIdentifier];
 
 	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:uuid];
 	[self writeJavascript:[pluginResult toSuccessCallbackString:[self.callbackIds valueForKey:@"getDeviceUniqueIdentifier"]]];

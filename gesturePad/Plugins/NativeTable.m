@@ -19,18 +19,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-
-	[_mainTableView release];
-	[_mainTableData release];
-    [_searchBar release];
-    [_searchController release];
-    [_navbar release];
-    [_toolbar release];
-    [_searchResults release];
-    [super dealloc];
-}
 
 
 
@@ -45,7 +33,7 @@
     _navbar.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
     //_navbar.barStyle = UIBarStyleBlackOpaque;
     _navbar.tintColor = [UIColor whiteColor];
-    _navbar.titleTextAttributes = @{UITextAttributeTextColor : [UIColor whiteColor]};
+    _navbar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
     
     UINavigationItem *navItem = [UINavigationItem alloc];
     NSString *navTitle = @"";
@@ -117,12 +105,6 @@
         NSArray *items = [NSArray arrayWithObjects: buttonOne, flexItem, buttonTwo, flexItem, buttonThree, flexItem, buttonFour, flexItem, buttonFive, nil];
         [_toolbar setItems: items animated:NO];
 
-        [buttonOne release];
-        [buttonTwo release];
-        [buttonThree release];
-        [buttonFour release];
-        [buttonFive release];
-        [flexItem release];
     }
     
     [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[UIColor whiteColor]];
@@ -155,7 +137,7 @@
     [_mainTableView setBackgroundColor:[UIColor clearColor]];
     
 
-    UIView *topview = [[[UIView alloc] initWithFrame:CGRectMake(0,-480,[UIScreen mainScreen].bounds.size.width,480)] autorelease];
+    UIView *topview = [[UIView alloc] initWithFrame:CGRectMake(0,-480,[UIScreen mainScreen].bounds.size.width,480)];
     topview.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.85];
     [_mainTableView addSubview:topview];
     
@@ -200,7 +182,6 @@
     [bg.layer insertSublayer:bgLayer atIndex:0];
     
     [bg addSubview:tempImageView];
-    [tempImageView release];
     [bg addSubview:_mainTableView];
     [bg addSubview:_navbar];
     [bg addSubview:_searchBar];
@@ -259,7 +240,6 @@
 - (void)setTableData:(NSArray*)arguments withDict:(NSDictionary*)options
 {
 	
-	[_mainTableData release];
 	_mainTableData = [[arguments objectAtIndex:0] copy];
 	[_mainTableView reloadData];
 	
@@ -369,7 +349,6 @@
             counter++;
             row++;
         }
-        [tmp release];
         
         
         //scroll to item
@@ -420,7 +399,6 @@
         }
     }
     // NSLog(@"Total Sections: %d", counter);
-    [tmp release];
     return counter;
 }
 
@@ -455,7 +433,6 @@
         }
     }
     //    NSLog(@"Section: %d Count: %d", section, rowsInSection);
-    [tmp release];
     return rowsInSection;
     
 }
@@ -484,7 +461,6 @@
         }
     }
     
-    [tmp release];
     return retVal;
     
 }
@@ -510,11 +486,11 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
     cell.backgroundColor = [UIColor clearColor];
-    cell.backgroundView = [[UIView new] autorelease];
+    cell.backgroundView = [UIView new];
     //cell.selectedBackgroundView = [[UIView new] autorelease];
     [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     
@@ -555,7 +531,6 @@
         rowCounter++;
     }
     //    NSLog(@"Section: %d Count: %d", section, rowsInSection);
-    [tmp release];
     
     NSDictionary *item = [_mainTableData objectAtIndex:actualRow];
     if (isFiltered) {
@@ -638,7 +613,7 @@
                         strEncoded = [@"data:image/png;base64," stringByAppendingString:strEncoded];
                         [strEncoded writeToFile:cachedFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
                     }
-                    [Base64 release];
+
                     dispatch_sync(dispatch_get_main_queue(), ^{
                         UITableViewCell *nCell = [tableView cellForRowAtIndexPath:indexPath];
                         if ([[NSFileManager defaultManager] fileExistsAtPath:cachedFile]){
@@ -718,7 +693,6 @@
         }
         rowCounter++;
     }
-    [tmp release];
     
     NSString * jsCallBack = [NSString stringWithFormat:@"window.plugins.NativeTable._onTableViewRowSelect(%d);", actualRow];
     [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];

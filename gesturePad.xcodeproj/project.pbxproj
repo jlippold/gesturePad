@@ -613,7 +613,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CODE_SIGN_ENTITLEMENTS = gesturePad/gesturePad.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jed Lippold (B8MVHC6NYE)";
@@ -637,7 +637,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CODE_SIGN_ENTITLEMENTS = gesturePad/gesturePad.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jed Lippold (B8MVHC6NYE)";

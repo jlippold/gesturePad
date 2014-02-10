@@ -18,9 +18,9 @@
 
 extern UIColor *newGrey;
 
-@property (nonatomic, retain) NSString *lastNavTitle;
-@property (nonatomic, retain) NSString *lastNavSubTitle;
-@property (nonatomic, retain) NSString *bgURL;
+@property (nonatomic, strong) NSString *lastNavTitle;
+@property (nonatomic, strong) NSString *lastNavSubTitle;
+@property (nonatomic, strong) NSString *bgURL;
 
 
 @property (nonatomic, strong) IBOutlet UIView *gView;
@@ -39,11 +39,11 @@ extern UIColor *newGrey;
 
 @property (nonatomic, strong) UISlider* volumeSlider;
 @property (nonatomic, strong) UISlider* nowPlayingSlider;
-@property (nonatomic, retain) UILabel* durationStart;
-@property (nonatomic, retain) UILabel* durationEnd;
+@property (nonatomic, strong) UILabel* durationStart;
+@property (nonatomic, strong) UILabel* durationEnd;
 
-@property (nonatomic, retain) UILabel* title;
-@property (nonatomic, retain) UILabel* subTitle;
+@property (nonatomic, strong) UILabel* title;
+@property (nonatomic, strong) UILabel* subTitle;
 
 @property (nonatomic, strong) IBOutlet UIToolbar *toolbar;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *rewindButton;

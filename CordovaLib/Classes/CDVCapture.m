@@ -89,11 +89,9 @@
 
         self.inUse = YES;
 
-        if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
-            [self.viewController presentViewController:navController animated:YES completion:nil];
-        } else {
-            [self.viewController presentModalViewController:navController animated:YES];
-        }
+
+        [self.viewController presentModalViewController:navController animated:YES];
+    
     }
 
     if (result) {
@@ -142,11 +140,9 @@
         pickerController.callbackId = callbackId;
         pickerController.mimeType = mode;
 
-        if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
-            [self.viewController presentViewController:pickerController animated:YES completion:nil];
-        } else {
+
             [self.viewController presentModalViewController:pickerController animated:YES];
-        }
+        
     }
 }
 
@@ -258,11 +254,9 @@
         // CDVImagePicker specific property
         pickerController.callbackId = callbackId;
 
-        if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
-            [self.viewController presentViewController:pickerController animated:YES completion:nil];
-        } else {
+
             [self.viewController presentModalViewController:pickerController animated:YES];
-        }
+    
     }
 }
 
