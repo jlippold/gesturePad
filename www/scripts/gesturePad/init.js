@@ -24,6 +24,8 @@ var init = {
 			gestures.doEvent(gesture);
 		});
 
+		
+
 		ui.initiateBindings();
 
 		util.doResize();
@@ -46,6 +48,9 @@ var init = {
 			ui.queryNowPlaying();
 			util.getRoomStatus();
 		}, 30000);
+
+
+		mb3.authenticateUser("treason", "urchin");
 
 		window.scrollTo(0, 0);
 		util.checkForYouTubeLink();

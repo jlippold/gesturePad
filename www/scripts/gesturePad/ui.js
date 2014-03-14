@@ -134,7 +134,7 @@ var ui = {
 					detailsLabelText: "Please Wait..."
 				});
 				setTimeout(function() {
-					MediaBrowser.lastOpenedCallBack();
+					mb3.lastOpenedCallBack();
 				}, 200);
 
 			}
