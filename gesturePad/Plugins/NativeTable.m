@@ -20,8 +20,6 @@
 }
 
 
-
-
 - (void)createTable:(NSArray*)arguments withDict:(NSDictionary*)options
 {
 
@@ -307,6 +305,8 @@
 
 - (void)showTable:(NSArray*)arguments withDict:(NSDictionary*)options
 {
+    NSString * jsCallBack = @"window.plugins.NativeTable._onTableShowComplete();";
+    [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
     return;
 }
 

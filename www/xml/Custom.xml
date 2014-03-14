@@ -80,7 +80,7 @@
 						</action>
 					</command>
 					<command>
-						<name>Hallway On</name>
+						<name>FrontDoor On</name>
 						<action>
 							<method>POST</method>
 							<data><![CDATA[]]></data>
@@ -89,7 +89,7 @@
 						</action>
 					</command>
 					<command>
-						<name>Hallway Off</name>
+						<name>FrontDoor Off</name>
 						<action>
 							<method>POST</method>
 							<data><![CDATA[]]></data>
@@ -317,7 +317,7 @@
 						<action>
 							<dataType>text</dataType>
 							<method>GET</method>
-							<data><![CDATA[SkipForward]]></data>
+							<data><![CDATA[SkipBack]]></data>
 						</action>
 						<gesture definition="1.R.L"/>
 					</command>
@@ -326,7 +326,7 @@
 						<action>
 							<dataType>text</dataType>
 							<method>GET</method>
-							<data><![CDATA[SkipBack]]></data>
+							<data><![CDATA[SkipForward]]></data>
 						</action>
 						<gesture definition="1.L.R"/>
 					</command>

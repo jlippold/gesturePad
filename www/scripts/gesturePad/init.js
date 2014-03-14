@@ -60,15 +60,15 @@ var init = {
 		util.getRoomStatus();
 		DirecTV.startWorker();
 		ui.queryNowPlaying();
-		npTimer = setInterval(function() {
-			ui.queryNowPlaying();
-		}, 30000);
+		//npTimer = setInterval(function() {
+		//	ui.queryNowPlaying();
+		//}, 30000);
 
 		util.checkForYouTubeLink();
 
 	},
 	onBackground: function() {
-		clearInterval(npTimer);
+		//clearInterval(npTimer);
 	},
 	loadXML: function() {
 		var xmlLoc = settings.userSettings.configURL + "?r=" + Math.random();

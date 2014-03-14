@@ -1216,14 +1216,17 @@ var MediaBrowser = {
 						$.ajaxq("genuisWorker");
 
 						util.setStatusBarMessage("Searching for new titles");
+						var url = util.getRandomMBServer() + "library?lightData=1";
+						console.log(url);
 						$.ajax({
-							url: util.getRandomMBServer() + "library?lightData=1",
+							url: url,
 							dataType: 'json',
 							timeout: settings.userSettings.MBServiceTimeout,
 							success: function(d) {
 								if (!d.Data) {
 									return;
 								}
+								console.log(d);
 								$.each(d.Data.Children, function(key, val) {
 									var item = d.Data.Children[key];
 									if (item.Type == "Folder") {
@@ -1237,7 +1240,13 @@ var MediaBrowser = {
 								util.setStatusBarMessage("Searching " + geniusResults.refreshQueue.length + " folders for new titles");
 								cache.saveJson("genius", geniusResults);
 								MediaBrowser.processGeniusQueue(geniusResults);
+							},
+							error: function(x, y, z) {
+								console.log(x);
+								console.log(y);
+								console.log(z);
 							}
+
 						});
 					});
 				}, function() {});
@@ -1347,6 +1356,24 @@ var MediaBrowser = {
 				}
 			});
 			util.setStatusBarMessage("Indexing " + remaining + " " + parentFolder + " Titles");
+			util.doHud({
+				show:false
+			});
+			util.doHud({
+				show: true,
+				labelText: "Indexing " + remaining + " " + parentFolder + " Titles",
+				detailsLabelText: "Tap to cancel",
+				tappedEvent: function() {
+					util.doHud({
+						show: false
+					});
+					if (geniusResults) {
+						geniusResults.refreshQueue = [];
+						geniusResults.TitlesQueue = [];
+					}
+					$.ajaxq("genuisWorker");
+				}
+			});
 		}
 
 		if (remaining % 50 === 0) { //clear the status every 25 items

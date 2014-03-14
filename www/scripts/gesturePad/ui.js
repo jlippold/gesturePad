@@ -447,7 +447,7 @@ var ui = {
 						var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[0];
 						ui.view.setOptionsForView({
 							durationStartText: util.hms2(offset),
-							durationEndText: "- " + util.hms2(duration - offset),
+							durationEndText: "-" + util.hms2(duration - offset),
 							durationSliderValue: util.isNumeric(perc) ? Math.floor(perc * 100) : 0,
 							guid: guid,
 							currentID: currentID,
@@ -491,7 +491,7 @@ var ui = {
 
 					ui.view.setOptionsForView({
 						durationStartText: util.hms2(json.offset),
-						durationEndText: "- " + util.hms2(json.duration - json.offset),
+						durationEndText: "-" + util.hms2(json.duration - json.offset),
 						durationSliderValue: Math.floor(perc * 100),
 						guid: null,
 						currentID: null,

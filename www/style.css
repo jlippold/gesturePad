@@ -1,19 +1,19 @@
 html {
 	height: 100%;
-	overflow: hidden;
+	overflow: hidden
 }
+
 body {
-	margin: 0;
-	padding: 0;
+	background-color: transparent;
+	font-family: "HelveticaNeue-UltraLight","Helvetica";
 	height: 100%;
-	background-color:transparent;
-	font-family: "HelveticaNeue-UltraLight", "Helvetica";
+	margin: 0;
+	padding: 0
 }
 
 #gestures_canvas {
-	top: 0;
 	left: 0;
-	z-index: 2;
 	position: absolute;
+	top: 0;
+	z-index: 2
 }
-

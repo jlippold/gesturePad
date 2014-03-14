@@ -144,6 +144,7 @@ var MediaBrowserNowPlaying = {
 						return true;
 					}
 				});
+				
 
 				//add in now playing items to minimize duplicates
 				if (channel.UpNext.length === 0) {

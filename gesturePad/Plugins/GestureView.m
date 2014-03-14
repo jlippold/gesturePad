@@ -113,8 +113,8 @@ UIColor *newGrey = nil;
     _durationStart = [[UILabel alloc] init];
     _durationStart.text = @"";
     [_durationStart setTextColor:newGrey];
-    _durationStart.textAlignment = NSTextAlignmentLeft;
-    _durationStart.frame = CGRectMake(10, 0, 40, 30);
+    _durationStart.textAlignment = NSTextAlignmentRight;
+    _durationStart.frame = CGRectMake(5, 1, 40, 30);
     [_durationStart setFont:[UIFont systemFontOfSize:12]];
     
     _nowPlayingSlider = [[UISlider alloc] init];
@@ -131,7 +131,7 @@ UIColor *newGrey = nil;
     [_durationEnd setTextColor:newGrey];
     _durationEnd.text = @"";
     _durationEnd.textAlignment = NSTextAlignmentLeft;
-    _durationEnd.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width - 44, 0, 40, 30);
+    _durationEnd.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width - 48, 1, 40, 30);
     [_durationEnd setFont:[UIFont systemFontOfSize:12]];
     
     [nowPlayingContainer addSubview:_durationStart];

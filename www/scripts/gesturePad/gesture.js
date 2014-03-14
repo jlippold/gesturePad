@@ -1,6 +1,6 @@
 var gestures = {
 	executeGestureByCommandName: function(command) {
-		var room = util.getCurrentRoom();
+	var room = util.getCurrentRoom();
 		var device = util.getCurrentDevice();
 		//check if there's a global gesture for it
 		var globals = $(xml).find("gesturePad > rooms > room[index='" + room.index + "'] ~ roomgestures > gesture > device > command > name:contains('" + command + "'):first");
@@ -70,7 +70,7 @@ var gestures = {
 			var gestureName = $(actionNodes).parent().find("name:first").text();
 			util.showNotification(gestureName, gesture);
 			var totalActions = ($(actionNodes).size() - 1);
-			
+
 			//Trigger ajax events
 			$(actionNodes).each(function(i) {
 				var thisnode = $(actionNodes);
@@ -123,7 +123,7 @@ var gestures = {
 						}
 					}
 				});
-				
+
 			});
 		} else {
 			//Unassigned gesture, just show and hide it
