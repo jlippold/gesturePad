@@ -30,7 +30,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
-			<dict>
+		<dict>
 			<key>DefaultValue</key>
 			<true/>
 			<key>Key</key>
@@ -246,10 +246,24 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
-
-
-
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>LIVROOM</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>S1_Client</string>
+			<key>KeyboardType</key>
+			<string>NumbersAndPunctuation</string>
+			<key>Title</key>
+			<string>Client Name</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
 		<dict>
 			<key>Title</key>
 			<string>Room 2</string>
@@ -376,7 +390,24 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>LIVROOM</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>S2_Client</string>
+			<key>KeyboardType</key>
+			<string>NumbersAndPunctuation</string>
+			<key>Title</key>
+			<string>Client Name</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
 		<dict>
 			<key>Title</key>
 			<string>Room 3</string>
@@ -491,6 +522,24 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
+			<string>LIVROOM</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>S3_Client</string>
+			<key>KeyboardType</key>
+			<string>NumbersAndPunctuation</string>
+			<key>Title</key>
+			<string>Client Name</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
 			<string>192.168.1.0</string>
 			<key>IsSecure</key>
 			<false/>
@@ -503,7 +552,6 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
 		<dict>
 			<key>Title</key>
 			<string>Room 4</string>
@@ -618,6 +666,24 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
+			<string>LIVROOM</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>S4_Client</string>
+			<key>KeyboardType</key>
+			<string>NumbersAndPunctuation</string>
+			<key>Title</key>
+			<string>Client Name</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
 			<string>192.168.1.0</string>
 			<key>IsSecure</key>
 			<false/>
@@ -630,7 +696,6 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
 		<dict>
 			<key>Title</key>
 			<string>Room 5</string>
@@ -757,7 +822,24 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>LIVROOM</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>S5_Client</string>
+			<key>KeyboardType</key>
+			<string>NumbersAndPunctuation</string>
+			<key>Title</key>
+			<string>Client Name</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

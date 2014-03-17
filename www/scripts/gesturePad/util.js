@@ -206,6 +206,12 @@ var util = {
 		}
 		return "";
 	},
+	ticksToSeconds: function(ticks) {
+		return (ticks/10000000);
+	},
+	secondsToTicks: function(seconds) {
+		return (seconds*10000000);
+	},
 	getCurrentDevice: function() {
 		if (settings.userSettings.rooms) {
 			if (settings.userSettings.rooms.length > 0) {

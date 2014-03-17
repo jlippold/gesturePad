@@ -256,11 +256,11 @@ var ui = {
 							break;
 						case 2:
 							util.setItem("lastRefresh", "2010-01-01T23:44:52.790Z");
-							MediaBrowser.startWorker(true, true);
+							mb3.startWorker(true, true);
 							break;
 						case 3:
 							//cache.clear("cache");
-							MediaBrowserNowPlaying.allItemsPopulated = false;
+							mb3.allItemsPopulated = false;
 							util.doAlert("Custom TV Cleared");
 							break;
 						case 4:
@@ -276,7 +276,7 @@ var ui = {
 
 		ui.view.bind("roomButtonTap", function() {
 			var oncomplete = function(buttonIndex) {
-				MediaBrowser.resetCallback();
+				mb3.resetCallback();
 				settings.userSettings.roomIndex = buttonIndex;
 				settings.userSettings.deviceIndex = 0;
 				util.updateStatus();
@@ -427,41 +427,47 @@ var ui = {
 
 		var device = util.getCurrentDevice();
 		if (device.shortname == "MCE") {
-			var base = util.getMBUrl();
+
+			var url = mb3.getServiceUrl() + "/mediabrowser/Sessions?format=json";
 			$.ajax({
-				url: base + "ui",
+				url: url,
 				dataType: "json",
 				timeout: 10000,
 				success: function(j) {
-					var duration = 0;
-					try {
-						duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
-					} catch (e) {
-						return;
-					}
-					if (j.Data.PlayingControllers.length >= 1) {
-						duration = j.Data.PlayingControllers[0].CurrentFileDuration.TotalSeconds;
-						var offset = j.Data.PlayingControllers[0].CurrentFilePosition.TotalSeconds;
-						var perc = offset / duration;
-						var currentID = j.Data.PlayingControllers[0].PlayableItems[0].CurrentMediaIndex;
-						var guid = j.Data.PlayingControllers[0].PlayableItems[0].MediaItemIds[0];
-						ui.view.setOptionsForView({
-							durationStartText: util.hms2(offset),
-							durationEndText: "-" + util.hms2(duration - offset),
-							durationSliderValue: util.isNumeric(perc) ? Math.floor(perc * 100) : 0,
-							guid: guid,
-							currentID: currentID,
-							title: j.Data.PlayingControllers[0].PlayableItems[0].DisplayName,
-							subTitle: "★★★★★",
-							duration: j.Data.PlayingControllers[0].CurrentFileDuration.Ticks,
-							controller: j.Data.PlayingControllers[0].ControllerName,
-							url: base + "image/?Id=" + guid,
-							isPlaying: (j.Data.PlayingControllers[0].IsPaused === true ? false : true)
-						});
+					var foundClient = false;
+					$.each(j, function(k, client) {
+						if (client.DeviceId === device.clientName) {
+							mb3.config.clientId = client.Id;
+							if (client.NowPlayingPositionTicks) {
+								var duration = client.NowPlayingItem.RunTimeTicks;
+								var offset = client.NowPlayingPositionTicks;
+								var perc = offset / duration;
+								var currentID = client.NowPlayingItem.Id;
+								var guid = client.NowPlayingItem.Id;
+								ui.view.setOptionsForView({
+									durationStartText: util.hms2( util.ticksToSeconds(offset) ),
+									durationEndText: "-" + util.hms2( util.ticksToSeconds(duration - offset) ),
+									durationSliderValue: util.isNumeric(perc) ? Math.floor(perc * 100) : 0,
+									guid: guid,
+									currentID: currentID,
+									title: client.NowPlayingItem.Name,
+									subTitle: client.Client + " " + client.NowPlayingItem.Type,
+									duration: duration,
+									controller: device.clientName,
+									url: mb3.getServiceUrl() + "/mediabrowser/Items/" + client.NowPlayingItem.Id + "/Images/Primary",
+									backdrop: mb3.getServiceUrl() + "/mediabrowser/Items/" + client.NowPlayingItem.Id + "/Images/Backdrop",
+									isPlaying: (client.IsPaused === true ? false : true)
+								});
+								foundClient = true;
+								return false;
+							}
+						}
+					});
 
-					} else {
+					if (foundClient === false) {
 						ui.clearNowPlaying();
 					}
+
 				},
 				error: function() {
 					ui.clearNowPlaying();
@@ -500,7 +506,8 @@ var ui = {
 						subTitle: json.major + " " + json.callsign,
 						duration: 0,
 						isPlaying: false,
-						url: ""
+						url: "",
+						backdrop: ""
 					});
 
 					$.ajax({
@@ -526,7 +533,8 @@ var ui = {
 										var poster = $(seriesxml).find("poster:first");
 										if ($(poster).size() > 0) {
 											ui.view.setOptionsForView({
-												"url": "http://thetvdb.com/banners/_cache/" + $(poster).text()
+												"url": "http://thetvdb.com/banners/_cache/" + $(poster).text(),
+												"backdrop": "http://thetvdb.com/banners/_cache/" + $(poster).text()
 											});
 										}
 									}

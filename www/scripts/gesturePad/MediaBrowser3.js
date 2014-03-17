@@ -4,7 +4,8 @@ var mb3 = {
 		port: "8096",
 		userName: "treason",
 		password: "urchin",
-		userID: ""
+		userID: "",
+		clientId: ""
 	},
 	getServiceUrl: function() {
 		return "http://" + mb3.config.server + ":" + mb3.config.port;
@@ -194,48 +195,60 @@ var mb3 = {
 	lastOpenedCallBack: function() {
 		mb3.createInitialListView();
 	},
-	backButtonCallback: function() {
-		mb3.createInitialListView();
+	navigationStack: [],
+	goBack: function() {
+		var lastItem = mb3.navigationStack.pop();
+		if (mb3.navigationStack.length === 0) {
+			mb3.createInitialListView();
+		} else {
+			lastItem = mb3.navigationStack.pop();
+			mb3.ShowItems(lastItem);
+		}
 	},
 	resetCallback: function() {
-		MediaBrowser.lastOpenedCallBack = function() {
-			MediaBrowser.createInitialListView();
+		mb3.lastOpenedCallBack = function() {
+			mb3.createInitialListView();
 		};
 	},
-	playByID: function(buttonIndex, id) {
-		if (buttonIndex == 2) {
-			DoShuffle();
+	playByID: function(id, playAt) {
+		var MBUrl = mb3.getServiceUrl();
+		MBUrl += "/mediabrowser/Sessions/" + mb3.config.clientId + "/Playing";
+
+		if (!playAt) {
+			playAt = 0;
 		}
-		if (buttonIndex == 1) {
-			var MBUrl = util.getMBUrl();
-			MBUrl += "ui?command=play&id=" + id;
-			$.getJSON(MBUrl, function(x) {
+
+		$.ajax({
+			url: MBUrl,
+			data: "ItemIds=" + id + "&PlayCommand=PlayNow&StartPositionTicks=" + playAt,
+			type: "POST",
+			success: function(json) {
 				setTimeout(function() {
 					ui.queryNowPlaying();
 				}, 1500);
-			});
-		}
+				//util.doAlert("Now Playing\n" + movieTitle);
+			},
+			error: function(x, y, z) {
+				console.log("Auth Error");
+				console.log(x);
+				console.log(y);
+				console.log(z);
+			}
+		});
 	},
 	playTitle: function(tr, movieTitle, playNow) {
 		if (util.isWifi() === false) {
 			util.doAlert("You are not on Wifi. To play this title, connect to Wifi and try again");
 			return;
 		}
-		var MBUrl = util.getMBUrl();
-		var guid = "";
+		var MBUrl = mb3.getServiceUrl();
+		var guid = $(tr).attr("data-guid");
 		if (playNow) {
-			guid = $(tr).attr("data-guid");
-			MBUrl += "ui?command=play&id=" + guid;
-			$.getJSON(MBUrl, function() {
-				setTimeout(function() {
-					ui.queryNowPlaying();
-				}, 1500);
-			});
-			util.doAlert("Now Playing\n" + movieTitle);
+			mb3.playByID(guid);
 		} else {
 			var actionSheet = window.plugins.actionSheet;
 			var actions = ["Play", "Resume", "View on Screen"];
-			if ($(tr).attr("data-imdb") == "1") {
+			if ($(tr).attr("data-imdb") === "1") {
 				actions.push("View Imdb Page");
 			}
 			actions.push("Cancel");
@@ -254,59 +267,68 @@ var mb3 = {
 				}
 				switch (actions[buttonIndex]) {
 					case "Play":
-						MBUrl += "ui?command=play&id=" + guid;
+						mb3.playByID(guid);
 						break;
 					case "Resume":
-						MBUrl += "ui?command=resume&id=" + guid;
+						MBUrl += "/mediabrowser/Users/" + mb3.config.userID + "/Items/" + guid + "/?format=json&Fields=Overview,Genres";
+						$.ajax({
+							url: MBUrl,
+							dataType: 'json',
+							success: function(d) {
+								mb3.playByID(guid, d.UserData.PlaybackPositionTicks);
+							}
+						});
 						break;
 					case "View on Screen":
-						MBUrl += "ui?command=navigatetoitem&id=" + guid;
+						MBUrl += "/mediabrowser/Sessions/" + mb3.config.clientId + "/Viewing";
+						$.ajax({
+							url: MBUrl,
+							data: "ItemId=" + $(tr).attr("data-guid") + "&ItemName=" + movieTitle,
+							type: "POST",
+							success: function(json) {
+								setTimeout(function() {
+									ui.queryNowPlaying();
+								}, 1500);
+							},
+							error: function(x, y, z) {}
+						});
 						break;
 					case "View Imdb Page":
-						MBUrl = "";
+
+						MBUrl += "/mediabrowser/Users/" + mb3.config.userID + "/Items/" + guid + "/?format=json&Fields=Overview,Genres";
+						$.ajax({
+							url: MBUrl,
+							dataType: 'json',
+							success: function(d) {
+								if (d.ProviderIds) {
+									if (d.ProviderIds.Imdb) {
+										var nt = window.plugins.NativeTable;
+										nt.hideTable(function() {
+											cb = window.plugins.childBrowser;
+											if (cb !== null) {
+												cb.onClose = function() {
+													setTimeout(function() {
+														ui.view.trigger("rightNavButtonTap");
+													}, 1000);
+												};
+												cb.showWebPage("http://m.imdb.com/title/" + d.ProviderIds.Imdb);
+											}
+										});
+									}
+								} else {
+									util.doAlert("Sorry, This title does not have an IMBD id");
+								}
+							}
+						});
+
 						break;
 				}
-				if (MBUrl !== "") {
-					$.getJSON(MBUrl, function() {
-						setTimeout(function() {
-							ui.queryNowPlaying();
-						}, 1500);
-					});
-				} else {
-					//launch Imdb
-					$.ajax({
-						url: util.getMBUrl() + "library/?Id=" + guid + "&lightData=1",
-						dataType: 'json',
-						timeout: settings.userSettings.MBServiceTimeout,
-						success: function(x) {
-							if (x.Data.ImdbID) {
-								var nt = window.plugins.NativeTable;
-								nt.hideTable(function() {
-									cb = window.plugins.childBrowser;
-									if (cb !== null) {
-										cb.onClose = function() {
-											setTimeout(function() {
-												ui.view.trigger("rightNavButtonTap");
-											}, 1000);
-										};
-										cb.showWebPage("http://m.imdb.com/title/" + x.Data.ImdbID);
-									}
-								});
-							} else {
-								util.doAlert("Sorry, This title does not have an IMBD id");
-							}
-						},
-						error: function() {
-							if (parse) {
-								util.doAlert("The server is not responding in time, and no cached version exists. Try again later");
-							}
-						}
-					});
-				}
+
 			});
 		}
 	},
 	ShowItems: function(item, sentEventType) {
+
 		var eventType = "click";
 		if (sentEventType) {
 			eventType = sentEventType;
@@ -322,7 +344,7 @@ var mb3 = {
 		var parseJsonResults = function(x) {
 
 			if (x.back == "StartupFolder") {
-				MediaBrowser.createInitialListView();
+				mb3.createInitialListView();
 				return;
 			}
 
@@ -337,18 +359,26 @@ var mb3 = {
 						'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 						'guid': item.Id,
 						'type': item.Type,
-						'imdb': "0"
+						'imdb': "0",
+						'ParentId': item.ParentId
 					});
 				} else {
+					var imdb = "0";
+					if (item.ProviderIds) {
+						if (item.ProviderIds.Imdb) {
+							imdb = "1";
+						}
+					}
 					tableView.push({
-						'textLabel': (item.UserData.PlayCount === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+						'textLabel': item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 						'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
 						'icon': "none",
 						'sectionHeader': item.Type,
 						'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 						'guid': item.Id,
 						'type': item.Type,
-						'imdb': item.ProviderIds.Imdb ? "1" : "0"
+						'imdb': imdb,
+						'ParentId': item.ParentId
 					});
 				}
 			});
@@ -367,7 +397,7 @@ var mb3 = {
 			});
 
 			nt.onToolbarButtonClick(function(buttonIndex) {
-				MediaBrowser.toolbarButtonClickEvent(buttonIndex, nt);
+				mb3.toolbarButtonClickEvent(buttonIndex, nt);
 			});
 
 			nt.onRightButtonTap(function() {
@@ -375,16 +405,12 @@ var mb3 = {
 			});
 			nt.setRowSelectCallBackFunction(function(rowId) {
 				var item = tableView[rowId];
+
 				if (item.icon == "none") {
 					var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>");
-					MediaBrowser.playTitle($(tr), item.textLabel, false);
+					mb3.playTitle($(tr), item.textLabel, false);
 				} else {
 					nt.hideTable(function() {
-						/*
-						mb3.backButtonCallback = function() {
-							mb3.lastOpenedCallBack();
-						};
-						*/
 						mb3.ShowItems(item);
 					});
 				}
@@ -392,7 +418,7 @@ var mb3 = {
 
 			nt.onBackButtonTap(function() {
 				nt.hideTable(function() {
-					mb3.backButtonCallback();
+					mb3.goBack();
 				});
 			});
 
@@ -431,54 +457,52 @@ var mb3 = {
 		if (item.type == "CustomFolder") {
 			switch (item.folderType) {
 				case "Genres":
-					MediaBrowser.lastOpenedCallBack = function() {
-						MediaBrowser.showListOfGenres();
+					mb3.lastOpenedCallBack = function() {
+						mb3.showListOfGenres();
 					};
 					break;
 				case "Years":
-					MediaBrowser.lastOpenedCallBack = function() {
-						MediaBrowser.showListOfYears();
+					mb3.lastOpenedCallBack = function() {
+						mb3.showListOfYears();
 					};
 					break;
 				case "Actors":
-					MediaBrowser.lastOpenedCallBack = function() {
-						MediaBrowser.showListOfActors();
+					mb3.lastOpenedCallBack = function() {
+						mb3.showListOfActors();
 					};
 					break;
 				case "Directors":
-					MediaBrowser.lastOpenedCallBack = function() {
-						MediaBrowser.showListOfDirectors();
+					mb3.lastOpenedCallBack = function() {
+						mb3.showListOfDirectors();
 					};
 					break;
 				case "OfficialRating":
-					MediaBrowser.lastOpenedCallBack = function() {
-						MediaBrowser.showListOfRating();
+					mb3.lastOpenedCallBack = function() {
+						mb3.showListOfRating();
 					};
 					break;
 				case "IMDBRating":
-					MediaBrowser.lastOpenedCallBack = function() {
-						MediaBrowser.showListOfIMDBRating();
+					mb3.lastOpenedCallBack = function() {
+						mb3.showListOfIMDBRating();
 					};
 					break;
 				case "Unwatched":
-					MediaBrowser.lastOpenedCallBack = function() {
-						MediaBrowser.showListOfUnwatched();
+					mb3.lastOpenedCallBack = function() {
+						mb3.showListOfUnwatched();
 					};
 					break;
 				case "Custom TV":
-					MediaBrowser.lastOpenedCallBack = function() {
+					mb3.lastOpenedCallBack = function() {
 						MediaBrowserNowPlaying.buildListView();
 					};
 					break;
 			}
-			MediaBrowser.lastOpenedCallBack();
+			mb3.lastOpenedCallBack();
 		} else {
-
-
-			
+			mb3.navigationStack.push(item);
 
 			mb3.lastOpenedCallBack = function() {
-				var URL = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.getUserId() + "/Items?format=json&Fields=Overview,ProviderIds&ParentId=" + item.guid;
+				var URL = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.getUserId() + "/Items?format=json&Fields=Overview,ProviderId,ParentId&ParentId=" + item.guid;
 				if (settings.userSettings.moviesByDate) {
 					URL += "&SortBy=DateCreated&SortOrder=Descending";
 				}
@@ -494,12 +518,12 @@ var mb3 = {
 					}
 				});
 			};
-			mb3.backButtonCallback = jQuery.extend(true, {}, mb3.lastOpenedCallBack);
 			mb3.lastOpenedCallBack();
 
 		}
 	},
 	createInitialListView: function() {
+		//mb3.navigationStack.push({"id": "StartupFolder", "title": "StartupFolder"});
 
 		var parseJsonResults = function(d) {
 
@@ -541,7 +565,7 @@ var mb3 = {
 			});
 			tableView.push({
 				'textLabel': 'Rating',
-				'detailTextLabel': "Movies sorted by IMDB Rating",
+				'detailTextLabel': "Movies sorted by Community Rating",
 				'icon': "greyarrow",
 				'sectionHeader': "Categories",
 				'image': "www/img/mb.png",
@@ -570,26 +594,6 @@ var mb3 = {
 				'folderType': 'Unwatched'
 			});
 			tableView.push({
-				'textLabel': 'Actors',
-				'detailTextLabel': "Movie Actors",
-				'icon': "greyarrow",
-				'sectionHeader': "Categories",
-				'image': "www/img/mb.png",
-				'nomask': false,
-				'type': 'CustomFolder',
-				'folderType': 'Actors'
-			});
-			tableView.push({
-				'textLabel': 'Directors',
-				'detailTextLabel': "Movie Directors",
-				'icon': "greyarrow",
-				'sectionHeader': "Categories",
-				'image': "www/img/mb.png",
-				'nomask': false,
-				'type': 'CustomFolder',
-				'folderType': 'Directors'
-			});
-			tableView.push({
 				'textLabel': 'MPAA Rating',
 				'detailTextLabel': "Official rating by the MPAA",
 				'icon': "greyarrow",
@@ -615,7 +619,7 @@ var mb3 = {
 			});
 
 			nt.onToolbarButtonClick(function(buttonIndex) {
-				MediaBrowser.toolbarButtonClickEvent(buttonIndex, nt);
+				mb3.toolbarButtonClickEvent(buttonIndex, nt);
 			});
 
 			nt.onRightButtonTap(function() {
@@ -629,9 +633,6 @@ var mb3 = {
 						labelText: "Loading Data...",
 						detailsLabelText: "Please Wait..."
 					});
-					mb3.backButtonCallback = function() {
-						mb3.createInitialListView();
-					};
 					setTimeout(function() {
 						mb3.ShowItems(item);
 					}, 250);
@@ -722,7 +723,6 @@ var mb3 = {
 				ui.view.trigger("rightNavButtonTap");
 			});
 		}
-
 	},
 	createCustomTable: function(tableView, tableTitle, backButtonCallback, itemSelectCallback) {
 		var nt = window.plugins.NativeTable;
@@ -740,7 +740,7 @@ var mb3 = {
 		});
 
 		nt.onToolbarButtonClick(function(buttonIndex) {
-			MediaBrowser.toolbarButtonClickEvent(buttonIndex, nt);
+			mb3.toolbarButtonClickEvent(buttonIndex, nt);
 		});
 
 		nt.onRightButtonTap(function() {
@@ -770,13 +770,13 @@ var mb3 = {
 		});
 		var tableView = [];
 		var ProductionYears = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
-				if (item.ProductionYear !== "" && item.ProductionYear !== null) {
+				if (item.ProductionYear !== "" && item.ProductionYear) {
 					if (jQuery.inArray(item.ProductionYear, ProductionYears) == -1) {
 						ProductionYears.push(item.ProductionYear);
 						tableView.push({
-							'textLabel': item.ProductionYear.toString(),
+							'textLabel': "" + item.ProductionYear,
 							'detailTextLabel': "Movies Released in " + item.ProductionYear,
 							'icon': "greyarrow",
 							'sectionHeader': "Movies By Year",
@@ -793,15 +793,15 @@ var mb3 = {
 				return;
 			}
 			tableView.sort(util.dynamicSort("-textLabel"));
-			MediaBrowser.createCustomTable(tableView, "Years", function() {
-				MediaBrowser.createInitialListView();
+			mb3.createCustomTable(tableView, "Years", function() {
+				mb3.createInitialListView();
 			}, function(x, nt) {
 				var item = tableView[x];
 				nt.hideTable(function() {
-					MediaBrowser.showListOfMoviesByYear(item.textLabel);
+					mb3.showListOfMoviesByYear(item.textLabel);
 				});
-				MediaBrowser.lastOpenedCallBack = function() {
-					MediaBrowser.showListOfMoviesByYear(item.textLabel);
+				mb3.lastOpenedCallBack = function() {
+					mb3.showListOfMoviesByYear(item.textLabel);
 				};
 			});
 		});
@@ -814,18 +814,24 @@ var mb3 = {
 		});
 
 		var tableView = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.ProductionYear == year) {
+					var imdb = "0";
+					if (item.ProviderIds) {
+						if (item.ProviderIds.Imdb) {
+							imdb = "1";
+						}
+					}
 					tableView.push({
 						'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
-						'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+						'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
 						'icon': "none",
-						'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
+						'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 						'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
 						'guid': item.Id,
 						'type': item.Type,
-						'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+						'imdb': imdb,
 						'sortName': item.SortName
 					});
 				}
@@ -837,12 +843,12 @@ var mb3 = {
 			}
 			tableView.sort(util.dynamicSort("sortName"));
 
-			MediaBrowser.createCustomTable(tableView, year, function() {
-				MediaBrowser.showListOfYears();
+			mb3.createCustomTable(tableView, year, function() {
+				mb3.showListOfYears();
 			}, function(x, nt) {
 				var item = tableView[x];
 				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>");
-				MediaBrowser.playTitle($(tr), item.textLabel, false);
+				mb3.playTitle($(tr), item.textLabel, false);
 			});
 		});
 	},
@@ -854,7 +860,8 @@ var mb3 = {
 		});
 		var tableView = [];
 		var Genres = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.Genres) {
 					for (var i = 0; i < item.Genres.length; i++) {
@@ -880,15 +887,15 @@ var mb3 = {
 				return;
 			}
 			tableView.sort(util.dynamicSort("textLabel"));
-			MediaBrowser.createCustomTable(tableView, "Genres", function() {
-				MediaBrowser.createInitialListView();
+			mb3.createCustomTable(tableView, "Genres", function() {
+				mb3.createInitialListView();
 			}, function(x, nt) {
 				var item = tableView[x];
 				nt.hideTable(function() {
-					MediaBrowser.showListOfMoviesByGenre(item.textLabel);
+					mb3.showListOfMoviesByGenre(item.textLabel);
 				});
-				MediaBrowser.lastOpenedCallBack = function() {
-					MediaBrowser.showListOfMoviesByGenre(item.textLabel);
+				mb3.lastOpenedCallBack = function() {
+					mb3.showListOfMoviesByGenre(item.textLabel);
 				};
 			});
 
@@ -902,21 +909,27 @@ var mb3 = {
 		});
 		var tableView = [];
 
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.Genres) {
 					for (var i = 0; i < item.Genres.length; i++) {
 						if (item.Genres[i] == genre) {
+							var imdb = "0";
+							if (item.ProviderIds) {
+								if (item.ProviderIds.Imdb) {
+									imdb = "1";
+								}
+							}
 							tableView.push({
-								'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
-								'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
-								'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
+								'textLabel': item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+								'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
+								'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 								'icon': "none",
 								'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
 								'guid': item.Id,
 								'type': item.Type,
-								'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+								'imdb': imdb,
 								'sortName': item.SortName
 							});
 						}
@@ -929,12 +942,12 @@ var mb3 = {
 			}
 			tableView.sort(util.dynamicSort("sortName"));
 
-			MediaBrowser.createCustomTable(tableView, genre, function() {
-				MediaBrowser.showListOfGenres();
+			mb3.createCustomTable(tableView, genre, function() {
+				mb3.showListOfGenres();
 			}, function(x, nt) {
 				var item = tableView[x];
 				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>");
-				MediaBrowser.playTitle($(tr), item.textLabel, false);
+				mb3.playTitle($(tr), item.textLabel, false);
 			});
 
 		});
@@ -947,7 +960,7 @@ var mb3 = {
 		});
 		var tableView = [];
 		var Actors = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.Actors) {
 					for (var i = 0; i < item.Actors.length; i++) {
@@ -987,15 +1000,15 @@ var mb3 = {
 				return;
 			}
 			tableView.sort(util.dynamicSort("customSort"));
-			MediaBrowser.createCustomTable(tableView, "Actors", function() {
-				MediaBrowser.createInitialListView();
+			mb3.createCustomTable(tableView, "Actors", function() {
+				mb3.createInitialListView();
 			}, function(x, nt) {
 				var item = tableView[x];
 				nt.hideTable(function() {
-					MediaBrowser.showListOfMoviesByActor(item.ActualName);
+					mb3.showListOfMoviesByActor(item.ActualName);
 				});
-				MediaBrowser.lastOpenedCallBack = function() {
-					MediaBrowser.showListOfMoviesByActor(item.ActualName);
+				mb3.lastOpenedCallBack = function() {
+					mb3.showListOfMoviesByActor(item.ActualName);
 				};
 			});
 		});
@@ -1008,20 +1021,26 @@ var mb3 = {
 		});
 
 		var tableView = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.Actors) {
 					for (var i = 0; i < item.Actors.length; i++) {
 						if (item.Actors[i].Name == actor) {
+							var imdb = "0";
+							if (item.ProviderIds) {
+								if (item.ProviderIds.Imdb) {
+									imdb = "1";
+								}
+							}
 							tableView.push({
-								'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
-								'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+								'textLabel': item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+								'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
 								'icon': "none",
 								'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
-								'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
+								'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 								'guid': item.Id,
 								'type': item.Type,
-								'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+								'imdb': imdb,
 								'sortName': item.SortName
 							});
 						}
@@ -1034,12 +1053,12 @@ var mb3 = {
 			}
 			tableView.sort(util.dynamicSort("sortName"));
 
-			MediaBrowser.createCustomTable(tableView, actor, function() {
-				MediaBrowser.showListOfActors();
+			mb3.createCustomTable(tableView, actor, function() {
+				mb3.showListOfActors();
 			}, function(x, nt) {
 				var item = tableView[x];
 				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>");
-				MediaBrowser.playTitle($(tr), item.textLabel, false);
+				mb3.playTitle($(tr), item.textLabel, false);
 			});
 
 		});
@@ -1052,7 +1071,7 @@ var mb3 = {
 		});
 		var tableView = [];
 		var Directors = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.Directors) {
 					for (var i = 0; i < item.Directors.length; i++) {
@@ -1084,15 +1103,15 @@ var mb3 = {
 				return;
 			}
 			tableView.sort(util.dynamicSort("customSort"));
-			MediaBrowser.createCustomTable(tableView, "Directors", function() {
-				MediaBrowser.createInitialListView();
+			mb3.createCustomTable(tableView, "Directors", function() {
+				mb3.createInitialListView();
 			}, function(x, nt) {
 				var item = tableView[x];
 				nt.hideTable(function() {
-					MediaBrowser.showListOfMoviesByDirector(item.ActualName);
+					mb3.showListOfMoviesByDirector(item.ActualName);
 				});
-				MediaBrowser.lastOpenedCallBack = function() {
-					MediaBrowser.showListOfMoviesByDirector(item.ActualName);
+				mb3.lastOpenedCallBack = function() {
+					mb3.showListOfMoviesByDirector(item.ActualName);
 				};
 			});
 		});
@@ -1104,20 +1123,26 @@ var mb3 = {
 			detailsLabelText: "Please Wait..."
 		});
 		var tableView = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.Directors) {
 					for (var i = 0; i < item.Directors.length; i++) {
 						if (item.Directors[i] == Director) {
+							var imdb = "0";
+							if (item.ProviderIds) {
+								if (item.ProviderIds.Imdb) {
+									imdb = "1";
+								}
+							}
 							tableView.push({
-								'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
-								'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+								'textLabel': item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+								'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
 								'icon': "none",
 								'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
-								'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
+								'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 								'guid': item.Id,
 								'type': item.Type,
-								'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+								'imdb': imdb,
 								'sortName': item.SortName
 							});
 						}
@@ -1130,12 +1155,12 @@ var mb3 = {
 			}
 			tableView.sort(util.dynamicSort("sortName"));
 
-			MediaBrowser.createCustomTable(tableView, Director, function() {
-				MediaBrowser.showListOfDirectors();
+			mb3.createCustomTable(tableView, Director, function() {
+				mb3.showListOfDirectors();
 			}, function(x, nt) {
 				var item = tableView[x];
 				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>");
-				MediaBrowser.playTitle($(tr), item.textLabel, false);
+				mb3.playTitle($(tr), item.textLabel, false);
 			});
 		});
 	},
@@ -1148,13 +1173,13 @@ var mb3 = {
 
 		var tableView = [];
 		var OfficialRatings = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
-				if (item.OfficialRating !== "" && item.OfficialRating !== null) {
+				if (item.OfficialRating !== "" && item.OfficialRating) {
 					if (jQuery.inArray(item.OfficialRating, OfficialRatings) == -1) {
 						OfficialRatings.push(item.OfficialRating);
 						tableView.push({
-							'textLabel': item.OfficialRating.toString(),
+							'textLabel': "" + item.OfficialRating,
 							'detailTextLabel': "Movies Rated: " + item.OfficialRating,
 							'icon': "greyarrow",
 							'sectionHeader': "Movies By MPAA Rating",
@@ -1171,15 +1196,15 @@ var mb3 = {
 				return;
 			}
 			tableView.sort(util.dynamicSort("textLabel"));
-			MediaBrowser.createCustomTable(tableView, "Rating", function() {
-				MediaBrowser.createInitialListView();
+			mb3.createCustomTable(tableView, "Rating", function() {
+				mb3.createInitialListView();
 			}, function(x, nt) {
 				var item = tableView[x];
 				nt.hideTable(function() {
-					MediaBrowser.showListOfMoviesByRating(item.textLabel);
+					mb3.showListOfMoviesByRating(item.textLabel);
 				});
-				MediaBrowser.lastOpenedCallBack = function() {
-					MediaBrowser.showListOfMoviesByRating(item.textLabel);
+				mb3.lastOpenedCallBack = function() {
+					mb3.showListOfMoviesByRating(item.textLabel);
 				};
 			});
 		});
@@ -1191,18 +1216,24 @@ var mb3 = {
 			detailsLabelText: "Please Wait..."
 		});
 		var tableView = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.OfficialRating == OfficialRating) {
+					var imdb = "0";
+					if (item.ProviderIds) {
+						if (item.ProviderIds.Imdb) {
+							imdb = "1";
+						}
+					}
 					tableView.push({
-						'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
-						'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+						'textLabel': item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+						'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
 						'icon': "none",
 						'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
-						'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
+						'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 						'guid': item.Id,
 						'type': item.Type,
-						'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+						'imdb': imdb,
 						'sortName': item.SortName
 					});
 				}
@@ -1213,12 +1244,12 @@ var mb3 = {
 			}
 			tableView.sort(util.dynamicSort("sortName"));
 
-			MediaBrowser.createCustomTable(tableView, OfficialRating, function() {
-				MediaBrowser.showListOfRating();
+			mb3.createCustomTable(tableView, OfficialRating, function() {
+				mb3.showListOfRating();
 			}, function(x, nt) {
 				var item = tableView[x];
 				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>");
-				MediaBrowser.playTitle($(tr), item.textLabel, false);
+				mb3.playTitle($(tr), item.textLabel, false);
 			});
 		});
 	},
@@ -1230,10 +1261,10 @@ var mb3 = {
 		});
 		var tableView = [];
 		var ImdbRatings = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
-				if (util.isNumeric(item.ImdbRating) && item.ImdbRating > 0) {
-					var imdbRating = Math.floor(item.ImdbRating);
+				if (util.isNumeric(item.CommunityRating) && item.CommunityRating > 0) {
+					var imdbRating = Math.floor(item.CommunityRating);
 					if (jQuery.inArray(imdbRating, ImdbRatings) == -1) {
 						ImdbRatings.push(imdbRating);
 						tableView.push({
@@ -1256,15 +1287,15 @@ var mb3 = {
 				return;
 			}
 			tableView.sort(util.dynamicSort("-sortOn"));
-			MediaBrowser.createCustomTable(tableView, "Rating", function() {
-				MediaBrowser.createInitialListView();
+			mb3.createCustomTable(tableView, "Rating", function() {
+				mb3.createInitialListView();
 			}, function(x, nt) {
 				var item = tableView[x];
 				nt.hideTable(function() {
-					MediaBrowser.showListOfMoviesByIMDBRating(item.imdbRating);
+					mb3.showListOfMoviesByIMDBRating(item.imdbRating);
 				});
-				MediaBrowser.lastOpenedCallBack = function() {
-					MediaBrowser.showListOfMoviesByIMDBRating(item.imdbRating);
+				mb3.lastOpenedCallBack = function() {
+					mb3.showListOfMoviesByIMDBRating(item.imdbRating);
 				};
 			});
 		});
@@ -1277,20 +1308,26 @@ var mb3 = {
 		});
 		var tableView = [];
 		rating = parseInt(rating, 10);
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
-				if (util.isNumeric(item.ImdbRating) && item.ImdbRating > 0) {
-					var imdbRating = Math.floor(item.ImdbRating);
+				if (util.isNumeric(item.CommunityRating) && item.CommunityRating > 0) {
+					var imdbRating = Math.floor(item.CommunityRating);
 					if (imdbRating == rating) {
+						var imdb = "0";
+						if (item.ProviderIds) {
+							if (item.ProviderIds.Imdb) {
+								imdb = "1";
+							}
+						}
 						tableView.push({
 							'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
-							'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+							'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
 							'icon': "none",
 							'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
-							'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
+							'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 							'guid': item.Id,
 							'type': item.Type,
-							'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+							'imdb': imdb,
 							'sortName': item.SortName
 						});
 					}
@@ -1303,12 +1340,12 @@ var mb3 = {
 			}
 			tableView.sort(util.dynamicSort("sortName"));
 
-			MediaBrowser.createCustomTable(tableView, rating.toString, function() {
-				MediaBrowser.showListOfIMDBRating();
+			mb3.createCustomTable(tableView, rating.toString, function() {
+				mb3.showListOfIMDBRating();
 			}, function(x, nt) {
 				var item = tableView[x];
 				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>");
-				MediaBrowser.playTitle($(tr), item.textLabel, false);
+				mb3.playTitle($(tr), item.textLabel, false);
 			});
 		});
 	},
@@ -1320,18 +1357,24 @@ var mb3 = {
 		});
 
 		var tableView = [];
-		MediaBrowser.loadGeniusResults(function(geniusResults) {
+		mb3.loadGeniusResults(function(geniusResults) {
 			$.each(geniusResults.Titles, function(idx, item) {
-				if (item.WatchedPercentage === 0) {
+				if (item.UserData.PlayCount === 0) {
+					var imdb = "0";
+					if (item.ProviderIds) {
+						if (item.ProviderIds.Imdb) {
+							imdb = "1";
+						}
+					}
 					tableView.push({
-						'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
-						'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
+						'textLabel': item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+						'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
 						'icon': "none",
 						'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
-						'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
+						'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
 						'guid': item.Id,
 						'type': item.Type,
-						'imdb': ((item.ImdbRating > 0) ? "1" : "0"),
+						'imdb': imdb,
 						'sortName': item.SortName
 					});
 				}
@@ -1342,12 +1385,12 @@ var mb3 = {
 			}
 			tableView.sort(util.dynamicSort("sortName"));
 
-			MediaBrowser.createCustomTable(tableView, "Unwatched", function() {
-				MediaBrowser.createInitialListView();
+			mb3.createCustomTable(tableView, "Unwatched", function() {
+				mb3.createInitialListView();
 			}, function(x, nt) {
 				var item = tableView[x];
 				var tr = $("<tr data-guid='" + item.guid + "' data-imdb='" + item.imdb + "'></tr>");
-				MediaBrowser.playTitle($(tr), item.textLabel, false);
+				mb3.playTitle($(tr), item.textLabel, false);
 			});
 		});
 	},
@@ -1387,57 +1430,36 @@ var mb3 = {
 
 				util.doHud({
 					show: true,
-					labelText: "Checking for new media...",
-					detailsLabelText: "Tap to cancel",
-					tappedEvent: function() {
-						util.setStatusBarForceClear();
-						util.doHud({
-							show: false
-						});
-						if (geniusResults) {
-							geniusResults.refreshQueue = [];
-							geniusResults.TitlesQueue = [];
-						}
-
-						$.ajaxq("genuisWorker");
-					}
+					labelText: "Refreshing all Titles..."
 				});
 
 				//Disable the sleep timer
 				cordova.require('cordova/plugin/powermanagement').acquire(function() {
 					//start out by pulling the root folders, and adding them to the queue
-					MediaBrowser.loadGeniusResults(function(geniusResults) {
-
-						//clear the queue
-						geniusResults.refreshQueue = [];
-						geniusResults.TitlesQueue = [];
-						$.ajaxq("genuisWorker");
+					mb3.loadGeniusResults(function(geniusResults) {
 
 						util.setStatusBarMessage("Searching for new titles");
-						var url = util.getRandomMBServer() + "library?lightData=1";
-						console.log(url);
+						var url = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.getUserId() + "/Items?format=json&recursive=true&IncludeItemTypes=Movie&Fields=Overview,ProviderId,Genres,SortName,Studios,People,Path,DateCreated";
+
 						$.ajax({
 							url: url,
 							dataType: 'json',
 							timeout: settings.userSettings.MBServiceTimeout,
 							success: function(d) {
-								if (!d.Data) {
-									return;
-								}
-								console.log(d);
-								$.each(d.Data.Children, function(key, val) {
-									var item = d.Data.Children[key];
-									if (item.Type == "Folder") {
-										geniusResults.refreshQueue.push({
-											Id: item.Id,
-											title: item.Name
-										});
-									}
+
+								geniusResults.Titles = {};
+								$.each(d.Items, function(x) {
+									var movieObject = d.Items[x];
+									var id = movieObject.Id.toString();
+
+									geniusResults.Titles[id] = movieObject;
 								});
-								//console.log(geniusResults.refreshQueue);
-								util.setStatusBarMessage("Searching " + geniusResults.refreshQueue.length + " folders for new titles");
 								cache.saveJson("genius", geniusResults);
-								MediaBrowser.processGeniusQueue(geniusResults);
+
+								util.doHud({
+									show: false
+								});
+
 							},
 							error: function(x, y, z) {
 								console.log(x);
@@ -1454,137 +1476,6 @@ var mb3 = {
 				util.setItem("lastRefresh", new Date().toISOString());
 			}
 		}, "gesturePad", "Refresh,Maybe Later");
-	},
-	processGeniusQueue: function(geniusResults) {
-
-		//MediaBrowser.loadGeniusResults(function(geniusResults) {
-		geniusResults.loaded = true;
-		if (geniusResults.refreshQueue.length > 0) {
-			//Pull the last folder and queue up all children
-			var toProcess = geniusResults.refreshQueue[geniusResults.refreshQueue.length - 1];
-			util.setStatusBarMessage("Processing " + toProcess.title);
-			var thisURL = util.getRandomMBServer() + "library?lightData=1&Id=" + toProcess.Id;
-			$.ajax({
-				url: thisURL,
-				dataType: 'json',
-				timeout: settings.userSettings.MBServiceTimeout,
-				success: function(d) {
-					var foundOne = false;
-					if (d.Data) {
-						$.each(d.Data.Children, function(x) {
-							var thisObj = d.Data.Children[x];
-							var thisId = thisObj.Id;
-							if (thisObj.Type == "Movie") {
-								//if (thisId === "859cacf9-21ca-2113-3327-d91a6fa7da5a") {
-								//	console.log("it");
-								//}
-								if (!geniusResults.Titles[thisId]) { //doesnt have prev saved metadata
-									if (!geniusResults.TitlesQueue[thisId]) { //is not in current queue
-										foundOne = true;
-										geniusResults.TitlesQueue[thisId] = {};
-										$.ajaxq("genuisWorker", {
-											url: util.getRandomMBServer() + "library/?Id=" + thisId + "&lightData=0",
-											dataType: 'json',
-											timeout: settings.userSettings.MBServiceTimeout,
-											success: function(x) {
-												MediaBrowser.saveGeniusResult(x, geniusResults);
-											},
-											error: function() {
-												console.log("error");
-												delete geniusResults.TitlesQueue[thisId];
-											}
-										});
-									}
-								}
-							}
-						});
-					} else {
-						console.log("no data in response.");
-					}
-
-					if (foundOne === false) {
-						//console.log("nothing new");
-						util.setStatusBarMessage(toProcess.title + " Completed");
-						geniusResults.refreshQueue.pop();
-						MediaBrowser.processGeniusQueue(geniusResults);
-					}
-				},
-				error: function() {
-					console.log("process error");
-				}
-			});
-		} else {
-			//release the power lock
-			cordova.require('cordova/plugin/powermanagement').release(function() {
-				//unlocked
-			}, function() {});
-
-			util.doHud({
-				show: false
-			});
-
-			util.setStatusBarMessage("All Titles Indexed.");
-			setTimeout(function() {
-				util.setItem("lastRefresh", new Date().toISOString());
-				util.setStatusBarForceClear();
-				MediaBrowserNowPlaying.allItemsPopulated = false;
-			}, 1500);
-		}
-		//});
-	},
-	saveGeniusResult: function(d, geniusResults) {
-		//MediaBrowser.loadGeniusResults(function(geniusResults) {
-		var movieObject = d.Data;
-		var id = movieObject.Id;
-
-		//save it
-		geniusResults.Titles[id] = movieObject;
-		//remove it from queue
-		delete geniusResults.TitlesQueue[id];
-
-		var remaining = Object.keys(geniusResults.TitlesQueue).length;
-		if (remaining % 10 === 0) { //alert the user, and save results every 10 items
-			//save to disk
-			cache.saveJson("genius", geniusResults);
-			var parentFolder = "";
-			//try to get the name of the parent folder
-			$.each(geniusResults.refreshQueue, function(x) {
-				if (geniusResults.refreshQueue[x].Id == movieObject.parentId) {
-					parentFolder = geniusResults.refreshQueue[x].title;
-				}
-			});
-			util.setStatusBarMessage("Indexing " + remaining + " " + parentFolder + " Titles");
-			util.doHud({
-				show: false
-			});
-			util.doHud({
-				show: true,
-				labelText: "Indexing " + remaining + " " + parentFolder + " Titles",
-				detailsLabelText: "Tap to cancel",
-				tappedEvent: function() {
-					util.doHud({
-						show: false
-					});
-					if (geniusResults) {
-						geniusResults.refreshQueue = [];
-						geniusResults.TitlesQueue = [];
-					}
-					$.ajaxq("genuisWorker");
-				}
-			});
-		}
-
-		if (remaining % 50 === 0) { //clear the status every 25 items
-			util.setStatusBarForceClear();
-		}
-
-		if (remaining === 0) {
-			//folder was totally indexed, do next
-			geniusResults.refreshQueue.pop();
-			cache.saveJson("genius", geniusResults);
-			MediaBrowser.processGeniusQueue(geniusResults);
-		}
-		//});
 	}
 
 };

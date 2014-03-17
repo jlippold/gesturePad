@@ -32,7 +32,7 @@ var settings = {
 			MBServiceTimeout: 120000,
 			moviesByDate: false,
 			tvByDate: false,
-			configURL: "mbeg.xml",
+			configURL: "xml/Custom.xml",
 			roomIndex: 0,
 			deviceIndex: 0,
 			isSetup: true,
@@ -92,6 +92,7 @@ var settings = {
 							"IPAddress": d["S" + i + "_IP"],
 							"Port": d["S" + i + "_EGPort"],
 							"ServicePort": d["S" + i + "_MBPort"],
+							"clientName": d["S" + i + "_Client"],
 							"timeshift": true,
 							"index": 0
 						});
