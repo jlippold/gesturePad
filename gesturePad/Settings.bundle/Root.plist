@@ -30,7 +30,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
-			<dict>
+		<dict>
 			<key>DefaultValue</key>
 			<true/>
 			<key>Key</key>
@@ -88,7 +88,7 @@
 			<key>Key</key>
 			<string>config_source</string>
 			<key>DefaultValue</key>
-			<string>0</string>
+			<string>3</string>
 			<key>Values</key>
 			<array>
 				<string>1</string>
@@ -108,7 +108,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>xml/Custom.xml</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -128,7 +128,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 			<key>Key</key>
 			<string>S1_enabled</string>
 			<key>Title</key>
@@ -160,7 +160,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>192.168.1.0</string>
+			<string>192.168.1.103</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -192,7 +192,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 			<key>Key</key>
 			<string>S1_EG</string>
 			<key>Title</key>
@@ -220,7 +220,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 			<key>Key</key>
 			<string>S1_DTV</string>
 			<key>Title</key>
@@ -234,7 +234,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>192.168.1.0</string>
+			<string>192.168.1.130</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -246,10 +246,6 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
-
-
-
 		<dict>
 			<key>Title</key>
 			<string>Room 2</string>
@@ -376,7 +372,6 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
 		<dict>
 			<key>Title</key>
 			<string>Room 3</string>
@@ -503,7 +498,6 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
 		<dict>
 			<key>Title</key>
 			<string>Room 4</string>
@@ -630,7 +624,6 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
 		<dict>
 			<key>Title</key>
 			<string>Room 5</string>
@@ -757,7 +750,6 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
-
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

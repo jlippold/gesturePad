@@ -151,7 +151,11 @@ static NSSet* org_apache_cordova_validArrowDirections;
                                       permittedArrowDirections:arrowDirection
                                                       animated:YES];
     } else {
-        [self.viewController presentModalViewController:cameraPicker animated:YES];
+        if ([self.viewController respondsToSelector:@selector(presentViewController:::)]) {
+            [self.viewController presentViewController:cameraPicker animated:YES completion:nil];
+        } else {
+            [self.viewController presentModalViewController:cameraPicker animated:YES];
+        }
     }
     self.hasPendingOperation = YES;
 }
