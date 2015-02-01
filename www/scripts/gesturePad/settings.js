@@ -69,8 +69,8 @@ var settings = {
 			settingsObj.mbAddress = d.MB_IP;
 			settingsObj.mbPort = d.MB_Port;
 			settingsObj.username = d.MB_User;
-			settingsObj.password = d.MB_Password;
-
+			settingsObj.password = d.MB_Pass;
+			
 			//gesture XML
 			if (d.config_source == 1) {
 				settingsObj.configURL = "mbeg.xml";

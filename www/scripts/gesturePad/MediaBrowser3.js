@@ -4,19 +4,20 @@ var mb3 = {
 		port: "8096",
 		userName: "",
 		password: "",
-		userID: ""
+		userId: "",
+		APIToken: ""
 	},
 	init: function() {
 		mb3.config.userName = settings.userSettings.username;
 		mb3.config.password = settings.userSettings.password;
 		mb3.config.port = settings.userSettings.mbPort;
 		mb3.config.server = settings.userSettings.mbAddress;
+		if (!mb3.config.password) {
+			alert("Invalid MB Server Settings");
+		}
 	},
 	getServiceUrl: function() {
 		return "http://" + mb3.config.server + ":" + mb3.config.port;
-	},
-	getUserId: function() {
-		return mb3.config.userID;
 	},
 	hashPassword: function(msg) {
 
@@ -185,10 +186,11 @@ var mb3 = {
 		var url = mb3.getServiceUrl() + "/mediabrowser/Users/AuthenticateByName?format=json";
 		$.ajax({
 			url: url,
-			data: "Username=" + user + "&Password=" + mb3.hashPassword(pass),
+			data: "Username=" + mb3.config.userName + "&Password=" + mb3.hashPassword(mb3.config.password),
 			type: "POST",
 			success: function(json) {
-				mb3.config.userID = json.User.Id;
+				mb3.config.userId = json.User.Id;
+				mb3.config.APIToken = json.AccessToken;
 			},
 			error: function(x, y, z) {
 				console.log("Auth Error");
@@ -315,6 +317,7 @@ var mb3 = {
 		}
 	},
 	ShowItems: function(item, sentEventType) {
+		alert(item);
 		var eventType = "click";
 		if (sentEventType) {
 			eventType = sentEventType;
@@ -420,6 +423,7 @@ var mb3 = {
 				dataType: 'json',
 				timeout: settings.userSettings.MBServiceTimeout,
 				success: function(d) {
+					alert(d.Title);
 					if (d !== null) {
 						d.Title = Title;
 						cache.saveJson(MBUrl, d);
@@ -486,7 +490,7 @@ var mb3 = {
 			
 
 			mb3.lastOpenedCallBack = function() {
-				var URL = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.getUserId() + "/Items?format=json&Fields=Overview,ProviderIds&ParentId=" + item.guid;
+				var URL = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.config.userId + "/Items?format=json&Fields=Overview,ProviderIds&ParentId=" + item.guid + "&api_key=" + mb3.config.APIToken;
 				if (settings.userSettings.moviesByDate) {
 					URL += "&SortBy=DateCreated&SortOrder=Descending";
 				}
@@ -656,7 +660,7 @@ var mb3 = {
 			if (util.isWifi() === false) {
 				if (parse) {
 					util.doAlert("You are not on Wifi and no cached version exists. To do this, connect to Wifi and try again");
-					mb3.createInitialListView();
+					//mb3.createInitialListView();
 					return;
 				}
 			}
@@ -677,8 +681,9 @@ var mb3 = {
 				}
 			});
 		};
-		var MBUrl = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.getUserId() + "/Items?format=json";
 
+		var MBUrl = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.config.userId + "/Items?format=json&api_key=" + mb3.config.APIToken;
+		
 		mb3.lastOpenedCallBack = function() {
 			mb3.createInitialListView();
 		};

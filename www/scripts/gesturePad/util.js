@@ -340,10 +340,8 @@ var util = {
 		}
 	},
 	isWifi: function() {
-		//console.log(settings.userSettings.wifi);
-		if (settings.userSettings.wifi === false) {
-			return true;
-		}
+		return true;
+		/*
 		try {
 			if (util.netState() == 'WiFi connection') {
 				return true;
@@ -353,6 +351,7 @@ var util = {
 		} catch (e) {
 			return true;
 		}
+		*/
 	},
 	netState: function() {
 		try {
