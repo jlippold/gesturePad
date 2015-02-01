@@ -44,7 +44,7 @@ UIColor *newGrey = nil;
 {
 
     newGrey = [UIColor colorWithRed:0.678 green:0.678 blue:0.678 alpha:1.0];
-    _bgURL = @"";
+    
     isPlaying = NO;
     _lastNavTitle = @"";
     _lastNavSubTitle = @"";
@@ -337,10 +337,7 @@ UIColor *newGrey = nil;
     if ( ![options objectForKey:@"url"]  ) {
         return;
     }
-    
-    if ([[options objectForKey:@"url"] isEqualToString:_bgURL] ) {
-        return;
-    }
+
     
 
     if ([[options objectForKey:@"url"] isEqualToString:@""] ) {
@@ -348,8 +345,6 @@ UIColor *newGrey = nil;
         return;
     }
     
-    
-    _bgURL = [[NSString alloc] initWithString:[options objectForKey:@"url"]];
     NSURL *imgUrl = [[NSURL alloc] initWithString:[options objectForKey:@"url"]];
     NSError* error = nil;
     NSData *imgData = [NSData dataWithContentsOfURL:imgUrl options:NSDataReadingUncached error:&error];
@@ -438,7 +433,6 @@ UIColor *newGrey = nil;
     
     if (_boxCover.alpha == 0.0) {
         _bgView.alpha = 0.0;
-        _bgURL = @"";
         [self setTint:newGrey];
         return;
     }
@@ -457,7 +451,7 @@ UIColor *newGrey = nil;
     } completion:^(BOOL finished){
         _bgView.image = [UIImage new];
         _boxCover.image = [UIImage new];
-        _bgURL = @"";
+
         [self setTint:newGrey];
     }];
     
