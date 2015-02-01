@@ -10,29 +10,29 @@
 	<string>gesturePad</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>B93FD464-93A4-477D-8044-B203F334880F</key>
-		<string>ssh://github.com/jlippold/gesturePad.git</string>
+		<key>209C66C15B3E0CE59B6F98BD6271F77F949FC3F3</key>
+		<string>github.com:jlippold/gesturePad.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>gesturePad.xcodeproj/project.xcworkspace</string>
+	<string>gesturePad.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>B93FD464-93A4-477D-8044-B203F334880F</key>
+		<key>209C66C15B3E0CE59B6F98BD6271F77F949FC3F3</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/jlippold/gesturePad.git</string>
+	<string>github.com:jlippold/gesturePad.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>B93FD464-93A4-477D-8044-B203F334880F</string>
+	<string>209C66C15B3E0CE59B6F98BD6271F77F949FC3F3</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>B93FD464-93A4-477D-8044-B203F334880F</string>
+			<string>209C66C15B3E0CE59B6F98BD6271F77F949FC3F3</string>
 			<key>IDESourceControlWCCName</key>
 			<string>gesturePad</string>
 		</dict>

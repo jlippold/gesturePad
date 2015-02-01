@@ -44,8 +44,7 @@ UIColor *newGrey = nil;
 {
 
     newGrey = [UIColor colorWithRed:0.678 green:0.678 blue:0.678 alpha:1.0];
-    _boxcoverURL = @"";
-    _backdropURL = @"";
+    _bgURL = @"";
     isPlaying = NO;
     _lastNavTitle = @"";
     _lastNavSubTitle = @"";
@@ -267,30 +266,6 @@ UIColor *newGrey = nil;
                                [[UIScreen mainScreen] bounds].size.width*2,
                                [[UIScreen mainScreen] bounds].size.height*2);
     
-    
-    // Set vertical effect
-    UIInterpolatingMotionEffect *verticalMotionEffect =
-    [[UIInterpolatingMotionEffect alloc]
-     initWithKeyPath:@"center.y"
-     type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    verticalMotionEffect.minimumRelativeValue = @(-20);
-    verticalMotionEffect.maximumRelativeValue = @(20);
-    
-    // Set horizontal effect
-    UIInterpolatingMotionEffect *horizontalMotionEffect =
-    [[UIInterpolatingMotionEffect alloc]
-     initWithKeyPath:@"center.x"
-     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    horizontalMotionEffect.minimumRelativeValue = @(-20);
-    horizontalMotionEffect.maximumRelativeValue = @(20);
-    
-    // Create group to combine both
-    UIMotionEffectGroup *group = [UIMotionEffectGroup new];
-    group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
-    
-    // Add both effects to your view
-    [_bgView addMotionEffect:group];
-    
     _boxCover = [[UIImageView alloc] initWithImage:[UIImage new]];
     _boxCover.frame = CGRectMake( 0, 114, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height - 275);
     
@@ -363,127 +338,73 @@ UIColor *newGrey = nil;
         return;
     }
     
+    if ([[options objectForKey:@"url"] isEqualToString:_bgURL] ) {
+        return;
+    }
+    
 
     if ([[options objectForKey:@"url"] isEqualToString:@""] ) {
-        [self clearImages];
+        [self wipeBackground];
         return;
     }
     
-    if ([[options objectForKey:@"url"] isEqualToString:_boxcoverURL] ) {
-        return;
-    }
     
-    _boxcoverURL = [[NSString alloc] initWithString:[options objectForKey:@"url"]];
-    [self downloadImageForBoxCover:_boxcoverURL];
-    
-    if ([options objectForKey:@"backdrop"]) {
-        _backdropURL = [[NSString alloc] initWithString:[options objectForKey:@"backdrop"]];
-        _backdropURL = [_backdropURL stringByAppendingFormat:@"?height=%.0f", [[UIScreen mainScreen] bounds].size.height+80];
-        [self downloadImageForBackground:_backdropURL];
+    _bgURL = [[NSString alloc] initWithString:[options objectForKey:@"url"]];
+    NSURL *imgUrl = [[NSURL alloc] initWithString:[options objectForKey:@"url"]];
+    NSError* error = nil;
+    NSData *imgData = [NSData dataWithContentsOfURL:imgUrl options:NSDataReadingUncached error:&error];
+    if (error) {
+        [self wipeBackground];
     } else {
-        [self downloadImageForBackground:[options objectForKey:@"url"]];
-    }
-    
-  
-    
-}
-
--(void) downloadImageForBackground:(NSString*) url {
-    NSURL *bgURL = [[NSURL alloc] initWithString:url];
-    BOOL isBoxCover = NO;
-    if ([url isEqualToString:_boxcoverURL]) {
-        isBoxCover = YES;
-    }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSError* error = nil;
-        NSData *imgData = [NSData dataWithContentsOfURL:bgURL options:NSDataReadingUncached error:&error];
-        dispatch_async(dispatch_get_main_queue(), ^{
+        
+        UIImage *img = [UIImage imageWithData:imgData];
+        if (img.size.width < 1 ) {
+            [self wipeBackground];
+            return;
+        }
+        
+        // Create the image context
+        UIGraphicsBeginImageContext(_bgView.frame.size);
+        UIImage *blurredSnapshotImage = [img applyDarkEffect];
+        UIGraphicsEndImageContext();
+        
+        _boxCover.alpha = 0.0;
+        _bgView.alpha = 0.0;
+        _boxCover.image = img;
+        _bgView.image = blurredSnapshotImage;
+        _bgView.contentMode = UIViewContentModeScaleAspectFill;
+        _bgView.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width/2*-1,
+                                   [[UIScreen mainScreen] bounds].size.height/2*-1,
+                                   [[UIScreen mainScreen] bounds].size.width*2,
+                                   [[UIScreen mainScreen] bounds].size.height*2);
+        
+        _boxCover.transform = CGAffineTransformMakeScale(0.01, 0.01);
+        
+        [UIView animateWithDuration:0.25 delay: 0.0 options: UIViewAnimationOptionCurveEaseIn  animations:^{
+            _boxCover.alpha = 1.0;
+            _bgView.alpha = 1.0;
+           _boxCover.transform = CGAffineTransformIdentity; //100%
+        } completion:^(BOOL finished){
+            isPlaying = YES;
+            _playButton.image = [UIImage imageNamed:@"www/img/ui/SystemMediaControl-Pause@2x.png"];
             
-            if (error) {
-                [self wipeBackdrop];
-                return;
+            UIColor *avgColor = [self averageColor:img];
+            CGFloat hue, saturation, brightness, alpha ;
+            BOOL ok = [ avgColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
+            if ( ok ) {
+                avgColor = [UIColor colorWithHue:hue saturation:saturation brightness:.85f alpha:alpha ] ;
+                [self setTint:avgColor];
             } else {
-                UIImage *img = [UIImage imageWithData:imgData];
-                
-                if (img.size.width < 1 ) {
-                    [self wipeBackdrop];
-                    return;
-                }
-                
-                _bgView.alpha = 0.0;
-                
-                if (isBoxCover) {
-                    _bgView.contentMode = UIViewContentModeScaleAspectFill;
-                    _bgView.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width/2*-1,
-                                               [[UIScreen mainScreen] bounds].size.height/2*-1,
-                                               [[UIScreen mainScreen] bounds].size.width*2,
-                                               [[UIScreen mainScreen] bounds].size.height*2);
-                } else {
-                    _bgView.contentMode = UIViewContentModeScaleAspectFill;
-                    _bgView.frame = CGRectMake(0,-40,
-                                               [[UIScreen mainScreen] bounds].size.width,
-                                               [[UIScreen mainScreen] bounds].size.height+80);
-                }
-
-                UIGraphicsBeginImageContext(_bgView.frame.size);
-                UIImage *blurredSnapshotImage = [img applyDarkEffect2];
-                UIGraphicsEndImageContext();
-                
-                _bgView.image = blurredSnapshotImage;
-                
-                [UIView animateWithDuration:1.0 animations:^() {
-                    _bgView.alpha = 1.0f;
-                }];
-                
+                [self setTint:newGrey];
             }
-        });
-    });
+           
+        }];
+        
+        
+    }
+    
+    
 }
-
-
--(void) downloadImageForBoxCover:(NSString*) url {
-    NSURL *boxURL = [[NSURL alloc] initWithString:url];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSError* error = nil;
-        NSData *imgData = [NSData dataWithContentsOfURL:boxURL options:NSDataReadingUncached error:&error];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (error) {
-                [self wipeBoxCover];
-                return;
-            } else {
-                UIImage *img = [UIImage imageWithData:imgData];
-                if (img.size.width < 1 ) {
-                    [self wipeBoxCover];
-                    return;
-                }
-
-                _boxCover.alpha = 0.0;
-                _boxCover.image = img;
-                _boxCover.transform = CGAffineTransformMakeScale(0.01, 0.01);
-                
-                [UIView animateWithDuration:0.25 delay: 0.0 options: UIViewAnimationOptionCurveEaseIn  animations:^{
-                    _boxCover.alpha = 1.0;
-                    _boxCover.transform = CGAffineTransformIdentity;
-                } completion:^(BOOL finished){
-                    isPlaying = YES;
-                    _playButton.image = [UIImage imageNamed:@"www/img/ui/SystemMediaControl-Pause@2x.png"];
-                    
-                    UIColor *avgColor = [self averageColor:img];
-                    CGFloat hue, saturation, brightness, alpha ;
-                    BOOL ok = [ avgColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
-                    if ( ok ) {
-                        avgColor = [UIColor colorWithHue:hue saturation:saturation brightness:.85f alpha:alpha ] ;
-                        [self setTint:avgColor];
-                    } else {
-                        [self setTint:newGrey];
-                    }
-                }];
-            }
-        });
-    });
-}
-
-
 
 - (void) setTint:(UIColor*) tintColor {
     _navbar.tintColor = tintColor;
@@ -513,37 +434,34 @@ UIColor *newGrey = nil;
 }
 
 
-- (void) wipeBackdrop {
-
-    _bgView.image = [UIImage new];
-    _bgView.alpha = 0.0;
-    _bgView.frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height);
-    _bgView.contentMode = UIViewContentModeScaleToFill;
-    _backdropURL = @"";
-}
-
-- (void) wipeBoxCover {
-
+- (void) wipeBackground {
+    
     if (_boxCover.alpha == 0.0) {
-        _boxcoverURL = @"";
+        _bgView.alpha = 0.0;
+        _bgURL = @"";
         [self setTint:newGrey];
         return;
     }
+    
+
     _boxCover.alpha = 1.0;
-    _boxCover.transform = CGAffineTransformIdentity;
+    _bgView.alpha = 1.0;
+    _bgView.frame = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height);
+    _bgView.contentMode = UIViewContentModeScaleToFill;
+    _boxCover.transform = CGAffineTransformIdentity; //100%
+
     [UIView animateWithDuration:0.25 delay: 0.0 options: UIViewAnimationOptionCurveEaseIn  animations:^{
         _boxCover.alpha = 0.0;
+        _bgView.alpha = 0.0;
         _boxCover.transform = CGAffineTransformMakeScale(0.01, 0.01);
     } completion:^(BOOL finished){
+        _bgView.image = [UIImage new];
         _boxCover.image = [UIImage new];
-        _boxcoverURL = @"";
+        _bgURL = @"";
         [self setTint:newGrey];
     }];
-}
+    
 
--(void) clearImages {
-    [self wipeBackdrop];
-    [self wipeBoxCover];
 }
 
 - (UIColor *)averageColor:(UIImage*) img {

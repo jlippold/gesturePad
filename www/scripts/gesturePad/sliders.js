@@ -8,18 +8,11 @@ var sliders = {
 		if (device.shortname != "MCE") {
 			return;
 		}
-		var MBUrl = mb3.getServiceUrl();
-		MBUrl += "/mediabrowser/Sessions/" + mb3.config.clientId + "/Playing/seek?SeekPositionTicks=" + seek;
-		console.log(MBUrl);
-		$.ajax({
-			url: MBUrl,
-			type: "POST",
-			success: function(json) {
-				console.log(json);
-				setTimeout(function() {
-					ui.queryNowPlaying();
-				}, 1500);
-			}
+		var base = util.getMBUrl() + "ui?command=seek&value=" + seek + "&controllerName=" + ui.nowPlaying.controller;
+		$.getJSON(base, function() {
+			setTimeout(function() {
+				ui.queryNowPlaying();
+			}, 1500);
 		});
 	}
 };

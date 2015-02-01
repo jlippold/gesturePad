@@ -311,7 +311,9 @@ var ui = {
 
 				if (room.IR) {
 					util.setDeviceByShortName("MCE"); //force device back to MCE, because EG swithces the inputs
-					var switchInputNode = $(xml).find('gesturePad > devices > device[shortname="MCE"] > commands > category > command > action > onCompleteSetDevice[shortname="' + deviceShortName + '"]:first');
+					var switchInputNode = $(xml).find(
+						'gesturePad > devices > device[shortname="MCE"] > commands > category > command > action > onCompleteSetDevice[shortname="' +
+						deviceShortName + '"]:first');
 					if ($(switchInputNode).size() > 0) {
 						gestures.doEvent("manual", $(switchInputNode).parent());
 						//util.getRoomStatus();
@@ -436,17 +438,17 @@ var ui = {
 				success: function(j) {
 					var foundClient = false;
 					$.each(j, function(k, client) {
-						if (client.DeviceId === device.clientName) {
+						if (client.DeviceName === device.clientName) {
 							mb3.config.clientId = client.Id;
-							if (client.NowPlayingPositionTicks) {
+							if (client.hasOwnProperty("NowPlayingItem") && client.hasOwnProperty("PlayState")) {
 								var duration = client.NowPlayingItem.RunTimeTicks;
-								var offset = client.NowPlayingPositionTicks;
+								var offset = client.PlayState.PositionTicks;
 								var perc = offset / duration;
 								var currentID = client.NowPlayingItem.Id;
 								var guid = client.NowPlayingItem.Id;
 								ui.view.setOptionsForView({
-									durationStartText: util.hms2( util.ticksToSeconds(offset) ),
-									durationEndText: "-" + util.hms2( util.ticksToSeconds(duration - offset) ),
+									durationStartText: util.hms2(util.ticksToSeconds(offset)),
+									durationEndText: "-" + util.hms2(util.ticksToSeconds(duration - offset)),
 									durationSliderValue: util.isNumeric(perc) ? Math.floor(perc * 100) : 0,
 									guid: guid,
 									currentID: currentID,
@@ -518,7 +520,8 @@ var ui = {
 							var url = "";
 							var guid = "";
 							$(tvxml).find("Data > Series > SeriesName").each(function() {
-								if ($(this).text().toLowerCase().replace(/\W/g, '').replace('the', '') == json.title.toLowerCase().replace(/\W/g, '').replace('the', '')) {
+								if ($(this).text().toLowerCase().replace(/\W/g, '').replace('the', '') == json.title.toLowerCase().replace(/\W/g, '').replace(
+										'the', '')) {
 									guid = $(this).parent().find("seriesid").text();
 									return false;
 								}

@@ -28,6 +28,10 @@ var settings = {
 			sounds: false,
 			vibrate: false,
 			wifi: true,
+			mbAddress: "192.168.1.1",
+			mbPort: 8096,
+			username: "",
+			password: "",
 			SleepThreshold: 60000,
 			MBServiceTimeout: 120000,
 			moviesByDate: false,
@@ -61,6 +65,12 @@ var settings = {
 			if (d.dateTV == 1) {
 				settingsObj.tvByDate = true;
 			}
+
+			settingsObj.mbAddress = d.MB_IP;
+			settingsObj.mbPort = d.MB_Port;
+			settingsObj.username = d.MB_User;
+			settingsObj.password = d.MB_Password;
+
 			//gesture XML
 			if (d.config_source == 1) {
 				settingsObj.configURL = "mbeg.xml";

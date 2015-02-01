@@ -15,9 +15,6 @@ var init = {
 		window.onresize = util.detectOrientation;
 		window.onerror = function(msg, url, line) {
 			console.log("\n\n" + msg + "\n" + url + "\nline " + line + "\n\n\n");
-			util.doHud({
-				show: false
-			});
 		};
 	},
 	onDeviceReady: function() {
@@ -27,14 +24,16 @@ var init = {
 			gestures.doEvent(gesture);
 		});
 
+		
+
 		ui.initiateBindings();
 
 		util.doResize();
 		notify.init();
 		notify.clearAllBadges();
-
+		
 		settings.loadSettings();
-
+		
 		if (settings.userSettings.isSetup === false) {
 			return;
 		}
@@ -50,7 +49,8 @@ var init = {
 			util.getRoomStatus();
 		}, 30000);
 
-		mb3.authenticateUser("treason", "urchin");
+
+		mb3.authenticateUser();
 
 		window.scrollTo(0, 0);
 		util.checkForYouTubeLink();

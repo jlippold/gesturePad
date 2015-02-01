@@ -1,209 +1,6 @@
-var mb3 = {
-	config: {
-		server: "",
-		port: "8096",
-		userName: "",
-		password: "",
-		userID: ""
-	},
-	init: function() {
-		mb3.config.userName = settings.userSettings.username;
-		mb3.config.password = settings.userSettings.password;
-		mb3.config.port = settings.userSettings.mbPort;
-		mb3.config.server = settings.userSettings.mbAddress;
-	},
-	getServiceUrl: function() {
-		return "http://" + mb3.config.server + ":" + mb3.config.port;
-	},
-	getUserId: function() {
-		return mb3.config.userID;
-	},
-	hashPassword: function(msg) {
-
-		function rotate_left(n, s) {
-			var t4 = (n << s) | (n >>> (32 - s));
-			return t4;
-		}
-
-		function lsb_hex(val) {
-			var str = "";
-			var i;
-			var vh;
-			var vl;
-
-			for (i = 0; i <= 6; i += 2) {
-				vh = (val >>> (i * 4 + 4)) & 0x0f;
-				vl = (val >>> (i * 4)) & 0x0f;
-				str += vh.toString(16) + vl.toString(16);
-			}
-			return str;
-		}
-
-		function cvt_hex(val) {
-			var str = "";
-			var i;
-			var v;
-
-			for (i = 7; i >= 0; i--) {
-				v = (val >>> (i * 4)) & 0x0f;
-				str += v.toString(16);
-			}
-			return str;
-		}
-
-		function Utf8Encode(string) {
-			string = string.replace(/\r\n/g, "\n");
-			var utftext = "";
-
-			for (var n = 0; n < string.length; n++) {
-
-				var c = string.charCodeAt(n);
-
-				if (c < 128) {
-					utftext += String.fromCharCode(c);
-				} else if ((c > 127) && (c < 2048)) {
-					utftext += String.fromCharCode((c >> 6) | 192);
-					utftext += String.fromCharCode((c & 63) | 128);
-				} else {
-					utftext += String.fromCharCode((c >> 12) | 224);
-					utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-					utftext += String.fromCharCode((c & 63) | 128);
-				}
-
-			}
-
-			return utftext;
-		}
-
-		var blockstart;
-		var i, j;
-		var W = new Array(80);
-		var H0 = 0x67452301;
-		var H1 = 0xEFCDAB89;
-		var H2 = 0x98BADCFE;
-		var H3 = 0x10325476;
-		var H4 = 0xC3D2E1F0;
-		var A, B, C, D, E;
-		var temp;
-
-		msg = Utf8Encode(msg);
-
-		var msg_len = msg.length;
-
-		var word_array = [];
-		for (i = 0; i < msg_len - 3; i += 4) {
-			j = msg.charCodeAt(i) << 24 | msg.charCodeAt(i + 1) << 16 |
-				msg.charCodeAt(i + 2) << 8 | msg.charCodeAt(i + 3);
-			word_array.push(j);
-		}
-
-		switch (msg_len % 4) {
-			case 0:
-				i = 0x080000000;
-				break;
-			case 1:
-				i = msg.charCodeAt(msg_len - 1) << 24 | 0x0800000;
-				break;
-
-			case 2:
-				i = msg.charCodeAt(msg_len - 2) << 24 | msg.charCodeAt(msg_len - 1) << 16 | 0x08000;
-				break;
-
-			case 3:
-				i = msg.charCodeAt(msg_len - 3) << 24 | msg.charCodeAt(msg_len - 2) << 16 | msg.charCodeAt(msg_len - 1) << 8 | 0x80;
-				break;
-		}
-
-		word_array.push(i);
-
-		while ((word_array.length % 16) != 14) word_array.push(0);
-
-		word_array.push(msg_len >>> 29);
-		word_array.push((msg_len << 3) & 0x0ffffffff);
-
-		for (blockstart = 0; blockstart < word_array.length; blockstart += 16) {
-
-			for (i = 0; i < 16; i++) W[i] = word_array[blockstart + i];
-			for (i = 16; i <= 79; i++) W[i] = rotate_left(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1);
-
-			A = H0;
-			B = H1;
-			C = H2;
-			D = H3;
-			E = H4;
-
-			for (i = 0; i <= 19; i++) {
-				temp = (rotate_left(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0ffffffff;
-				E = D;
-				D = C;
-				C = rotate_left(B, 30);
-				B = A;
-				A = temp;
-			}
-
-			for (i = 20; i <= 39; i++) {
-				temp = (rotate_left(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff;
-				E = D;
-				D = C;
-				C = rotate_left(B, 30);
-				B = A;
-				A = temp;
-			}
-
-			for (i = 40; i <= 59; i++) {
-				temp = (rotate_left(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff;
-				E = D;
-				D = C;
-				C = rotate_left(B, 30);
-				B = A;
-				A = temp;
-			}
-
-			for (i = 60; i <= 79; i++) {
-				temp = (rotate_left(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff;
-				E = D;
-				D = C;
-				C = rotate_left(B, 30);
-				B = A;
-				A = temp;
-			}
-
-			H0 = (H0 + A) & 0x0ffffffff;
-			H1 = (H1 + B) & 0x0ffffffff;
-			H2 = (H2 + C) & 0x0ffffffff;
-			H3 = (H3 + D) & 0x0ffffffff;
-			H4 = (H4 + E) & 0x0ffffffff;
-
-		}
-
-		var out = cvt_hex(H0) + cvt_hex(H1) + cvt_hex(H2) + cvt_hex(H3) + cvt_hex(H4);
-
-		return out.toLowerCase();
-	},
-	authenticateUser: function() {
-		mb3.init();
-		var url = mb3.getServiceUrl() + "/mediabrowser/Users/AuthenticateByName?format=json";
-		$.ajax({
-			url: url,
-			data: "Username=" + user + "&Password=" + mb3.hashPassword(pass),
-			type: "POST",
-			success: function(json) {
-				mb3.config.userID = json.User.Id;
-			},
-			error: function(x, y, z) {
-				console.log("Auth Error");
-				alert("Error logging into mediabrowser");
-				console.log(x);
-				console.log(y);
-				console.log(z);
-			}
-		});
-	},
+var MediaBrowser = {
 	lastOpenedCallBack: function() {
-		mb3.createInitialListView();
-	},
-	backButtonCallback: function() {
-		mb3.createInitialListView();
+		MediaBrowser.createInitialListView();
 	},
 	resetCallback: function() {
 		MediaBrowser.lastOpenedCallBack = function() {
@@ -319,9 +116,7 @@ var mb3 = {
 		if (sentEventType) {
 			eventType = sentEventType;
 		}
-
-		var MBUrl = mb3.getServiceUrl();
-
+		var MBUrl = util.getMBUrl();
 		util.doHud({
 			show: true,
 			labelText: "Loading Data...",
@@ -329,34 +124,43 @@ var mb3 = {
 		});
 		var parseJsonResults = function(x) {
 
-			if (x.back == "StartupFolder") {
+			if (x.Data.Name == "StartupFolder") {
 				MediaBrowser.createInitialListView();
 				return;
 			}
-
 			var tableView = [];
-			$.each(x.Items, function(key, item) {
-				if (item.Type == "Folder" || item.Type == "Season" || item.Type == "Series" || item.Type == "FavoriteFolder") {
+			if (settings.userSettings.moviesByDate && (x.Data.Type == "Folder" || x.Data.Type == "FavoriteFolder")) {
+				x.Data.Children.sort(function(a, b) {
+					return Date.parse(b.DateCreated) - Date.parse(a.DateCreated);
+				});
+			}
+			if (settings.userSettings.tvByDate && (x.Data.Type == "Season" || x.Data.Type == "Series")) {
+				x.Data.Children.sort(function(a, b) {
+					return Date.parse(b.DateCreated) - Date.parse(a.DateCreated);
+				});
+			}
+			$.each(x.Data.Children, function(key, val) {
+				if (x.Data.Children[key].Type == "Folder" || x.Data.Children[key].Type == "Season" || x.Data.Children[key].Type == "Series" || x.Data.Children[key].Type == "FavoriteFolder") {
 					tableView.push({
-						'textLabel': item.Name,
-						'detailTextLabel': "" + item.RecursiveItemCount + " total, " + item.RecursiveUnplayedItemCount + " not watched, " + item.RecentlyAddedItemCount + " new",
+						'textLabel': x.Data.Children[key].Name,
+						'detailTextLabel': "" + x.Data.Children[key].ChildCount + " total, " + (x.Data.Children[key].UnwatchedCount ? x.Data.Children[key].UnwatchedCount + " not watched, " : "") + x.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
 						'icon': "greyarrow",
-						'sectionHeader': item.Type,
-						'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
-						'guid': item.Id,
-						'type': item.Type,
-						'imdb': "0"
+						'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
+						'image': util.getRandomMBServer() + "image/?Id=" + x.Data.Children[key].Id + "&maxwidth=120&maxheight=120",
+						'guid': x.Data.Children[key].Id,
+						'type': x.Data.Children[key].Type,
+						'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")
 					});
 				} else {
 					tableView.push({
-						'textLabel': (item.UserData.PlayCount === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
-						'detailTextLabel': (item.CommunityRating ? item.CommunityRating + "/10 " : "") + (item.Overview ? item.Overview : ""),
+						'textLabel': (x.Data.Children[key].WatchedPercentage === 0 ? "🔹 " : "") + x.Data.Children[key].Name + ((x.Data.Children[key].ProductionYear) ? " (" + x.Data.Children[key].ProductionYear + ")" : ""),
+						'detailTextLabel': (x.Data.Children[key].ImdbRating ? x.Data.Children[key].ImdbRating + "/10 " : "") + (x.Data.Children[key].TagLine ? x.Data.Children[key].TagLine : ""),
 						'icon': "none",
-						'sectionHeader': item.Type,
-						'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
-						'guid': item.Id,
-						'type': item.Type,
-						'imdb': item.ProviderIds.Imdb ? "1" : "0"
+						'sectionHeader': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Children[0].Type,
+						'image': util.getRandomMBServer() + "image/?Id=" + x.Data.Children[key].Id + "&maxwidth=120&maxheight=120",
+						'guid': x.Data.Children[key].Id,
+						'type': x.Data.Children[key].Type,
+						'imdb': ((x.Data.Children[key].ImdbRating > 0) ? "1" : "0")
 					});
 				}
 			});
@@ -365,11 +169,11 @@ var mb3 = {
 				'height': $(window).height(),
 				'showSearchBar': true,
 				'showNavBar': true,
-				'navTitle': x.Title,
+				'navTitle': x.Data.Name == "StartupFolder" ? 'Folders' : x.Data.Name,
 				'navBarColor': 'black',
 				'showRightButton': true,
 				'RightButtonText': 'Close',
-				'showBackButton': true,
+				'showBackButton': x.Data.Name != "StartupFolder" ? true : false,
 				'showToolBar': true,
 				'MediaBrowserToolBar': true
 			});
@@ -388,29 +192,29 @@ var mb3 = {
 					MediaBrowser.playTitle($(tr), item.textLabel, false);
 				} else {
 					nt.hideTable(function() {
-						/*
-						mb3.backButtonCallback = function() {
-							mb3.lastOpenedCallBack();
-						};
-						*/
-						mb3.ShowItems(item);
+						MediaBrowser.ShowItems(item);
 					});
 				}
 			});
-
-			nt.onBackButtonTap(function() {
-				nt.hideTable(function() {
-					mb3.backButtonCallback();
+			if (x.Data.Name == "StartupFolder") {
+				nt.onBackButtonTap(function() {});
+			} else {
+				nt.onBackButtonTap(function() {
+					nt.hideTable(function() {
+						MediaBrowser.ShowItems({
+							'type': 'Folder',
+							'guid': x.Data.parentId
+						});
+					});
 				});
-			});
-
+			}
 			nt.setTableData(tableView);
 			util.doHud({
 				show: false
 			});
 			nt.showTable(function() {});
 		};
-		var getJsonFromServer = function(MBUrl, parse, Title) {
+		var getJsonFromServer = function(MBUrl, parse) {
 			if (util.isWifi() === false && parse) {
 				util.doAlert("Sorry, you are not on Wifi, and this data is yet to be cached.");
 				return;
@@ -420,8 +224,7 @@ var mb3 = {
 				dataType: 'json',
 				timeout: settings.userSettings.MBServiceTimeout,
 				success: function(d) {
-					if (d !== null) {
-						d.Title = Title;
+					if (d.Data !== null) {
 						cache.saveJson(MBUrl, d);
 					}
 					if (parse) {
@@ -435,8 +238,8 @@ var mb3 = {
 				}
 			});
 		};
-
 		if (item.type == "CustomFolder") {
+
 			switch (item.folderType) {
 				case "Genres":
 					MediaBrowser.lastOpenedCallBack = function() {
@@ -482,28 +285,21 @@ var mb3 = {
 			MediaBrowser.lastOpenedCallBack();
 		} else {
 
-
-			
-
-			mb3.lastOpenedCallBack = function() {
-				var URL = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.getUserId() + "/Items?format=json&Fields=Overview,ProviderIds&ParentId=" + item.guid;
-				if (settings.userSettings.moviesByDate) {
-					URL += "&SortBy=DateCreated&SortOrder=Descending";
-				}
+			MediaBrowser.lastOpenedCallBack = function() {
+				var URL = util.getMBUrl() + "library/?lightData=1&Id=" + item.guid;
 				cache.getJson(URL, function(d) {
 					if (d === null) {
 						//get from server
-						getJsonFromServer(URL, true, item.Name);
+						getJsonFromServer(URL, true);
 					} else {
 						//display cached
 						parseJsonResults(d);
 						//get from server, to replace cache but dont parse
-						getJsonFromServer(URL, false, item.Name);
+						getJsonFromServer(URL, false);
 					}
 				});
 			};
-			mb3.backButtonCallback = jQuery.extend(true, {}, mb3.lastOpenedCallBack);
-			mb3.lastOpenedCallBack();
+			MediaBrowser.lastOpenedCallBack();
 
 		}
 	},
@@ -513,16 +309,17 @@ var mb3 = {
 
 			//parse the StartUp Folder
 			var tableView = [];
-			$.each(d.Items, function(key, item) {
+			$.each(d.Data.Children, function(key, val) {
 				tableView.push({
-					'textLabel': item.Name,
-					'detailTextLabel': "" + item.RecursiveItemCount + " total, " + item.RecursiveUnplayedItemCount + " not watched, " + item.RecentlyAddedItemCount + " new",
+					'textLabel': d.Data.Children[key].Name,
+					'detailTextLabel': "" + d.Data.Children[key].ChildCount + " total, " + d.Data.Children[key].UnwatchedCount + " not watched, " + d.Data.Children[key].RecentlyAddedUnplayedItemCount + " new",
 					'icon': "greyarrow",
 					'sectionHeader': "Folders",
-					'image': mb3.getServiceUrl() + "/mediabrowser/Items/" + item.Id + "/Images/Primary?maxheight=120&maxwidth=120",
+					'image': util.getMBUrl() + "image/?Id=" + d.Data.Children[key].Id + "&maxwidth=120&maxheight=120",
 					'nomask': false,
-					'guid': item.Id,
-					'type': item.Type
+					'guid': d.Data.Children[key].Id,
+					'type': d.Data.Children[key].Type,
+					'imdb': d.Data.Children[key].ImdbRating
 				});
 			});
 
@@ -637,11 +434,8 @@ var mb3 = {
 						labelText: "Loading Data...",
 						detailsLabelText: "Please Wait..."
 					});
-					mb3.backButtonCallback = function() {
-						mb3.createInitialListView();
-					};
 					setTimeout(function() {
-						mb3.ShowItems(item);
+						MediaBrowser.ShowItems(item);
 					}, 250);
 				});
 			});
@@ -651,12 +445,11 @@ var mb3 = {
 			});
 			nt.showTable(function() {});
 		};
-
 		var getJsonFromServer = function(MBUrl, parse) {
 			if (util.isWifi() === false) {
 				if (parse) {
 					util.doAlert("You are not on Wifi and no cached version exists. To do this, connect to Wifi and try again");
-					mb3.createInitialListView();
+					MediaBrowser.createInitialListView();
 					return;
 				}
 			}
@@ -677,10 +470,11 @@ var mb3 = {
 				}
 			});
 		};
-		var MBUrl = mb3.getServiceUrl() + "/mediabrowser/Users/" + mb3.getUserId() + "/Items?format=json";
+		var MBUrl = util.getMBUrl();
+		MBUrl += "library/";
 
-		mb3.lastOpenedCallBack = function() {
-			mb3.createInitialListView();
+		MediaBrowser.lastOpenedCallBack = function() {
+			MediaBrowser.createInitialListView();
 		};
 		cache.getJson(MBUrl, function(d) {
 			if (d === null) {
@@ -826,7 +620,7 @@ var mb3 = {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.ProductionYear == year) {
 					tableView.push({
-						'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+						'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 						'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 						'icon': "none",
 						'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
@@ -917,7 +711,7 @@ var mb3 = {
 					for (var i = 0; i < item.Genres.length; i++) {
 						if (item.Genres[i] == genre) {
 							tableView.push({
-								'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+								'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 								'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 								'image': util.getRandomMBServer() + "image/?Id=" + item.Id + "&maxwidth=120&maxheight=120",
 								'icon': "none",
@@ -1022,7 +816,7 @@ var mb3 = {
 					for (var i = 0; i < item.Actors.length; i++) {
 						if (item.Actors[i].Name == actor) {
 							tableView.push({
-								'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+								'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 								'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 								'icon': "none",
 								'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
@@ -1118,7 +912,7 @@ var mb3 = {
 					for (var i = 0; i < item.Directors.length; i++) {
 						if (item.Directors[i] == Director) {
 							tableView.push({
-								'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+								'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 								'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 								'icon': "none",
 								'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
@@ -1203,7 +997,7 @@ var mb3 = {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.OfficialRating == OfficialRating) {
 					tableView.push({
-						'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+						'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 						'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 						'icon': "none",
 						'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
@@ -1291,7 +1085,7 @@ var mb3 = {
 					var imdbRating = Math.floor(item.ImdbRating);
 					if (imdbRating == rating) {
 						tableView.push({
-							'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+							'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 							'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 							'icon': "none",
 							'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
@@ -1332,7 +1126,7 @@ var mb3 = {
 			$.each(geniusResults.Titles, function(idx, item) {
 				if (item.WatchedPercentage === 0) {
 					tableView.push({
-						'textLabel': (item.WatchedPercentage === 0 ? " " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
+						'textLabel': (item.WatchedPercentage === 0 ? "🔹 " : "") + item.Name + ((item.ProductionYear) ? " (" + item.ProductionYear + ")" : ""),
 						'detailTextLabel': (item.ImdbRating ? item.ImdbRating + "/10 " : "") + (item.TagLine ? item.TagLine : ""),
 						'icon': "none",
 						'sectionHeader': item.SortName.substring(0, 1).toUpperCase(),
@@ -1563,7 +1357,7 @@ var mb3 = {
 			});
 			util.setStatusBarMessage("Indexing " + remaining + " " + parentFolder + " Titles");
 			util.doHud({
-				show: false
+				show:false
 			});
 			util.doHud({
 				show: true,

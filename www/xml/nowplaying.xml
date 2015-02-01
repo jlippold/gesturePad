@@ -10,8 +10,8 @@
 				<value>1</value>
 			</rule>
 			<rule field="Folder">
-				<compare>notcontains</compare>
-				<value>kids</value>
+				<compare>contains</compare>
+				<value>recent</value>
 			</rule>
 		</ruleSet>
 	</channel>
@@ -186,20 +186,6 @@
 			<rule field="Actor">
 				<compare>equals</compare>
 				<value>Adam Sandler</value>
-			</rule>
-			<rule field="Folder">
-				<compare>notcontains</compare>
-				<value>kids</value>
-			</rule>
-			<rule field="Genre">
-				<compare>first</compare>
-				<value>Comedy</value>
-			</rule>
-		</ruleSet>
-		<ruleSet>
-			<rule field="Actor">
-				<compare>equals</compare>
-				<value>Jonah Hill</value>
 			</rule>
 			<rule field="Folder">
 				<compare>notcontains</compare>

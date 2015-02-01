@@ -677,7 +677,8 @@ static CDVJKArray *_CDVJKArrayCreate(id *objects, NSUInteger count, BOOL mutable
   NSCParameterAssert((objects != NULL) && (_CDVJKArrayClass != NULL) && (_CDVJKArrayInstanceSize > 0UL));
   CDVJKArray *array = NULL;
   if(CDVJK_EXPECT_T((array = (CDVJKArray *)calloc(1UL, _CDVJKArrayInstanceSize)) != NULL)) { // Directly allocate the CDVJKArray instance via calloc.
-    array->isa      = _CDVJKArrayClass;
+ 
+    object_setClass(array,  _CDVJKArrayClass);
     if((array = [array init]) == NULL) { return(NULL); }
     array->capacity = count;
     array->count    = count;
@@ -928,7 +929,9 @@ static CDVJKDictionary *_CDVJKDictionaryCreate(id *keys, NSUInteger *keyHashes, 
   NSCParameterAssert((keys != NULL) && (keyHashes != NULL) && (objects != NULL) && (_CDVJKDictionaryClass != NULL) && (_CDVJKDictionaryInstanceSize > 0UL));
   CDVJKDictionary *dictionary = NULL;
   if(CDVJK_EXPECT_T((dictionary = (CDVJKDictionary *)calloc(1UL, _CDVJKDictionaryInstanceSize)) != NULL)) { // Directly allocate the CDVJKDictionary instance via calloc.
-    dictionary->isa      = _CDVJKDictionaryClass;
+       object_setClass(dictionary,  _CDVJKDictionaryClass);
+  
+      
     if((dictionary = [dictionary init]) == NULL) { return(NULL); }
     dictionary->capacity = _CDVJKDictionaryCapacityForCount(count);
     dictionary->count    = 0UL;

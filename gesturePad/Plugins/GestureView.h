@@ -20,8 +20,8 @@ extern UIColor *newGrey;
 
 @property (nonatomic, strong) NSString *lastNavTitle;
 @property (nonatomic, strong) NSString *lastNavSubTitle;
-@property (nonatomic, strong) NSString *boxcoverURL;
-@property (nonatomic, strong) NSString *backdropURL;
+@property (nonatomic, strong) NSString *bgURL;
+
 
 @property (nonatomic, strong) IBOutlet UIView *gView;
 

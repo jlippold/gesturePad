@@ -160,7 +160,7 @@
             CGContextTranslateCTM(c, 0, 0);
             //[self.webView.superview.layer renderInContext:c];
             UIColor *avgColor = [self averageColor:viewImage];
-            viewImage = [viewImage applyDarkEffect2];
+            viewImage = [viewImage applyDarkEffect];
             UIGraphicsEndImageContext();
             [_navbar setTintColor:avgColor];
             [_toolbar setTintColor:avgColor];
@@ -184,7 +184,6 @@
     [bg addSubview:_navbar];
     [bg addSubview:_searchBar];
     [bg addSubview:_toolbar];
-    
     
     [vc.view addSubview:bg];
 

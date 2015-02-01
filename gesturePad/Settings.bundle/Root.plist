@@ -6,6 +6,84 @@
 	<array>
 		<dict>
 			<key>Title</key>
+			<string>MediaBrowser</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>192.168.1.110</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>MB_IP</string>
+			<key>KeyboardType</key>
+			<string>NumbersAndPunctuation</string>
+			<key>Title</key>
+			<string>IP Address</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>8096</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>MB_Port</string>
+			<key>KeyboardType</key>
+			<string>NumberPad</string>
+			<key>Title</key>
+			<string>Port</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>treason</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>MB_User</string>
+			<key>KeyboardType</key>
+			<string>NumberPad</string>
+			<key>Title</key>
+			<string>UserName</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string></string>
+			<key>IsSecure</key>
+			<true/>
+			<key>Key</key>
+			<string>MB_Pass</string>
+			<key>KeyboardType</key>
+			<string>NumbersAndPunctuation</string>
+			<key>Title</key>
+			<string>Password</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>General</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
@@ -88,7 +166,7 @@
 			<key>Key</key>
 			<string>config_source</string>
 			<key>DefaultValue</key>
-			<string>0</string>
+			<string>3</string>
 			<key>Values</key>
 			<array>
 				<string>1</string>
@@ -108,7 +186,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>xml/Custom.xml</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -128,7 +206,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 			<key>Key</key>
 			<string>S1_enabled</string>
 			<key>Title</key>
@@ -160,7 +238,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>192.168.1.0</string>
+			<string>192.168.1.103</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -173,26 +251,8 @@
 			<string>PSTextFieldSpecifier</string>
 		</dict>
 		<dict>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
 			<key>DefaultValue</key>
-			<string>8092</string>
-			<key>IsSecure</key>
-			<false/>
-			<key>Key</key>
-			<string>S1_MBPort</string>
-			<key>KeyboardType</key>
-			<string>NumberPad</string>
-			<key>Title</key>
-			<string>Media Browser Port</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-		</dict>
-		<dict>
-			<key>DefaultValue</key>
-			<false/>
+			<true/>
 			<key>Key</key>
 			<string>S1_EG</string>
 			<key>Title</key>
@@ -220,7 +280,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 			<key>Key</key>
 			<string>S1_DTV</string>
 			<key>Title</key>
@@ -234,7 +294,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>192.168.1.0</string>
+			<string>192.168.1.130</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
@@ -252,7 +312,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>LIVROOM</string>
+			<string>Living Room TV</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
